@@ -32,7 +32,7 @@
     width: 90%;
     max-width: 700px;
     background: linear-gradient(to right, #ce02fc, #1f002a);
-    border-radius: 8px;
+    border-radius: 20px;
     overflow: hidden;
     opacity: 0;
     transform: translate(-50%, -70%);
@@ -66,16 +66,19 @@
     background: url("/loginw1.jpg") center/cover no-repeat;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     padding: 30px;
-    text-shadow: 2px 2px 4px #1f002a;
+    text-shadow: 2px 2px 4px #030004;
 }
 
 .form-details h2 {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 900;
     margin-bottom: 10px;
+}
+.form-details p {
+    font-size: 0.8rem;
+    width: 160px;
 }
 
 .form-content {
@@ -101,8 +104,10 @@
     padding: 12px 15px 0 15px;
     font-size: 1rem;
     border: 1px solid #ce02fc;
-    border-radius: 4px;
+    border-radius: 10px;
     outline: none;
+    background-color: transparent;
+    color: #fdfcfd;
 }
 
 .input-field label {
@@ -126,8 +131,8 @@
 .forgot-pass-link {
     display: inline-block;
     margin-top: 12px;
-    color: #ce02fc;
-    font-size: 0.9rem;
+    color: #fdfcfd;
+    font-size: 0.8rem;
     text-decoration: none;
 }
 
@@ -136,11 +141,13 @@
 }
 
 .signup-link {
-    color: #ce02fc;
+    color: #ffffff;
+    font-size: 0.7rem;
+    text-align: center;
 }
 
 .signup-link a {
-    color: #ce02fc;
+    color: #f9f8fa;
 }
 
 .signup-link:hover {
