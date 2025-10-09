@@ -1,0 +1,30 @@
+/* Home page */
+.homeImage {
+    min-height: 90vh;
+    background-image: url('/homePage.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 5%;
+}
+
+.homeImageText {
+    color: white;
+    text-align: center;
+    text-shadow: 2px 2px 4px #000000;
+}
+
+.imageTextStyle {
+    font-size: 3rem;
+    font-weight: bold;
+    max-width: 40%;
+}
+
+.homeCard {
+    border-radius: 20px;
+    padding: 10px;
+}
