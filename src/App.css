@@ -1,30 +1,32 @@
-/* Home page */
-.homeImage {
-    min-height: 90vh;
-    background-image: url('/homePage.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+/* Navbar */
 
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding-right: 5%;
+.navLink{
+    color: #ce02fc;
+    text-decoration: none;
 }
 
-.homeImageText {
-    color: white;
-    text-align: center;
-    text-shadow: 2px 2px 4px #000000;
-}
-
-.imageTextStyle {
-    font-size: 3rem;
-    font-weight: bold;
-    max-width: 40%;
-}
-
-.homeCard {
+.navLogin{
+    border: none;
+    outline: none;
+    color: #fff;
+    padding: 5px 20px;
     border-radius: 20px;
-    padding: 10px;
+    font-size: 1rem;
+    background-size: 200% auto;
+    box-shadow: 0px 0px 14px -7px #ffffff;
+    background-image: linear-gradient(45deg, #68037f 0%, #68037f 51%, #ce02fc 100%);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    transition: 0.5s;
+}
+
+.navLogin:hover {
+    background-position: right center;
+    color: white;
+}
+
+.navLogin:active {
+    transform: scale(0.95);
 }

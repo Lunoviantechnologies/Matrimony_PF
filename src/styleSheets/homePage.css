@@ -1,0 +1,79 @@
+/* Home page */
+.homeImage {
+    min-height: 90vh;
+    background-image: url('/homePage.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 5%;
+}
+
+.homeImageText {
+    color: white;
+    text-align: center;
+    text-shadow: 2px 2px 4px #000000;
+}
+
+.imageTextStyle {
+    font-size: 3rem;
+    font-weight: bold;
+    max-width: 40%;
+}
+
+.registerButton {
+    width: 50%;
+    border: none;
+    outline: none;
+    color: #fff;
+    padding: 12px;
+    margin-top: 25px;
+    border-radius: 40px;
+    font-size: 1rem;
+    background-size: 200% auto;
+    box-shadow: 0px 0px 14px -7px #ffffff;
+    background-image: linear-gradient(45deg, #68037f 0%, #68037f 51%, #ce02fc 100%);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    transition: 0.5s;
+}
+
+.registerButton:hover {
+    background-position: right center;
+}
+
+.registerButton:active {
+    transform: scale(0.95);
+}
+
+.cardHeader {
+    font-weight: bold;
+    color: #68037f;
+}
+
+.homeCard {
+    border-radius: 20px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.211);
+    transition: transform 0.3s, box-shadow 0.3s;
+    height: 100%;
+}
+
+.homeCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.homeCard h6 {
+    font-weight: bold;
+    color: #68037f;
+}
+
+.homeCard p {
+    font-size: 0.8rem;
+}

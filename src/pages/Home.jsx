@@ -2,6 +2,7 @@ import React from "react";
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import PsychologyIcon from "@mui/icons-material/Psychology";
+import '../styleSheets/homePage.css';
 
 const Home = () => {
 
@@ -11,13 +12,13 @@ const Home = () => {
                 <span className="homeImageText">
                     <b className="imageTextStyle">Your journey to a lifelong</b> <br />
                     <b>companionship starts here...</b> <br />
-                    <button className="btn btn-primary text-white mt-4 px-3 py-2" style={{ borderRadius: '500px' }}>Your Ideal Match Awaits</button>
+                    <button className="btn registerButton btn-primary text-white mt-4 px-3 py-2" style={{ borderRadius: '500px' }}>Your Ideal Match Awaits</button>
                     <p className="mt-4"> #1 Matchmaking service | ⭐⭐⭐⭐⭐  Rating on Playstore | Successful stories</p>
                 </span>
             </div>
 
             <div className="container mt-5 mb-5 py-4 w-75">
-                <h2>The Matrimony Experience</h2>
+                <h2 className="cardHeader">The Matrimony Experience</h2>
 
                 <div className="row mt-4">
                     <div class="col-sm-4 mb-3 mb-sm-0">
