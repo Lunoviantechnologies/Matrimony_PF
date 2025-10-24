@@ -3,8 +3,14 @@ import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import '../styleSheets/homePage.css';
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+    const navigate = useNavigate();
+
+    const register = ()=>{
+       navigate("/register")
+    };
 
     return (
         <div>
@@ -12,7 +18,7 @@ const Home = () => {
                 <span className="homeImageText">
                     <b className="imageTextStyle">Your journey to a lifelong</b> <br />
                     <b>companionship starts here...</b> <br />
-                    <button className="btn registerButton btn-primary text-white mt-4 px-3 py-2" style={{ borderRadius: '500px' }}>Your Ideal Match Awaits</button>
+                    <button className="btn registerButton btn-primary text-white mt-4 px-3 py-2" style={{ borderRadius: '500px' }} onClick={register}>Your Ideal Match Awaits</button>
                     <p className="mt-4"> #1 Matchmaking service | ⭐⭐⭐⭐⭐  Rating on Playstore | Successful stories</p>
                 </span>
             </div>
