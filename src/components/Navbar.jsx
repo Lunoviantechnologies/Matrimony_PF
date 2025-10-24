@@ -9,22 +9,18 @@ const Navbar = () => {
     const closeLogin = () => setShowLogin(false);
 
     return (
-        <nav className="navBody container d-flex justify-content-between align-items-center py-2 w-75">
-            {/* Logo */}
-            <img src="/matrimonyLogo.png" height="50px" alt="logo" />
+        <nav className="navBody container py-2 w-75">
 
-            {/* Navigation links */}
             <div className="d-flex gap-4 justify-content-end align-items-center">
-                <Link className="navLink" to="/home">About us</Link>
-                <Link className="navLink" to="/home">Contact us</Link>
+                <Link className="navLink" to="/home">Home</Link>
+                <Link className="navLink" to="/home">About Us</Link>
+                <Link className="navLink" to="/home">Contact Us</Link>
 
-                {/* Login button */}
                 <button className="navLogin btn" onClick={openLogin}>
                     Login
                 </button>
             </div>
 
-            {/* Login modal */}
             <Login show={showLogin} onClose={closeLogin} />
         </nav>
     );
