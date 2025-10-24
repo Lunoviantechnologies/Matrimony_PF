@@ -16,10 +16,10 @@ const AppRoutes = createBrowserRouter([
                 path: "/",
                 element: <Home /> 
             },
-             {
-                 path: "/register", 
-                element: <Register />
-             },
+            {
+                path: "/register", 
+            element: <Register />
+            },
             {
                 path:"/dashboard",
                 element:<Dashboard/>
