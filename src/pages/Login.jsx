@@ -20,7 +20,7 @@ const Login = ({ show, onClose }) => {
 
                 <div className="form-box login">
                     <div className="form-details">
-                        <h2>Welcome Back</h2>
+                        <h2>WELCOME BACK !</h2>
                         <p>Please log in using your personal information to stay connected with us.</p>
                     </div>
 
