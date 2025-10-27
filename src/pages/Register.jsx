@@ -73,13 +73,16 @@ const Register = () => {
                       handleOptionChange("profileFor", option);
                       setTimeout(nextStep, 250);
                     }}
-                  >
+                  > 
+                  
                     {option}
                   </button>
                 ))}
               </div>
             </div>
           </>
+
+        
         );
       case 2:
         return (
