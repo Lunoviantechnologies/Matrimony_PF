@@ -92,6 +92,8 @@ const Register = () => {
               </div>
             </div>
           </>
+
+        
         );
       case 2:
         return (
