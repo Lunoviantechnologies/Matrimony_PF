@@ -19,16 +19,15 @@ const AppRoutes = createBrowserRouter([
                 element: <Home />
             },
             {
-<<<<<<< HEAD
                 path : "/editProfile",
                 element : <EditProfile />
             },
             {
                 path : "/viewProfile",
                 element : <ProfileView />
-            }
-            
-=======
+            },
+       
+            {
                 path:"/register",
                 element:<Register/>
             },
