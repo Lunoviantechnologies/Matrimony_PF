@@ -12,9 +12,9 @@ const Navbar = () => {
         <nav className="navBody container py-2 w-75">
 
             <div className="d-flex gap-4 justify-content-end align-items-center">
-                <Link className="navLink" to="/home">Home</Link>
-                <Link className="navLink" to="/home">About Us</Link>
-                <Link className="navLink" to="/home">Contact Us</Link>
+                <Link className="navLink" to="/">Home</Link>
+                <Link className="navLink" to="/aboutUs">About Us</Link>
+                <Link className="navLink" to="/contactUs">Contact Us</Link>
 
                 <button className="navLogin btn" onClick={openLogin}>
                     Login

@@ -24,29 +24,29 @@ const Home = () => {
                 <h2 className="cardHeader">The Matrimony Experience</h2>
 
                 <div className="row mt-4">
-                    <div class="col-sm-4 mb-3 mb-sm-0">
-                        <div class="card homeCard">
-                            <div class="card-body">
+                    <div className="col-sm-4 mb-3 mb-sm-0">
+                        <div className="card homeCard">
+                            <div className="card-body">
                                 <CurrencyExchangeIcon sx={{ fontSize: 70, color: 'green', mb: 1, }} />
-                                <h6 class="card-title" style={{ fontWeight: 'bold' }}>30 Day Money Back Guarantee</h6>
+                                <h6 className="card-title" style={{ fontWeight: 'bold' }}>30 Day Money Back Guarantee</h6>
                                 <p className="card-text opacity-75">Get matched with someone special within 30 days, or we’ll refund your money—guaranteed!</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="card homeCard">
-                            <div class="card-body">
+                    <div className="col-sm-4">
+                        <div className="card homeCard">
+                            <div className="card-body">
                                 <TaskAltIcon sx={{ fontSize: 70, color: 'blue', mb: 1, }} />
-                                <h6 class="card-title" style={{ fontWeight: 'bold' }}>Blue Tick to find your Green Flag</h6>
+                                <h6 className="card-title" style={{ fontWeight: 'bold' }}>Blue Tick to find your Green Flag</h6>
                                 <p className="card-text opacity-75">Did you know our blue-tick profiles get 40% more connection requests than others?.</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="card homeCard">
-                            <div class="card-body">
+                    <div className="col-sm-4">
+                        <div className="card homeCard">
+                            <div className="card-body">
                                 <PsychologyIcon sx={{ fontSize: 70, color: '#00eaffff', mb: 1, }} />
-                                <h6 class="card-title" style={{ fontWeight: 'bold' }}>Matchmaking Powered by AI</h6>
+                                <h6 className="card-title" style={{ fontWeight: 'bold' }}>Matchmaking Powered by AI</h6>
                                 <p className="card-text opacity-75">Cutting-edge technology with two decades of matchmaking expertise to help you find "the one".</p>
                             </div>
                         </div>

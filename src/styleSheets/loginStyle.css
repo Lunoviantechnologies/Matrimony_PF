@@ -156,10 +156,11 @@
 
 .signup-link a {
     color: #013c19;
+    text-decoration: none;
 }
 
-.signup-link:hover {
-    text-decoration: underline;
+.signupa-link:hover{
+    text-decoration: underline !important; 
 }
 
 button[type="submit"] {
