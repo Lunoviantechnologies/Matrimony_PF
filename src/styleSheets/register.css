@@ -1,167 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+.matrimony-container {
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 2rem 1rem;
+}
 
-  .matrimony-container {
-    font-family: 'Inter', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f8f9fa;
-    padding: 2rem 1rem;
-  }
+.form-wrapper {
+  background: #ffffff;
+  padding: 2.5rem;
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
 
-  .form-wrapper {
-    background: #ffffff;
-    padding: 2.5rem;
-    border-radius: 24px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-    width: 100%;
-    max-width: 500px;
-    text-align: center;
-  }
+.progress-bar-container {
+  width: 100%;
+  height: 6px;
+  background-color: #e9ecef;
+  border-radius: 3px;
+  margin-bottom: 30px;
+  overflow: hidden;
+}
 
-  .progress-bar-container {
-    width: 100%;
-    height: 6px;
-    background-color: #e9ecef;
-    border-radius: 3px;
-    margin-bottom: 30px;
-    overflow: hidden;
-  }
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #44e0e8, #18c2b4);
+  border-radius: 3px;
+  transition: width 0.4s ease-in-out;
+}
 
-  .progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #44e0e8, #18c2b4);
-    border-radius: 3px;
-    transition: width 0.4s ease-in-out;
-  }
-  
-  .step-icon {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background-color: #eafcff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto 15px;
-    color: #18c2b4;
-    font-size: 28px;
-  }
-  
-  .step-header {
-    color: #6c757d;
-    margin-bottom: 25px;
-    font-weight: 500;
-  }
+.step-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #eafcff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 15px;
+  color: #18c2b4;
+  font-size: 28px;
+}
 
-  h2 {
-    color: #212529;
-    font-weight: 700;
-    margin-bottom: 30px;
-    font-size: 1.75rem;
-  }
+.step-header {
+  color: #6c757d;
+  margin-bottom: 25px;
+  font-weight: 500;
+}
 
-  .form-group {
-    text-align: left;
-    margin-bottom: 1.5rem;
-  }
-  
-  .form-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #495057;
-    font-size: 0.9rem;
-  }
+h2 {
+  color: #212529;
+  font-weight: 700;
+  margin-bottom: 30px;
+  font-size: 1.75rem;
+}
 
-  .form-input, .form-select {
-    width: 100%;
-    padding: 14px 16px;
-    border: 1px solid #ced4da;
-    border-radius: 8px;
-    font-size: 1rem;
-    background-color: #fff;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  
-  .form-input::placeholder {
-    color: #adb5bd;
-  }
+.form-group {
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
 
-  .form-input:focus, .form-select:focus {
-    outline: none;
-    border-color: #18c2b4;
-    box-shadow: 0 0 0 4px rgba(24, 194, 180, 0.1);
-  }
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #495057;
+  font-size: 0.9rem;
+}
 
-  .option-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: flex-start;
-  }
+.form-input,
+.form-select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
 
-  .option-btn {
-    padding: 10px 20px;
-    border: 1px solid #ced4da;
-    border-radius: 50px;
-    cursor: pointer;
-    background-color: #fff;
-    color: #495057;
-    font-weight: 500;
-    transition: all 0.2s;
-  }
+.form-input::placeholder {
+  color: #adb5bd;
+}
 
-  .option-btn.selected {
-    background-color: #eafcff;
-    border-color: #18c2b4;
-    color: #18c2b4;
-  }
+.form-input:focus,
+.form-select:focus {
+  outline: none;
+  border-color: #18c2b4;
+  box-shadow: 0 0 0 4px rgba(24, 194, 180, 0.1);
+}
 
-  .action-btn {
-    width: 100%;
-    padding: 16px;
-    border: none;
-    border-radius: 12px;
-    background: linear-gradient(90deg, #18c2b4, #44e0e8);
-    color: white;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 4px 15px rgba(24, 194, 180, 0.2);
-  }
+.option-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-start;
+}
 
-  .action-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(24, 194, 180, 0.3);
-  }
-  
-  .action-btn:disabled {
-    background: #e9ecef;
-    color: #adb5bd;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-  }
+.option-btn {
+  padding: 10px 20px;
+  border: 1px solid #ced4da;
+  border-radius: 50px;
+  cursor: pointer;
+  background-color: #fff;
+  color: #495057;
+  font-weight: 500;
+  transition: all 0.2s;
+}
 
-  .row {
-    display: flex;
-    gap: 15px;
-  }
+.option-btn.selected {
+  background-color: #eafcff;
+  border-color: #18c2b4;
+  color: #18c2b4;
+}
 
-  .col {
-    flex: 1;
-  }
+.action-btn {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #18c2b4, #44e0e8);
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(24, 194, 180, 0.2);
+}
 
-  .footer-text {
-    margin-top: 20px;
-    font-size: 12px;
-    color: #6c757d;
-  }
-  .footer-text a {
-    color: #18c2b4;
-    text-decoration: none;
-  }
+.action-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(24, 194, 180, 0.3);
+}
+
+.action-btn:disabled {
+  background: #e9ecef;
+  color: #adb5bd;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Scope row/col to the matrimony-container so we don't override Bootstrap globals */
+.matrimony-container .row {
+  display: flex;
+  gap: 15px;
+}
+
+.matrimony-container .col {
+  flex: 1;
+}
+
+.footer-text {
+  margin-top: 20px;
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.footer-text a {
+  color: #18c2b4;
+  text-decoration: none;
+}
