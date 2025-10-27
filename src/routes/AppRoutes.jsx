@@ -6,6 +6,8 @@ import Dashboard from "../pages/Dashboard";
 import EditProfile from "../pages/EditProfile";
 import ProfileView from "../pages/ProfileView";
 import Login from "../pages/Login";
+import AboutUs from "../components/AboutUs";
+import ContactUs from "../components/ContactUs";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -17,12 +19,18 @@ const AppRoutes = createBrowserRouter([
                 element: <Home />
             },
             {
-                path: "/login",
-                element: <Login />
+<<<<<<< HEAD
+                path : "/editProfile",
+                element : <EditProfile />
             },
             {
-                path: "/register",
-                element: <Register />
+                path : "/viewProfile",
+                element : <ProfileView />
+            }
+            
+=======
+                path:"/register",
+                element:<Register/>
             },
             {
                 path: "/dashboard",
@@ -35,7 +43,7 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "/profileView",
                 element: <ProfileView />
-            }
+            },
         ]
     }
 ]);
