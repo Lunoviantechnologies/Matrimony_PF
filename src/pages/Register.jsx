@@ -85,7 +85,8 @@ const Register = () => {
                       handleOptionChange("profileFor", option);
                       setTimeout(nextStep, 250);
                     }}
-                  >
+                  > 
+                  
                     {option}
                   </button>
                 ))}
