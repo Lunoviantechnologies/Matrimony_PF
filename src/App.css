@@ -1,20 +1,27 @@
+.App {
+    background-color: #D9F5E4;
+    font-family: 'Verdana', 'sans-serif';
+}
+
 /* Navbar */
 
 .navLink{
-    color: #ce02fc;
+    color: #081c15;
+    font-weight: 600;
     text-decoration: none;
 }
 
 .navLogin{
     border: none;
     outline: none;
-    color: #fff;
+    color: #081c15;
     padding: 5px 20px;
-    border-radius: 20px;
+    width: 80px;
+    border-radius: 15x;
     font-size: 1rem;
     background-size: 200% auto;
     box-shadow: 0px 0px 14px -7px #ffffff;
-    background-image: linear-gradient(45deg, #68037f 0%, #68037f 51%, #ce02fc 100%);
+    background-image: linear-gradient(45deg, #9bcfb0 0%, #71b98e 51%, #7af5ab 100%);
     cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
@@ -25,6 +32,7 @@
 .navLogin:hover {
     background-position: right center;
     color: white;
+    font-weight: 600;
 }
 
 .navLogin:active {

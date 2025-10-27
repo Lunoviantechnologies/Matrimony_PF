@@ -1,8 +1,22 @@
 import React from "react";
 import "../styleSheets/loginStyle.css";
+import { useNavigate } from "react-router-dom";
 
 const Login = ({ show, onClose }) => {
     if (!show) return null;
+
+    const navigate = useNavigate();
+
+    const handleRegister = () => {
+        onClose();
+        navigate('/register');
+    };
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        navigate('/dashboard');
+        onClose();
+    }
 
     return (
         <div className="login-form">
@@ -20,7 +34,7 @@ const Login = ({ show, onClose }) => {
 
                 <div className="form-box login">
                     <div className="form-details">
-                        <h2>Welcome Back</h2>
+                        <h2>WELCOME BACK !</h2>
                         <p>Please log in using your personal information to stay connected with us.</p>
                     </div>
 
@@ -41,11 +55,11 @@ const Login = ({ show, onClose }) => {
                                 Forgot password?
                             </a>
 
-                            <button type="submit">Log In</button>
+                            <button type="submit" onClick={handleLogin}>Log In</button>
                         </form>
 
                         <div className="mt-4 signup-link">
-                            <span>New to Matrimony? <a href="#" className="text-decoration-none">SignUp for Free</a></span>
+                            <span>New to Matrimony? <a onClick={handleRegister} className="signupa"> SignUp for Free</a></span>
                         </div>
                     </div>
                 </div>
