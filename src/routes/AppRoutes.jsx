@@ -6,6 +6,8 @@ import Dashboard from "../pages/Dashboard";
 import EditProfile from "../pages/EditProfile";
 import ProfileView from "../pages/ProfileView";
 import Login from "../pages/Login";
+import AboutUs from "../components/AboutUs";
+import ContactUs from "../components/ContactUs";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -15,6 +17,14 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "/",
                 element: <Home />
+            },
+            {
+                path: "/aboutUs",
+                element: <AboutUs />
+            },
+            {
+                path: "/contactUs",
+                element: <ContactUs />
             },
             {
                 path: "/login",
@@ -35,7 +45,7 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "/profileView",
                 element: <ProfileView />
-            }
+            },
         ]
     }
 ]);
