@@ -1,18 +1,6 @@
 import React, { useState } from "react";
-import {
-  FaUser,
-  FaUserFriends,
-  FaMapMarkerAlt,
-  FaBriefcase,
-  FaGraduationCap,
-  FaRing,
-  FaShieldAlt,
-  FaBookOpen,
-} from "react-icons/fa";
+import { FaUser, FaUserFriends, FaMapMarkerAlt, FaBriefcase, FaGraduationCap, FaRing, FaShieldAlt, FaBookOpen, } from "react-icons/fa";
 import "../styleSheets/register.css";
-// --- Custom CSS to match the design ---
-// In a real project, this would go in a separate CSS file.
-
 
 const Register = () => {
   const [step, setStep] = useState(1);
@@ -77,10 +65,10 @@ const Register = () => {
             <h2>This Profile is for</h2>
             <div className="form-group">
               <div className="option-group" style={{ justifyContent: "center" }}>
-                {[ "Myself", "My Son", "My Daughter", "My Brother", "My Sister", "My Friend", "My Relative" ].map((option) => (
+                {["Myself", "My Son", "My Daughter", "My Brother", "My Sister", "My Friend", "My Relative"].map((option) => (
                   <button
                     key={option}
-                    className={`option-btn ${ formData.profileFor === option ? "selected" : "" }`}
+                    className={`option-btn ${formData.profileFor === option ? "selected" : ""}`}
                     onClick={() => {
                       handleOptionChange("profileFor", option);
                       setTimeout(nextStep, 250);
@@ -114,7 +102,7 @@ const Register = () => {
                 <div className="col"><input type="text" name="dobYear" className="form-input" placeholder="YYYY" value={formData.dobYear} onChange={handleChange} /></div>
               </div>
             </div>
-            <button onClick={nextStep} className="action-btn" disabled={ !formData.firstName || !formData.lastName || !formData.dobYear }>
+            <button onClick={nextStep} className="action-btn" disabled={!formData.firstName || !formData.lastName || !formData.dobYear}>
               Continue
             </button>
           </>
@@ -148,7 +136,7 @@ const Register = () => {
       case 4:
         return (
           <>
-            <div className="step-icon" style={{color: "#e85c5c", backgroundColor: "#ffebeb"}}><FaMapMarkerAlt /></div>
+            <div className="step-icon" style={{ color: "#e85c5c", backgroundColor: "#ffebeb" }}><FaMapMarkerAlt /></div>
             <p className="step-header">Now let's build your Profile</p>
             <h2>Location Details</h2>
             <div className="form-group">
@@ -174,7 +162,7 @@ const Register = () => {
       case 5:
         return (
           <>
-            <div className="step-icon" style={{color: "#4a90e2", backgroundColor: "#eef6ff"}}><FaGraduationCap /></div>
+            <div className="step-icon" style={{ color: "#4a90e2", backgroundColor: "#eef6ff" }}><FaGraduationCap /></div>
             <p className="step-header">Great! Few more details</p>
             <h2>Highest qualification</h2>
             <div className="form-group">
@@ -191,7 +179,7 @@ const Register = () => {
       case 6:
         return (
           <>
-            <div className="step-icon" style={{color: "#7e6cca", backgroundColor: "#f2f0ff"}}><FaRing /></div>
+            <div className="step-icon" style={{ color: "#7e6cca", backgroundColor: "#f2f0ff" }}><FaRing /></div>
             <h2>Personal Details</h2>
             <div className="form-group">
               <label className="form-label">Your Marital status *</label>
@@ -208,7 +196,7 @@ const Register = () => {
             <div className="form-group">
               <label className="form-label">Diet</label>
               <div className="option-group">
-                {[ "Veg", "Non-Veg", "Occasionally Non-Veg", "Eggetarian", "Jain", "Vegan"].map((d) => (
+                {["Veg", "Non-Veg", "Occasionally Non-Veg", "Eggetarian", "Jain", "Vegan"].map((d) => (
                   <button key={d} className={`option-btn ${formData.diet === d ? "selected" : ""}`} onClick={() => handleOptionChange("diet", d)}>{d}</button>
                 ))}
               </div>
@@ -219,7 +207,7 @@ const Register = () => {
       case 7:
         return (
           <>
-            <div className="step-icon" style={{color: "#28a745", backgroundColor: "#eaf6ec"}}><FaBriefcase /></div>
+            <div className="step-icon" style={{ color: "#28a745", backgroundColor: "#eaf6ec" }}><FaBriefcase /></div>
             <p className="step-header">You are almost done!</p>
             <h2>Work Details</h2>
             <div className="form-group">
@@ -242,7 +230,7 @@ const Register = () => {
             </div>
             <div className="form-group">
               <label className="form-label">Your current company name</label>
-              <input type="text" name="companyName" className="form-input" placeholder="Specify current organization" value={formData.companyName} onChange={handleChange}/>
+              <input type="text" name="companyName" className="form-input" placeholder="Specify current organization" value={formData.companyName} onChange={handleChange} />
             </div>
             <button onClick={nextStep} className="action-btn">Create Profile</button>
           </>
@@ -251,12 +239,12 @@ const Register = () => {
         return (
           <>
             <div className="step-icon" style={{ backgroundColor: "#fffbe6", color: "#f0ad4e" }}><FaShieldAlt /></div>
-            <p className="step-header" style={{maxWidth: "350px", margin: "0 auto 25px"}}>
+            <p className="step-header" style={{ maxWidth: "350px", margin: "0 auto 25px" }}>
               An active email ID & phone no. are required to secure your Profile
             </p>
             <div className="form-group">
               <label className="form-label">Email ID</label>
-              <input type="email" name="email" className="form-input" placeholder="Email ID" value={formData.email} onChange={handleChange}/>
+              <input type="email" name="email" className="form-input" placeholder="Email ID" value={formData.email} onChange={handleChange} />
             </div>
             <div className="form-group">
               <label className="form-label">Mobile no.</label>
@@ -265,7 +253,7 @@ const Register = () => {
                   <select className="form-select"><option>+91</option></select>
                 </div>
                 <div className="col">
-                  <input type="tel" name="mobile" className="form-input" placeholder="Mobile no." value={formData.mobile} onChange={handleChange}/>
+                  <input type="tel" name="mobile" className="form-input" placeholder="Mobile no." value={formData.mobile} onChange={handleChange} />
                 </div>
               </div>
             </div>
