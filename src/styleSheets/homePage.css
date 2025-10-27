@@ -77,3 +77,74 @@
 .homeCard p {
     font-size: 0.8rem;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* src/styleSheets/homePage.css */
+
+.registerButton {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e) !important;
+    border: none !important;
+    font-weight: bold !important;
+    padding: 12px 30px !important;
+    transition: transform 0.3s ease !important;
+}
+
+.registerButton:hover {
+    transform: scale(1.05) !important;
+    background: linear-gradient(45deg, #ff5252, #ff6b6b) !important;
+}
+
+.cardHeader {
+    text-align: center;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+}
+
+.homeCard {
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    height: 100%;
+    border-radius: 15px !important;
+}
+
+.homeCard:hover {
+    transform: translateY(-10px) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.homeCard .card-body {
+    text-align: center;
+    padding: 2rem 1.5rem !important;
+}
+
+.homeCard .card-title {
+    color: #333;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.homeCard .card-text {
+    color: #666;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
