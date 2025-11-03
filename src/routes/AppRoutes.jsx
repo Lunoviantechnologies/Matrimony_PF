@@ -13,6 +13,7 @@ import ProfileView from "../pages/ProfileView";
 import Login from "../pages/Login";
 import AboutUs from "../components/AboutUs";
 import ContactUs from "../components/ContactUs";
+import Footer from "../components/Footer";
 >>>>>>> 46fc466a5eb8175bfb2c4a1f07e7b63b44dd7429
 
 const AppRoutes = createBrowserRouter([
@@ -75,6 +76,10 @@ const AppRoutes = createBrowserRouter([
                 path: "/profileView",
                 element: <ProfileView />
             },
+            {
+                path: "/footer",
+                element: <Footer/>
+            }
 >>>>>>> 46fc466a5eb8175bfb2c4a1f07e7b63b44dd7429
         ]
     }
