@@ -1,129 +1,154 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React from 'react';
 
-export default function AboutUsFooter() {
-  return (
-    <motion.footer
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="bg-white text-gray-700 border-t border-gray-200 py-12"
-    >
-      <div className="max-w-7xl mx-auto px-6">
+// --- 3. Trust Bar Component (Trusted by Millions Section) ---
+const SaathjanamTrustBar = () => {
+    const featureStyle = {
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        margin: '0 30px',
+        textAlign: 'center'
+    };
 
-        {/* Logo + Headline */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-extrabold text-gray-800 mb-2" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
-            SaathJanam.com
-          </h1>
-          <h2 className="text-lg font-semibold text-gray-700">Trusted by Millions</h2>
-        </div>
+    const iconStyle = { 
+        fontSize: '24px', 
+        color: '#D13550', // Primary color
+        marginBottom: '8px' 
+    };
 
-        {/* Description */}
-        <p className="text-center max-w-3xl mx-auto text-gray-600 mb-6">
-          SaathJanam helps people find happiness through marriage by connecting like-minded individuals
-          with verified profiles and thoughtful matchmaking. We prioritize safety, privacy, and meaningful
-          connections to make every journey towards togetherness easier.
-        </p>
+    return (
+        <section style={{ 
+            padding: '40px 15%', 
+            textAlign: 'center',
+            backgroundColor: '#f9f9f9',
+            borderTop: '1px solid #eee'
+        }}>
+            <div style={{
+                display: 'inline-block',
+                backgroundColor: '#4CB9D2',
+                color: 'white',
+                padding: '8px 25px',
+                borderRadius: '20px',
+                fontWeight: 'bold',
+                fontSize: '18px',
+                marginBottom: '40px',
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+            }}>
+                Trusted by Millions
+            </div>
 
-        {/* Country links */}
-        <div className="flex flex-wrap justify-center gap-4 mb-8">
-          {["India","USA","Canada","UK","Singapore","Australia","UAE","NRI Matrimonials"].map((c) => (
-            <a key={c} href="#" className="text-blue-600 text-sm hover:underline">
-              {c}
-            </a>
-          ))}
-        </div>
+            <div style={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                paddingTop: '20px', 
+                gap: '50px' 
+            }}>
+                
+                {/* Feature 1: Best Matches (Placeholder for Icon) */}
+                <div style={featureStyle}>
+                    <span style={iconStyle}>
+                        <span role="img" aria-label="Heart">💖</span>
+                    </span>
+                    <p style={{ margin: 0, fontWeight: '600' }}>**Best Matches**</p>
+                </div>
 
-        {/* Button */}
-        <div className="text-center mb-12">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            className="px-8 py-2 bg-teal-500 text-white rounded-full font-medium shadow-md hover:shadow-lg transition-all"
-          >
-            Trusted by Millions
-          </motion.button>
-        </div>
+                {/* Feature 2: Verified Profiles (Placeholder for Icon) */}
+                <div style={featureStyle}>
+                    <span style={{ ...iconStyle, color: '#4CAF50' }}>
+                        <span role="img" aria-label="Check">✅</span>
+                    </span>
+                    <p style={{ margin: 0, fontWeight: '600' }}>**Verified Profiles**</p>
+                </div>
 
-        <hr className="border-gray-200 mb-12" />
+                {/* Feature 3: 100% Privacy (Placeholder for Icon) */}
+                <div style={featureStyle}>
+                    <span style={{ ...iconStyle, color: '#FFA500' }}>
+                        <span role="img" aria-label="Lock">🔒</span>
+                    </span>
+                    <p style={{ margin: 0, fontWeight: '600' }}>**100% Privacy**</p>
+                </div>
+            </div>
+        </section>
+    );
+};
 
-        {/* Icons */}
-        <div className="flex flex-wrap justify-center gap-12 mb-12">
-          {[
-            { label: "Best Matches", color: "#e6f9f2" },
-            { label: "Verified Profiles", color: "#fff6f6" },
-            { label: "100% Privacy", color: "#eef7ff" },
-          ].map((item, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 * i }}
-              className="flex flex-col items-center"
-            >
-              <div
-                className="w-20 h-20 rounded-full flex items-center justify-center shadow-sm"
-                style={{ background: item.color }}
-              >
-                <span className="text-lg font-bold text-gray-700">{item.label[0]}</span>
-              </div>
-              <p className="text-sm font-medium text-gray-700 mt-2">{item.label}</p>
-            </motion.div>
-          ))}
-        </div>
+// --- 2. Header Component (Main banner and intro text) ---
+const SaathjanamHeader = () => {
+    return (
+        <header style={{ 
+            padding: '40px 15% 20px', 
+            textAlign: 'center', 
+            fontFamily: 'Arial, sans-serif' 
+        }}>
+            <h1 style={{ 
+                fontSize: '32px', 
+                color: '#D13550', 
+                marginBottom: '5px' 
+            }}>
+                Saathjanam.com
+            </h1>
+            <p style={{ 
+                fontSize: '16px', 
+                color: '#666', 
+                marginBottom: '20px' 
+            }}>
+                - **Trusted by over 35 Million Members**
+            </p>
+            
+            <div style={{ 
+                fontSize: '14px', 
+                marginBottom: '20px' 
+            }}>
+                <a href="/india" style={{ color: '#007bff', textDecoration: 'none' }}>India</a> | 
+                <a href="/usa" style={{ color: '#007bff', textDecoration: 'none', margin: '0 8px' }}>USA</a> | 
+                <a href="/canada" style={{ color: '#007bff', textDecoration: 'none', margin: '0 8px' }}>Canada</a> | 
+                <a href="/uk" style={{ color: '#007bff', textDecoration: 'none', margin: '0 8px' }}>UK</a> | 
+                <a href="/nri" style={{ color: '#D13550', textDecoration: 'none', fontWeight: 'bold' }}>NRI Matrimonials »</a>
+            </div>
+        </header>
+    );
+};
 
-        <hr className="border-gray-200 mb-12" />
+// --- 1. Main Application Component for the About Us Page ---
+const SaathjanamAboutUs = () => {
+    return (
+        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', fontFamily: 'Arial, sans-serif' }}>
+            <SaathjanamHeader />
+            <SaathjanamTrustBar />
+            
+            {/* --- Main About Us Content Area --- */}
+            <main style={{ 
+                flexGrow: 1, 
+                padding: '50px 15%', 
+                maxWidth: '900px',
+                margin: '0 auto',
+                textAlign: 'left'
+            }}>
+                <h2 style={{ color: '#333', borderBottom: '2px solid #D13550', paddingBottom: '10px', marginBottom: '30px' }}>
+                    Our Journey to Finding Happiness
+                </h2>
+                
+                <p>
+                    **Saathjanam.com** was established with a singular mission: to redefine the way people meet and find their life partners. Launched in 2025, we quickly grew to become one of the world’s most trusted matrimonial services, driven by innovation, security, and a deep understanding of our members' cultural needs.
+                </p>
+                
+                <h3 style={{ color: '#4CB9D2', marginTop: '30px' }}>The Saathjanam Promise</h3>
+                <ul>
+                    <li>**Innovation:** We continually upgrade our platform with smart matching algorithms.</li>
+                    <li>**Trust:** Every profile is screened to ensure a safe and genuine experience.</li>
+                    <li>**Privacy:** We employ industry-leading encryption and privacy controls.</li>
+                </ul>
 
-        {/* Footer Columns */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center md:text-left">
-          <div>
-            <h3 className="text-sm font-semibold text-gray-800 mb-3">Need Help?</h3>
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li><a href="#" className="hover:underline">Contact Us</a></li>
-              <li><a href="#" className="hover:underline">How It Works</a></li>
-              <li><a href="#" className="hover:underline">Safety Tips</a></li>
-              <li><a href="#" className="hover:underline">Support Center</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-semibold text-gray-800 mb-3">Company</h3>
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li><a href="#" className="hover:underline">About Us</a></li>
-              <li><a href="#" className="hover:underline">Careers</a></li>
-              <li><a href="#" className="hover:underline">Press</a></li>
-              <li><a href="#" className="hover:underline">Blog</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-semibold text-gray-800 mb-3">Privacy & You</h3>
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li><a href="#" className="hover:underline">Privacy Policy</a></li>
-              <li><a href="#" className="hover:underline">Terms of Use</a></li>
-              <li><a href="#" className="hover:underline">Cookie Settings</a></li>
-              <li><a href="#" className="hover:underline">Report Abuse</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-semibold text-gray-800 mb-3">More</h3>
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li><a href="#" className="hover:underline">Success Stories</a></li>
-              <li><a href="#" className="hover:underline">Premium Plans</a></li>
-              <li><a href="#" className="hover:underline">Mobile App</a></li>
-              <li><a href="#" className="hover:underline">Affiliate</a></li>
-            </ul>
-          </div>
-        </div>
-
-        <hr className="border-gray-200 my-8" />
-
-        {/* Bottom note */}
-        <div className="text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} SaathJanam.com. All rights reserved.
+                <p style={{ marginTop: '30px', fontWeight: 'bold' }}>
+                    Join the millions who have found their happily ever after with Saathjanam!
+                </p>
+            </main>
+            
+            {/* The Footer would go here if needed, e.g.: <SaathjanamFooter /> */}
         </div>
       </div>
     </motion.footer>
   );
 }
+
+export default AboutUs;
