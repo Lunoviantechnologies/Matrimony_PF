@@ -72,22 +72,6 @@ const Home = () => {
     const navigate = useNavigate();
 
     return (
-<<<<<<< HEAD
-        <div>
-            <div className="homeImage">
-                <span className="homeImageText">
-                    <b className="imageTextStyle">Your journey to a lifelong</b> <br />
-                    <b>companionship starts here...</b> <br />
-                    <button 
-                        className="btn registerButton btn-primary text-white mt-4 px-3 py-2" 
-                        style={{ borderRadius: '500px' }}
-                        onClick={() => navigate('/premium')}
-                    >
-                        Your Ideal Match Awaits
-                    </button>
-                    <p className="mt-4"> #1 Matchmaking service | ⭐⭐⭐⭐⭐  Rating on Playstore | Successful stories</p>
-                </span>
-=======
         <div className="homePage">
 
             <div className="homeBanner container">
@@ -99,7 +83,6 @@ const Home = () => {
                 <div className="bannerImage">
                     <img src="banner1.png" alt="homeBanner" />
                 </div>
->>>>>>> 46fc466a5eb8175bfb2c4a1f07e7b63b44dd7429
             </div>
 
             <div className="container mt-5 mb-5 py-4 w-75">
@@ -109,26 +92,16 @@ const Home = () => {
                     <div className="col-sm-4 mb-3 mb-sm-0">
                         <div className="card homeCard">
                             <div className="card-body">
-<<<<<<< HEAD
-                                <CurrencyExchangeIcon sx={{ fontSize: 70, color: 'green', mb: 1,}} />
-                                <h6 className="card-title" style={{ fontWeight: 'bold' }}>30 Day Money Back Guarantee</h6>
-                                <p className="card-text opacity-75">Get matched with someone special within 30 days, or we'll refund your money—guaranteed!</p>
-=======
                                 <CurrencyExchangeIcon sx={{ fontSize: 70, color: 'green', mb: 1, }} />
                                 <h6 className="card-title" style={{ fontWeight: 'bold' }}>30 Day Money Back Guarantee</h6>
                                 <p className="card-text opacity-75">Get matched with someone special within 30 days, or we’ll refund your money—guaranteed!</p>
->>>>>>> 46fc466a5eb8175bfb2c4a1f07e7b63b44dd7429
                             </div>
                         </div>
                     </div>
                     <div className="col-sm-4">
                         <div className="card homeCard">
                             <div className="card-body">
-<<<<<<< HEAD
-                                <TaskAltIcon sx={{ fontSize: 70, color: 'blue', mb: 1,}} />
-=======
                                 <TaskAltIcon sx={{ fontSize: 70, color: 'blue', mb: 1, }} />
->>>>>>> 46fc466a5eb8175bfb2c4a1f07e7b63b44dd7429
                                 <h6 className="card-title" style={{ fontWeight: 'bold' }}>Blue Tick to find your Green Flag</h6>
                                 <p className="card-text opacity-75">Did you know our blue-tick profiles get 40% more connection requests than others?.</p>
                             </div>
@@ -137,11 +110,7 @@ const Home = () => {
                     <div className="col-sm-4">
                         <div className="card homeCard">
                             <div className="card-body">
-<<<<<<< HEAD
-                                <PsychologyIcon sx={{ fontSize: 70, color: '#00eaffff', mb: 1,}} />
-=======
                                 <PsychologyIcon sx={{ fontSize: 70, color: '#00eaffff', mb: 1, }} />
->>>>>>> 46fc466a5eb8175bfb2c4a1f07e7b63b44dd7429
                                 <h6 className="card-title" style={{ fontWeight: 'bold' }}>Matchmaking Powered by AI</h6>
                                 <p className="card-text opacity-75">Cutting-edge technology with two decades of matchmaking expertise to help you find "the one".</p>
                             </div>
