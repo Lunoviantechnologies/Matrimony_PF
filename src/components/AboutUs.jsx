@@ -110,7 +110,7 @@ const SaathjanamHeader = () => {
 };
 
 // --- 1. Main Application Component for the About Us Page ---
-const SaathjanamAboutUs = () => {
+const AboutUs = () => {
     return (
         <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', fontFamily: 'Arial, sans-serif' }}>
             <SaathjanamHeader />
@@ -146,8 +146,6 @@ const SaathjanamAboutUs = () => {
             
             {/* The Footer would go here if needed, e.g.: <SaathjanamFooter /> */}
         </div>
-      </div>
-    </motion.footer>
   );
 }
 

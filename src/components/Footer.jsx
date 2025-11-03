@@ -37,7 +37,7 @@ const FOOTER_LINKS = [
   },
 ];
 
-const SaathjanamFooter = () => {
+const Footer = () => {
   const getSlug = (text) =>
     text.toLowerCase().replace(/ /g, "-").replace(/[&]/g, "");
 
