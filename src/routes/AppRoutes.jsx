@@ -22,19 +22,7 @@ const AppRoutes = createBrowserRouter([
                 path: "/",
                 element: <Home />
             },
-                 {
-                path: "/premium",
-                element: <PremiumSubscription />
-            },
-               {
-                path: "/subscription/:planId",
-                element: <SubscriptionDescription />
-            },
             {
-                path: "/login",
-                element: <Login />
-            },
-                    {
                 path: "/aboutUs",
                 element: <AboutUs />
             },
@@ -43,37 +31,40 @@ const AppRoutes = createBrowserRouter([
                 element: <ContactUs />
             },
             {
+                path: "/register",
+                element: <Register />
+            },
+            {
                 path: "/login",
                 element: <Login />
-            },
-            {
-                path : "/editProfile",
-                element : <EditProfile />
-            },
-            {
-                path : "/viewProfile",
-                element : <ProfileView />
-            },
-       
-            {
-                path:"/register",
-                element:<Register/>
-            },
-            {
-                path: "/dashboard",
-                element: <Dashboard />
             },
             {
                 path: "/editProfile",
                 element: <EditProfile />
             },
             {
-                path: "/profileView",
+                path: "/viewProfile",
                 element: <ProfileView />
             },
             {
+                path: "/profileCard",
+                element: <ProfileCard />
+            },
+            {
+                path: "/dashboard",
+                element: <Dashboard />
+            },
+            {
                 path: "/footer",
-                element: <Footer/>
+                element: <Footer />
+            },
+            {
+                path: "/premium",
+                element: <PremiumSubscription />
+            },
+            {
+                path: "/subscription/:planId",
+                element: <SubscriptionDescription />
             }
         ]
     }
