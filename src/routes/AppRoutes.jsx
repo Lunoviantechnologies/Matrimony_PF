@@ -10,8 +10,8 @@ import ProfileView from "../pages/ProfileView";
 import Login from "../pages/Login";
 import AboutUs from "../components/AboutUs";
 import ContactUs from "../components/ContactUs";
-import Footer from "../components/Footer";
 import ProfileCard from "../components/ProfileCard";
+import DashboardLayout from "../pages/DashboardLayout";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -38,32 +38,35 @@ const AppRoutes = createBrowserRouter([
                 path: "/login",
                 element: <Login />
             },
+        ],
+    },
+    {
+        path: "/dashboard",
+        element: <DashboardLayout />,
+        children: [
+            
             {
-                path: "/editProfile",
-                element: <EditProfile />
-            },
-            {
-                path: "/viewProfile",
-                element: <ProfileView />
-            },
-            {
-                path: "/profileCard",
-                element: <ProfileCard />
-            },
-            {
-                path: "/dashboard",
+                path: "",
                 element: <Dashboard />
             },
             {
-                path: "/footer",
-                element: <Footer />
+                path: "editProfile",
+                element: <EditProfile />
             },
             {
-                path: "/premium",
+                path: "viewProfile",
+                element: <ProfileView />
+            },
+            {
+                path: "profileCard",
+                element: <ProfileCard />
+            },
+            {
+                path: "premium",
                 element: <PremiumSubscription />
             },
             {
-                path: "/subscription/:planId",
+                path: "subscription/:planId",
                 element: <SubscriptionDescription />
             }
         ]

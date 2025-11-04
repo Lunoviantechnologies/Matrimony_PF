@@ -1,4 +1,3 @@
-// src/pages/SubscriptionDescription.jsx
 import { useParams, useNavigate } from 'react-router-dom';
 import '../styleSheets/SubscriptionDescription.css';
 
@@ -144,7 +143,7 @@ const SubscriptionDescription = () => {
               <h2>Plan Summary</h2>
               <div className="discount-badge">{plan.discount}</div>
             </div>
-            
+
             <div className="price-details">
               <div className="price-original">{plan.originalPrice}</div>
               <div className="price-discounted">{plan.discountedPrice}</div>
