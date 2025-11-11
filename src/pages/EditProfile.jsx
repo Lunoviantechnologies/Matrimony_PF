@@ -116,19 +116,7 @@ export default function EditProfile() {
 
   return (
     <div className="edit-profile-page">
-      {/* ---- Header ---- */}
-      <header className="fixed-header">
-        <div className="header-left">
-          <div className="logo-sample">MyMatches</div>
-          <div className="page-title">Edit Profile</div>
-        </div>
-        <nav className="header-right">
-          <a className="nav-link active">About</a>
-          <a className="nav-link">Partner Preferences</a>
-          <a className="nav-link">Photos</a>
-        </nav>
-      </header>
-
+      <h3>Edit Profile</h3>
       {/* ---- Main content ---- */}
       <main className="page-content">
         <aside className="left-column">

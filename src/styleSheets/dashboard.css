@@ -1,3 +1,12 @@
+/* Dashboard body */
+
+.dashboard_body {
+    font-family: serif;
+    /* background: #D9F5E4; */
+    min-height: 100vh;
+    padding: 20px;
+}
+
 /* Match section */
 
 .matchSection {
@@ -15,36 +24,6 @@
     overflow: hidden;
     position: relative;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Request section */
-
-.requestSection {
-    background: #fff;
-    border-radius: 15px;
-    padding: 24px;
-    margin-bottom: 32px;
-    box-shadow: 0 1px 6px #ddd;
-}
-
-.requestSecton_map_body {
-    display: flex;
-    align-items: center;
-    margin-bottom: 22px;
-    background: #fff;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 1px 6px #ddd;
-}
-
-.requestSecton_button {
-    font-weight: bold;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    background-color: #f0f0f0;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
 /* plan section */

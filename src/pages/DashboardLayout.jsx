@@ -3,14 +3,16 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import { Outlet } from "react-router-dom";
 import Footer from "../components/Footer";
+import SubNavbar from "../components/SubNavbar";
 
 const DashboardLayout = () => {
     return (
-        <div>
+        <div style={{backgroundColor: '#D9F5E4'}}>
             <Navbar />
-            <div style={{ display: "flex", marginTop: "70px" }}>
+            <SubNavbar />
+            <div style={{ display: "flex", marginTop: "10px" }}>
                 <Sidebar />
-                <div style={{ flex: 1, background: "#FAF8F2", minHeight: "100vh", padding: 20 }}>
+                <div style={{ flex: 1, background: "#D9F5E4", minHeight: "100vh", padding: 20 }}>
                     <Outlet />
                 </div>
             </div>

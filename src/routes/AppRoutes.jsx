@@ -12,6 +12,7 @@ import AboutUs from "../components/AboutUs";
 import ContactUs from "../components/ContactUs";
 import ProfileCard from "../components/ProfileCard";
 import DashboardLayout from "../pages/DashboardLayout";
+import Settings from "../components/Settings";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -68,6 +69,10 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "subscription/:planId",
                 element: <SubscriptionDescription />
+            },
+            {
+                path: "settings",
+                element: <Settings />
             }
         ]
     }
