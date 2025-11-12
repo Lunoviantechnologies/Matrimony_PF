@@ -65,6 +65,7 @@ const AppRoutes = createBrowserRouter([
              {
                 path: "/chatwindow",
                 element: <ChatWindow />
+             },
             {
                 path: "profileCard",
                 element: <ProfileCard />
