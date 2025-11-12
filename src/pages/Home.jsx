@@ -1,10 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import '../styleSheets/homePage.css';
 
 const Home = () => {
+    const navigate = useNavigate();
 
     return (
         <div className="homePage">
@@ -16,7 +18,7 @@ const Home = () => {
                 </div>
 
                 <div className="bannerImage">
-                    <img src="banner1.png" alt="homeBanner" />
+                    <img src="banner2.png" alt="homeBanner" />
                 </div>
             </div>
 

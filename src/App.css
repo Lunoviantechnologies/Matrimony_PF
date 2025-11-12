@@ -5,9 +5,14 @@
 
 /* Navbar */
 
+.navBody{
+    background-color: #D9F5E4;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .navLink{
     color: #081c15;
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: none;
 }
 
@@ -38,3 +43,17 @@
 .navLogin:active {
     transform: scale(0.95);
 }
+
+/* Sub Navbar */
+
+.sub_navbar{
+    background-color: #f8f9fa;
+    padding: 14px 0;
+}
+
+.subnav_link {
+    color: #025423;
+    text-decoration: none;
+}
+
+

@@ -29,7 +29,7 @@ const Login = ({ show, onClose }) => {
             {/* Popup box */}
             <div className={`form-popup ${show ? "show" : ""}`}>
                 <span className="close-btn material-symbols-rounded" onClick={onClose}>
-                    <i class="bi bi-x-circle"></i>
+                    <i className="bi bi-x-circle"></i>
                 </span>
 
                 <div className="form-box login">

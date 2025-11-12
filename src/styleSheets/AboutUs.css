@@ -1,0 +1,115 @@
+.aboutus-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+}
+
+/* ---------- Header ---------- */
+.aboutus-header {
+    padding: 40px 15% 20px;
+    text-align: center;
+}
+
+.aboutus-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #012a11;
+    margin-bottom: 5px;
+}
+
+.aboutus-subtitle {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.aboutus-links a {
+    color: #007bff;
+    text-decoration: none;
+    margin: 0 8px;
+}
+
+.aboutus-links a.highlight {
+    color: #D13550;
+    font-weight: bold;
+}
+
+/* ---------- Trust Bar ---------- */
+.trustbar-section {
+    padding: 40px 15%;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-top: 1px solid #eee;
+}
+
+.trustbar-title {
+    display: inline-block;
+    background-color: #4CB9D2;
+    color: white;
+    padding: 8px 25px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 40px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.trustbar-features {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+    gap: 50px;
+    flex-wrap: wrap;
+}
+
+.trustbar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin: 0 30px;
+}
+
+.trustbar-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.trustbar-icon.heart {
+    color: #D13550;
+}
+
+.trustbar-icon.verified {
+    color: #4CAF50;
+}
+
+.trustbar-icon.privacy {
+    color: #FFA500;
+}
+
+/* ---------- Main Content ---------- */
+.aboutus-main {
+    flex-grow: 1;
+    padding: 50px 15%;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.aboutus-heading {
+    color: #333;
+    border-bottom: 2px solid #D13550;
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+}
+
+.aboutus-promise {
+    color: #4CB9D2;
+    margin-top: 30px;
+}
+
+.aboutus-cta {
+    margin-top: 30px;
+    font-weight: bold;
+}
