@@ -8,6 +8,7 @@ import ProfileView from "../pages/ProfileView";
 import Login from "../pages/Login";
 import AboutUs from "../components/AboutUs";
 import ContactUs from "../components/ContactUs";
+import ChatWindow from "../components/ChatWindow";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -54,6 +55,10 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "/profileView",
                 element: <ProfileView />
+            },
+              {
+                path: "/chatwindow",
+                element: <ChatWindow />
             },
         ]
     }
