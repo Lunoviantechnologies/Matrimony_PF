@@ -63,7 +63,7 @@ const AppRoutes = createBrowserRouter([
                 element: <ProfileView />
             },
              {
-                path: "/chatwindow",
+                path: "chatwindow",
                 element: <ChatWindow />
              },
             {
@@ -83,11 +83,11 @@ const AppRoutes = createBrowserRouter([
                 element: <Settings />
             },
             {
-                path: "/viewreport",
+                path: "viewreport",
                 element: <ViewReport />
             },
             {
-                path: "/admindashboard",
+                path: "admindashboard",
                 element: <AdminDashboard />
             },
         ]
