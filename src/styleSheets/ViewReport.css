@@ -1,0 +1,204 @@
+/* ==============================
+   SaathJanam Matrimony Report CSS
+   Theme: Pastel Green & Dark Green
+   ============================== */
+
+.viewreport-container {
+  font-family: "Poppins", sans-serif;
+  background-color: #f9fdfb;
+  color: #333;
+}
+
+/* 🌸 Banner Section */
+.banner {
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.8)
+    ),
+    url("https://claremontdiamonds.com.au/wp-content/uploads/2022/10/couple-exchanging-wedding-rings-scaled.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  text-align: center;
+  padding: 80px 20px;
+  border-bottom: 2px solid #cde7d8;
+}
+
+.banner .overlay h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #145a32; /* Dark Green */
+  margin-bottom: 10px;
+}
+
+.banner .overlay p {
+  font-size: 1.1rem;
+  font-style: italic;
+  color: #256d45; /* Slightly lighter green */
+}
+
+/* 💚 Stats Section */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 50px 10%;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 25px 15px;
+  text-align: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.card .icon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.card h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #0b6b50;
+}
+
+.card p {
+  font-size: 0.95rem;
+  color: #444;
+}
+
+/* Pastel Theme Colors */
+.card.pink {
+  background: #e6f9f2; /* soft pastel green */
+  border-left: 6px solid #1b8c6e;
+}
+.card.green {
+  background: #eafaf0;
+  border-left: 6px solid #2f9e85;
+}
+.card.yellow {
+  background: #f1fbf6;
+  border-left: 6px solid #43a047;
+}
+.card.blue {
+  background: #edf9f3;
+  border-left: 6px solid #00796b;
+}
+
+/* 📊 Charts Section */
+.charts-section {
+  background: #ffffff;
+  border-top: 1px solid #e2efe5;
+  border-bottom: 1px solid #e2efe5;
+  padding: 50px 10%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+.chart-box {
+  background: #f9fdfb;
+  border-radius: 14px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.chart-box:hover {
+  transform: translateY(-5px);
+}
+
+.chart-icon {
+  font-size: 2rem;
+  color: #1b8c6e;
+  margin-bottom: 10px;
+}
+
+.chart-box h3 {
+  color: #145a32;
+  font-weight: 600;
+}
+
+.chart-box p {
+  color: #4f4f4f;
+  font-size: 0.95rem;
+}
+
+/* 📈 Summary Section */
+.summary {
+  padding: 60px 10%;
+  text-align: center;
+  background: #eafaf0;
+}
+
+.summary h2 {
+  color: #145a32;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.summary ul {
+  list-style: none;
+  padding: 0;
+  color: #333;
+}
+
+.summary li {
+  font-size: 1rem;
+  margin: 8px 0;
+}
+
+/* 📩 Contact Section */
+.contact-info {
+  text-align: center;
+  padding: 60px 10%;
+  background: #ffffff;
+  border-top: 1px solid #e2efe5;
+}
+
+.contact-info h2 {
+  color: #145a32;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.contact-info p {
+  color: #444;
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+.social-links a {
+  text-decoration: none;
+  color: #1b8c6e;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #e6f9f2;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+  background: #1b8c6e;
+  color: white;
+}

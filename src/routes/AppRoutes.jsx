@@ -12,6 +12,9 @@ import AboutUs from "../components/AboutUs";
 import ContactUs from "../components/ContactUs";
 import Footer from "../components/Footer";
 import ProfileCard from "../components/ProfileCard";
+import ViewReport from "../admin/ViewReport";
+import AdminDashboard from "../admin/AdminDashboard";
+
 
 const AppRoutes = createBrowserRouter([
     {
@@ -34,7 +37,7 @@ const AppRoutes = createBrowserRouter([
                 path: "/login",
                 element: <Login />
             },
-                    {
+            {
                 path: "/aboutUs",
                 element: <AboutUs />
             },
@@ -74,7 +77,15 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "/footer",
                 element: <Footer/>
-            }
+            },
+            {
+                path: "/viewreport",
+                element: <ViewReport />
+            },
+            {
+                path: "/admindashboard",
+                element: <AdminDashboard />
+            },
         ]
     }
 ]);
