@@ -10,6 +10,7 @@ import ProfileView from "../pages/ProfileView";
 import Login from "../pages/Login";
 import AboutUs from "../components/AboutUs";
 import ContactUs from "../components/ContactUs";
+import ChatWindow from "../components/ChatWindow";
 import ProfileCard from "../components/ProfileCard";
 import DashboardLayout from "../pages/DashboardLayout";
 import Settings from "../components/Settings";
@@ -61,6 +62,10 @@ const AppRoutes = createBrowserRouter([
                 path: "viewProfile",
                 element: <ProfileView />
             },
+             {
+                path: "/chatwindow",
+                element: <ChatWindow />
+             },
             {
                 path: "profileCard",
                 element: <ProfileCard />
