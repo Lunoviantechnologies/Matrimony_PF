@@ -63,7 +63,7 @@ const AppRoutes = createBrowserRouter([
                 element: <ProfileView />
             },
              {
-                path: "chatwindow",
+                path: "messages",
                 element: <ChatWindow />
              },
             {
