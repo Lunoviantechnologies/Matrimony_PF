@@ -10,9 +10,13 @@ import ProfileView from "../pages/ProfileView";
 import Login from "../pages/Login";
 import AboutUs from "../components/AboutUs";
 import ContactUs from "../components/ContactUs";
+import ChatWindow from "../components/ChatWindow";
 import ProfileCard from "../components/ProfileCard";
 import DashboardLayout from "../pages/DashboardLayout";
 import Settings from "../components/Settings";
+import ViewReport from "../admin/ViewReport";
+import AdminDashboard from "../admin/AdminDashboard";
+
 
 const AppRoutes = createBrowserRouter([
     {
@@ -58,6 +62,10 @@ const AppRoutes = createBrowserRouter([
                 path: "viewProfile",
                 element: <ProfileView />
             },
+             {
+                path: "/chatwindow",
+                element: <ChatWindow />
+             },
             {
                 path: "profileCard",
                 element: <ProfileCard />
@@ -73,7 +81,15 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "settings",
                 element: <Settings />
-            }
+            },
+            {
+                path: "viewreport",
+                element: <ViewReport />
+            },
+            {
+                path: "admindashboard",
+                element: <AdminDashboard />
+            },
         ]
     }
 ]);
