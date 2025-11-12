@@ -6,7 +6,7 @@ const Navbar = () => {
     const [showLogin, setShowLogin] = useState(false);
     
     const openLogin = () => setShowLogin(true);
-    const closeLogin = () => setShowLogin(false);
+    const closeLogin = () => setShowLogin(false); 
 
     return (
         <nav className="navBody sticky-top container py-2 w-75">
