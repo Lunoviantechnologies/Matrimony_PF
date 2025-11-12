@@ -1,0 +1,96 @@
+.profile-main-container {
+  padding: 40px 20px;
+  background: linear-gradient(to bottom, #0e1b30, #0a1222);
+  min-height: 100vh;
+  text-align: center;
+}
+
+.profile-title {
+  color: #ffd27f;
+  font-size: 34px;
+  font-weight: bold;
+  margin-bottom: 35px;
+  letter-spacing: 2px;
+}
+
+.profile-cards-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+}
+
+.profile-card {
+  width: 270px;
+  border-radius: 18px;
+  padding-bottom: 10px;
+  background: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+  transition: 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.profile-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.35);
+}
+
+.image-box {
+  width: 100%;
+  height: 330px;
+  overflow: hidden;
+}
+
+.profile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.4s ease;
+}
+
+.image-box:hover .profile-img {
+  scale: 1.08;
+}
+
+.profile-details {
+  padding: 14px;
+  color: #2b2b2b;
+  text-align: center;
+}
+
+.profile-details h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.profile-details span {
+  font-size: 14px;
+  color: #555;
+  display: block;
+}
+
+.profile-details p {
+  font-size: 15px;
+  color: #444;
+  margin: 4px 0;
+}
+
+.connect-btn {
+  margin-top: 8px;
+  width: 100%;
+  padding: 10px;
+  background: #e78a00;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.connect-btn:hover {
+  background: #cc7700;
+}

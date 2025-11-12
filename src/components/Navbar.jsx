@@ -9,7 +9,7 @@ const Navbar = () => {
     const closeLogin = () => setShowLogin(false);
 
     return (
-        <nav className="navBody container py-2 w-75">
+        <nav className="navBody sticky-top container py-2 w-75">
 
             <div className="d-flex gap-4 justify-content-end align-items-center">
                 <Link className="navLink" to="/">Home</Link>

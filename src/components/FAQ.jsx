@@ -1,10 +1,6 @@
 import React, { useState } from "react";
-import "./FAQ.css";
-import {
-  FaChevronDown,
-  FaChevronUp,
-  FaQuestionCircle,
-} from "react-icons/fa";
+import "../styleSheets/faq.css";
+import { FaChevronDown, FaChevronUp, FaQuestionCircle, } from "react-icons/fa";
 
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(null);

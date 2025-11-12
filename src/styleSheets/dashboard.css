@@ -1,0 +1,57 @@
+/* Dashboard body */
+
+.dashboard_body {
+    font-family: serif;
+    /* background: #D9F5E4; */
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Match section */
+
+.matchSection {
+    background: #fff;
+    border-radius: 15px;
+    padding: 24px;
+    margin-bottom: 32px;
+    box-shadow: 0 1px 6px #ddd;
+}
+
+.matchSection_map {
+    width: 180px;
+    height: 220px;
+    border-radius: 18px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* plan section */
+
+.planSection {
+    flex: 1;
+    background: #fff;
+    border-radius: 15px;
+    padding: 24px;
+    min-width: 280px;
+    box-shadow: 0 1px 6px #ddd;
+    text-align: center;
+}
+
+/* chat list */
+
+.chatList {
+    flex: 1;
+    background: #fff;
+    border-radius: 15px;
+    padding: 24px;
+    box-shadow: 0 1px 6px #ddd;
+}
+
+.chatList_map {
+    display: flex;
+    align-items: center;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
