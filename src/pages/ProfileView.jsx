@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import '../styleSheets/ProfileView.css';
-
-import {
-  LineChart, Line,XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,} from "recharts";
+import { LineChart, Line,XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,} from "recharts";
 import { FiCamera, FiUpload, FiEdit, FiChevronDown } from "react-icons/fi";
 import { FaHeart, FaEye, FaHandshake, FaMousePointer } from "react-icons/fa"; 
 
