@@ -18,6 +18,8 @@ import ViewReport from "../admin/ViewReport";
 import AdminDashboard from "../admin/AdminDashboard";
 
 
+import Footer from "../components/Footer";
+import AdminDashboard from "../admin/AdminDashboard";
 const AppRoutes = createBrowserRouter([
     {
         path: "/",
@@ -62,34 +64,10 @@ const AppRoutes = createBrowserRouter([
                 path: "viewProfile",
                 element: <ProfileView />
             },
-             {
-                path: "messages",
-                element: <ChatWindow />
-             },
             {
-                path: "profileCard",
-                element: <ProfileCard />
-            },
-            {
-                path: "premium",
-                element: <PremiumSubscription />
-            },
-            {
-                path: "subscription/:planId",
-                element: <SubscriptionDescription />
-            },
-            {
-                path: "settings",
-                element: <Settings />
-            },
-            {
-                path: "viewreport",
-                element: <ViewReport />
-            },
-            {
-                path: "admindashboard",
-                element: <AdminDashboard />
-            },
+                path: "/footer",
+                element: <Footer/>
+            }
         ]
     }
 ]);
