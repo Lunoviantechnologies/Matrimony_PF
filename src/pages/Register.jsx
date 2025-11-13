@@ -65,66 +65,81 @@ const Register = () => {
     alert("Profile created successfully!");
   };
 
-  const renderStep = () => {
-    switch (step) {
-      case 1:
-        return (
-          <>
-            <div className="step-icon"><FaUserFriends /></div>
-            <h2>This Profile is for</h2>
-            <div className="form-group">
-              <div className="option-group" style={{ justifyContent: "center" }}>
-                {[
-                  "Myself",
-                  "My Son",
-                  "My Daughter",
-                  "My Brother",
-                  "My Sister",
-                  "My Friend",
-                  "My Relative",
-                ].map((option) => (
+ const renderStep = () => {
+  switch (step) {
+    case 1:
+      return (
+        <>
+          <div className="step-icon"><FaUserFriends /></div>
+          <h2>This Profile is for</h2>
+          <div className="form-group">
+            <div className="option-group" style={{ justifyContent: "center" }}>
+              {[
+                "Myself",
+                "My Son",
+                "My Daughter",
+                "My Brother",
+                "My Sister",
+                "My Friend",
+                "My Relative",
+              ].map((option) => (
+                <button
+                  key={option}
+                  className={`option-btn ${
+                    formData.profileFor === option ? "selected" : ""
+                  }`}
+                  onClick={() => {
+                    handleOptionChange("profileFor", option);
+
+                    // Ask for gender only if "Myself", "My Friend", or "My Relative"
+                    if (
+                      option === "My Friend" ||
+                      option === "Myself" ||
+                      option === "My Relative"
+                    )
+                      return;
+
+                    setTimeout(nextStep, 300);
+                  }}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Show gender question for Friend, Myself, or Relative */}
+          {(formData.profileFor === "My Friend" ||
+            formData.profileFor === "Myself" ||
+            formData.profileFor === "My Relative") && (
+            <div className="form-group fade-in">
+              <h3>
+                {formData.profileFor === "My Friend"
+                  ? "Is your friend Male or Female?"
+                  : formData.profileFor === "My Relative"
+                  ? "Is your relative Male or Female?"
+                  : "Are you Male or Female?"}
+              </h3>
+              <div className="option-group">
+                {["Male", "Female"].map((g) => (
                   <button
-                    key={option}
+                    key={g}
                     className={`option-btn ${
-                      formData.profileFor === option ? "selected" : ""
+                      formData.friendGender === g ? "selected" : ""
                     }`}
                     onClick={() => {
-                      handleOptionChange("profileFor", option);
-                      // Ask for gender only if "My Friend"
-                      if (option === "My Friend") return;
+                      handleOptionChange("friendGender", g);
                       setTimeout(nextStep, 300);
                     }}
                   >
-                    {option}
+                    {g}
                   </button>
                 ))}
               </div>
             </div>
-
-            {formData.profileFor === "My Friend" && (
-              <div className="form-group fade-in">
-                <h3>Is your friend Male or Female?</h3>
-                <div className="option-group">
-                  {["Male", "Female"].map((g) => (
-                    <button
-                      key={g}
-                      className={`option-btn ${
-                        formData.friendGender === g ? "selected" : ""
-                      }`}
-                      onClick={() => {
-                        handleOptionChange("friendGender", g);
-                        setTimeout(nextStep, 300);
-                      }}
-                    >
-                      {g}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </>
-        );
-
+          )}
+        </>
+      );
       case 2:
         return (
           <>
