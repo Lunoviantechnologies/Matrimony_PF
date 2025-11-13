@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"; 
 import "../styleSheets/Dashboard.css";
 
 const Dashboard = () => {

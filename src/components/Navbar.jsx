@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Login from "../pages/Login";
+import Login from "../pages/Login"; 
 
 const Navbar = () => {
     const [showLogin, setShowLogin] = useState(false);
     
     const openLogin = () => setShowLogin(true);
-    const closeLogin = () => setShowLogin(false);
+    const closeLogin = () => setShowLogin(false); 
 
     return (
         <nav className="navBody sticky-top container py-2 w-75">
@@ -15,6 +15,7 @@ const Navbar = () => {
                 <Link className="navLink" to="/">Home</Link>
                 <Link className="navLink" to="/aboutUs">About Us</Link>
                 <Link className="navLink" to="/contactUs">Contact Us</Link>
+                <Link className="navLink" to="/help">Help</Link>
 
                 <button className="navLogin btn" onClick={openLogin}>
                     Login

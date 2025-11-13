@@ -1,5 +1,5 @@
 import React from "react";
-import "../styleSheets/profileCard.css";
+import "../styleSheets/profileCard.css"; 
 
 const profiles = [
   {
@@ -117,7 +117,7 @@ const profiles = [
 const ProfileCards = () => {
   return (
     <div className="profile-main-container">
-      <h2 className="profile-title">Top Matches For You ❤️</h2>
+      <h2 className="profile-title">Top Matches For You</h2>
 
       <div className="profile-cards-wrapper">
         {profiles.map((profile) => (
@@ -134,6 +134,7 @@ const ProfileCards = () => {
               <p>{profile.community}</p>
 
               <button className="connect-btn">View Profile</button>
+              <button className="connect-btn">Send Request</button>
             </div>
           </div>
         ))}

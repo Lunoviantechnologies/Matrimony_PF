@@ -1,4 +1,6 @@
 import React from "react";
+import "../styleSheets/Footer.css";
+
 const FOOTER_LINKS = [
   {
     title: "Need Help?",
@@ -41,103 +43,25 @@ const Footer = () => {
   const getSlug = (text) =>
     text.toLowerCase().replace(/ /g, "-").replace(/[&]/g, "");
 
-  const styles = {
-    footer: {
-      backgroundColor: "#fafafa",
-      padding: "50px 10%",
-      borderTop: "1px solid #eee",
-      fontFamily: "Arial, sans-serif",
-      marginTop: "50px",
-    },
-    heading: {
-      textAlign: "center",
-      color: "#ff5a60",
-      fontSize: "26px",
-      fontWeight: "600",
-      marginBottom: "15px",
-    },
-    description: {
-      textAlign: "center",
-      color: "#555",
-      fontSize: "15px",
-      maxWidth: "900px",
-      margin: "0 auto 40px",
-      lineHeight: "1.6",
-    },
-    content: {
-      display: "flex",
-      justifyContent: "space-between",
-      flexWrap: "wrap",
-      maxWidth: "1200px",
-      margin: "0 auto 30px",
-    },
-    column: {
-      width: "23%",
-      minWidth: "200px",
-      marginBottom: "30px",
-    },
-    columnTitle: {
-      fontSize: "15px",
-      fontWeight: "700",
-      color: "#333",
-      marginBottom: "15px",
-    },
-    list: {
-      listStyle: "none",
-      padding: 0,
-      margin: 0,
-    },
-    link: {
-      textDecoration: "none",
-      color: "#666",
-      fontSize: "14px",
-      lineHeight: "1.8",
-      display: "block",
-      transition: "color 0.3s",
-    },
-    linkHover: {
-      color: "#ff5a60",
-    },
-    copyright: {
-      textAlign: "center",
-      fontSize: "12px",
-      color: "#999",
-      paddingTop: "20px",
-      borderTop: "1px solid #ddd",
-    },
-  };
-
   return (
-    <footer style={styles.footer}>
-      {/* Heading */}
-      <h2 style={styles.heading}>Saathjanam.com - Trusted by Millions</h2>
+    <footer className="footer">
+      <h2 className="footer-heading">Saathjanam.com - Trusted by Millions</h2>
 
-      {/* Description */}
-      <p style={styles.description}>
+      <p className="footer-description">
         Saathjanam.com, one of India's leading matrimonial platforms, was
         founded with a simple objective — to help people find happiness. By
         redefining how Indian brides and grooms meet for marriage,
         Saathjanam.com continues to connect millions of people worldwide.
       </p>
 
-      {/* Footer Links */}
-      <div style={styles.content}>
+      <div className="footer-content">
         {FOOTER_LINKS.map((column) => (
-          <div key={column.title} style={styles.column}>
-            <h3 style={styles.columnTitle}>{column.title}</h3>
-            <ul style={styles.list}>
+          <div key={column.title} className="footer-column">
+            <h3 className="footer-column-title">{column.title}</h3>
+            <ul className="footer-list">
               {column.links.map((link) => (
                 <li key={link}>
-                  <a
-                    href={`/${getSlug(link)}`}
-                    style={styles.link}
-                    onMouseOver={(e) =>
-                      (e.currentTarget.style.color = "#ff5a60")
-                    }
-                    onMouseOut={(e) =>
-                      (e.currentTarget.style.color = "#666")
-                    }
-                  >
+                  <a href={`/${getSlug(link)}`} className="footer-link">
                     {link}
                   </a>
                 </li>
@@ -147,8 +71,7 @@ const Footer = () => {
         ))}
       </div>
 
-      {/* Copyright */}
-      <div style={styles.copyright}>
+      <div className="footer-copyright">
         &copy; {new Date().getFullYear()} Saathjanam.com. All Rights Reserved.
       </div>
     </footer>

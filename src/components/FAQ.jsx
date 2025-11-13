@@ -42,7 +42,7 @@ const FAQ = () => {
     },
   ];
 
-  return (
+  return ( 
     <div className="faq-container">
       <h2><FaQuestionCircle className="faq-icon" /> Frequently Asked Questions</h2>
       <p className="faq-subtitle">

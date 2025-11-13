@@ -1,7 +1,7 @@
 .ticket-container {
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #ff6f91, #ff9671);
+  background-color: #D9F5E4;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -21,7 +21,7 @@
 
 .ticket-title {
   font-size: 26px;
-  font-weight: 700;
+  font-weight: 700; 
   color: #ee225d;
   text-align: center;
   margin-bottom: 8px;

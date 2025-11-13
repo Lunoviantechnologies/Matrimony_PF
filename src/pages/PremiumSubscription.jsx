@@ -1,5 +1,3 @@
-// App.jsx
-
 import React from 'react';
 import '../styleSheets/PremiumSubscription.css';
 

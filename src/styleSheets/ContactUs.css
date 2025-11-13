@@ -5,9 +5,9 @@
 
 /* Banner Section */
 .contact-banner {
-  background: url("https://wallpapers.com/images/hd/wedding-couple-silhouette-at-sunset-gua3bhaaj4a3e1g5.jpg")
-    center/cover no-repeat;
-  height: 340px;
+   background: url("/contactus.jpg") center/cover no-repeat;
+  height: auto;
+  min-height: 340px;
   position: relative;
   display: flex;
   align-items: center;
@@ -55,7 +55,7 @@
 }
 
 .contact-form h2 {
-  color: #d14d4d;
+  color: #02451d;
   margin-bottom: 20px;
   text-align: center;
 }
@@ -88,7 +88,7 @@
   margin-top: 20px;
   width: 100%;
   padding: 12px;
-  background: #d14d4d;
+  background: #02451d;
   color: white;
   font-size: 16px;
   border: none;
@@ -98,7 +98,7 @@
 }
 
 .contact-form button:hover {
-  background: #b93d3d;
+  background: #06642c;
   transform: scale(1.02);
 }
 
@@ -117,7 +117,7 @@
 .company-name {
   font-weight: 600;
   font-size: 18px;
-  color: #d14d4d;
+  color: #397b54;
   margin-bottom: 15px;
 }
 
@@ -128,7 +128,7 @@
 }
 
 .detail-item .icon {
-  color: #d14d4d;
+  color: #02451d;
   font-size: 20px;
   margin-right: 12px;
 }

@@ -14,7 +14,7 @@ function App() {
         <Outlet />
       </main>
 
-      <Footer />
+      <Footer /> 
     </div>
   )
 }

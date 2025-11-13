@@ -2,26 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import '../styleSheets/ProfileView.css';
 
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-} from "recharts";
+  LineChart, Line,XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,} from "recharts";
 import { FiCamera, FiUpload, FiEdit, FiChevronDown } from "react-icons/fi";
-import { FaHeart, FaEye, FaHandshake, FaMousePointer } from "react-icons/fa";
-
-/**
- * Notes:
- * - Requires `recharts` and `react-icons` packages:
- *   npm install recharts react-icons
- *
- * - Plant decoration:
- *   Place the plant image at public/images/plant.png or import it and use as below.
- *   See the "How to connect plant decoration images" note at the end.
- */
+import { FaHeart, FaEye, FaHandshake, FaMousePointer } from "react-icons/fa"; 
 
 const MONTHS = [
   "September 2025",
@@ -482,4 +465,4 @@ export default function ProfileView() {
       )}
     </div>
   );
-}
+};
