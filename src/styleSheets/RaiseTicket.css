@@ -1,7 +1,7 @@
 .ticket-container {
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #ff6f91, #ff9671);
+  background-color: #D9F5E4;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -15,8 +15,8 @@ import ProfileCard from "../components/ProfileCard";
 import DashboardLayout from "../pages/DashboardLayout";
 import Settings from "../components/Settings";
 import ViewReport from "../admin/ViewReport";
-import Footer from "../components/Footer";
 import AdminDashboard from "../admin/AdminDashboard";
+import RaiseTicket from "../components/RaiseTicket";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -34,6 +34,10 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "/contactUs",
                 element: <ContactUs />
+            },
+            {
+                path: "/help",
+                element: <RaiseTicket />
             },
             {
                 path: "/register",
@@ -87,7 +91,7 @@ const AppRoutes = createBrowserRouter([
                 element: <ViewReport />
             },
             {
-                path: "admindashboard",
+                path: "adminDashboard",
                 element: <AdminDashboard />
             },
         ]

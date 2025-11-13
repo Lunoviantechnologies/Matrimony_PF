@@ -15,6 +15,7 @@ const Navbar = () => {
                 <Link className="navLink" to="/">Home</Link>
                 <Link className="navLink" to="/aboutUs">About Us</Link>
                 <Link className="navLink" to="/contactUs">Contact Us</Link>
+                <Link className="navLink" to="/help">Help</Link>
 
                 <button className="navLogin btn" onClick={openLogin}>
                     Login
