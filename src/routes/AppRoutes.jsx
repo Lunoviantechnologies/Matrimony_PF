@@ -17,81 +17,34 @@ import Settings from "../components/Settings";
 import ViewReport from "../admin/ViewReport";
 import AdminDashboard from "../admin/AdminDashboard";
 
-
 const AppRoutes = createBrowserRouter([
-    {
-        path: "/",
-        element: <App />,
-        children: [
-            {
-                path: "/",
-                element: <Home />
-            },
-            {
-                path: "/aboutUs",
-                element: <AboutUs />
-            },
-            {
-                path: "/contactUs",
-                element: <ContactUs />
-            },
-            {
-                path: "/register",
-                element: <Register />
-            },
-            {
-                path: "/login",
-                element: <Login />
-            },
-        ],
-    },
-    {
-        path: "/dashboard",
-        element: <DashboardLayout />,
-        children: [
-            
-            {
-                path: "",
-                element: <Dashboard />
-            },
-            {
-                path: "editProfile",
-                element: <EditProfile />
-            },
-            {
-                path: "viewProfile",
-                element: <ProfileView />
-            },
-             {
-                path: "/chatwindow",
-                element: <ChatWindow />
-             },
-            {
-                path: "profileCard",
-                element: <ProfileCard />
-            },
-            {
-                path: "premium",
-                element: <PremiumSubscription />
-            },
-            {
-                path: "subscription/:planId",
-                element: <SubscriptionDescription />
-            },
-            {
-                path: "settings",
-                element: <Settings />
-            },
-            {
-                path: "viewreport",
-                element: <ViewReport />
-            },
-            {
-                path: "admindashboard",
-                element: <AdminDashboard />
-            },
-        ]
-    }
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      { index: true, element: <Home /> },           // index route for "/"
+      { path: "aboutUs", element: <AboutUs /> },
+      { path: "contactUs", element: <ContactUs /> },
+      { path: "register", element: <Register /> },
+      { path: "login", element: <Login /> },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: <DashboardLayout />,
+    children: [
+      { index: true, element: <Dashboard /> },      // "/dashboard"
+      { path: "editProfile", element: <EditProfile /> },
+      { path: "viewProfile", element: <ProfileView /> },
+      { path: "chatwindow", element: <ChatWindow /> },   // <-- relative now
+      { path: "profileCard", element: <ProfileCard /> },
+      { path: "premium", element: <PremiumSubscription /> },
+      { path: "subscription/:planId", element: <SubscriptionDescription /> },
+      { path: "settings", element: <Settings /> },
+      { path: "viewreport", element: <ViewReport /> },
+      { path: "admindashboard", element: <AdminDashboard /> },
+    ],
+  },
 ]);
 
 export default AppRoutes;
