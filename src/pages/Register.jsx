@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  FaUser,
-  FaUserFriends,
-  FaMapMarkerAlt,
-  FaBriefcase,
-  FaGraduationCap,
-  FaRing,
-  FaShieldAlt,
-  FaBookOpen,
-} from "react-icons/fa";
+import { FaUser, FaUserFriends, FaMapMarkerAlt, FaBriefcase, FaGraduationCap, FaRing, FaShieldAlt, FaBookOpen,} from "react-icons/fa";
 import "../styleSheets/register.css";
 
 const Register = () => {

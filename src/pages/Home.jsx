@@ -4,6 +4,7 @@ import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import '../styleSheets/homePage.css';
+import FAQ from "../components/FAQ";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -54,6 +55,10 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div>
+                <FAQ />
             </div>
         </div>
     );

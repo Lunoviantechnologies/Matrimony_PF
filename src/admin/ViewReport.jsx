@@ -1,18 +1,7 @@
 import React from "react";
 import "../stylesheets/ViewReport.css";
 
-import {
-  FaUsers,
-  FaHeart,
-  FaRupeeSign,
-  FaChartPie,
-  FaChartLine,
-  FaEnvelope,
-  FaTwitter,
-  FaFacebookF,
-  FaLinkedinIn,
-  FaInstagram,
-} from "react-icons/fa";
+import { FaUsers, FaHeart, FaRupeeSign, FaChartPie, FaChartLine, FaEnvelope, FaTwitter, FaFacebookF, FaLinkedinIn, FaInstagram,} from "react-icons/fa";
 
 const ViewReport = () => {
   return (

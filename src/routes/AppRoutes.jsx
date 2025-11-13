@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom"; 
 import App from "../App";
 import Register from "../pages/Register";
 import Home from "../pages/Home";
@@ -16,7 +16,6 @@ import DashboardLayout from "../pages/DashboardLayout";
 import Settings from "../components/Settings";
 import ViewReport from "../admin/ViewReport";
 import AdminDashboard from "../admin/AdminDashboard";
-
 
 const AppRoutes = createBrowserRouter([
     {
@@ -67,7 +66,7 @@ const AppRoutes = createBrowserRouter([
                 element: <ChatWindow />
              },
             {
-                path: "profileCard",
+                path: "matches",
                 element: <ProfileCard />
             },
             {

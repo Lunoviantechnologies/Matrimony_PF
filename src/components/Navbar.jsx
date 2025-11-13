@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Login from "../pages/Login";
+import Login from "../pages/Login"; 
 
 const Navbar = () => {
     const [showLogin, setShowLogin] = useState(false);

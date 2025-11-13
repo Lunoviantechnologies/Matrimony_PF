@@ -12,7 +12,7 @@ const ContactUs = () => {
           <p>
             We’d love to help you find your perfect match. Reach out to start your journey today.
           </p>
-        </div>
+        </div> 
       </section>
 
       {/* Main Content */}

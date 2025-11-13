@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  FaUsers,
-  FaHeart,
-  FaUserPlus,
-  FaRupeeSign,
-  FaChartLine,
-  FaFileAlt,
-  FaCheckCircle,
-  FaHeadset,
-} from "react-icons/fa";
+import { FaUsers, FaHeart, FaUserPlus, FaRupeeSign, FaChartLine, FaFileAlt, FaCheckCircle, FaHeadset, } from "react-icons/fa";
 import "../stylesheets/adminDashboard.css";
 
 const AdminDashboard = () => {
@@ -26,7 +17,7 @@ const AdminDashboard = () => {
           <button><FaHeadset /><span>Support</span></button>
         </nav>
       </aside>
-      
+
       <main className="admin-main">
         <header className="admin-header">
           <div>

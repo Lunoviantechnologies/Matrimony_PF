@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../styleSheets/AboutUs.css";
 
-const AboutUs = () => {
+const AboutUs = () => { 
     return (
         <div className="aboutus-container">
             {/* Header Section */}

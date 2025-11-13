@@ -195,4 +195,4 @@ const SubscriptionDescription = () => {
   );
 };
 
-export default SubscriptionDescription;
+export default SubscriptionDescription; 
