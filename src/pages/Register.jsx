@@ -429,10 +429,11 @@ const Register = () => {
             </button>
           )}
           {step < totalSteps && (
-            <button type="button" onClick={nextStep} className="next-btn">
+            <button type="button" onClick={nextStep} className="next-btn" >
               Next ➡
             </button>
           )}
+          
         </div>
       </div>
     </div>
