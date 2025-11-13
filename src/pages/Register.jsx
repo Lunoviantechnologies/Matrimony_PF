@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import {
-  FaUser,
   FaUserFriends,
+  FaUser,
+  FaBookOpen,
   FaMapMarkerAlt,
   FaBriefcase,
   FaGraduationCap,
   FaRing,
-  FaShieldAlt,
-  FaBookOpen,
 } from "react-icons/fa";
 import "../styleSheets/register.css";
 
 const Register = () => {
   const [step, setStep] = useState(1);
+
   const [formData, setFormData] = useState({
     profileFor: "",
-    friendGender: "",
+    gender: "",
     firstName: "",
     lastName: "",
     dobDay: "",
@@ -23,19 +23,17 @@ const Register = () => {
     dobYear: "",
     religion: "Hindu",
     community: "Telugu",
+    subCommunity: "",
     country: "India",
     city: "",
-    livesWithFamily: "",
-    subCommunity: "",
-    highestQualification: "B.E / B.Tech",
-    collegeName: "Jawaharlal Nehru Technological University",
     maritalStatus: "Never Married",
     height: "",
-    diet: "",
-    income: "₹ 7 to 10 Lakh yearly",
+    highestQualification: "B.E / B.Tech",
+    collegeName: "",
     workWith: "Private Company",
-    workAs: "Software Developer / Programmer",
+    workAs: "",
     companyName: "",
+    income: "₹ 7 to 10 Lakh yearly",
     email: "",
     mobile: "",
   });
@@ -61,19 +59,19 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Final Form Data Submitted:", formData);
-    alert("Profile created successfully!");
+    console.log("Form Submitted:", formData);
   };
 
- const renderStep = () => {
-  switch (step) {
-    case 1:
-      return (
-        <>
-          <div className="step-icon"><FaUserFriends /></div>
-          <h2>This Profile is for</h2>
-          <div className="form-group">
-            <div className="option-group" style={{ justifyContent: "center" }}>
+  // ------------------------ STEP RENDERING ------------------------
+  const renderStep = () => {
+    switch (step) {
+      // STEP 1: Profile For
+      case 1:
+        return (
+          <>
+            <div className="step-icon"><FaUserFriends /></div>
+            <h2>This profile is for</h2>
+            <div className="option-group">
               {[
                 "Myself",
                 "My Son",
@@ -90,15 +88,12 @@ const Register = () => {
                   }`}
                   onClick={() => {
                     handleOptionChange("profileFor", option);
-
-                    // Ask for gender only if "Myself", "My Friend", or "My Relative"
                     if (
-                      option === "My Friend" ||
                       option === "Myself" ||
+                      option === "My Friend" ||
                       option === "My Relative"
                     )
-                      return;
-
+                      return; // show gender next
                     setTimeout(nextStep, 300);
                   }}
                 >
@@ -106,111 +101,103 @@ const Register = () => {
                 </button>
               ))}
             </div>
-          </div>
 
-          {/* Show gender question for Friend, Myself, or Relative */}
-          {(formData.profileFor === "My Friend" ||
-            formData.profileFor === "Myself" ||
-            formData.profileFor === "My Relative") && (
-            <div className="form-group fade-in">
-              <h3>
-                {formData.profileFor === "My Friend"
-                  ? "Is your friend Male or Female?"
-                  : formData.profileFor === "My Relative"
-                  ? "Is your relative Male or Female?"
-                  : "Are you Male or Female?"}
-              </h3>
-              <div className="option-group">
-                {["Male", "Female"].map((g) => (
-                  <button
-                    key={g}
-                    className={`option-btn ${
-                      formData.friendGender === g ? "selected" : ""
-                    }`}
-                    onClick={() => {
-                      handleOptionChange("friendGender", g);
-                      setTimeout(nextStep, 300);
-                    }}
-                  >
-                    {g}
-                  </button>
-                ))}
+            {(formData.profileFor === "Myself" ||
+              formData.profileFor === "My Friend" ||
+              formData.profileFor === "My Relative") && (
+              <div className="form-group fade-in">
+                <h3>
+                  {formData.profileFor === "My Friend"
+                    ? "Is your friend Male or Female?"
+                    : formData.profileFor === "My Relative"
+                    ? "Is your relative Male or Female?"
+                    : "Are you Male or Female?"}
+                </h3>
+                <div className="option-group">
+                  {["Male", "Female"].map((g) => (
+                    <button
+                      key={g}
+                      className={`option-btn ${
+                        formData.gender === g ? "selected" : ""
+                      }`}
+                      onClick={() => {
+                        handleOptionChange("gender", g);
+                        setTimeout(nextStep, 300);
+                      }}
+                    >
+                      {g}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-        </>
-      );
+            )}
+          </>
+        );
+
+      // STEP 2: Basic Details
       case 2:
         return (
           <>
             <div className="step-icon"><FaUser /></div>
-            <h2>Your name</h2>
-            <div className="form-group">
+            <h2>Tell us about you</h2>
+            <input
+              type="text"
+              name="firstName"
+              placeholder="First Name"
+              className="form-input"
+              value={formData.firstName}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="lastName"
+              placeholder="Last Name"
+              className="form-input"
+              value={formData.lastName}
+              onChange={handleChange}
+            />
+
+            <label className="form-label">Date of Birth</label>
+            <div className="dob-fields">
               <input
                 type="text"
-                name="firstName"
-                className="form-input"
-                placeholder="First name"
-                value={formData.firstName}
+                name="dobDay"
+                placeholder="DD"
+                maxLength="2"
+                className="form-input small"
+                value={formData.dobDay}
                 onChange={handleChange}
               />
-            </div>
-            <div className="form-group">
               <input
                 type="text"
-                name="lastName"
-                className="form-input"
-                placeholder="Last name"
-                value={formData.lastName}
+                name="dobMonth"
+                placeholder="MM"
+                maxLength="2"
+                className="form-input small"
+                value={formData.dobMonth}
                 onChange={handleChange}
               />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Date of birth</label>
-              <div className="row">
-                <div className="col">
-                  <input
-                    type="text"
-                    name="dobDay"
-                    className="form-input"
-                    placeholder="DD"
-                    value={formData.dobDay}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="col">
-                  <input
-                    type="text"
-                    name="dobMonth"
-                    className="form-input"
-                    placeholder="MM"
-                    value={formData.dobMonth}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="col">
-                  <input
-                    type="text"
-                    name="dobYear"
-                    className="form-input"
-                    placeholder="YYYY"
-                    value={formData.dobYear}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
+              <input
+                type="text"
+                name="dobYear"
+                placeholder="YYYY"
+                maxLength="4"
+                className="form-input medium"
+                value={formData.dobYear}
+                onChange={handleChange}
+              />
             </div>
           </>
         );
 
-      // keep remaining steps unchanged — just included navigation
+      // STEP 3: Religion / Community
       case 3:
         return (
           <>
             <div className="step-icon"><FaBookOpen /></div>
-            <h2>Your religion</h2>
+            <h2>Religion & Community</h2>
             <div className="form-group">
-              <label className="form-label">Religion</label>
+              <label>Religion</label>
               <select
                 name="religion"
                 className="form-select"
@@ -220,10 +207,13 @@ const Register = () => {
                 <option>Hindu</option>
                 <option>Muslim</option>
                 <option>Christian</option>
+                <option>Sikh</option>
+                <option>Other</option>
               </select>
             </div>
+
             <div className="form-group">
-              <label className="form-label">Community</label>
+              <label>Community</label>
               <select
                 name="community"
                 className="form-select"
@@ -232,11 +222,32 @@ const Register = () => {
               >
                 <option>Telugu</option>
                 <option>Tamil</option>
+                <option>Malayalam</option>
+                <option>Kannada</option>
                 <option>Marathi</option>
+                <option>Hindi</option>
               </select>
             </div>
+
+            <input
+              type="text"
+              name="subCommunity"
+              placeholder="Sub-community (optional)"
+              className="form-input"
+              value={formData.subCommunity}
+              onChange={handleChange}
+            />
+          </>
+        );
+
+      // STEP 4: Location
+      case 4:
+        return (
+          <>
+            <div className="step-icon"><FaMapMarkerAlt /></div>
+            <h2>Where do you live?</h2>
             <div className="form-group">
-              <label className="form-label">Living in</label>
+              <label>Country</label>
               <select
                 name="country"
                 className="form-select"
@@ -246,13 +257,147 @@ const Register = () => {
                 <option>India</option>
                 <option>USA</option>
                 <option>UK</option>
+                <option>Canada</option>
+                <option>Australia</option>
+              </select>
+            </div>
+            <input
+              type="text"
+              name="city"
+              placeholder="City"
+              className="form-input"
+              value={formData.city}
+              onChange={handleChange}
+            />
+          </>
+        );
+
+      // STEP 5: Education
+      case 5:
+        return (
+          <>
+            <div className="step-icon"><FaGraduationCap /></div>
+            <h2>Education</h2>
+            <div className="form-group">
+              <label>Highest Qualification</label>
+              <select
+                name="highestQualification"
+                className="form-select"
+                value={formData.highestQualification}
+                onChange={handleChange}
+              >
+                <option>B.E / B.Tech</option>
+                <option>M.E / M.Tech</option>
+                <option>MBA</option>
+                <option>PhD</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <input
+              type="text"
+              name="collegeName"
+              placeholder="College / University Name"
+              className="form-input"
+              value={formData.collegeName}
+              onChange={handleChange}
+            />
+          </>
+        );
+
+      // STEP 6: Career
+      case 6:
+        return (
+          <>
+            <div className="step-icon"><FaBriefcase /></div>
+            <h2>Career Details</h2>
+            <div className="form-group">
+              <label>Working With</label>
+              <select
+                name="workWith"
+                className="form-select"
+                value={formData.workWith}
+                onChange={handleChange}
+              >
+                <option>Private Company</option>
+                <option>Government</option>
+                <option>Self Employed</option>
+                <option>Not Working</option>
+              </select>
+            </div>
+            <input
+              type="text"
+              name="workAs"
+              placeholder="Your Profession"
+              className="form-input"
+              value={formData.workAs}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="companyName"
+              placeholder="Company Name"
+              className="form-input"
+              value={formData.companyName}
+              onChange={handleChange}
+            />
+            <div className="form-group">
+              <label>Annual Income</label>
+              <select
+                name="income"
+                className="form-select"
+                value={formData.income}
+                onChange={handleChange}
+              >
+                <option>₹ 3 to 5 Lakh yearly</option>
+                <option>₹ 5 to 7 Lakh yearly</option>
+                <option>₹ 7 to 10 Lakh yearly</option>
+                <option>₹ 10 to 15 Lakh yearly</option>
+                <option>Above ₹ 15 Lakh yearly</option>
               </select>
             </div>
           </>
         );
 
+      // STEP 7: Contact Info
+      case 7:
+        return (
+          <>
+            <div className="step-icon"><FaUser /></div>
+            <h2>Contact Information</h2>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email Address"
+              className="form-input"
+              value={formData.email}
+              onChange={handleChange}
+            />
+            <input
+              type="tel"
+              name="mobile"
+              placeholder="Mobile Number"
+              className="form-input"
+              value={formData.mobile}
+              onChange={handleChange}
+            />
+          </>
+        );
+
+      // STEP 8: Final Confirmation
+      case 8:
+        return (
+          <>
+            <div className="step-icon"><FaRing /></div>
+            <h2>Confirm & Submit</h2>
+            <p>Please review your details and submit your profile.</p>
+            <button className="submit-btn" onClick={handleSubmit}>
+              Create My Profile
+            </button>
+          </>
+        );
+
       default:
-        return <div>Continue other steps...</div>;
+        return <div>Unknown Step</div>;
     }
   };
 
@@ -266,17 +411,25 @@ const Register = () => {
           ></div>
         </div>
 
-        {renderStep()}
+        <form onSubmit={handleSubmit} className="fade-in">
+          {renderStep()}
+        </form>
 
-        {/* ✅ Back / Next Buttons */}
-        <div className="nav-buttons" style={{ marginTop: 20, display: "flex", justifyContent: "space-between" }}>
+        <div
+          className="nav-buttons"
+          style={{
+            marginTop: 25,
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
           {step > 1 && (
-            <button onClick={prevStep} className="back-btn">
+            <button type="button" onClick={prevStep} className="back-btn">
               ⬅ Back
             </button>
           )}
           {step < totalSteps && (
-            <button onClick={nextStep} className="next-btn">
+            <button type="button" onClick={nextStep} className="next-btn">
               Next ➡
             </button>
           )}
