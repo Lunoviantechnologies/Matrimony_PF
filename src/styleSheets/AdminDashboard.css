@@ -1,0 +1,222 @@
+/* ---------- Layout ---------- */
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+    background: #f4f6f5;
+    font-family: "Poppins", sans-serif;
+    color: #2e2e2e;
+  }
+  
+  /* ---------- Sidebar ---------- */
+  .admin-sidebar {
+    width: 220px;
+    background: #00695C;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 25px 20px;
+    gap: 30px;
+    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.08);
+  }
+  
+  .sidebar-logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 1px;
+  }
+  
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  
+  .sidebar-nav button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 8px 5px;
+    width: 100%;
+    border-radius: 6px;
+    transition: 0.25s;
+  }
+  
+  .sidebar-nav button:hover {
+    background: #004D44;
+  }
+  
+  /* ---------- Main Content ---------- */
+  .admin-main {
+    flex: 1;
+    padding: 28px 50px;
+  }
+  
+  /* Header */
+  .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+  }
+  
+  .admin-header h1 {
+    font-size: 1.9rem;
+    font-weight: 600;
+    color: #00695C;
+  }
+  
+  .admin-header p {
+    color: #666;
+    margin-top: 4px;
+    font-size: 0.95rem;
+  }
+  
+  .admin-avatar {
+    width: 44px;
+    border-radius: 50%;
+    border: 3px solid #26A69A;
+  }
+  
+  /* ---------- Cards ---------- */
+  .stats-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 22px;
+    margin-bottom: 45px;
+  }
+  
+  .stat-card {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 22px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    transition: 0.25s ease-out;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  }
+  
+  .stat-card .icon {
+    font-size: 34px;
+    margin-bottom: 8px;
+    color: #26A69A;
+  }
+  
+  /* ---------- Table ---------- */
+  .activity-section {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    margin-bottom: 35px;
+  }
+  
+  .activity-section h2 {
+    color: #00695C;
+    margin-bottom: 14px;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  
+  thead {
+    background: #E0F2F1;
+  }
+  
+  thead th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  
+  tbody tr {
+    border-bottom: 1px solid #eee;
+    transition: 0.2s;
+  }
+  
+  tbody tr:hover {
+    background: #F1F9F8;
+  }
+  
+  tbody td {
+    padding: 12px;
+  }
+  
+  /* ---------- Quick Actions (Left-aligned Small Buttons) ---------- */
+  .quick-actions h2 {
+    color: #00695C;
+    margin-bottom: 12px;
+    font-size: 1.05rem;
+    text-align: left;  /* heading aligned left */
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: flex-start; /* left aligned buttons */
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .action-btn {
+    background: #26A69A;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;       /* smaller padding */
+    min-width: 60px;         /* smaller width */
+    height: 28px;            /* smaller height */
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;                /* smaller space between icon and text */
+    font-size: 0.75rem;      /* smaller text */
+    font-weight: 500;
+    transition: 0.2s ease;
+    box-sizing: border-box;
+  }
+  
+  .action-btn svg {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .action-btn:hover {
+    background: #00897B;
+  }
+  
+  /* Footer */
+  .admin-footer {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 0.85rem;
+    color: #777;
+  }
+  
+  /* ---------- Responsive ---------- */
+  @media (max-width: 768px) {
+    .admin-main {
+      padding: 20px;
+    }
+    .admin-sidebar {
+      width: 180px;
+    }
+    .sidebar-logo { font-size: 20px; }
+  }
+  
