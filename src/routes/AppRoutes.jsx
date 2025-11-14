@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom"; 
+import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import Register from "../pages/Register";
 import Home from "../pages/Home";
@@ -17,6 +17,8 @@ import Settings from "../components/Settings";
 import ViewReport from "../admin/ViewReport";
 import AdminDashboard from "../admin/AdminDashboard";
 import RaiseTicket from "../components/RaiseTicket";
+import Requests from "../pages/Requests";
+import Matches from "../pages/Matches";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -53,7 +55,7 @@ const AppRoutes = createBrowserRouter([
         path: "/dashboard",
         element: <DashboardLayout />,
         children: [
-            
+
             {
                 path: "",
                 element: <Dashboard />
@@ -66,13 +68,23 @@ const AppRoutes = createBrowserRouter([
                 path: "viewProfile",
                 element: <ProfileView />
             },
-             {
+            {
                 path: "messages",
                 element: <ChatWindow />
-             },
+            },
             {
                 path: "matches",
-                element: <ProfileCard />
+                element: <Matches />,
+                children: [
+                    {   
+                        path: "my_matches",
+                        element: <ProfileCard />
+                    },
+                ]
+            },
+            {
+                path: "requests",
+                element: <Requests />
             },
             {
                 path: "premium",

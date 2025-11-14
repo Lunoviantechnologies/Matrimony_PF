@@ -1,16 +1,17 @@
 import React from "react"; 
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const SubNavbar = () => {
     return (
         <div className="sticky-top sub_navbar">
             <div className="container d-flex justify-content-around">
-                <Link className="subnav_link" to="/dashboard">Dashboard</Link>
-                <Link className="subnav_link" to="/dashboard/editProfile">Edit Profile</Link>
-                <Link className="subnav_link" to="/dashboard/viewProfile">View Profile</Link>
-                <Link className="subnav_link" to="/dashboard/matches">Matches</Link>
-                <Link className="subnav_link" to="/dashboard/messages">Messages</Link>
-                <Link className="subnav_link" to="/dashboard/settings">Settings</Link>
+                <NavLink className="subnav_link" to="" end>Dashboard</NavLink>
+                <NavLink className="subnav_link" to="editProfile">Edit Profile</NavLink>
+                <NavLink className="subnav_link" to="viewProfile">View Profile</NavLink>
+                <NavLink className="subnav_link" to="requests">Requests</NavLink>
+                <NavLink className="subnav_link" to="matches">Matches</NavLink>
+                <NavLink className="subnav_link" to="messages">Messages</NavLink>
+                <NavLink className="subnav_link" to="settings">Settings</NavLink>
             </div>
         </div>
     );
