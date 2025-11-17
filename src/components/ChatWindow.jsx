@@ -4,6 +4,7 @@ import { FiSearch } from "react-icons/fi";
 
 const ChatWindow = () => {
   const [chats, setChats] = useState([
+    
     {
       id: 1, 
       name: "Priya Sharma",

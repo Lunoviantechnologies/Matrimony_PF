@@ -20,6 +20,7 @@ import RaiseTicket from "../components/RaiseTicket";
 import Requests from "../pages/Requests";
 import Matches from "../pages/Matches";
 import Cart from "../components/Cart";
+import Forgotpassword from "../components/Forgotpassword";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -49,6 +50,10 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "/login",
                 element: <Login />
+            },
+            {
+                path:"forgotpassword",
+                element:<Forgotpassword />
             },
         ],
     },
@@ -107,6 +112,7 @@ const AppRoutes = createBrowserRouter([
                 path: "adminDashboard",
                 element: <AdminDashboard />
             },
+            
         ]
     }
 ]);

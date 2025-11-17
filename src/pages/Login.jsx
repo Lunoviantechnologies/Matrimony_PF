@@ -1,7 +1,6 @@
 import React from "react"; 
 import "../styleSheets/loginStyle.css";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = ({ show, onClose }) => {
     if (!show) return null;
@@ -52,9 +51,9 @@ const Login = ({ show, onClose }) => {
                                 <label>Password</label>
                             </div>
 
-                            <a href="#" className="forgot-pass-link">
+                            <Link to="forgotpassword" className="forgot-pass-link">
                                 Forgot password?
-                            </a>
+                            </Link>
 
                             <button type="submit" onClick={handleLogin}>Log In</button>
                         </form>
