@@ -19,6 +19,7 @@ import AdminDashboard from "../admin/AdminDashboard";
 import RaiseTicket from "../components/RaiseTicket";
 import Requests from "../pages/Requests";
 import Matches from "../pages/Matches";
+import Cart from "../components/Cart";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -76,7 +77,7 @@ const AppRoutes = createBrowserRouter([
                 path: "matches",
                 element: <Matches />,
                 children: [
-                    {   
+                    {
                         path: "my_matches",
                         element: <ProfileCard />
                     },
@@ -91,8 +92,8 @@ const AppRoutes = createBrowserRouter([
                 element: <PremiumSubscription />
             },
             {
-                path: "subscription/:planId",
-                element: <SubscriptionDescription />
+                path: "cart/:planId",
+                element: <Cart />
             },
             {
                 path: "settings",

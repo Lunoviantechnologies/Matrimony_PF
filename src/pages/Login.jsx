@@ -1,5 +1,6 @@
 import React from "react"; 
 import "../styleSheets/loginStyle.css";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const Login = ({ show, onClose }) => {
@@ -59,7 +60,7 @@ const Login = ({ show, onClose }) => {
                         </form>
 
                         <div className="mt-4 signup-link">
-                            <span>New to Matrimony? <a onClick={handleRegister} className="signupa"> SignUp for Free</a></span>
+                            <span>New to Matrimony? <Link onClick={handleRegister} className="signupa"> SignUp for Free</Link></span>
                         </div>
                     </div>
                 </div>

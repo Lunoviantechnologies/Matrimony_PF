@@ -109,7 +109,7 @@
 .input-field input {
     width: 100%;
     height: 45px;
-    padding: 12px 15px 0 15px;
+    padding: 20px 15px 5px 15px;
     font-size: 1rem;
     border: 1px solid #013c19;
     border-radius: 10px;
@@ -121,7 +121,7 @@
 .input-field label {
     padding: 0 5px;
     position: absolute;
-    top: 50%;
+    top: 35%;
     left: 15px;
     transform: translateY(-50%);
     color: #9e9d9d;
@@ -131,7 +131,7 @@
 
 .input-field input:focus~label,
 .input-field input:valid~label {
-    transform: translateY(-110%);
+    transform: translateY(-150%);
     font-size: 0.75rem;
     color: #013c19;
 }
