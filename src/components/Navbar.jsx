@@ -21,7 +21,7 @@ const Navbar = () => {
                 <Link className="navLink" to="/contactUs">Contact Us</Link>
                 <Link className="navLink" to="/help">Help</Link>
 
-                <button className="navLogin btn" onClick={openLogin}>
+                <button className="navLogin" onClick={openLogin}>
                     Login
                 </button>
             </div>
