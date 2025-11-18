@@ -7,7 +7,7 @@
 
 .navBody {
     background-color: #D9F5E4;
-    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+    border-radius: 50px;
 }
 
 .navLink {
@@ -42,6 +42,23 @@
 
 .navLogin:active {
     transform: scale(0.95);
+}
+
+/* Search Filter */
+
+.searchfilter {
+    background-color: transparent;
+    border: 1px solid #9bcfb0;
+    width: 260px;
+    border-radius: 20px;
+    height: 38px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    line-height: 38px;
+    box-sizing: border-box;
+    position: relative;
+    top: 6px;  
 }
 
 /* Sub Navbar */
