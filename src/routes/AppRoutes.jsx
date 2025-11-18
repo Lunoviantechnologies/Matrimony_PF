@@ -21,6 +21,8 @@ import Requests from "../pages/Requests";
 import Matches from "../pages/Matches";
 import Cart from "../components/Cart";
 import Forgotpassword from "../components/Forgotpassword";
+import AdminLayout from "../admin/AdminLayout";
+import ManageUser from "../admin/ManageUser";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -52,8 +54,8 @@ const AppRoutes = createBrowserRouter([
                 element: <Login />
             },
             {
-                path:"forgotpassword",
-                element:<Forgotpassword />
+                path: "forgotpassword",
+                element: <Forgotpassword />
             },
         ],
     },
@@ -104,15 +106,25 @@ const AppRoutes = createBrowserRouter([
                 path: "settings",
                 element: <Settings />
             },
+            
+        ]
+    },
+    {
+        path: "/admin",
+        element: <AdminLayout />,
+        children: [
+            {
+                path: "",
+                element: <AdminDashboard />
+            },
             {
                 path: "viewreport",
                 element: <ViewReport />
             },
             {
-                path: "adminDashboard",
-                element: <AdminDashboard />
+                path: "manageusers",
+                element: <ManageUser />
             },
-            
         ]
     }
 ]);

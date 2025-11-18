@@ -29,12 +29,20 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="flex justify-center items-center w-full min-h-screen bg-gray-100 p-4">
-      <Card className="max-w-md w-full shadow-lg">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+      <Card
+        sx={{
+          width: "100%",
+          maxWidth: 450,
+          margin: "0 auto",
+        }}
+        className="shadow-lg"
+      >
         <CardContent>
           <Typography variant="h5" fontWeight="bold" gutterBottom>
             Forgot Password
           </Typography>
+
           <Typography variant="body2" color="text.secondary" gutterBottom>
             Enter your registered email, and we'll send you a password reset link.
           </Typography>
@@ -45,7 +53,6 @@ export default function ForgotPassword() {
           <form onSubmit={handleSubmit}>
             <TextField
               label="Email Address"
-              type="email"
               fullWidth
               required
               margin="normal"
@@ -54,10 +61,9 @@ export default function ForgotPassword() {
             />
 
             <Button
-              variant="contained"
-              color="primary"
-              type="submit"
               fullWidth
+              variant="contained"
+              type="submit"
               disabled={loading}
               sx={{ mt: 2 }}
             >
@@ -68,4 +74,5 @@ export default function ForgotPassword() {
       </Card>
     </div>
   );
-}
+
+};

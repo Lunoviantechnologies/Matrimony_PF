@@ -3,7 +3,6 @@ import "../styleSheets/sidebar.css";
 
 const Sidebar = () => {
     const [filters, setFilters] = useState({
-        gender: [],
         age: [],
         religion: [],
         caste: [],
@@ -27,11 +26,6 @@ const Sidebar = () => {
     };
 
     const sections = [
-        {
-            title: "Gender",
-            category: "gender",
-            options: ["Bride", "Groom"],
-        },
         {
             title: "Age",
             category: "age",
