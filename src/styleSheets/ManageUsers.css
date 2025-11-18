@@ -1,0 +1,279 @@
+/* ManageUsers.css - place in src/stylesheets/ManageUsers.css */
+
+.manage-users-root {
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  padding: 18px;
+  background: #f7f8fb;
+  border-radius: 8px;
+}
+
+/* Header */
+.mu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.mu-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #222;
+}
+
+.mu-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.mu-search {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #e3e6ee;
+  width: 260px;
+}
+
+.mu-filter {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #e3e6ee;
+  background: #fff;
+}
+
+/* Bulk actions row */
+.mu-bulk {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.btn {
+  background: #2f6ce6;
+  color: #fff;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.btn:hover {
+  opacity: 0.95;
+}
+
+.btn-danger {
+  background: #e04545;
+}
+
+.btn-small {
+  padding: 6px 8px;
+  font-size: 12px;
+  margin-left: 6px;
+}
+
+/* Table */
+.mu-table-wrap {
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 2px 6px rgba(20, 30, 60, 0.03);
+  overflow: auto;
+}
+
+.mu-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.mu-table th,
+.mu-table td {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid #f0f2f7;
+  vertical-align: middle;
+}
+
+.mu-table th {
+  font-weight: 600;
+  color: #333;
+  font-size: 13px;
+}
+
+.mu-empty {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+/* Row styles */
+.mu-user-cell {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.mu-avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #e6f0ff, #f0f6ff);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2f6ce6;
+  font-weight: 700;
+}
+
+.mu-name {
+  font-weight: 600;
+  color: #222;
+}
+
+.mu-id {
+  font-size: 12px;
+  color: #888;
+}
+
+.mu-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #2f6ce6;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.mu-badge.premium {
+  background: linear-gradient(90deg, #fff7e6, #fff0d6);
+  color: #d87e00;
+}
+
+/* Status */
+.mu-status {
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.mu-status.active {
+  background: #e6fff2;
+  color: #0b8a4f;
+}
+
+.mu-status.pending_verification {
+  background: #fff6e6;
+  color: #b86b00;
+}
+
+.mu-status.suspended {
+  background: #ffecec;
+  color: #b71c1c;
+}
+
+.mu-status.banned {
+  background: #fbeff0;
+  color: #a11a2a;
+}
+
+/* Muted row for non-active */
+.mu-row-muted td {
+  opacity: 0.85;
+}
+
+/* Actions column */
+.mu-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Footer */
+.mu-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.mu-pagination {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.mu-rows-info {
+  color: #666;
+}
+
+/* Loading */
+.mu-loading {
+  padding: 28px;
+  text-align: center;
+  color: #666;
+}
+
+/* Modal */
+.mu-modal-backdrop {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(18, 25, 40, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 800;
+}
+
+.mu-modal {
+  width: 680px;
+  max-width: 95%;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(10, 20, 40, 0.25);
+}
+
+.mu-modal-header {
+  padding: 16px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f1f3f8;
+}
+
+.mu-modal-body {
+  padding: 16px 18px;
+  max-height: 60vh;
+  overflow: auto;
+}
+
+.mu-modal-footer {
+  padding: 12px 18px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  border-top: 1px solid #f1f3f8;
+}
+
+.mu-detail-row {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.mu-notes {
+  margin-top: 6px;
+  padding: 8px;
+  background: #fafafa;
+  border-radius: 6px;
+  color: #555;
+  font-size: 13px;
+}

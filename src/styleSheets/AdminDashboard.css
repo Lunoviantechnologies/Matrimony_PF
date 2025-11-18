@@ -397,16 +397,16 @@
     background: #26A69A;
     color: #fff;
     border: none;
-    padding: 5px 10px;       /* smaller padding */
-    min-width: 60px;         /* smaller width */
-    height: 28px;            /* smaller height */
+    padding: 5px 10px;       
+    min-width: 60px;         
+    height: 28px;            
     border-radius: 5px;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;                /* smaller space between icon and text */
-    font-size: 0.75rem;      /* smaller text */
+    gap: 4px;                
+    font-size: 0.75rem;      
     font-weight: 500;
     transition: 0.2s ease;
     box-sizing: border-box;

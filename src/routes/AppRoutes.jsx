@@ -17,7 +17,9 @@ import Settings from "../components/Settings";
 import ViewReport from "../admin/ViewReport";
 import AdminDashboard from "../admin/AdminDashboard";
 import RaiseTicket from "../components/RaiseTicket";
-
+import Notification from "../components/Notification";
+import ManageUsers from "../admin/ManageUser";
+import ViewProfileModal from "../components/viewprofileModal";
 const AppRoutes = createBrowserRouter([
     {
         path: "/",
@@ -47,7 +49,20 @@ const AppRoutes = createBrowserRouter([
                 path: "/login",
                 element: <Login />
             },
-        ],
+             {
+                path: "/manageusers",
+                element: <ManageUsers />
+             },
+              
+            {
+                path: "/viewprofilemodal",
+                element: <ViewProfileModal />
+            },
+             {
+                path: "profilecard",
+                element: <ProfileCard />
+            }
+        ]
     },
     {
         path: "/dashboard",
@@ -94,6 +109,11 @@ const AppRoutes = createBrowserRouter([
                 path: "adminDashboard",
                 element: <AdminDashboard />
             },
+            {
+                path: "notification",
+                element: <Notification />
+            },
+           
         ]
     }
 ]);

@@ -1,0 +1,179 @@
+/* ===========================
+   UPDATED VIEW PROFILE MODAL
+   =========================== */
+
+.vp-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  backdrop-filter: blur(3px);
+}
+
+.vp-modal {
+  width: 850px;
+  max-width: 95%;
+  max-height: 90vh;
+  background: #fff;
+  border-radius: 12px;
+  overflow-y: auto;
+  position: relative;
+  animation: modalFadeIn 0.25s ease;
+  box-shadow: 0px 8px 40px rgba(0, 0, 0, 0.35);
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vp-close {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  background: #ff4d4d;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.vp-close:hover {
+  background: #d80404;
+}
+
+.vp-grid {
+  display: flex;
+  gap: 25px;
+  padding: 25px;
+  align-items: flex-start;
+  max-height: 75vh;
+}
+
+/* Left Side (Image Section) */
+.vp-left {
+  width: 280px;            /* reduces the container width */
+  flex-shrink: 0;
+}
+
+.vp-main-image img {
+  width: 100%;
+  height: 250px;           /* 🔥 reduced size */
+  max-height: 250px;
+  border-radius: 10px;
+  /* object-fit: cover; */
+  object-position: center; /* keeps face centered */
+}
+
+/* Extra photos (optional) */
+.vp-photos-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.vp-thumb {
+  width: 22%;
+  height: 65px;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.vp-thumb:hover {
+  transform: scale(1.04);
+}
+
+/* Right Side Details */
+.vp-right {
+  flex: 1;
+}
+
+.vp-name {
+  font-size: 26px;
+  font-weight: 700;
+  color: #222;
+}
+
+.vp-age {
+  font-size: 20px;
+  color: #444;
+}
+
+.vp-meta {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 10px;
+  column-gap: 15px;
+  color: #333;
+}
+
+.vp-section {
+  margin-top: 20px;
+}
+
+.vp-section h4 {
+  margin-bottom: 5px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.vp-bio,
+.vp-list li {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* Contact info */
+.vp-contact {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.vp-contact a {
+  color: #0066cc;
+}
+
+/* Buttons */
+.vp-actions {
+  margin-top: 22px;
+  display: flex;
+  gap: 10px;
+}
+
+.connect-btn.secondary {
+  background: #f2f2f2;
+  color: #444;
+}
+
+.connect-btn.secondary:hover {
+  background: #e8e8e8;
+}
+
+/* Footer */
+.vp-footer {
+  padding: 12px 20px;
+  font-size: 13px;
+  color: #555;
+  border-top: 1px solid #e8e8e8;
+  background: #fafafa;
+}
