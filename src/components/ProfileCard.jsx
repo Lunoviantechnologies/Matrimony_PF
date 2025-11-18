@@ -1,5 +1,6 @@
-import React from "react";
-import "../styleSheets/profileCard.css"; 
+import React, { useState } from "react";
+import "../styleSheets/profileCard.css";
+import ViewProfileModal from "./ViewProfileModal"; // ⭐ IMPORT MODAL
 
 const profiles = [
   {
@@ -115,6 +116,8 @@ const profiles = [
 ];
 
 const ProfileCards = () => {
+  const [activeProfile, setActiveProfile] = useState(null); // ⭐ MODAL STATE
+
   return (
     <div className="profile-main-container">
       <h2 className="profile-title">Top Matches For You</h2>
@@ -122,7 +125,9 @@ const ProfileCards = () => {
       <div className="profile-cards-wrapper">
         {profiles.map((profile) => (
           <div className="profile-card" key={profile.id}>
-            <div className="image-box">
+            
+            {/* CLICK TO OPEN MODAL */}
+            <div className="image-box" onClick={() => setActiveProfile(profile)}>
               <img src={profile.image} alt={profile.name} className="profile-img" />
             </div>
 
@@ -133,12 +138,27 @@ const ProfileCards = () => {
               <p>{profile.location}</p>
               <p>{profile.community}</p>
 
-              <button className="connect-btn">View Profile</button>
+              {/* OPEN MODAL BUTTON */}
+              <button 
+                className="connect-btn"
+                onClick={() => setActiveProfile(profile)}
+              >
+                View Profile
+              </button>
+
               <button className="connect-btn">Send Request</button>
             </div>
           </div>
         ))}
       </div>
+
+      {/* ⭐ RENDER MODAL HERE */}
+      {activeProfile && (
+        <ViewProfileModal 
+          profile={activeProfile} 
+          onClose={() => setActiveProfile(null)} 
+        />
+      )}
     </div>
   );
 };

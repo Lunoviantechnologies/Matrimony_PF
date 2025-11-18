@@ -17,12 +17,14 @@ import Settings from "../components/Settings";
 import ViewReport from "../admin/ViewReport";
 import AdminDashboard from "../admin/AdminDashboard";
 import RaiseTicket from "../components/RaiseTicket";
+import Notification from "../components/Notification";
+import ManageUser from "../admin/ManageUser";
+import ViewProfileModal from "../components/ViewProfileModal";
 import Requests from "../pages/Requests";
 import Matches from "../pages/Matches";
 import Cart from "../components/Cart";
 import Forgotpassword from "../components/Forgotpassword";
 import AdminLayout from "../admin/AdminLayout";
-import ManageUser from "../admin/ManageUser";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -57,7 +59,11 @@ const AppRoutes = createBrowserRouter([
                 path: "forgotpassword",
                 element: <Forgotpassword />
             },
-        ],
+             {
+                path: "profilecard",
+                element: <ProfileCard />
+            }
+        ]
     },
     {
         path: "/dashboard",
@@ -88,6 +94,10 @@ const AppRoutes = createBrowserRouter([
                         path: "my_matches",
                         element: <ProfileCard />
                     },
+                    {
+                        path: "view_profile/:profileId",
+                        element: <ViewProfileModal />
+                    }
                 ]
             },
             {
@@ -106,7 +116,10 @@ const AppRoutes = createBrowserRouter([
                 path: "settings",
                 element: <Settings />
             },
-            
+            {
+                path: "notifications",
+                element: <Notification />
+            },
         ]
     },
     {
