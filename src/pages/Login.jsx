@@ -1,6 +1,6 @@
 import React from "react"; 
 import "../styleSheets/loginStyle.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = ({ show, onClose }) => {
     if (!show) return null;
@@ -51,15 +51,15 @@ const Login = ({ show, onClose }) => {
                                 <label>Password</label>
                             </div>
 
-                            <a href="#" className="forgot-pass-link">
+                            <Link to="forgotpassword" className="forgot-pass-link">
                                 Forgot password?
-                            </a>
+                            </Link>
 
                             <button type="submit" onClick={handleLogin}>Log In</button>
                         </form>
 
                         <div className="mt-4 signup-link">
-                            <span>New to Matrimony? <a onClick={handleRegister} className="signupa"> SignUp for Free</a></span>
+                            <span>New to Matrimony? <Link onClick={handleRegister} className="signupa"> SignUp for Free</Link></span>
                         </div>
                     </div>
                 </div>

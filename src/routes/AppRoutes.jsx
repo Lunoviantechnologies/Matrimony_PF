@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom"; 
+import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import Register from "../pages/Register";
 import Home from "../pages/Home";
@@ -17,9 +17,17 @@ import Settings from "../components/Settings";
 import ViewReport from "../admin/ViewReport";
 import AdminDashboard from "../admin/AdminDashboard";
 import RaiseTicket from "../components/RaiseTicket";
+<<<<<<< HEAD
 import Notification from "../components/Notification";
 import ManageUsers from "../admin/ManageUser";
 import ViewProfileModal from "../components/viewprofileModal";
+=======
+import Requests from "../pages/Requests";
+import Matches from "../pages/Matches";
+import Cart from "../components/Cart";
+import Forgotpassword from "../components/Forgotpassword";
+
+>>>>>>> b8aae4230fdcdc979ac0002bd2aa82a5da89680f
 const AppRoutes = createBrowserRouter([
     {
         path: "/",
@@ -49,6 +57,7 @@ const AppRoutes = createBrowserRouter([
                 path: "/login",
                 element: <Login />
             },
+<<<<<<< HEAD
              {
                 path: "/manageusers",
                 element: <ManageUsers />
@@ -63,12 +72,19 @@ const AppRoutes = createBrowserRouter([
                 element: <ProfileCard />
             }
         ]
+=======
+            {
+                path:"forgotpassword",
+                element:<Forgotpassword />
+            },
+        ],
+>>>>>>> b8aae4230fdcdc979ac0002bd2aa82a5da89680f
     },
     {
         path: "/dashboard",
         element: <DashboardLayout />,
         children: [
-            
+
             {
                 path: "",
                 element: <Dashboard />
@@ -81,21 +97,31 @@ const AppRoutes = createBrowserRouter([
                 path: "viewProfile",
                 element: <ProfileView />
             },
-             {
+            {
                 path: "messages",
                 element: <ChatWindow />
-             },
+            },
             {
                 path: "matches",
-                element: <ProfileCard />
+                element: <Matches />,
+                children: [
+                    {
+                        path: "my_matches",
+                        element: <ProfileCard />
+                    },
+                ]
+            },
+            {
+                path: "requests",
+                element: <Requests />
             },
             {
                 path: "premium",
                 element: <PremiumSubscription />
             },
             {
-                path: "subscription/:planId",
-                element: <SubscriptionDescription />
+                path: "cart/:planId",
+                element: <Cart />
             },
             {
                 path: "settings",
@@ -109,11 +135,15 @@ const AppRoutes = createBrowserRouter([
                 path: "adminDashboard",
                 element: <AdminDashboard />
             },
+<<<<<<< HEAD
             {
                 path: "notification",
                 element: <Notification />
             },
            
+=======
+            
+>>>>>>> b8aae4230fdcdc979ac0002bd2aa82a5da89680f
         ]
     }
 ]);
