@@ -57,7 +57,6 @@ const AppRoutes = createBrowserRouter([
                 path: "/login",
                 element: <Login />
             },
-<<<<<<< HEAD
              {
                 path: "/manageusers",
                 element: <ManageUsers />
@@ -72,13 +71,6 @@ const AppRoutes = createBrowserRouter([
                 element: <ProfileCard />
             }
         ]
-=======
-            {
-                path:"forgotpassword",
-                element:<Forgotpassword />
-            },
-        ],
->>>>>>> b8aae4230fdcdc979ac0002bd2aa82a5da89680f
     },
     {
         path: "/dashboard",
