@@ -10,8 +10,8 @@ const Navbar = () => {
     const closeLogin = () => setShowLogin(false);
 
     return (
-        <nav className="navBody sticky-top container w-75">
-
+        <nav className="navBody sticky-top container w-75 d-flex justify-content-between align-items-center">
+            <img src="/saathjanam_logo.png" alt="saathjanam_logo" height={'50px'} />
             <div className="d-flex gap-4 justify-content-end align-items-center">
                 <div className="d-flex align-items-center">
                     <SearchFilters />
@@ -21,7 +21,7 @@ const Navbar = () => {
                 <Link className="navLink" to="/contactUs">Contact Us</Link>
                 <Link className="navLink" to="/help">Help</Link>
 
-                <button className="navLogin btn" onClick={openLogin}>
+                <button className="navLogin" onClick={openLogin}>
                     Login
                 </button>
             </div>

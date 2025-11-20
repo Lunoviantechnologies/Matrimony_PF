@@ -5,30 +5,13 @@ import "../stylesheets/adminDashboard.css";
 const AdminDashboard = () => {
   return (
     <div className="admin-container">
-      <aside className="admin-sidebar">
-        <div className="sidebar-logo">SJ</div>
-        <nav className="sidebar-nav">
-          <button><FaChartLine /><span>Dashboard</span></button>
-          <button><FaHeart /><span>Matches</span></button>
-          <button><FaUserPlus /><span>New Profiles</span></button>
-          <button><FaRupeeSign /><span>Payments</span></button>
-          <button><FaFileAlt /><span>Reports</span></button>
-          <button><FaCheckCircle /><span>Approvals</span></button>
-          <button><FaHeadset /><span>Support</span></button>
-        </nav>
-      </aside>
-
       <main className="admin-main">
         <header className="admin-header">
           <div>
             <h1>Admin Dashboard</h1>
             <p>Overview and management tools</p>
           </div>
-          <img
-            src="https://i.pravatar.cc/50"
-            alt="Admin Avatar"
-            className="admin-avatar"
-          />
+          <img src="saathjanam_logo.png" alt="Admin Avatar" className="admin-avatar"/>
         </header>
 
         <section className="stats-section">

@@ -45,14 +45,22 @@ const Footer = () => {
 
   return (
     <footer className="footer">
-      <h2 className="footer-heading">Saathjanam.com - Trusted by Millions</h2>
+      <div className="d-flex justify-content-start">
+        <div>
+          <img src="/saathjanam_logo.png" alt="saathjanam_logo" height={'100px'}/>
+        </div>
 
-      <p className="footer-description">
-        Saathjanam.com, one of India's leading matrimonial platforms, was
-        founded with a simple objective — to help people find happiness. By
-        redefining how Indian brides and grooms meet for marriage,
-        Saathjanam.com continues to connect millions of people worldwide.
-      </p>
+        <div>
+          <h2 className="footer-heading">Saathjanam.com - Trusted by Millions</h2>
+
+          <p className="footer-description">
+            Saathjanam.com, one of India's leading matrimonial platforms, was
+            founded with a simple objective — to help people find happiness. By
+            redefining how Indian brides and grooms meet for marriage,
+            Saathjanam.com continues to connect millions of people worldwide.
+          </p>
+        </div>
+      </div>
 
       <div className="footer-content">
         {FOOTER_LINKS.map((column) => (

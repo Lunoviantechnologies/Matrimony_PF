@@ -9,7 +9,10 @@ const Login = ({ show, onClose }) => {
 
     const handleRegister = () => {
         onClose();
-        navigate('/register');
+    };
+
+    const handleForget = () => {
+        onClose();
     };
 
     const handleLogin = (e) => {
@@ -51,7 +54,7 @@ const Login = ({ show, onClose }) => {
                                 <label>Password</label>
                             </div>
 
-                            <Link to="forgotpassword" className="forgot-pass-link">
+                            <Link to="forgotpassword" onClick={handleForget} className="forgot-pass-link">
                                 Forgot password?
                             </Link>
 
@@ -59,7 +62,7 @@ const Login = ({ show, onClose }) => {
                         </form>
 
                         <div className="mt-4 signup-link">
-                            <span>New to Matrimony? <Link onClick={handleRegister} className="signupa"> SignUp for Free</Link></span>
+                            <span>New to Matrimony? <Link to="register" onClick={handleRegister} className="signupa"> SignUp for Free</Link></span>
                         </div>
                     </div>
                 </div>

@@ -17,10 +17,14 @@ import Settings from "../components/Settings";
 import ViewReport from "../admin/ViewReport";
 import AdminDashboard from "../admin/AdminDashboard";
 import RaiseTicket from "../components/RaiseTicket";
+import Notification from "../components/Notification";
+import ManageUser from "../admin/ManageUser";
+import ViewProfileModal from "../components/viewprofileModal";
 import Requests from "../pages/Requests";
 import Matches from "../pages/Matches";
 import Cart from "../components/Cart";
 import Forgotpassword from "../components/Forgotpassword";
+import AdminLayout from "../admin/AdminLayout";
 import ViewProfileModal from "../components/viewprofileModal";
 import ManageUser from "../admin/ManageUser";
 import Notification from "../components/Notification";
@@ -55,12 +59,8 @@ const AppRoutes = createBrowserRouter([
                 element: <Login />
             },
             {
-                path:"/forgotpassword",
-                element:<Forgotpassword />
-            },
-            {
-                path:"/viewprofilecard",
-                element:<ViewProfileModal/>
+                path: "forgotpassword",
+                element: <Forgotpassword />
             },
             {
                 path: "/manageuser",
@@ -97,6 +97,10 @@ const AppRoutes = createBrowserRouter([
                         path: "my_matches",
                         element: <ProfileCard />
                     },
+                    {
+                        path: "view_profile/:profileId",
+                        element: <ViewProfileModal />
+                    }
                 ]
             },
             {
@@ -116,18 +120,27 @@ const AppRoutes = createBrowserRouter([
                 element: <Settings />
             },
             {
+                path: "notifications",
+                element: <Notification />
+            },
+        ]
+    },
+    {
+        path: "/admin",
+        element: <AdminLayout />,
+        children: [
+            {
+                path: "",
+                element: <AdminDashboard />
+            },
+            {
                 path: "viewreport",
                 element: <ViewReport />
             },
             {
-                path: "adminDashboard",
-                element: <AdminDashboard />
+                path: "manageusers",
+                element: <ManageUser />
             },
-            {
-                path: "notifications",
-                element: <Notification />
-            },
-            
         ]
     }
 ]);
