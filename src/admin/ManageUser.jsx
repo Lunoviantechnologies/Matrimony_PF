@@ -23,7 +23,7 @@ const MOCK_USERS = Array.from({ length: 24 }).map((_, i) => ({
   photos: [],
 }));
 
-export default function ManageUsers({ apiBase = "", pageSize = 10 }) {
+export default function ManageUser({ apiBase = "", pageSize = 10 }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 

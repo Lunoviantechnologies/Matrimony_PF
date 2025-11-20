@@ -70,12 +70,13 @@
 .vp-left {
   width: 280px;            /* reduces the container width */
   flex-shrink: 0;
+  height: fit-content;
 }
 
 .vp-main-image img {
-  width: 100%;
+  width: 50px;
   height: 250px;           /* 🔥 reduced size */
-  max-height: 250px;
+  max-height: 20px;
   border-radius: 10px;
   /* object-fit: cover; */
   object-position: center; /* keeps face centered */

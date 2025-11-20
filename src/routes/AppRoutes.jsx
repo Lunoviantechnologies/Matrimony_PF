@@ -17,17 +17,14 @@ import Settings from "../components/Settings";
 import ViewReport from "../admin/ViewReport";
 import AdminDashboard from "../admin/AdminDashboard";
 import RaiseTicket from "../components/RaiseTicket";
-<<<<<<< HEAD
-import Notification from "../components/Notification";
-import ManageUsers from "../admin/ManageUser";
-import ViewProfileModal from "../components/viewprofileModal";
-=======
 import Requests from "../pages/Requests";
 import Matches from "../pages/Matches";
 import Cart from "../components/Cart";
 import Forgotpassword from "../components/Forgotpassword";
+import ViewProfileModal from "../components/viewprofileModal";
+import ManageUser from "../admin/ManageUser";
+import Notification from "../components/Notification";
 
->>>>>>> b8aae4230fdcdc979ac0002bd2aa82a5da89680f
 const AppRoutes = createBrowserRouter([
     {
         path: "/",
@@ -57,20 +54,19 @@ const AppRoutes = createBrowserRouter([
                 path: "/login",
                 element: <Login />
             },
-             {
-                path: "/manageusers",
-                element: <ManageUsers />
-             },
-              
             {
-                path: "/viewprofilemodal",
-                element: <ViewProfileModal />
+                path:"/forgotpassword",
+                element:<Forgotpassword />
             },
-             {
-                path: "profilecard",
-                element: <ProfileCard />
-            }
-        ]
+            {
+                path:"/viewprofilecard",
+                element:<ViewProfileModal/>
+            },
+            {
+                path: "/manageuser",
+                element: <ManageUser />
+            },
+        ],
     },
     {
         path: "/dashboard",
@@ -127,15 +123,11 @@ const AppRoutes = createBrowserRouter([
                 path: "adminDashboard",
                 element: <AdminDashboard />
             },
-<<<<<<< HEAD
             {
-                path: "notification",
+                path: "notifications",
                 element: <Notification />
             },
-           
-=======
             
->>>>>>> b8aae4230fdcdc979ac0002bd2aa82a5da89680f
         ]
     }
 ]);
