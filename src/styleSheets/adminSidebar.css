@@ -20,20 +20,20 @@
     font-size: 28px;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 25px;
+    /* margin-bottom: 5px; */
     color: #00b36b;
 }
 
 .sidebar-nav {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
 }
 
 .sidebar-nav button {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     padding: 12px 15px;
     width: 100%;
     border: none;

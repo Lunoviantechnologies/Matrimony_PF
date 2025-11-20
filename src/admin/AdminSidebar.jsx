@@ -13,6 +13,10 @@ export default function AdminSidebar() {
     const handleAdminDashboard = () => {
         navigate('/admin');
     };
+
+    const handleManageUser = () => {
+        navigate('/admin/manageusers');
+    };
     
     return (
         <aside className="admin-sidebar">
@@ -22,6 +26,7 @@ export default function AdminSidebar() {
                 <button onClick={handleAdminDashboard}><FaChartLine /><span>Dashboard</span></button>
                 <button><FaHeart /><span>Matches</span></button>
                 <button><FaUserPlus /><span>New Profiles</span></button>
+                <button onClick={handleManageUser}><FaUserPlus /><span>Manage Users</span></button>
                 <button><FaRupeeSign /><span>Payments</span></button>
                 <button onClick={handleReport}><FaFileAlt /><span>Reports</span></button>
                 <button><FaCheckCircle /><span>Approvals</span></button>
