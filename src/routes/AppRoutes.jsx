@@ -25,9 +25,6 @@ import Matches from "../pages/Matches";
 import Cart from "../components/Cart";
 import Forgotpassword from "../components/Forgotpassword";
 import AdminLayout from "../admin/AdminLayout";
-import ViewProfileModal from "../components/viewprofileModal";
-import ManageUser from "../admin/ManageUser";
-import Notification from "../components/Notification";
 
 const AppRoutes = createBrowserRouter([
     {
