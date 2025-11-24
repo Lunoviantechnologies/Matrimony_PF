@@ -20,6 +20,7 @@ const Navbar = () => {
                 <Link className="navLink" to="/aboutUs">About Us</Link>
                 <Link className="navLink" to="/contactUs">Contact Us</Link>
                 <Link className="navLink" to="/help">Help</Link>
+                <Link className="navLink" to="/premium">Upgrade</Link>
 
                 <button className="navLogin" onClick={openLogin}>
                     Login

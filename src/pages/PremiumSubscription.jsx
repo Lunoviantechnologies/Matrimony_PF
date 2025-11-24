@@ -90,7 +90,7 @@ function PremiumSubscription() {
   ];
 
   const handlePlanSelect = (plan) => {
-    navigate(`/dashboard/cart/${plan.id}`);
+    navigate(`/cart/${plan.id}`);
   };
 
   return (

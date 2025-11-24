@@ -59,10 +59,14 @@ const AppRoutes = createBrowserRouter([
                 path: "forgotpassword",
                 element: <Forgotpassword />
             },
-             {
-                path: "profilecard",
-                element: <ProfileCard />
-            }
+            {
+                path: "premium",
+                element: <PremiumSubscription />
+            },
+            {
+                path: "cart/:planId",
+                element: <Cart />
+            },
         ]
     },
     {
@@ -103,14 +107,6 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "requests",
                 element: <Requests />
-            },
-            {
-                path: "premium",
-                element: <PremiumSubscription />
-            },
-            {
-                path: "cart/:planId",
-                element: <Cart />
             },
             {
                 path: "settings",
