@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../styleSheets/profileCard.css";
-import ViewProfileModal from "./ViewProfileModal"; // ⭐ IMPORT MODAL
+// import ViewProfileModal from "./ViewProfileModal"; // ⭐ IMPORT MODAL
+import ViewProfileModal from "./viewprofileModal";
 
 const profiles = [
   {
