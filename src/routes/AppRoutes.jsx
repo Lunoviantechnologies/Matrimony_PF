@@ -7,7 +7,6 @@ import SubscriptionDescription from '../pages/SubscriptionDescription';
 import Dashboard from "../pages/Dashboard";
 import EditProfile from "../pages/EditProfile";
 import ProfileView from "../pages/ProfileView";
-import Login from "../pages/Login";
 import AboutUs from "../components/AboutUs";
 import ContactUs from "../components/ContactUs";
 import ChatWindow from "../components/ChatWindow";
@@ -25,9 +24,7 @@ import Matches from "../pages/Matches";
 import Cart from "../components/Cart";
 import Forgotpassword from "../components/Forgotpassword";
 import AdminLayout from "../admin/AdminLayout";
-import ViewProfileModal from "../components/viewprofileModal";
-import ManageUser from "../admin/ManageUser";
-import Notification from "../components/Notification";
+import RegisterSuccessPage from "../successPages/registerSuccessPage";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -55,18 +52,22 @@ const AppRoutes = createBrowserRouter([
                 element: <Register />
             },
             {
-                path: "/login",
-                element: <Login />
-            },
-            {
                 path: "forgotpassword",
                 element: <Forgotpassword />
             },
             {
-                path: "/manageuser",
-                element: <ManageUser />
+                path: "premium",
+                element: <PremiumSubscription />
             },
-        ],
+            {
+                path: "cart/:planId",
+                element: <Cart />
+            },
+            {
+                path: "registration-success",
+                element: <RegisterSuccessPage />
+            },
+        ]
     },
     {
         path: "/dashboard",
@@ -106,14 +107,6 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "requests",
                 element: <Requests />
-            },
-            {
-                path: "premium",
-                element: <PremiumSubscription />
-            },
-            {
-                path: "cart/:planId",
-                element: <Cart />
             },
             {
                 path: "settings",

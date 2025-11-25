@@ -1,0 +1,46 @@
+.glow-wrapper {
+    padding: 4px;
+    /* thickness of border */
+    border-radius: 18px;
+    position: relative;
+}
+
+.glow-wrapper .card:hover {
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.glow-wrapper::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 3px;
+    background: linear-gradient(120deg,
+            #00ff88,
+            #00c8ff,
+            #8a2be2,
+            #ff0099,
+            #00ff88);
+    background-size: 300% 300%;
+    animation: glowMove 4s linear infinite;
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+@keyframes glowMove {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
