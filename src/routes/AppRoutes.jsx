@@ -7,7 +7,6 @@ import SubscriptionDescription from '../pages/SubscriptionDescription';
 import Dashboard from "../pages/Dashboard";
 import EditProfile from "../pages/EditProfile";
 import ProfileView from "../pages/ProfileView";
-import Login from "../pages/Login";
 import AboutUs from "../components/AboutUs";
 import ContactUs from "../components/ContactUs";
 import ChatWindow from "../components/ChatWindow";
@@ -25,6 +24,7 @@ import Matches from "../pages/Matches";
 import Cart from "../components/Cart";
 import Forgotpassword from "../components/Forgotpassword";
 import AdminLayout from "../admin/AdminLayout";
+import RegisterSuccessPage from "../successPages/registerSuccessPage";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -52,10 +52,6 @@ const AppRoutes = createBrowserRouter([
                 element: <Register />
             },
             {
-                path: "/login",
-                element: <Login />
-            },
-            {
                 path: "forgotpassword",
                 element: <Forgotpassword />
             },
@@ -66,6 +62,10 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "cart/:planId",
                 element: <Cart />
+            },
+            {
+                path: "registration-success",
+                element: <RegisterSuccessPage />
             },
         ]
     },
