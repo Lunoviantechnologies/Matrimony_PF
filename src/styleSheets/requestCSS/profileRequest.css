@@ -1,0 +1,66 @@
+.received-container {
+    width: 90%;
+    margin: auto;
+    padding: 20px 0;
+  }
+  
+  .received-card {
+    background: white;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #e7f8ec;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+  
+  .left-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .profile-img {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    border: 3px solid #2ea4ff;
+    object-fit: cover;
+  }
+  
+  .name {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  .details {
+    margin: 0;
+    color: #6f6f6f;
+  }
+  
+  .btn-section {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .accept {
+    padding: 6px 14px;
+    border: none;
+    background: #25a244;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .reject {
+    padding: 6px 14px;
+    border: none;
+    background: #d62828;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  

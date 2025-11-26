@@ -11,12 +11,23 @@ import Login from "../pages/Login";
 import AboutUs from "../components/AboutUs";
 import ContactUs from "../components/ContactUs";
 import ChatWindow from "../components/ChatWindow";
-import ProfileCard from "../components/ProfileCard";
+// import ProfileCard from "../components/ProfileCard";
 import DashboardLayout from "../pages/DashboardLayout";
 import Settings from "../components/Settings";
 import ViewReport from "../admin/ViewReport";
 import AdminDashboard from "../admin/AdminDashboard";
 import RaiseTicket from "../components/RaiseTicket";
+import AdminProfiles from "../admin/AdminProfiles";
+import MyMatches from "../pages/Mymatches";
+import NearMe from "../pages/Nearme";
+import MoreMatches from "../pages/MoreMatches";
+import NewMatches from "../pages/Newmatches";
+import Matches from "../pages/Matches";
+import Request from"../pages/Request";
+import Accepted from "../pages/Accepted";
+import Sent from"../pages/Sent";
+import Rejected from"../pages/Rejected";
+import Received from"../pages/Received";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -47,6 +58,13 @@ const AppRoutes = createBrowserRouter([
                 path: "/login",
                 element: <Login />
             },
+            {
+                path: "/Adminprofiles",
+                element: <AdminProfiles />
+            }
+            
+            
+       
         ],
     },
     {
@@ -72,7 +90,47 @@ const AppRoutes = createBrowserRouter([
              },
             {
                 path: "matches",
-                element: <ProfileCard />
+                element: <Matches/>,
+                children:[
+                    {            
+                        path: "mymatches",
+                        element: <MyMatches/>
+                    },
+                    {
+                        path: "nearme",
+                        element: <NearMe />
+                    },
+                    {
+                        path: "morematches",
+                        element: <MoreMatches />
+                    },
+                    {
+                        path: "newmatches",
+                        element: <NewMatches/>
+                    },
+                ]
+            },
+            {
+                path: "requests",
+                element: <Request/>,
+                children:[
+                    {            
+                        path: "accepted",
+                        element: <Accepted/>
+                    },
+                    {
+                        path: "sent",
+                        element: <Sent />
+                    },
+                    {
+                        path: "received",
+                        element: <Received />
+                    },
+                    {
+                        path: "rejected",
+                        element: <Rejected/>
+                    },
+                ]
             },
             {
                 path: "premium",
@@ -94,6 +152,9 @@ const AppRoutes = createBrowserRouter([
                 path: "adminDashboard",
                 element: <AdminDashboard />
             },
+          
+
+          
         ]
     }
 ]);
