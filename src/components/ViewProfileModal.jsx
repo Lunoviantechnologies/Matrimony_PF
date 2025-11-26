@@ -1,15 +1,6 @@
 import React, { useEffect } from "react";
 import "../styleSheets/profileCard.css";
 
-/**
- * ViewProfileModal.jsx
- * Props:
- *  - profile: object (id, name, age, job, education, location, community, height, image, ...optional fields)
- *  - onClose: function
- *
- * Shows full details and actions: View Profile, Send Request, Message.
- */
-
 export default function ViewProfileModal({ profile = {}, onClose = () => {} }) {
   useEffect(() => {
     const onKey = (e) => {
@@ -30,7 +21,6 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {} }) {
     community,
     height,
     image,
-    // optional extras (if available in future)
     bio,
     photos = [],
     phone,

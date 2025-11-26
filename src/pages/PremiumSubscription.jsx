@@ -85,7 +85,7 @@ function PremiumSubscription() {
         'Standout from Profiles',
         'Matches contact directly'
       ],
-      duration: '12 months'
+      duration: '12 months'  
     }
   ];
 

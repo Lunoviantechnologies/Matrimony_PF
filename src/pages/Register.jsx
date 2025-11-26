@@ -193,7 +193,7 @@ const Register = () => {
 
     console.log("Payload to server:", payload);
 
-    axios.post(`${backendIP}/api/profiles/register`, payload)
+    axios.post(`${backendIP}/profiles/register`, payload)
       .then((response) => {
         console.log("Server Response:", response.data);
         alert("Registration Successful!");

@@ -1,11 +1,19 @@
-import React from "react"; 
+import React, { useState } from "react";
 import "../styleSheets/loginStyle.css";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import backendIP from "../api/api";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../redux/thunk/loginThunk";
 
 const Login = ({ show, onClose }) => {
     if (!show) return null;
 
     const navigate = useNavigate();
+    const [auth, setAuth] = useState({ emailId: "", createPassword: "" });
+    const [showPassword, setShowPassword] = useState(false);
+    const dispatch = useDispatch();
+    const { loading, error, role, isLoggedIn } = useSelector( state => state.auth );
 
     const handleRegister = () => {
         onClose();
@@ -17,9 +25,20 @@ const Login = ({ show, onClose }) => {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        navigate('/dashboard');
-        onClose();
-    }
+        console.log("Attempting login with:", auth);
+        
+        dispatch( loginUser(auth) )
+            .unwrap()
+            .then( () => {
+                onclose();
+                if ( role === "admin" ) navigate("/admin");
+                else navigate("/dashboard");
+            })
+            .catch( (err) => {
+                alert("Login failed. Please check your credentials and try again.");
+                console.error("Login error:", err);
+            })
+    };
 
     return (
         <div className="login-form">
@@ -45,13 +64,29 @@ const Login = ({ show, onClose }) => {
                         <h2>LOGIN</h2>
                         <form>
                             <div className="input-field">
-                                <input type="text" required />
+                                <input type="text" required onChange={(e) => { setAuth({ ...auth, emailId: e.target.value }) }} />
                                 <label>Email</label>
                             </div>
 
-                            <div className="input-field">
-                                <input type="password" required />
-                                <label>Password</label>
+                            <div className="input-field position-relative">
+                                <input
+                                    id="loginPassword"
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder=" "
+                                    required
+                                    onChange={(e) =>
+                                        setAuth({ ...auth, createPassword: e.target.value })
+                                    }
+                                />
+                                <label htmlFor="loginPassword">Password</label>
+
+                                <span
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="position-absolute top-50 end-0 translate-middle-y me-3"
+                                    style={{ cursor: "pointer", zIndex: 10 }}
+                                >
+                                    <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
+                                </span>
                             </div>
 
                             <Link to="forgotpassword" onClick={handleForget} className="forgot-pass-link">

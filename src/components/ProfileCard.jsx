@@ -152,7 +152,7 @@ const ProfileCards = () => {
           </div>
         ))}
       </div>
-
+  
       {/* ⭐ RENDER MODAL HERE */}
       {activeProfile && (
         <ViewProfileModal 

@@ -12,7 +12,7 @@ const Matches = () => {
             </div>
 
             <Outlet />
-        </div>
+        </div>  
     );
 };
 

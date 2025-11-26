@@ -13,7 +13,7 @@ export default function ForgotPassword() {
     setSuccess("");
     setError("");
     setLoading(true);
-
+  
     try {
       // 🔹 Replace URL with your backend API
       const response = await axios.post("http://your-backend.com/api/forgot-password", {

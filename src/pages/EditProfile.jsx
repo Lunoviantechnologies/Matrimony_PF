@@ -29,7 +29,7 @@ export default function EditProfile() {
     highestEducation: "B.Tech - CSE",
     employedIn: "Private",
     occupation: "Software Engineer",
-    company: "NextHub Technologies",
+    company: "NextHub Technologies",   
     experience: "2 – 3 years",
   });
 

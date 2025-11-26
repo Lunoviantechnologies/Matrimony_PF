@@ -9,7 +9,7 @@ export default function AdminSidebar() {
     const handleReport = () => {
         navigate('/admin/viewreport');        
     };
-
+  
     const handleAdminDashboard = () => {
         navigate('/admin');
     };

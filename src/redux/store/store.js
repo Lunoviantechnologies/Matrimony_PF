@@ -5,7 +5,7 @@ import searchFilterReducer from "../slices/searchFilterSlice";
 const store = configureStore({
     reducer: {
         auth : authReducer,
-        search : searchFilterReducer
+        search : searchFilterReducer 
     },
 });
 

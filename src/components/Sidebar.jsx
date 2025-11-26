@@ -5,7 +5,7 @@ const Sidebar = () => {
     const [filters, setFilters] = useState({
         age: [],
         religion: [],
-        caste: [],
+        caste: [],  
         country: [],
         education: [],
         profession: [],
@@ -14,7 +14,7 @@ const Sidebar = () => {
 
     const handleCheckboxChange = (category, value) => {
         setFilters((prev) => {
-            const updated = prev[category].includes(value)
+            const updated = prev[category].includes(value)  
                 ? prev[category].filter((v) => v !== value)
                 : [...prev[category], value];
             return { ...prev, [category]: updated };

@@ -7,12 +7,6 @@
   color: #2e2e2e;
 }
 
-/* ---------- Main Content ---------- */
-/* .admin-main {
-  flex: 1;
-  padding: 28px 50px;
-} */
-
 /* Header */
 .admin-header {
   display: flex;
@@ -22,7 +16,7 @@
 }
 
 .admin-header h1 {
-  font-size: 1.9rem;
+  font-size: 1.9rem; 
   font-weight: 600;
   color: #00695C;
 }

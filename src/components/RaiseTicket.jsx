@@ -104,7 +104,7 @@ const RaiseTicket = () => {
           <button type="submit" className="ticket-btn">
             Submit Ticket
           </button>
-        </form>
+        </form>  
       </div>
     </div>
   );

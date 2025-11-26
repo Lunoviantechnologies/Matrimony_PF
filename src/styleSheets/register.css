@@ -85,7 +85,7 @@ h2 {
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.form-input::placeholder {
+.form-input::placeholder {  
   color: #adb5bd;
 }
 

@@ -184,7 +184,7 @@ export default function ProfileView() {
     <div className="pv-container">
       <div className="pv-top">
         <div className="pv-header">
-          <h2>Profiles views</h2>
+          <h2>Profiles views</h2>  
           <div className="pv-month-dropdown">
             <button
               className="pv-dropdown-toggle"

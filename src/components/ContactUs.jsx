@@ -13,7 +13,7 @@ const ContactUs = () => {
             We’d love to help you find your perfect match. Reach out to start your journey today.
           </p>
         </div> 
-      </section>
+      </section>  
 
       {/* Main Content */}
       <section className="contact-content">

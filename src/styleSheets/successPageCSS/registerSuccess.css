@@ -1,6 +1,5 @@
 .glow-wrapper {
     padding: 4px;
-    /* thickness of border */
     border-radius: 18px;
     position: relative;
 }
@@ -9,7 +8,7 @@
     box-shadow: none !important;
     transform: none !important;
 }
-
+  
 .glow-wrapper::before {
     content: "";
     position: absolute;

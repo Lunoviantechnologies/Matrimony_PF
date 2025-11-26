@@ -90,6 +90,6 @@
   transition: 0.3s;
 }
 
-.connect-btn:hover {
+.connect-btn:hover { 
   background: #cc7700;
 }
