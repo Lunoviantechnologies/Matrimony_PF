@@ -1,6 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { FiGrid, FiUser, FiEdit, FiInbox, FiHeart, FiSettings, FiMessageSquare } from "react-icons/fi";
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { FiGrid, FiUser, FiEdit, FiInbox, FiHeart, FiSettings, FiMessageSquare } from "react-icons/fi";
 
 const SubNavbar = () => {
     return (

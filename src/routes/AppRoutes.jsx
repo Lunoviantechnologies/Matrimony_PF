@@ -10,7 +10,7 @@ import ProfileView from "../pages/ProfileView";
 import AboutUs from "../components/AboutUs";
 import ContactUs from "../components/ContactUs";
 import ChatWindow from "../components/ChatWindow";
-import ProfileCard from "../components/ProfileCard";
+// import ProfileCard from "../components/ProfileCard";
 import DashboardLayout from "../pages/DashboardLayout";
 import Settings from "../components/Settings";
 import ViewReport from "../admin/ViewReport";
@@ -25,6 +25,17 @@ import Cart from "../components/Cart";
 import Forgotpassword from "../components/Forgotpassword";
 import AdminLayout from "../admin/AdminLayout";
 import RegisterSuccessPage from "../successPages/registerSuccessPage";
+import AdminProfiles from "../admin/AdminProfiles";
+import MyMatches from "../pages/Mymatches";
+import NearMe from "../pages/Nearme";
+import MoreMatches from "../pages/MoreMatches";
+import NewMatches from "../pages/Newmatches";
+import Matches from "../pages/Matches";
+import Request from"../pages/Request";
+import Accepted from "../pages/Accepted";
+import Sent from"../pages/Sent";
+import Rejected from"../pages/Rejected";
+import Received from"../pages/Received";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -67,7 +78,14 @@ const AppRoutes = createBrowserRouter([
                 path: "registration-success",
                 element: <RegisterSuccessPage />
             },
-        ]
+            {
+                path: "/Adminprofiles",
+                element: <AdminProfiles />
+            }
+            
+            
+       
+        ],
     },
     {
         path: "/dashboard",
@@ -92,17 +110,51 @@ const AppRoutes = createBrowserRouter([
             },
             {
                 path: "matches",
-                element: <Matches />,
-                children: [
-                    {
-                        path: "my_matches",
-                        element: <ProfileCard />
+                element: <Matches/>,
+                children:[
+                    {            
+                        path: "mymatches",
+                        element: <MyMatches/>
                     },
                     {
-                        path: "view_profile/:profileId",
-                        element: <ViewProfileModal />
-                    }
+                        path: "nearme",
+                        element: <NearMe />
+                    },
+                    {
+                        path: "morematches",
+                        element: <MoreMatches />
+                    },
+                    {
+                        path: "newmatches",
+                        element: <NewMatches/>
+                    },
                 ]
+            },
+            {
+                path: "requests",
+                element: <Request/>,
+                children:[
+                    {            
+                        path: "accepted",
+                        element: <Accepted/>
+                    },
+                    {
+                        path: "sent",
+                        element: <Sent />
+                    },
+                    {
+                        path: "received",
+                        element: <Received />
+                    },
+                    {
+                        path: "rejected",
+                        element: <Rejected/>
+                    },
+                ]
+            },
+            {
+                path: "premium",
+                element: <PremiumSubscription />
             },
             {  
                 path: "requests",
@@ -134,6 +186,9 @@ const AppRoutes = createBrowserRouter([
                 path: "manageusers",
                 element: <ManageUser />
             },
+          
+
+          
         ]
     }
 ]);

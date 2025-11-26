@@ -8,6 +8,7 @@
 .navBody {
     background-color: #D9F5E4;
     border-radius: 50px;
+    border-radius: 50px;
 }
 
 .navLink {
@@ -22,6 +23,8 @@
     color: #081c15;
     padding: 5px 20px;
     width: 80px;
+    border-radius: 10px;
+    font-size: 1rem;
     border-radius: 10px;
     font-size: 1rem;
     background-size: 200% auto;
@@ -42,6 +45,23 @@
 
 .navLogin:active {
     transform: scale(0.95);
+}
+
+/* Search Filter */
+
+.searchfilter {
+    background-color: transparent;
+    border: 1px solid #9bcfb0;
+    width: 260px;
+    border-radius: 20px;
+    height: 38px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    line-height: 38px;
+    box-sizing: border-box;
+    position: relative;
+    top: 6px;  
 }
 
 /* Search Filter */
@@ -83,7 +103,30 @@
 
 .subnav_link.active {
     border-bottom: 2px solid #04c451;
+    text-decoration: none;
     color: #025423;
+    font-weight: 500;
+    padding-bottom: 4px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.subnav_link:hover {
+    color: #025423;
+}
+
+.subnav_link.active {
+    border-bottom: 2px solid #04c451;
+    color: #025423;
+}
+
+/* Request Profiles */
+
+.request_nav {
+    padding: 14px 0;
+}
+
+.request_link {
 }
 
 /* Request Profiles */
