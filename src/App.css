@@ -64,23 +64,6 @@
     top: 6px;  
 }
 
-/* Search Filter */
-
-.searchfilter {
-    background-color: transparent;
-    border: 1px solid #9bcfb0;
-    width: 260px;
-    border-radius: 20px;
-    height: 38px;
-    padding: 0 14px;
-    display: flex;
-    align-items: center;
-    line-height: 38px;
-    box-sizing: border-box;
-    position: relative;
-    top: 6px;  
-}
-
 /* Sub Navbar */
 
 .sub_navbar {
@@ -101,7 +84,7 @@
     color: #025423;
 }
 
-.subnav_link.active {
+/* .subnav_link.active {
     border-bottom: 2px solid #04c451;
     text-decoration: none;
     color: #025423;
@@ -109,24 +92,11 @@
     padding-bottom: 4px;
     border-bottom: 2px solid transparent;
     transition: all 0.3s ease;
-}
-
-.subnav_link:hover {
-    color: #025423;
-}
+} */
 
 .subnav_link.active {
     border-bottom: 2px solid #04c451;
     color: #025423;
-}
-
-/* Request Profiles */
-
-.request_nav {
-    padding: 14px 0;
-}
-
-.request_link {
 }
 
 /* Request Profiles */

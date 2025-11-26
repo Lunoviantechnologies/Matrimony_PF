@@ -30,7 +30,6 @@ import MyMatches from "../pages/Mymatches";
 import NearMe from "../pages/Nearme";
 import MoreMatches from "../pages/MoreMatches";
 import NewMatches from "../pages/Newmatches";
-import Matches from "../pages/Matches";
 import Request from"../pages/Request";
 import Accepted from "../pages/Accepted";
 import Sent from"../pages/Sent";
@@ -78,13 +77,6 @@ const AppRoutes = createBrowserRouter([
                 path: "registration-success",
                 element: <RegisterSuccessPage />
             },
-            {
-                path: "/Adminprofiles",
-                element: <AdminProfiles />
-            }
-            
-            
-       
         ],
     },
     {
@@ -114,7 +106,7 @@ const AppRoutes = createBrowserRouter([
                 children:[
                     {            
                         path: "mymatches",
-                        element: <MyMatches/>
+                        element: <MyMatches />
                     },
                     {
                         path: "nearme",
@@ -186,9 +178,10 @@ const AppRoutes = createBrowserRouter([
                 path: "manageusers",
                 element: <ManageUser />
             },
-          
-
-          
+            {
+                path: "adminprofiles",
+                element: <AdminProfiles />
+            }
         ]
     }
 ]);

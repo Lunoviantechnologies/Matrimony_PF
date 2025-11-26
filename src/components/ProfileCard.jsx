@@ -116,7 +116,7 @@ const profiles = [
   }
 ];
 
-const ProfileCards = () => {
+const ProfileCard = () => {
   const [activeProfile, setActiveProfile] = useState(null); // ⭐ MODAL STATE
 
   return (
@@ -164,4 +164,4 @@ const ProfileCards = () => {
   );
 };
 
-export default ProfileCards;
+export default ProfileCard;
