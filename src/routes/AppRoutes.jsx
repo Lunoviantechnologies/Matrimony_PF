@@ -30,11 +30,11 @@ import MyMatches from "../pages/Mymatches";
 import NearMe from "../pages/Nearme";
 import MoreMatches from "../pages/MoreMatches";
 import NewMatches from "../pages/Newmatches";
-import Request from"../pages/Request";
 import Accepted from "../pages/Accepted";
 import Sent from"../pages/Sent";
 import Rejected from"../pages/Rejected";
 import Received from"../pages/Received";
+import ProtectedRoute from "./ProtectedRoute";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -81,7 +81,11 @@ const AppRoutes = createBrowserRouter([
     },
     {
         path: "/dashboard",
-        element: <DashboardLayout />,
+        element: (
+            <ProtectedRoute>
+                <DashboardLayout />
+            </ProtectedRoute>
+        ),
         children: [
 
             {
@@ -124,7 +128,7 @@ const AppRoutes = createBrowserRouter([
             },
             {
                 path: "requests",
-                element: <Request/>,
+                element: <Requests />,
                 children:[
                     {            
                         path: "accepted",
@@ -164,7 +168,11 @@ const AppRoutes = createBrowserRouter([
     },
     {
         path: "/admin",
-        element: <AdminLayout />,
+        element: (
+            <ProtectedRoute>
+                <AdminLayout />
+            </ProtectedRoute>
+        ),
         children: [
             {
                 path: "",

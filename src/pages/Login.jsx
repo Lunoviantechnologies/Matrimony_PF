@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import "../styleSheets/loginStyle.css";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import backendIP from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../redux/thunk/loginThunk";
 
@@ -12,43 +10,45 @@ const Login = ({ show, onClose }) => {
     const navigate = useNavigate();
     const [auth, setAuth] = useState({ emailId: "", createPassword: "" });
     const [showPassword, setShowPassword] = useState(false);
+
     const dispatch = useDispatch();
-    const { loading, error, role, isLoggedIn } = useSelector( state => state.auth );
+    const { loading, error, role, isLoggedIn } = useSelector(state => state.auth);
 
-    const handleRegister = () => {
-        onClose();
-    };
-
-    const handleForget = () => {
-        onClose();
-    };
+    const handleRegister = () => onClose();
+    const handleForget = () => onClose();
 
     const handleLogin = (e) => {
         e.preventDefault();
-        console.log("Attempting login with:", auth);
         
-        dispatch( loginUser(auth) )
+        dispatch(loginUser(auth))
             .unwrap()
-            .then( () => {
-                onclose();
-                if ( role === "admin" ) navigate("/admin");
+            .then(() => {
+                onClose();
+                if (role === "admin") navigate("/admin");
                 else navigate("/dashboard");
             })
-            .catch( (err) => {
-                alert("Login failed. Please check your credentials and try again.");
-                console.error("Login error:", err);
-            })
+            .catch(() => {
+                alert("Login failed. Please check your credentials.");
+            });
     };
 
     return (
         <div className="login-form">
-            {/* Overlay background */}
+
+            {/* Loading Overlay */}
+            {loading && (
+                <div className="loading-overlay">
+                    <div className="spinner-border text-light"></div>
+                </div>
+            )}
+
+            {/* Blur background */}
             <div
                 className={`blur-bg-overlay ${show ? "active" : ""}`}
                 onClick={onClose}
             ></div>
 
-            {/* Popup box */}
+            {/* Popup */}
             <div className={`form-popup ${show ? "show" : ""}`}>
                 <span className="close-btn material-symbols-rounded" onClick={onClose}>
                     <i className="bi bi-x-circle"></i>
@@ -62,12 +62,19 @@ const Login = ({ show, onClose }) => {
 
                     <div className="form-content">
                         <h2>LOGIN</h2>
+
                         <form>
+                            {/* EMAIL */}
                             <div className="input-field">
-                                <input type="text" required onChange={(e) => { setAuth({ ...auth, emailId: e.target.value }) }} />
+                                <input
+                                    type="text"
+                                    required
+                                    onChange={(e) => setAuth({ ...auth, emailId: e.target.value })}
+                                />
                                 <label>Email</label>
                             </div>
 
+                            {/* PASSWORD */}
                             <div className="input-field position-relative">
                                 <input
                                     id="loginPassword"
@@ -89,16 +96,41 @@ const Login = ({ show, onClose }) => {
                                 </span>
                             </div>
 
-                            <Link to="forgotpassword" onClick={handleForget} className="forgot-pass-link">
+                            <Link
+                                to="forgotpassword"
+                                onClick={handleForget}
+                                className="forgot-pass-link"
+                            >
                                 Forgot password?
                             </Link>
 
-                            <button type="submit" onClick={handleLogin}>Log In</button>
+                            {/* LOGIN BUTTON WITH SPINNER */}
+                            <button
+                                type="submit"
+                                onClick={handleLogin}
+                                disabled={loading}
+                                className="login-btn"
+                            >
+                                {loading ? (
+                                    <span>
+                                        <span className="spinner-border spinner-border-sm me-2"></span>
+                                        Logging in...
+                                    </span>
+                                ) : (
+                                    "Log In"
+                                )}
+                            </button>
                         </form>
 
                         <div className="mt-4 signup-link">
-                            <span>New to Matrimony? <Link to="register" onClick={handleRegister} className="signupa"> SignUp for Free</Link></span>
+                            <span>
+                                New to Matrimony?
+                                <Link to="register" onClick={handleRegister} className="signupa">
+                                    {" "}SignUp for Free
+                                </Link>
+                            </span>
                         </div>
+
                     </div>
                 </div>
             </div>

@@ -1,45 +1,63 @@
-import React from "react";
-import "../styleSheets/requestCSS/profileRequest.css";
-
-const users = [
-  {
-    id: 1,
-    name: "Priya Sharma",
-    age: 26,
-    city: "Hyderabad",
-    image: "/PHOTO-2025-11-25-14-05-01.jpg" // use your file path
-  },
-  {
-    id: 2,
-    name: "Anita Reddy",
-    age: 24,
-    city: "Bangalore",
-    image: "/PHOTO-2025-11-25-14-05-01.jpg" // replace with other image
-  }
-];
+import React, { useEffect } from "react";
+import "../styleSheets/requestCSS/profileRequest.css"
+import axios from "axios";
+import backendIP from "../api/api";
+import { useSelector } from "react-redux";
 
 const Received = () => {
+
+  const { id } = useSelector(state => state.auth);
+  const [receivedRequests, setReceivedRequests] = React.useState([]);
+
+  useEffect(() => {
+    axios.get(`${backendIP}/friends/received/${id}`).then((response) => {
+      console.log("Received requests:", response.data);
+      setReceivedRequests(response.data);
+    }).catch((error) => {
+      console.error("Error fetching received requests:", error);
+    });
+  }, []);
+
+  const handleAccept = async (requestId) => {
+    try {
+      const response = await axios.post(`${backendIP}/friends/respond/${requestId}/${true}`);
+      console.log("Request accepted:", response.data);
+      alert("Request accepted successfully");
+      setReceivedRequests(receivedRequests.filter(req => req.requestId !== requestId));
+    } catch (error) {
+      console.error("Error accepting request:", error);
+    }
+  };
+
+  const handleReject = async (requestId) => {
+    try {
+      const response = await axios.post(`${backendIP}/friends/respond/${requestId}/${false}`);
+      console.log("Request rejected:", response.data);
+      alert("Request rejected successfully");
+      setReceivedRequests(receivedRequests.filter(req => req.requestId !== requestId));
+    } catch (error) {
+      console.error("Error rejecting request:", error);
+    }
+  };
+
   return (
     <div className="received-container">
-      {users.map((user) => (
-        <div className="received-card" key={user.id}>
-          
+      {receivedRequests.map((user) => (
+        <div className="received-card" key={user.requestId}>
           <div className="left-section">
-            <img src={user.image} alt="profile" className="profile-img" />
-            
-            <div>
-              <h3 className="name">{user.name}</h3>
-              <p className="details">
-                Age: {user.age} • City: {user.city}
-              </p>
+            <div className="img-box">
+              <img src={user.image} alt="profile" className="profile-img" />
+            </div>
+
+            <div className="text-section">
+              <h3 className="name">{user.senderName}</h3>
             </div>
           </div>
 
           <div className="btn-section">
-            <button className="accept">Accept</button>
-            <button className="reject">Reject</button>
+            <button className="accept" onClick={() => { handleAccept(user.requestId) }}>Accept</button>
+            <button className="reject" onClick={() => { handleReject(user.requestId) }}>Reject</button>
           </div>
-
         </div>
       ))}
     </div>

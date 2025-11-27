@@ -6,14 +6,14 @@ const rejectedUsers = [
     name: "Priya Sharma",
     age: 26,
     city: "Hyderabad",
-    image: "/mnt/data/PHOTO-2025-11-25-14-05-01.jpg"
+    image: "https://static.vecteezy.com/system/resources/thumbnails/029/663/882/small/adorable-baby-with-vibrant-clothing-in-a-playful-pose-ai-generative-photo.jpg",
   },
   {
     id: 2,
     name: "Anita Reddy",
     age: 24,
     city: "Bangalore",
-    image: "/mnt/data/PHOTO-2025-11-25-14-05-01.jpg"
+    image: "https://static.vecteezy.com/system/resources/thumbnails/029/663/882/small/adorable-baby-with-vibrant-clothing-in-a-playful-pose-ai-generative-photo.jpg",
   }
 ];
 
@@ -22,15 +22,16 @@ const Rejected = () => {
     <div className="received-container">
       {rejectedUsers.map((user) => (
         <div className="received-card" key={user.id}>
-          
-          <div className="left-section">
-            <img src={user.image} alt="profile" className="profile-img" />
 
-            <div>
+          <div className="left-section">
+            <div className="img-box">
+              <img src={user.image} alt="profile" className="profile-img" />
+            </div>
+
+            <div className="text-section">
               <h3 className="name">{user.name}</h3>
-              <p className="details">
-                Age: {user.age} • City: {user.city}
-              </p>
+              <p className="details">Age: {user.age}</p>
+              <p className="details">City: {user.city}</p>
               <p className="details" style={{ color: "#d62828", fontWeight: 600 }}>
                 Rejected
               </p>
