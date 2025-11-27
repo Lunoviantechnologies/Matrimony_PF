@@ -101,7 +101,7 @@ export default function Settings() {
     <Card>
       <CardContent>
         <Typography variant="h6" fontWeight="600" gutterBottom>
-          Help & Support
+          Help & Support   
         </Typography>
 
         <Button fullWidth variant="contained" color="secondary" sx={{ mt: 1 }}>

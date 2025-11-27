@@ -13,7 +13,7 @@ const RegisterSuccessPage = () => {
 
                     <h2 className="mb-3">Registration Successful 🎉</h2>
 
-                    <p className="text-secondary mb-4">
+                    <p className="text-secondary mb-4">  
                         Your account has been created successfully.<br />
                         Please log in to continue.
                     </p>

@@ -48,7 +48,7 @@ const FAQ = () => {
       <p className="faq-subtitle">
         Answers to the most common questions from our global community
       </p>
-
+  
       <div className="faq-list">
         {faqData.map((item, index) => (
           <div

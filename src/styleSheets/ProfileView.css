@@ -16,7 +16,7 @@
 .pv-container {
   font-family: var(--font-sans);
   padding: 20px;
-  display: flex;
+  display: flex; 
   flex-direction: column;
   gap: 20px;
   color: #12321b;

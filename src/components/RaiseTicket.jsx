@@ -163,7 +163,7 @@ const RaiseTicket = () => {
           <button type="submit" className="ticket-btn" disabled={loading}>
             {loading ? "Submitting..." : "Submit Ticket"}
           </button>
-        </form>
+        </form>  
       </div>
     </div>
   );

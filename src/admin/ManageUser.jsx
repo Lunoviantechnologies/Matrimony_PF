@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../stylesheets/ManageUsers.css";
 
-/**
- * ManageUsers.jsx
- * Props (optional):
- *  - apiBase: base URL for admin APIs (default: "")
- *  - pageSize: number of rows per page (default: 10)
- *
- * Replace fetch endpoints with your real endpoints or pass functions.
- */
-
 const MOCK_USERS = Array.from({ length: 24 }).map((_, i) => ({
   userId: `u_${1000 + i}`,
   name: ["Asha Rao", "Rahul Kumar", "Sita Devi", "Vikram"][i % 4] + ` ${i}`,

@@ -4,7 +4,7 @@ import "../styleSheets/Dashboard.css";
 const Dashboard = () => {
   return (
     <div className="dashboard_body">
-      {/* ====== Matches Section ====== */}
+      {/* ====== Matches Section ====== */}  
       <section className="matchSection">
         <h2 style={{ color: "#695019", marginBottom: 15 }}>
           New Profile Matches

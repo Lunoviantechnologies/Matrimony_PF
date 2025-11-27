@@ -17,9 +17,9 @@
 
 .mu-header h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: 20px;  
   color: #222;
-}
+} 
 
 .mu-controls {
   display: flex;

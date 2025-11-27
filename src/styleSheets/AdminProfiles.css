@@ -1,0 +1,112 @@
+/* MAIN CONTAINER */
+.profile-main-container {
+    width: 100%;
+    padding: 20px;
+}
+
+.profile-title {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.profile-cards-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 12px;   /* smaller gap between cards */
+}
+
+
+/* CARD */
+.profile-card {
+    background: white;
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.12);
+    transition: 0.3s ease;
+}
+
+.profile-card:hover {
+    transform: translateY(-4px);
+}
+
+/* IMAGE */
+.image-box {
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* DETAILS */
+.profile-details {
+    text-align: center;
+    margin-top: 14px;
+}
+
+.profile-details h3 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.profile-details span {
+    font-size: 14px;
+    color: gray;
+}
+
+.profile-details p {
+    margin: 4px 0;
+}
+
+/* ACTION BUTTONS */
+.admin-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;  /* stacked buttons */
+    margin-top: 16px;
+}
+
+/* Base Button – Pill Shape */
+.admin-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.25s;
+    border: none;
+}
+
+/* EDIT BUTTON (Blue) */
+.admin-btn.edit {
+    background: #0d6efd;
+    color: white;
+}
+
+.admin-btn.edit:hover {
+    background: #0b5ed7;
+    transform: translateY(-2px);
+}
+
+/* DELETE BUTTON (Red Outline) */
+.admin-btn.delete {
+    background: white;
+    color: #d32f2f;
+    border: 2px solid #d32f2f;
+}
+
+.admin-btn.delete:hover {
+    background: #fddede;
+    transform: translateY(-2px);
+}

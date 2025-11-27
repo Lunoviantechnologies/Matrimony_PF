@@ -12,7 +12,7 @@ const SubscriptionDescription = () => {
       discount: '30% off',
       originalPrice: '¥14,510',
       discountedPrice: '¥3,631',
-      perMonth: '11,211 per month',
+      perMonth: '11,211 per month',  
       features: [
         'Send unlimited Messages',
         'View upto 50 Contact Numbers',

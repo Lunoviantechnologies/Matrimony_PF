@@ -52,7 +52,7 @@ const Footer = () => {
 
         <div>
           <h2 className="footer-heading">Saathjanam.com - Trusted by Millions</h2>
-
+  
           <p className="footer-description">
             Saathjanam.com, one of India's leading matrimonial platforms, was
             founded with a simple objective — to help people find happiness. By

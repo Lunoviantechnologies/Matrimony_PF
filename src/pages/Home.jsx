@@ -12,7 +12,7 @@ const Home = () => {
     return (
         <div className="homePage">
 
-            <div className="homeBanner container">
+            <div className="homeBanner container">  
                 <div className="bannerText">
                     <img src="/saathjanam_logo.png" alt="saathjanam_logo" height={'200px'} />
                     <h1>SaathJanam</h1>

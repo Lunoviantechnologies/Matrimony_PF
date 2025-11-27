@@ -37,7 +37,7 @@ const AboutUs = () => {
                     </div>
                 </div>
             </section>
-
+  
             {/* Main About Us Content */}
             <main className="aboutus-main">
                 <h2 className="aboutus-heading">Our Journey to Finding Happiness</h2>

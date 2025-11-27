@@ -25,7 +25,7 @@
 }
 
 /* Fixed header */
-.fixed-header {
+.fixed-header {  
   position: fixed;
   top: 0;
   left: 0; 

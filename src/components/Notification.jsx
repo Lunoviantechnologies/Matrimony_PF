@@ -12,7 +12,7 @@ const Notification = ({ notifications = [], onNavigate }) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setOpen(false);
       }
-    };
+    }; 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);

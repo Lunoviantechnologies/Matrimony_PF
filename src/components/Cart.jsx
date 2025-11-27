@@ -401,7 +401,7 @@ function Cart() {
                                     value={formatCardNumber(paymentDetails.cardNumber)}
                                     onChange={handlePaymentInputChange}
                                     required
-                                />
+                                />  
                                 <div className="card-row">
                                     <input
                                         type="text"

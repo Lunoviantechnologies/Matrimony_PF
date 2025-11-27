@@ -24,7 +24,7 @@
   font-size: 1rem;
   transition: background-color 0.3s ease;
 } 
-
+ 
 .back-btn:hover {
   background: #ff5252;
 }
