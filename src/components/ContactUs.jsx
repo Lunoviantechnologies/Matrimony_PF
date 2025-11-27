@@ -1,8 +1,77 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import "../styleSheets/contactUs.css";
-import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaTwitter, FaFacebookF, FaLinkedinIn, FaInstagram } from "react-icons/fa";
+import {
+  FaPhoneAlt,
+  FaEnvelope,
+  FaMapMarkerAlt,
+  FaTwitter,
+  FaFacebookF,
+  FaLinkedinIn,
+  FaInstagram,
+} from "react-icons/fa";
+import backendIP from "../api/api";
 
 const ContactUs = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  const [status, setStatus] = useState("");
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setStatus("");
+  setError("");
+
+  const payload = {
+    name: formData.name,              // ✅ what backend expects
+    email: formData.email,
+    phone: formData.phone,
+    message: formData.message,        // ✅ what backend expects
+
+    // Also keep these if backend uses them in future
+    fullName: formData.name,
+    phoneNumber: formData.phone,
+    description: formData.message,
+  };
+
+  console.log("Sending payload:", payload);
+
+  try {
+    const res = await axios.post(
+      `${backendIP}/api/contact`,
+      payload,
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    console.log("Response:", res.data);
+    setStatus("✅ Message sent successfully");
+
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      message: "",
+    });
+
+  } catch (err) {
+    console.error("Error:", err.response?.data || err.message);
+    setError(err.response?.data?.message || "Something went wrong");
+  }
+};
+
+
   return (
     <div className="contact-container">
       {/* Banner Section */}
@@ -10,9 +79,10 @@ const ContactUs = () => {
         <div className="banner-overlay">
           <h1>CONTACT US</h1>
           <p>
-            We’d love to help you find your perfect match. Reach out to start your journey today.
+            We’d love to help you find your perfect match. Reach out to start
+            your journey today.
           </p>
-        </div> 
+        </div>
       </section>
 
       {/* Main Content */}
@@ -20,21 +90,56 @@ const ContactUs = () => {
         {/* Left: Form */}
         <div className="contact-form">
           <h2>Send Us a Message</h2>
-          <form>
+
+          <form onSubmit={handleSubmit}>
             <label>Name</label>
-            <input type="text" placeholder="Enter your name" required />
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter your name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
 
             <label>Email</label>
-            <input type="email" placeholder="Enter your email" required />
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
 
             <label>Phone Number</label>
-            <input type="tel" placeholder="Enter your phone number" required />
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Enter your phone number"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+            />
 
             <label>Message</label>
-            <textarea placeholder="Type your message..." rows="4" required></textarea>
+            <textarea
+              name="message"
+              placeholder="Type your message..."
+              rows="4"
+              value={formData.message}
+              onChange={handleChange}
+              required
+            ></textarea>
 
             <button type="submit">Send Message</button>
           </form>
+
+          {/* Success Message */}
+          {status && <p style={{ color: "green", marginTop: "10px" }}>{status}</p>}
+
+          {/* Error Message */}
+          {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
         </div>
 
         {/* Right: Contact Details */}
@@ -57,7 +162,7 @@ const ContactUs = () => {
             <span>+91 98765 43210</span>
           </div>
 
-          {/* Social Links Section */}
+          {/* Social Links */}
           <div className="social-section">
             <h3>Connect With Us</h3>
             <ul className="social-list">

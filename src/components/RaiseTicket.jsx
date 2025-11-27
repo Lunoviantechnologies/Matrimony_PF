@@ -1,5 +1,7 @@
-import React, { useState } from "react"; 
+import React, { useState } from "react";
 import "../styleSheets/raiseTicket.css";
+import backendIP from "../api/api";
+import axios from "axios";
 
 const RaiseTicket = () => {
   const [form, setForm] = useState({
@@ -11,6 +13,9 @@ const RaiseTicket = () => {
     memberId: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
+  // ✅ UI Categories (user friendly)
   const categories = [
     "Profile Approval Issue",
     "Premium Membership",
@@ -22,13 +27,67 @@ const RaiseTicket = () => {
     "Other Queries"
   ];
 
+  // ✅ Backend Enum Mapping
+  const categoryMap = {
+    "Profile Approval Issue": "ACCOUNT",
+    "Premium Membership": "PAYMENT",
+    "Login / Account Recovery": "LOGIN",
+    "Report Fake / Fraud Profile": "ACCOUNT",
+    "Payment Issue": "PAYMENT",
+    "Profile Privacy & Safety": "TECHNICAL",
+    "Matchmaking Assistance": "FEEDBACK",
+    "Other Queries": "OTHER"
+  };
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Form submitted successfully! (Frontend only)");
+    setLoading(true);
+
+    // ✅ Convert UI selection to backend Enum
+    const payload = {
+      issueCategory: categoryMap[form.category] || "OTHER",
+      name: form.name,
+      email: form.email,
+      phoneNumber: form.phone,
+      description: form.message,
+      memberId: form.memberId
+    };
+
+    console.log("Sending fixed payload:", payload);
+
+    try {
+      await axios.post(
+        `${backendIP}/api/tickets`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      alert("✅ Ticket submitted successfully");
+
+      // ✅ Reset form after success
+      setForm({
+        category: "",
+        name: "",
+        email: "",
+        phone: "",
+        message: "",
+        memberId: "",
+      });
+
+    } catch (error) {
+      console.log("Backend error:", error.response?.data);
+      alert("❌ " + (error.response?.data?.message || "Submission Failed"));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -101,8 +160,8 @@ const RaiseTicket = () => {
             required
           />
 
-          <button type="submit" className="ticket-btn">
-            Submit Ticket
+          <button type="submit" className="ticket-btn" disabled={loading}>
+            {loading ? "Submitting..." : "Submit Ticket"}
           </button>
         </form>
       </div>
