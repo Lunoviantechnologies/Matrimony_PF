@@ -21,7 +21,7 @@ const SubNavbar = () => {
                 <NavLink className="subnav_link" to="matches">
                     <FiHeart size={18} /> Matches
                 </NavLink>
-                <NavLink className="subnav_link" to="messages">
+                <NavLink className="subnav_link" to="messages/:userId">
                     <FiMessageSquare size={18} /> Messages
                 </NavLink>
                 <NavLink className="subnav_link" to="settings">

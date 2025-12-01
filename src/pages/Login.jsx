@@ -22,10 +22,15 @@ const Login = ({ show, onClose }) => {
         
         dispatch(loginUser(auth))
             .unwrap()
-            .then(() => {
+            .then((data) => {
                 onClose();
-                if (role === "admin") navigate("/admin");
-                else navigate("/dashboard");
+                const userRole = data.role[0];
+                // console.log("Login successful:", data);
+                if (userRole === "ADMIN") {
+                    navigate("/admin");
+                } else if (userRole === "PROFILE")  {
+                    navigate("/dashboard");
+                }
             })
             .catch(() => {
                 alert("Login failed. Please check your credentials.");

@@ -103,12 +103,20 @@
   font-size: 14px;
 }
 
-.btn-primary {
+.btn-send {
   background: #f7a400;
   color: white;
   transition: 0.2s;
 }
 
-.btn-primary:hover {
+.btn-sent:disabled {
+  background: grey;
+  color: white;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.btn-send:hover {
   background: #d98b00;
+  color: white;
 }
