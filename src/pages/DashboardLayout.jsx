@@ -9,7 +9,7 @@ const DashboardLayout = () => {
     return (
         <div style={{backgroundColor: '#D9F5E4'}}>
             <Navbar />
-            <SubNavbar />
+            <SubNavbar />  
             <div style={{ display: "flex", marginTop: "10px" }}>
                 <Sidebar />
                 <div style={{ flex: 1, background: "#D9F5E4", minHeight: "100vh", padding: 20 }}>

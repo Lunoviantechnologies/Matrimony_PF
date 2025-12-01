@@ -19,7 +19,7 @@
   animation: fadeIn 0.4s ease-in;
 }
 
-.ticket-title {
+.ticket-title {  
   font-size: 26px;
   font-weight: 700; 
   color: #ee225d;

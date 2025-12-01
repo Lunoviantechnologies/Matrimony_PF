@@ -6,7 +6,7 @@ const ChatWindow = () => {
   const [chats, setChats] = useState([
     
     {
-      id: 1, 
+      id: 1,   
       name: "Priya Sharma",
       avatar: "https://randomuser.me/api/portraits/women/65.jpg",
       messages: [

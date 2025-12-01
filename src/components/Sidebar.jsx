@@ -5,7 +5,7 @@ const Sidebar = () => {
     const [filters, setFilters] = useState({
         age: [],
         religion: [],
-        caste: [],
+        caste: [],  
         country: [],
         education: [],
         profession: [],
@@ -14,7 +14,7 @@ const Sidebar = () => {
 
     const handleCheckboxChange = (category, value) => {
         setFilters((prev) => {
-            const updated = prev[category].includes(value)
+            const updated = prev[category].includes(value)  
                 ? prev[category].filter((v) => v !== value)
                 : [...prev[category], value];
             return { ...prev, [category]: updated };
@@ -75,10 +75,7 @@ const Sidebar = () => {
         <div className="sidebar">
             <h5 className="sidebar-title text-center">Search Filters</h5>
 
-            <button
-                className="btn btn-primary w-100 apply-btn"
-                onClick={handleApplyFilters}
-            >
+            <button className="btn w-100 apply-btn" onClick={handleApplyFilters}>
                 Apply Filters
             </button>
 
@@ -96,10 +93,7 @@ const Sidebar = () => {
                                     handleCheckboxChange(section.category, item)
                                 }
                             />
-                            <label
-                                className="form-check-label"
-                                htmlFor={`${section.category}-${item}`}
-                            >
+                            <label className="form-check-label" htmlFor={`${section.category}-${item}`}>
                                 {item}
                             </label>
                         </div>

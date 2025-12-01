@@ -157,7 +157,8 @@ const ProfileCards = () => {
           </div>
         ))}
       </div>
-
+  
+      {/* ⭐ RENDER MODAL HERE */}
       {activeProfile && (
         <ViewProfileModal
           profile={activeProfile}
@@ -169,4 +170,4 @@ const ProfileCards = () => {
   );
 };
 
-export default ProfileCards;
+export default ProfileCard;

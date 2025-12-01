@@ -12,7 +12,7 @@ const SubNavbar = () => {
                 <NavLink className="subnav_link" to="editProfile">
                     <FiEdit size={18} /> Edit Profile
                 </NavLink>
-                <NavLink className="subnav_link" to="viewProfile">
+                <NavLink className="subnav_link" to="viewProfile">    
                     <FiUser size={18} /> View Profile
                 </NavLink>
                 <NavLink className="subnav_link" to="requests">

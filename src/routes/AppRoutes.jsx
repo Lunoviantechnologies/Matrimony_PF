@@ -7,11 +7,10 @@ import SubscriptionDescription from '../pages/SubscriptionDescription';
 import Dashboard from "../pages/Dashboard";
 import EditProfile from "../pages/EditProfile";
 import ProfileView from "../pages/ProfileView";
-import Login from "../pages/Login";
 import AboutUs from "../components/AboutUs";
 import ContactUs from "../components/ContactUs";
 import ChatWindow from "../components/ChatWindow";
-import ProfileCard from "../components/ProfileCard";
+// import ProfileCard from "../components/ProfileCard";
 import DashboardLayout from "../pages/DashboardLayout";
 import Settings from "../components/Settings";
 import ViewReport from "../admin/ViewReport";
@@ -25,8 +24,17 @@ import Matches from "../pages/Matches";
 import Cart from "../components/Cart";
 import Forgotpassword from "../components/Forgotpassword";
 import AdminLayout from "../admin/AdminLayout";
-import ManageMatches from "../admin/ManageMatches";
-import AdminProfile from "../admin/AdminProfiles";
+import RegisterSuccessPage from "../successPages/registerSuccessPage";
+import AdminProfiles from "../admin/AdminProfiles";
+import MyMatches from "../pages/Mymatches";
+import NearMe from "../pages/Nearme";
+import MoreMatches from "../pages/MoreMatches";
+import NewMatches from "../pages/Newmatches";
+import Accepted from "../pages/Accepted";
+import Sent from"../pages/Sent";
+import Rejected from"../pages/Rejected";
+import Received from"../pages/Received";
+import ProtectedRoute from "./ProtectedRoute";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -54,22 +62,30 @@ const AppRoutes = createBrowserRouter([
                 element: <Register />
             },
             {
-                path: "/login",
-                element: <Login />
-            },
-            {
                 path: "forgotpassword",
                 element: <Forgotpassword />
             },
             {
-                path: "/manageuser",
-                element: <ManageUser />
+                path: "premium",
+                element: <PremiumSubscription />
+            },
+            {
+                path: "cart/:planId",
+                element: <Cart />
+            },
+            {
+                path: "registration-success",
+                element: <RegisterSuccessPage />
             },
         ],
     },
     {
         path: "/dashboard",
-        element: <DashboardLayout />,
+        element: (
+            <ProtectedRoute>
+                <DashboardLayout />
+            </ProtectedRoute>
+        ),
         children: [
 
             {
@@ -90,29 +106,55 @@ const AppRoutes = createBrowserRouter([
             },
             {
                 path: "matches",
-                element: <Matches />,
-                children: [
-                    {
-                        path: "my_matches",
-                        element: <ProfileCard />
+                element: <Matches/>,
+                children:[
+                    {            
+                        path: "mymatches",
+                        element: <MyMatches />
                     },
                     {
-                        path: "view_profile/:profileId",
-                        element: <ViewProfileModal />
-                    }
+                        path: "nearme",
+                        element: <NearMe />
+                    },
+                    {
+                        path: "morematches",
+                        element: <MoreMatches />
+                    },
+                    {
+                        path: "newmatches",
+                        element: <NewMatches/>
+                    },
                 ]
             },
             {
                 path: "requests",
-                element: <Requests />
+                element: <Requests />,
+                children:[
+                    {            
+                        path: "accepted",
+                        element: <Accepted/>
+                    },
+                    {
+                        path: "sent",
+                        element: <Sent />
+                    },
+                    {
+                        path: "received",
+                        element: <Received />
+                    },
+                    {
+                        path: "rejected",
+                        element: <Rejected/>
+                    },
+                ]
             },
             {
                 path: "premium",
                 element: <PremiumSubscription />
             },
-            {
-                path: "cart/:planId",
-                element: <Cart />
+            {  
+                path: "requests",
+                element: <Requests />
             },
             {
                 path: "settings",
@@ -126,7 +168,11 @@ const AppRoutes = createBrowserRouter([
     },
     {
         path: "/admin",
-        element: <AdminLayout />,
+        element: (
+            <ProtectedRoute>
+                <AdminLayout />
+            </ProtectedRoute>
+        ),
         children: [
             {
                 path: "",
@@ -148,6 +194,10 @@ const AppRoutes = createBrowserRouter([
                 path: "adminprofile",
                 element: <AdminProfile />
             },
+            {
+                path: "adminprofiles",
+                element: <AdminProfiles />
+            }
         ]
     }
 ]);

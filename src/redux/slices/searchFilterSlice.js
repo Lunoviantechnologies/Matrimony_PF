@@ -9,7 +9,7 @@ const searchFilterSlice = createSlice({
         setSearchText: (state, action) => {
             state.text = action.payload;
         }
-    }
+    } 
 });
 
 export const { setSearchText } = searchFilterSlice.actions;

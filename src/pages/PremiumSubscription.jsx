@@ -85,12 +85,12 @@ function PremiumSubscription() {
         'Standout from Profiles',
         'Matches contact directly'
       ],
-      duration: '12 months'
+      duration: '12 months'  
     }
   ];
 
   const handlePlanSelect = (plan) => {
-    navigate(`/dashboard/cart/${plan.id}`);
+    navigate(`/cart/${plan.id}`);
   };
 
   return (

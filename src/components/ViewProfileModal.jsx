@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import "../styleSheets/ViewProfileModal.css";
 
+<<<<<<< HEAD
 /**
  * ViewProfileModal.jsx
  * - props:
@@ -12,6 +13,9 @@ import "../styleSheets/ViewProfileModal.css";
  */
 
 export default function ViewProfileModal({ profile = {}, onClose = () => {}, anchorRect = null }) {
+=======
+export default function ViewProfileModal({ profile = {}, onClose = () => {} }) {
+>>>>>>> 4a65194ca8553f4f81c2a2a357f826aeb82b7c21
   useEffect(() => {
     const onKey = (e) => { if (e.key === "Escape") onClose(); };
     document.addEventListener("keydown", onKey);
@@ -24,6 +28,7 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {}, anc
   const {
     name = "—",
     age,
+<<<<<<< HEAD
     gender = "—",
     height = "—",
     religion = "",
@@ -37,6 +42,19 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {}, anc
     city = "—",
     state = "—",
     country = "—",
+=======
+    job,
+    education,
+    location,
+    community,
+    height,
+    image,
+    bio,
+    photos = [],
+    phone,
+    email,
+    preferences = {},
+>>>>>>> 4a65194ca8553f4f81c2a2a357f826aeb82b7c21
     family = {},
     bio = "",
     photos = [],
