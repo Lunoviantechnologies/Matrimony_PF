@@ -35,6 +35,7 @@ import Sent from"../pages/Sent";
 import Rejected from"../pages/Rejected";
 import Received from"../pages/Received";
 import ProtectedRoute from "./ProtectedRoute";
+import ManageMatches from "../admin/ManageMatches";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -189,10 +190,6 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "managematches",
                 element: <ManageMatches />
-            },
-            {
-                path: "adminprofile",
-                element: <AdminProfile />
             },
             {
                 path: "adminprofiles",
