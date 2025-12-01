@@ -1,16 +1,6 @@
 import React, { useEffect } from "react";
 import "../styleSheets/ViewProfileModal.css";
 
-/**
- * ViewProfileModal.jsx
- * - props:
- *    profile: object with matrimony fields
- *    onClose: fn
- *    anchorRect: optional DOMRect to anchor popover (fixed)
- *
- * Popover shows expanded matrimony details and is scrollable.
- */
-
 export default function ViewProfileModal({ profile = {}, onClose = () => {}, anchorRect = null }) {
   useEffect(() => {
     const onKey = (e) => { if (e.key === "Escape") onClose(); };

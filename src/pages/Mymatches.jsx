@@ -7,7 +7,6 @@ import backendIP from "../api/api";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 
 const MyMatches = () => {
-
   const { profiles, loading, error } = useSelector((state) => state.profiles);
   const { id, myProfile } = useSelector((state) => state.auth);
   const [SentRequests, setSentRequests] = useState([]);
@@ -20,8 +19,7 @@ const MyMatches = () => {
     axios
       .get(`${backendIP}/friends/sent/${id}`)
       .then((response) => {
-        console.log("Sent requests:", response.data);
-        setSentRequests(response.data); // array of objects
+        setSentRequests(response.data);
       })
       .catch((error) => {
         console.error("Error fetching sent requests:", error);
@@ -31,10 +29,7 @@ const MyMatches = () => {
   const handleSendRequest = (receiverId) => {
     axios
       .post(`${backendIP}/friends/send/${id}/${receiverId}`)
-      .then((response) => {
-        console.log("Request sent successfully:", response.data);
-
-        // Update UI instantly by adding new sent request
+      .then(() => {
         setSentRequests((prev) => [
           ...prev,
           { senderId: id, receiverId: receiverId },
@@ -45,7 +40,6 @@ const MyMatches = () => {
       });
   };
 
-  // Extract only receiverIds from SentRequests object array
   const sentReceiverIds = SentRequests.map((req) => req.receiverId);
 
   return (
@@ -60,13 +54,7 @@ const MyMatches = () => {
             <article className="profile-card" key={p.id}>
               <div className="image-box">
                 <img
-                  src={
-                    p.image
-                      ? p.image
-                      : p.gender === "Female"
-                        ? "/placeholder_girl.png"
-                        : "/placeholder_boy.png"
-                  }
+                  src={ p.image ? p.image : p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
                   alt={p.name}
                   className="profile-img"
                 />
@@ -86,10 +74,10 @@ const MyMatches = () => {
                 </p>
 
                 <div className="btn-row">
-                  <button className="btn btn-sendRequest">View Profile</button>
+                  <button className="btn btn-view">View Profile</button>
 
                   <button
-                    className={`btn btn-sendRequest ${sentReceiverIds.includes(p.id) ? "btn-sent" : "btn-send"}`}
+                    className={`btn ${sentReceiverIds.includes(p.id) ? "btn-sent" : "btn-send"}`}
                     disabled={sentReceiverIds.includes(p.id)}
                     onClick={() => handleSendRequest(p.id)}
                   >

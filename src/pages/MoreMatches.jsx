@@ -64,10 +64,10 @@ const MoreMatches = () => {
                   <p className="line">{p.religion} | {p.subCaste} </p>
 
                   <div className="btn-row">
-                    <button className="btn btn-sendRequest">View Profile</button>
+                    <button className="btn btn-view">View Profile</button>
 
                     <button
-                      className={`btn btn-sendRequest ${sentReceiverIds.includes(p.id) ? "btn-sent" : "btn-send"}`}
+                      className={`btn ${sentReceiverIds.includes(p.id) ? "btn-sent" : "btn-send"}`}
                       disabled={sentReceiverIds.includes(p.id)}
                       onClick={() => handleSendRequest(p.id)}
                     >

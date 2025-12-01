@@ -129,7 +129,7 @@
 }
 
 /* Messages */
-/* .chatwindow-messages {
+.chatwindow-messages {
     flex: 1;
     padding: 15px;
     overflow-y: auto;
@@ -157,43 +157,6 @@
     align-self: flex-start;
     background: #eaeaea;
     color: black;
-} */
-
-/* Wrap every message properly */
-.chat-bubble {
-  max-width: 60%;
-  padding: 10px 14px;
-  border-radius: 12px;
-  margin: 8px 0;
-  display: inline-block;
-}
-
-/* MY MESSAGE (right side) */
-.my-message {
-  background: #d1f7c4;
-  align-self: flex-end;
-  margin-left: auto;
-  text-align: right;
-  border-bottom-right-radius: 0;
-}
-
-/* THEIR MESSAGE (left side) */
-.their-message {
-  background: #ffffff;
-  align-self: flex-start;
-  margin-right: auto;
-  text-align: left;
-  border-bottom-left-radius: 0;
-}
-
-/* Messages wrapper MUST be flex column */
-.chatwindow-messages {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 10px;
-  overflow-y: auto;
-  height: calc(100vh - 180px);
 }
 
 .chat-time {
