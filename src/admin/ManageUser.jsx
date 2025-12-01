@@ -1,197 +1,166 @@
-import React, { useEffect, useState } from "react";
-import "../stylesheets/ManageUsers.css";
+import React, { useEffect, useMemo, useState } from "react";
+import "../styleSheets/ManageUsers.css";
 
-/**
- * ManageUsers.jsx
- * Props (optional):
- *  - apiBase: base URL for admin APIs (default: "")
- *  - pageSize: number of rows per page (default: 10)
- *
- * Replace fetch endpoints with your real endpoints or pass functions.
- */
-
-const MOCK_USERS = Array.from({ length: 24 }).map((_, i) => ({
-  userId: `u_${1000 + i}`,
-  name: ["Asha Rao", "Rahul Kumar", "Sita Devi", "Vikram"][i % 4] + ` ${i}`,
-  age: 23 + (i % 10),
-  gender: i % 2 === 0 ? "Female" : "Male",
-  city: ["Hyderabad", "Delhi", "Bengaluru", "Chennai"][i % 4],
-  membership: i % 3 === 0 ? "Premium" : "Free",
-  profileStatus: i % 5 === 0 ? "pending_verification" : i % 7 === 0 ? "suspended" : "active",
-  lastActive: new Date(Date.now() - i * 1000 * 60 * 60).toISOString(),
-  verified: i % 5 !== 0,
-  photos: [],
-}));
+const MOCK_USERS = Array.from({ length: 24 }).map((_, i) => {
+  const id = `u_${1000 + i}`;
+  const names = ["Asha Rao", "Rahul Kumar", "Sita Devi", "Vikram"];
+  const name = `${names[i % names.length]} ${i}`;
+  const city = ["Hyderabad", "Delhi", "Bengaluru", "Chennai"][i % 4];
+  const membership = i % 3 === 0 ? "Premium" : "Free";
+  const status =
+    i % 5 === 0
+      ? "pending_verification"
+      : i % 7 === 0
+      ? "suspended"
+      : "active";
+  const joined = new Date(Date.now() - i * 1000 * 60 * 60).toISOString();
+  return {
+    userId: id,
+    name,
+    age: 23 + (i % 10),
+    gender: i % 2 === 0 ? "Female" : "Male",
+    city,
+    membership,
+    profileStatus: status,
+    lastActive: joined,
+    verified: i % 5 !== 0,
+    image: null,
+    bio: i % 4 === 0 ? "Loves cooking and travelling." : "",
+  };
+});
 
 export default function ManageUser({ apiBase = "", pageSize = 10 }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // UI state
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [genderFilter, setGenderFilter] = useState("all");
   const [membershipFilter, setMembershipFilter] = useState("all");
   const [page, setPage] = useState(1);
-  const [selected, setSelected] = useState(new Set());
-  const [detailUser, setDetailUser] = useState(null);
-  const [confirm, setConfirm] = useState({ open: false, action: null, user: null });
 
-  // Fetch users from API or fallback to mock
+  const [detailUser, setDetailUser] = useState(null);
+  const [confirm, setConfirm] = useState({
+    open: false,
+    action: null,
+    user: null,
+  });
+
   useEffect(() => {
     let mounted = true;
     async function load() {
       setLoading(true);
       try {
         if (!apiBase) {
-          // fallback to mock
-          await new Promise((r) => setTimeout(r, 300));
+          await new Promise((r) => setTimeout(r, 200));
           if (mounted) setUsers(MOCK_USERS);
         } else {
           const res = await fetch(`${apiBase}/admin/users`);
-          if (!res.ok) throw new Error("Failed to fetch");
+          if (!res.ok) throw new Error("Fetch error");
           const data = await res.json();
           if (mounted) setUsers(data);
         }
       } catch (err) {
-        console.error("Load users error:", err);
+        console.error(err);
         if (mounted && users.length === 0) setUsers(MOCK_USERS);
       } finally {
         if (mounted) setLoading(false);
       }
     }
     load();
-    return () => (mounted = false);
-    // eslint-disable-next-line
+    return () => {
+      mounted = false;
+    };
   }, [apiBase]);
 
-  // Derived filtered list
-  const filtered = users.filter((u) => {
-    const query = search.trim().toLowerCase();
-    if (query) {
-      const match =
-        u.name.toLowerCase().includes(query) ||
-        (u.email && u.email.toLowerCase().includes(query)) ||
-        u.userId.toLowerCase().includes(query) ||
-        (u.phone && u.phone.includes(query));
-      if (!match) return false;
-    }
-    if (statusFilter !== "all" && u.profileStatus !== statusFilter) return false;
-    if (genderFilter !== "all" && u.gender.toLowerCase() !== genderFilter) return false;
-    if (membershipFilter !== "all" && u.membership.toLowerCase() !== membershipFilter) return false;
-    return true;
-  });
+  // FILTER + PAGINATION
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return users.filter((u) => {
+      if (q) {
+        const match =
+          (u.name && u.name.toLowerCase().includes(q)) ||
+          (u.userId && u.userId.toLowerCase().includes(q)) ||
+          (u.city && u.city.toLowerCase().includes(q));
+        if (!match) return false;
+      }
+      if (statusFilter !== "all" && u.profileStatus !== statusFilter) {
+        return false;
+      }
+      if (genderFilter !== "all" && u.gender.toLowerCase() !== genderFilter) {
+        return false;
+      }
+      if (
+        membershipFilter !== "all" &&
+        u.membership.toLowerCase() !== membershipFilter
+      ) {
+        return false;
+      }
+      return true;
+    });
+  }, [users, search, statusFilter, genderFilter, membershipFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const pageItems = filtered.slice((page - 1) * pageSize, page * pageSize);
 
-  // selection helpers
-  const toggleSelect = (userId) => {
-    const s = new Set(selected);
-    if (s.has(userId)) s.delete(userId);
-    else s.add(userId);
-    setSelected(s);
-  };
-  const toggleSelectAll = () => {
-    const idsOnPage = pageItems.map((u) => u.userId);
-    const s = new Set(selected);
-    const allSelected = idsOnPage.every((id) => s.has(id));
-    if (allSelected) {
-      idsOnPage.forEach((id) => s.delete(id));
-    } else {
-      idsOnPage.forEach((id) => s.add(id));
-    }
-    setSelected(s);
-  };
-
-  // Backend actions (replace with real API calls)
-  const postAction = async (userId, action, payload = {}) => {
-    // optimistic UI update
+  // ACTIONS (verify logic kept but no button uses it)
+  const postAction = async (userId, action) => {
     setUsers((prev) =>
-      prev.map((u) => (u.userId === userId ? { ...u, profileStatus: action === "suspend" ? "suspended" : u.profileStatus } : u))
+      prev.map((u) =>
+        u.userId === userId
+          ? {
+              ...u,
+              profileStatus:
+                action === "suspend"
+                  ? "suspended"
+                  : action === "restore"
+                  ? "active"
+                  : u.profileStatus,
+              verified: action === "verify" ? true : u.verified,
+            }
+          : u
+      )
     );
     if (!apiBase) return { ok: true };
     try {
       const res = await fetch(`${apiBase}/admin/users/${userId}/status`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action, ...payload }),
+        body: JSON.stringify({ action }),
       });
       return res;
     } catch (err) {
-      console.error("postAction err", err);
+      console.error(err);
       return { ok: false };
     }
   };
 
+  const doAction = async (user, action) => {
+    setConfirm({ open: false, action: null, user: null });
+    setLoading(true);
+    const res = await postAction(user.userId, action);
+    if (res && res.ok === false) {
+      alert("Action failed");
+    }
+    setLoading(false);
+  };
+
   const handleAction = (user, action) => {
-    // show confirm for destructive actions
-    if (action === "delete" || action === "suspend" || action === "ban") {
+    if (action === "delete" || action === "suspend") {
       setConfirm({ open: true, action, user });
       return;
     }
-    // immediate actions: verify / restore
     doAction(user, action);
   };
 
-  const doAction = async (user, action, reason = "") => {
-    setConfirm({ open: false, action: null, user: null });
-    setLoading(true);
-    const res = await postAction(user.userId, action, { reason });
-    // simple feedback - for production, use toast
-    if (res?.ok === false) {
-      alert("Action failed. See console.");
-    } else {
-      // refresh or mutate local state
-      if (action === "verify") {
-        setUsers((prev) => prev.map((u) => (u.userId === user.userId ? { ...u, verified: true, profileStatus: "active" } : u)));
-      } else if (action === "suspend") {
-        setUsers((prev) => prev.map((u) => (u.userId === user.userId ? { ...u, profileStatus: "suspended" } : u)));
-      } else if (action === "restore") {
-        setUsers((prev) => prev.map((u) => (u.userId === user.userId ? { ...u, profileStatus: "active" } : u)));
-      } else if (action === "delete") {
-        setUsers((prev) => prev.filter((u) => u.userId !== user.userId));
-      } else if (action === "ban") {
-        setUsers((prev) => prev.map((u) => (u.userId === user.userId ? { ...u, profileStatus: "banned" } : u)));
-      }
-    }
-    setLoading(false);
-  };
-
-  const handleBulkAction = async (action) => {
-    if (selected.size === 0) return alert("Select at least one user");
-    if (action === "delete" || action === "suspend") {
-      const ok = window.confirm(`Apply "${action}" to ${selected.size} users? This is irreversible.`);
-      if (!ok) return;
-    }
-    setLoading(true);
-    // Post to /admin/users/bulk (replace with real call)
-    if (!apiBase) {
-      // mock update
-      setUsers((prev) =>
-        prev.map((u) => (selected.has(u.userId) ? { ...u, profileStatus: action === "suspend" ? "suspended" : u.profileStatus } : u))
-      );
-    } else {
-      try {
-        await fetch(`${apiBase}/admin/users/bulk`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action, userIds: Array.from(selected) }),
-        });
-      } catch (err) {
-        console.error("bulk err", err);
-      }
-    }
-    setSelected(new Set());
-    setLoading(false);
-  };
-
   const openDetail = (user) => setDetailUser(user);
+  const closeDetail = () => setDetailUser(null);
 
   return (
     <div className="manage-users-root">
       <div className="mu-header">
         <h2>Manage Users</h2>
+
         <div className="mu-controls">
           <input
             className="mu-search"
@@ -202,40 +171,48 @@ export default function ManageUser({ apiBase = "", pageSize = 10 }) {
               setPage(1);
             }}
           />
-          <select className="mu-filter" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+
+          <select
+            className="mu-filter"
+            value={statusFilter}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setPage(1);
+            }}
+          >
             <option value="all">All Status</option>
             <option value="active">Active</option>
             <option value="pending_verification">Pending Verification</option>
             <option value="suspended">Suspended</option>
             <option value="banned">Banned</option>
-            <option value="deleted">Deleted</option>
           </select>
 
-          <select className="mu-filter" value={genderFilter} onChange={(e) => setGenderFilter(e.target.value)}>
+          <select
+            className="mu-filter"
+            value={genderFilter}
+            onChange={(e) => {
+              setGenderFilter(e.target.value);
+              setPage(1);
+            }}
+          >
             <option value="all">All Genders</option>
             <option value="female">Female</option>
             <option value="male">Male</option>
           </select>
 
-          <select className="mu-filter" value={membershipFilter} onChange={(e) => setMembershipFilter(e.target.value)}>
+          <select
+            className="mu-filter"
+            value={membershipFilter}
+            onChange={(e) => {
+              setMembershipFilter(e.target.value);
+              setPage(1);
+            }}
+          >
             <option value="all">All Memberships</option>
             <option value="premium">Premium</option>
             <option value="free">Free</option>
           </select>
         </div>
-      </div>
-
-      <div className="mu-bulk">
-        <button className="btn" onClick={() => handleBulkAction("verify")}>
-          Verify Selected
-        </button>
-        <button className="btn" onClick={() => handleBulkAction("suspend")}>
-          Suspend Selected
-        </button>
-        <button className="btn btn-danger" onClick={() => handleBulkAction("delete")}>
-          Delete Selected
-        </button>
-        <div className="mu-bulk-info">{selected.size} selected</div>
       </div>
 
       <div className="mu-table-wrap">
@@ -245,17 +222,11 @@ export default function ManageUser({ apiBase = "", pageSize = 10 }) {
           <table className="mu-table">
             <thead>
               <tr>
-                <th>
-                  <input
-                    type="checkbox"
-                    checked={pageItems.length > 0 && pageItems.every((u) => selected.has(u.userId))}
-                    onChange={toggleSelectAll}
-                  />
-                </th>
-                <th>User</th>
+                <th>Avatar</th>
+                <th>Name</th>
                 <th>Age</th>
                 <th>Gender</th>
-                <th>Location</th>
+                <th>City</th>
                 <th>Membership</th>
                 <th>Status</th>
                 <th>Last Active</th>
@@ -271,45 +242,66 @@ export default function ManageUser({ apiBase = "", pageSize = 10 }) {
                 </tr>
               ) : (
                 pageItems.map((u) => (
-                  <tr key={u.userId} className={u.profileStatus !== "active" ? "mu-row-muted" : ""}>
-                    <td>
-                      <input type="checkbox" checked={selected.has(u.userId)} onChange={() => toggleSelect(u.userId)} />
-                    </td>
+                  <tr
+                    key={u.userId}
+                    className={u.profileStatus !== "active" ? "mu-row-muted" : ""}
+                  >
                     <td className="mu-user-cell" onClick={() => openDetail(u)}>
                       <div className="mu-avatar">{u.name.charAt(0)}</div>
-                      <div>
-                        <div className="mu-name">{u.name}</div>
-                        <div className="mu-id">{u.userId}</div>
-                      </div>
                     </td>
+
+                    <td onClick={() => openDetail(u)}>
+                      <div className="mu-name">{u.name}</div>
+                      <div className="mu-id">{u.userId}</div>
+                    </td>
+
                     <td>{u.age}</td>
                     <td>{u.gender}</td>
                     <td>{u.city}</td>
+
                     <td>
-                      <span className={`mu-badge ${u.membership === "Premium" || u.membership === "premium" ? "premium" : ""}`}>
+                      <span
+                        className={`mu-badge ${
+                          u.membership === "Premium" ||
+                          u.membership === "premium"
+                            ? "premium"
+                            : ""
+                        }`}
+                      >
                         {u.membership}
                       </span>
                     </td>
+
                     <td>
-                      <span className={`mu-status ${u.profileStatus}`}>{u.profileStatus.replace("_", " ")}</span>
+                      <span className={`mu-status ${u.profileStatus}`}>
+                        {u.profileStatus.replace("_", " ")}
+                      </span>
                     </td>
+
                     <td>{new Date(u.lastActive).toLocaleString()}</td>
+
                     <td className="mu-actions">
-                      {!u.verified && (
-                        <button className="btn btn-small" onClick={() => handleAction(u, "verify")}>
-                          Verify
-                        </button>
-                      )}
-                      {u.profileStatus !== "suspended" && u.profileStatus !== "banned" ? (
-                        <button className="btn btn-small" onClick={() => handleAction(u, "suspend")}>
+                      {u.profileStatus !== "suspended" &&
+                      u.profileStatus !== "banned" ? (
+                        <button
+                          className="btn small"
+                          onClick={() => handleAction(u, "suspend")}
+                        >
                           Suspend
                         </button>
                       ) : (
-                        <button className="btn btn-small" onClick={() => handleAction(u, "restore")}>
+                        <button
+                          className="btn small"
+                          onClick={() => handleAction(u, "restore")}
+                        >
                           Restore
                         </button>
                       )}
-                      <button className="btn btn-danger btn-small" onClick={() => handleAction(u, "delete")}>
+
+                      <button
+                        className="btn-danger small"
+                        onClick={() => handleAction(u, "delete")}
+                      >
                         Delete
                       </button>
                     </td>
@@ -323,45 +315,40 @@ export default function ManageUser({ apiBase = "", pageSize = 10 }) {
 
       <div className="mu-footer">
         <div className="mu-pagination">
-          <button className="btn" disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
+          <button
+            className="btn"
+            disabled={page <= 1}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+          >
             Prev
           </button>
           <span>
             Page {page} / {totalPages}
           </span>
-          <button className="btn" disabled={page >= totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>
+          <button
+            className="btn"
+            disabled={page >= totalPages}
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+          >
             Next
           </button>
         </div>
         <div className="mu-rows-info">{filtered.length} results</div>
       </div>
 
-      {/* Detail modal */}
       {detailUser && (
-        <div className="mu-modal-backdrop" onClick={() => setDetailUser(null)}>
+        <div className="mu-modal-backdrop" onClick={closeDetail}>
           <div className="mu-modal" onClick={(e) => e.stopPropagation()}>
             <div className="mu-modal-header">
               <h3>{detailUser.name}</h3>
-              <div className="mu-modal-actions">
-                {!detailUser.verified && (
-                  <button className="btn" onClick={() => doAction(detailUser, "verify")}>
-                    Verify
-                  </button>
-                )}
-                <button className="btn" onClick={() => handleAction(detailUser, detailUser.profileStatus === "suspended" ? "restore" : "suspend")}>
-                  {detailUser.profileStatus === "suspended" ? "Restore" : "Suspend"}
-                </button>
-                <button className="btn btn-danger" onClick={() => handleAction(detailUser, "delete")}>
-                  Delete
-                </button>
-              </div>
             </div>
             <div className="mu-modal-body">
               <div className="mu-detail-row">
                 <strong>User ID:</strong> {detailUser.userId}
               </div>
               <div className="mu-detail-row">
-                <strong>Age / Gender:</strong> {detailUser.age} / {detailUser.gender}
+                <strong>Age / Gender:</strong> {detailUser.age} /{" "}
+                {detailUser.gender}
               </div>
               <div className="mu-detail-row">
                 <strong>Location:</strong> {detailUser.city}
@@ -373,19 +360,19 @@ export default function ManageUser({ apiBase = "", pageSize = 10 }) {
                 <strong>Status:</strong> {detailUser.profileStatus}
               </div>
               <div className="mu-detail-row">
-                <strong>Last Active:</strong> {new Date(detailUser.lastActive).toLocaleString()}
+                <strong>Last Active:</strong>{" "}
+                {new Date(detailUser.lastActive).toLocaleString()}
               </div>
               <div className="mu-detail-row">
-                <strong>Verified:</strong> {detailUser.verified ? "Yes" : "No"}
+                <strong>Verified:</strong>{" "}
+                {detailUser.verified ? "Yes" : "No"}
               </div>
               <div className="mu-detail-row">
-                <strong>Admin Notes:</strong>
-                <div className="mu-notes">No notes yet (sample UI)</div>
+                <strong>Bio:</strong> {detailUser.bio || "—"}
               </div>
             </div>
-
             <div className="mu-modal-footer">
-              <button className="btn" onClick={() => setDetailUser(null)}>
+              <button className="btn" onClick={closeDetail}>
                 Close
               </button>
             </div>
@@ -393,31 +380,36 @@ export default function ManageUser({ apiBase = "", pageSize = 10 }) {
         </div>
       )}
 
-      {/* Confirm dialog */}
       {confirm.open && (
-        <div className="mu-modal-backdrop" onClick={() => setConfirm({ open: false, action: null, user: null })}>
+        <div
+          className="mu-modal-backdrop"
+          onClick={() =>
+            setConfirm({ open: false, action: null, user: null })
+          }
+        >
           <div className="mu-modal" onClick={(e) => e.stopPropagation()}>
             <div className="mu-modal-header">
               <h3>Confirm {confirm.action}</h3>
             </div>
             <div className="mu-modal-body">
               <p>
-                Are you sure you want to <strong>{confirm.action}</strong> user <strong>{confirm.user?.name}</strong> ({confirm.user?.userId})?
+                Are you sure you want to <strong>{confirm.action}</strong> user{" "}
+                <strong>{confirm.user?.name}</strong>?
               </p>
-              <p>This action may be irreversible. Provide a reason (optional):</p>
-              <textarea id="confirm-reason" placeholder="Reason (optional)" rows="3" />
             </div>
             <div className="mu-modal-footer">
               <button
                 className="btn"
-                onClick={() => {
-                  const reason = document.getElementById("confirm-reason")?.value || "";
-                  doAction(confirm.user, confirm.action, reason);
-                }}
+                onClick={() => doAction(confirm.user, confirm.action)}
               >
-                Yes, {confirm.action}
+                Yes
               </button>
-              <button className="btn btn-danger" onClick={() => setConfirm({ open: false, action: null, user: null })}>
+              <button
+                className="btn btn-danger"
+                onClick={() =>
+                  setConfirm({ open: false, action: null, user: null })
+                }
+              >
                 Cancel
               </button>
             </div>
