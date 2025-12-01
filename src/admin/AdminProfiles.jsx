@@ -1,182 +1,106 @@
-import React from "react";
-import { Edit, Trash2 } from "lucide-react";
-import "../styleSheets/AdminProfiles.css";
+import React, { useMemo } from "react";
+import "../styleSheets/AdminProfile.css";
 
-const profiles = [
-  {
-    id: 1,
-    name: "Aarushi Sharma",
-    age: 24,
-    job: "Software Engineer",
-    education: "B.Tech",
-    location: "Hyderabad",
-    community: "Hindu | Brahmin",
-    height: "5'4\"",
-    image: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg"
-  },
-  {
-    id: 2,
-    name: "Arjun Reddy",
-    age: 27,
-    job: "Business Analyst",
-    education: "MBA",
-    location: "Bangalore",
-    community: "Hindu | Reddy",
-    height: "5'9\"",
-    image: "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg"
-  },
-  {
-    id: 3,
-    name: "Sneha Patil",
-    age: 25,
-    job: "Doctor",
-    education: "MBBS",
-    location: "Pune",
-    community: "Hindu | Maratha",
-    height: "5'5\"",
-    image: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg"
-  },
-  {
-    id: 4,
-    name: "Rohit Verma",
-    age: 29,
-    job: "Civil Engineer",
-    education: "M.Tech",
-    location: "Delhi",
-    community: "Hindu | Kayastha",
-    height: "6'0\"",
-    image: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg"
-  },
-  {
-    id: 5,
-    name: "Aditi Singh",
-    age: 23,
-    job: "HR Manager",
-    education: "MBA",
-    location: "Lucknow",
-    community: "Hindu | Rajput",
-    height: "5'3\"",
-    image: "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg"
-  },
+/**
+ * AdminProfile.jsx
+ * - Frontend only demo of "recently joined" admin widget.
+ * - Replace MOCK_USERS with API data later.
+ */
 
-  {
-    id: 6,
-    name: "Rahul Sharma",
-    age: 26,
-    job: "Software Developer",
-    education: "B.Tech",
-    location: "Chennai",
-    community: "Hindu | Brahmin",
-    height: "5'10\"",
-    image: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg"
-  },
-  {
-    id: 7,
-    name: "Meera Nair",
-    age: 26,
-    job: "Fashion Designer",
-    education: "BA Fashion",
-    location: "Kochi",
-    community: "Hindu | Nair",
-    height: "5'5\"",
-    image: "https://tse3.mm.bing.net/th/id/OIP.6GF79-gQ_49Ze3nGrUrsyAHaLH"
-  },
-  {
-    id: 8,
-    name: "Karan Mehta",
-    age: 30,
-    job: "Entrepreneur",
-    education: "MBA",
-    location: "Mumbai",
-    community: "Hindu | Jain",
-    height: "5'11\"",
-    image: "https://images.pexels.com/photos/712513/pexels-photo-712513.jpeg"
-  },
-  {
-    id: 9,
-    name: "Priya Das",
-    age: 24,
-    job: "Teacher",
-    education: "B.Ed",
-    location: "Kolkata",
-    community: "Hindu | Bengali",
-    height: "5'2\"",
-    image: "https://tse1.mm.bing.net/th/id/OIP.BnFxTdGXnR3aYi6NeQm41wHaHa"
-  },
-  {
-    id: 10,
-    name: "Sandeep Gupta",
-    age: 27,
-    job: "Bank Officer",
-    education: "B.Com",
-    location: "Ahmedabad",
-    community: "Hindu | Vaishya",
-    height: "5'8\"",
-    image: "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg"
-  },
-  {
-    id: 11,
-    name: "Kavita Rao",
-    age: 25,
-    job: "Interior Designer",
-    education: "Diploma",
-    location: "Mangalore",
-    community: "Hindu | Gowda",
-    height: "5'4\"",
-    image: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg"
-  },
-  {
-    id: 12,
-    name: "Vikram Singh",
-    age: 29,
-    job: "Cyber Security Expert",
-    education: "B.Tech",
-    location: "Noida",
-    community: "Hindu | Rajput",
-    height: "5'11\"",
-    image: "https://tse3.mm.bing.net/th/id/OIP.7Q8E1vH-mpx_1WUvDd3n4QAAAA"
-  }
+const now = () => new Date();
+
+const MOCK_USERS = [
+  { id: "u101", name: "Aarushi Sharma", joinedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), city: "Hyderabad" }, // 2 hours ago
+  { id: "u102", name: "Arjun Reddy", joinedAt: new Date(Date.now() - 26 * 60 * 60 * 1000).toISOString(), city: "Bangalore" }, // 26 hours ago ~ 1 day
+  { id: "u103", name: "Sneha Patil", joinedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), city: "Pune" }, // 3 days ago
+  { id: "u104", name: "Rohit Verma", joinedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(), city: "Delhi" }, // 10 days ago
+  { id: "u105", name: "Aditi Singh", joinedAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(), city: "Lucknow" }, // 20 days ago
+  { id: "u106", name: "Vishal Kumar", joinedAt: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000).toISOString(), city: "Chennai" }, // 40 days ago
 ];
 
-const AdminProfiles = () => {
-  return (
-    <div className="profile-main-container">
-      <h2 className="profile-title">Admin – Manage All Profiles</h2>
+function timeAgo(iso) {
+  const d = new Date(iso);
+  const diff = Math.max(0, Date.now() - d.getTime());
+  const sec = Math.floor(diff / 1000);
+  if (sec < 60) return `${sec} sec${sec !== 1 ? "s" : ""} ago`;
+  const min = Math.floor(sec / 60);
+  if (min < 60) return `${min} min${min !== 1 ? "s" : ""} ago`;
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr} hour${hr !== 1 ? "s" : ""} ago`;
+  const days = Math.floor(hr / 24);
+  if (days < 30) return `${days} day${days !== 1 ? "s" : ""} ago`;
+  const months = Math.floor(days / 30);
+  return `${months} month${months !== 1 ? "s" : ""} ago`;
+}
 
-      <div className="profile-cards-wrapper">
-        {profiles.map((profile) => (
-          <div className="profile-card" key={profile.id}>
-            
-            {/* Profile Image */}
-            <div className="image-box">
-              <img src={profile.image} alt={profile.name} className="profile-img" />
+export default function AdminProfile({ users = MOCK_USERS }) {
+  // derive counts & sorted list
+  const stats = useMemo(() => {
+    const total = users.length;
+    const tNow = Date.now();
+    const dayMs = 24 * 60 * 60 * 1000;
+    const in24 = users.filter(u => tNow - new Date(u.joinedAt).getTime() <= dayMs).length;
+    const in7 = users.filter(u => tNow - new Date(u.joinedAt).getTime() <= 7 * dayMs).length;
+    const in30 = users.filter(u => tNow - new Date(u.joinedAt).getTime() <= 30 * dayMs).length;
+
+    // sorted newest first
+    const sorted = [...users].sort((a, b) => new Date(b.joinedAt) - new Date(a.joinedAt));
+
+    return { total, in24, in7, in30, sorted };
+  }, [users]);
+
+  return (
+    <div className="ap-root">
+      <h2 className="ap-title">Recently Joined Users</h2>
+
+      <div className="ap-cards">
+        <div className="ap-card">
+          <div className="ap-card-number">{stats.in24}</div>
+          <div className="ap-card-label">Joined in 24 hrs</div>
+        </div>
+
+        <div className="ap-card">
+          <div className="ap-card-number">{stats.in7}</div>
+          <div className="ap-card-label">Joined in 7 days</div>
+        </div>
+
+        <div className="ap-card">
+          <div className="ap-card-number">{stats.in30}</div>
+          <div className="ap-card-label">Joined in 30 days</div>
+        </div>
+
+        <div className="ap-card">
+          <div className="ap-card-number">{stats.total}</div>
+          <div className="ap-card-label">Total users</div>
+        </div>
+      </div>
+
+      <div className="ap-list">
+        <div className="ap-list-header">
+          <div>User</div>
+          <div>Location</div>
+          <div>Joined</div>
+        </div>
+
+        {stats.sorted.map(u => (
+          <div className="ap-row" key={u.id}>
+            <div className="ap-user">
+              <div className="ap-avatar">{u.name.charAt(0)}</div>
+              <div>
+                <div className="ap-name">{u.name}</div>
+                <div className="ap-sub">{u.education || ""}</div>
+              </div>
             </div>
 
-            {/* Profile Details */}
-            <div className="profile-details">
-              <h3>{profile.name}</h3>
-              <span>{profile.age} yrs • {profile.height}</span>
-              <p>{profile.job} • {profile.education}</p>
-              <p>{profile.location}</p>
-              <p>{profile.community}</p>
+            <div className="ap-location">{u.city || "—"}</div>
 
-              {/* Admin Action Buttons */}
-              <div className="admin-actions">
-                <button className="admin-btn edit">
-                  <Edit size={16} /> Edit
-                </button>
-
-                <button className="admin-btn delete">
-                  <Trash2 size={16} /> Delete
-                </button>
-              </div>
-
+            <div className="ap-joined">
+              <div className="ap-time">{timeAgo(u.joinedAt)}</div>
+              <div className="ap-timestamp">{new Date(u.joinedAt).toLocaleString()}</div>
             </div>
           </div>
         ))}
       </div>
     </div>
   );
-};
-
-export default AdminProfiles;
+}

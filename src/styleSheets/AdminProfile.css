@@ -1,0 +1,167 @@
+/* Root container – full width */
+.ap-root {
+  padding: 18px;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial;
+}
+
+.ap-title {
+  margin: 0 0 12px 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #123;
+}
+
+/* Summary cards */
+.ap-cards {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.ap-card {
+  flex: 1;
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  text-align: center;
+}
+
+.ap-card-number {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f766e;
+}
+
+.ap-card-label {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #555;
+}
+
+/* List card */
+.ap-list {
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* Header + rows share same flex structure so columns line up */
+.ap-list-header,
+.ap-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.ap-list-header {
+  padding: 10px 12px;
+  font-weight: 700;
+  color: #333;
+  border-bottom: 1px solid #eef2f3;
+}
+
+.ap-row {
+  padding: 12px;
+  border-bottom: 1px solid #f3f6f6;
+}
+
+.ap-row:last-child {
+  border-bottom: none;
+}
+
+/* Column widths: User(2) / Location(1) / Joined(1) */
+.ap-list-header > div:nth-child(1),
+.ap-row .ap-user {
+  flex: 2;
+}
+
+.ap-list-header > div:nth-child(2),
+.ap-row .ap-location {
+  flex: 1;
+}
+
+.ap-list-header > div:nth-child(3),
+.ap-row .ap-joined {
+  flex: 1;
+}
+
+/* ensure all header cells are left aligned like the row cells */
+.ap-list-header > div {
+  text-align: left;
+}
+
+/* User cell */
+.ap-user {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.ap-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: #e6f6f5;
+  color: #0f766e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.ap-name {
+  font-weight: 700;
+}
+
+.ap-sub {
+  font-size: 12px;
+  color: #777;
+  margin-top: 2px;
+}
+
+/* Location + joined columns */
+.ap-location {
+  color: #555;
+  font-size: 13px;
+}
+
+.ap-joined {
+  color: inherit;        /* same text color behaviour */
+  text-align: left;      /* same alignment as User/Location */
+}
+
+.ap-time {
+  font-weight: 700;
+  color: #0f766e;
+}
+
+.ap-timestamp {
+  font-size: 12px;
+  color: #888;
+  margin-top: 4px;
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+  .ap-cards {
+    flex-direction: column;
+  }
+
+  .ap-list-header,
+  .ap-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .ap-joined {
+    text-align: left;
+  }
+}

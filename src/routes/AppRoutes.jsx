@@ -18,7 +18,7 @@ import AdminDashboard from "../admin/AdminDashboard";
 import RaiseTicket from "../components/RaiseTicket";
 import Notification from "../components/Notification";
 import ManageUser from "../admin/ManageUser";
-import ViewProfileModal from "../components/viewprofileModal";
+import ViewProfileModal from "../components/ViewProfileModal";
 import Requests from "../pages/Requests";
 import Matches from "../pages/Matches";
 import Cart from "../components/Cart";
@@ -35,6 +35,7 @@ import Sent from "../pages/Sent";
 import Rejected from "../pages/Rejected";
 import Received from "../pages/Received";
 import ProtectedRoute from "./ProtectedRoute";
+import ManageMatches from "../admin/ManageMatches";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -184,6 +185,10 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "manageusers",
                 element: <ManageUser />
+            },
+            {
+                path: "managematches",
+                element: <ManageMatches />
             },
             {
                 path: "adminprofiles",

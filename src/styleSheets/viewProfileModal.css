@@ -1,180 +1,108 @@
-/* ===========================
-   UPDATED VIEW PROFILE MODAL
-   =========================== */
+/* ViewProfileModal.css - expanded popover + centered modal */
 
+/* Backdrops */
 .vp-backdrop {
   position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100vw;
-  background: rgba(0, 0, 0, 0.55);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-  backdrop-filter: blur(3px);
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1400;
+  backdrop-filter: blur(1px);
 }
-  
+
+.vp-pop-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1999;
+  background: transparent;
+}
+
+/* centered modal */
 .vp-modal {
-  width: 850px;
-  max-width: 95%;
-  max-height: 90vh;
+  width: 920px;
+  max-width: 96%;
   background: #fff;
   border-radius: 12px;
-  overflow-y: auto;
+  padding: 16px;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.12);
   position: relative;
-  animation: modalFadeIn 0.25s ease;
-  box-shadow: 0px 8px 40px rgba(0, 0, 0, 0.35);
-}
-
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.vp-close {
-  position: absolute;
-  top: 12px;
-  right: 15px;
-  background: #ff4d4d;
-  border: none;
-  color: #fff;
-  font-size: 18px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.vp-close:hover {
-  background: #d80404;
-}
-
-.vp-grid {
-  display: flex;
-  gap: 25px;
-  padding: 25px;
-  align-items: flex-start;
-  max-height: 75vh;
-}
-
-/* Left Side (Image Section) */
-.vp-left {
-  width: 280px;            /* reduces the container width */
-  flex-shrink: 0;
-  height: fit-content;
-}
-
-.vp-main-image img {
-  width: 50px;
-  height: 250px;           /* 🔥 reduced size */
-  max-height: 20px;
-  border-radius: 10px;
-  /* object-fit: cover; */
-  object-position: center; /* keeps face centered */
-}
-
-/* Extra photos (optional) */
-.vp-photos-row {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.vp-thumb {
-  width: 22%;
-  height: 65px;
-  object-fit: cover;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.vp-thumb:hover {
-  transform: scale(1.04);
-}
-
-/* Right Side Details */
-.vp-right {
-  flex: 1;
-}
-
-.vp-name {
-  font-size: 26px;
-  font-weight: 700;
   color: #222;
 }
 
-.vp-age {
-  font-size: 20px;
-  color: #444;
-}
-
-.vp-meta {
-  margin-top: 12px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  row-gap: 10px;
-  column-gap: 15px;
-  color: #333;
-}
-
-.vp-section {
-  margin-top: 20px;
-}
-
-.vp-section h4 {
-  margin-bottom: 5px;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.vp-bio,
-.vp-list li {
+/* close buttons */
+.vp-close, .vp-close-small {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  border: none;
+  background: #222;
+  color: #fff;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  cursor: pointer;
   font-size: 14px;
-  color: #555;
-  line-height: 1.5;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
+.vp-close-small { width:26px; height:26px; font-size:12px; background:#111; }
 
-/* Contact info */
-.vp-contact {
-  margin-top: 20px;
-  font-size: 14px;
-}
+/* layout */
+.vp-grid { display:flex; gap:18px; align-items:flex-start; }
+.vp-left { width:340px; flex-shrink:0; display:flex; flex-direction:column; gap:10px; }
+.vp-main-image img { width:100%; height:360px; object-fit:cover; border-radius:10px; }
+.vp-photos-row { display:flex; gap:8px; margin-top:6px; }
+.vp-thumb { width:64px; height:64px; object-fit:cover; border-radius:6px; }
 
-.vp-contact a {
-  color: #0066cc;
-}
+/* right column */
+.vp-right { flex:1; min-width:0; display:flex; flex-direction:column; gap:10px; }
+.vp-name { font-size:22px; font-weight:700; color:#1f2937; margin:0; }
+.vp-age { font-weight:500; color:#6b7280; margin-left:8px; font-size:15px; }
+.vp-meta { display:grid; grid-template-columns:repeat(2,1fr); gap:8px 14px; font-size:14px; color:#333; }
 
-/* Buttons */
-.vp-actions {
-  margin-top: 22px;
-  display: flex;
-  gap: 10px;
-}
+.vp-section { margin-top:8px; }
+.vp-section h4 { margin:6px 0; font-size:15px; font-weight:600; }
+.vp-bio { margin:6px 0; color:#444; font-size:14px; line-height:1.45; }
 
-.connect-btn.secondary {
-  background: #f2f2f2;
-  color: #444;
-}
+.vp-list { padding-left:16px; margin:6px 0; color:#444; }
 
-.connect-btn.secondary:hover {
-  background: #e8e8e8;
-}
+.vp-contact { margin-top:8px; font-size:14px; color:#333; }
 
-/* Footer */
-.vp-footer {
-  padding: 12px 20px;
-  font-size: 13px;
-  color: #555;
-  border-top: 1px solid #e8e8e8;
-  background: #fafafa;
+.vp-actions { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+.connect-btn { padding:8px 12px; border-radius:8px; background:#f59e0b; color:#fff; border:none; cursor:pointer; font-weight:600; }
+.connect-btn.secondary { background:#f3f4f6; color:#111; border:1px solid #e6e6e6; }
+
+/* anchored popover (expanded) */
+.vp-popover { background:#fff; border-radius:10px; padding:12px; box-shadow: 0 12px 30px rgba(10,20,40,0.12); border:1px solid #f1f1f1; overflow:hidden; }
+.vp-popover-expanded { display:flex; flex-direction:column; }
+
+/* pop row */
+.vp-pop-row { display:flex; gap:12px; align-items:flex-start; }
+.vp-passport-small img { width:100px; height:120px; object-fit:cover; border-radius:6px; }
+
+/* make info scrollable if tall */
+.vp-info-small { flex:1; min-width:0; }
+.vp-info-scroll { overflow:auto; max-height: 220px; padding-right:6px; }
+
+/* info styles */
+.vp-name-small { font-weight:700; font-size:15px; color:#222; }
+.vp-age-small { font-weight:500; color:#666; font-size:13px; margin-left:6px; }
+.vp-subline-small { color:#666; font-size:13px; margin-bottom:6px; }
+.vp-meta-small { font-size:13px; color:#333; display:grid; grid-template-columns:1fr; gap:6px; margin-top:6px; }
+.vp-section-small { margin-top:8px; }
+.vp-bio-small { margin-top:4px; font-size:13px; color:#444; }
+
+/* contact + actions small */
+.vp-contact-small { margin-top:8px; font-size:13px; color:#333; }
+.vp-actions-small { margin-top:10px; display:flex; gap:8px; }
+
+/* responsive */
+@media (max-width:900px) {
+  .vp-modal { width:95%; padding:12px; }
+  .vp-left { width:40%; }
+  .vp-main-image img { height:240px; }
+  .vp-passport-small img { width:84px; height:104px; }
 }
