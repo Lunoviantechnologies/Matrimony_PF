@@ -182,7 +182,7 @@ export default function EditProfile() {
             </div>
 
             <div className="photo-caption">
-              <div className="photo-name">{profileData.fullName || `${profileData.firstName || ""} ${profileData.lastName || ""}`}</div>
+              <div className="photo-name">{profileData.fullName || `${profileData.firstName || ""} ${profileData.lastName || "Null"}`}</div>
               <div className="photo-sub">Active member • Verified</div>
             </div>
 
@@ -225,10 +225,11 @@ export default function EditProfile() {
               <button className="edit-inline" onClick={() => openSectionModal("family")}><FaEdit /> Edit</button>
             </div>
             <div className="box-body">
-              <Row label="Father" value={profileData.fatherName} />
-              <Row label="Mother" value={profileData.motherName} />
-              <Row label="Siblings" value={profileData.siblings} />
-              <Row label="Family Status" value={profileData.familyStatus} />
+              <Row label="Father Status" value={profileData.fatherName} />
+              <Row label="Mother Status" value={profileData.motherName} />
+              <Row label="Number of Brothers" value={profileData.numberofbrothers} />
+              <Row label="Number of Sisters" value={profileData.numberofsister} />
+              <Row label="ancestral Origin/Native Place" value={profileData.NativePalce} />
             </div>
           </div>
         </aside>
@@ -257,7 +258,8 @@ export default function EditProfile() {
                 <Row label="Company" value={profileData.companyName} />
                 <Row label="Experience" value={profileData.experience} />
                 <Row label="Sector" value={profileData.sector} />
-                <Row label="Rashi" value={profileData.rashi} />
+                <Row label="Sports " value={profileData.Sports} />
+                 <Row label="Living with Childrens" value={profileData.livingwithchildrens} />
               </div>
             </div>
           </div>

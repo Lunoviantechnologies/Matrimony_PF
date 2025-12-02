@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import '../styleSheets/PremiumSubscription.css';
+import axios from 'axios';
+import backendIP from '../api/api';
 
 function PremiumSubscription() {
   const navigate = useNavigate();
@@ -91,6 +93,7 @@ function PremiumSubscription() {
 
   const handlePlanSelect = (plan) => {
     navigate(`/cart/${plan.id}`);
+    axios.post(`${backendIP}/payments/create-order`)
   };
 
   return (
