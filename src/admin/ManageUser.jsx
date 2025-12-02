@@ -33,9 +33,7 @@ const handleDelete = async (id) => {
     setSearch("");
 
     alert("User deleted successfully");
-
     dispatch(fetchUserProfiles());
-
     setDetailUser(false);
     setConfirm({ open: false, user: null }); // ✅ THIS CLOSES MODAL
 
