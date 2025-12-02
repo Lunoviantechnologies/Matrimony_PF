@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "../styleSheets/profileCard.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
@@ -10,14 +10,26 @@ const Nearme = () => {
 
   const { profiles, loading, error } = useSelector((state) => state.profiles);
   const { id, myProfile } = useSelector((state) => state.auth);
+  const [SentRequests, setSentRequests] = useState([]);
   const dispatch = useDispatch();
 
-  console.log("Profiles from Redux:", profiles);
+  // console.log("Profiles from Redux:", profiles);
+  // console.log("Profiles from Redux:", myProfile);
 
   useEffect(() => {
     dispatch(fetchUserProfiles());
     dispatch(fetchMyProfile(id));
-  }, [dispatch]);
+
+    axios
+      .get(`${backendIP}/friends/sent/${id}`)
+      .then((response) => {
+        // console.log("Sent requests:", response.data);
+        setSentRequests(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching sent requests:", error);
+      });
+  }, [dispatch, id]);
 
   const handleSendRequest = (receiverId) => {
     axios.post(`${backendIP}/friends/send/${id}/${receiverId}`).then((response) => {
@@ -28,6 +40,8 @@ const Nearme = () => {
     });
   };
 
+  const sentReceiverIds = SentRequests.map((req) => req.receiverId);
+
   return (
     <div className="profile-main-container">
       <h2 className="profile-title">Near Matches For You</h2>
@@ -36,6 +50,7 @@ const Nearme = () => {
         {profiles
           .filter(p => p.id !== id)
           .filter(p => p.gender !== myProfile?.gender)
+          .filter(p => p.city === myProfile?.city)
           .map((p) => (
             <article className="profile-card" key={p.id}>
               <div className="image-box">
@@ -50,8 +65,15 @@ const Nearme = () => {
                 <p className="line">{p.religion} | {p.subCaste} </p>
 
                 <div className="btn-row">
-                  <button className="btn btn-primary">View Profile</button>
-                  <button className="btn btn-primary" onClick={() => { handleSendRequest(p.id) }}>Send Request</button>
+                  <button className="btn btn-view">View Profile</button>
+
+                  <button
+                    className={`btn ${sentReceiverIds.includes(p.id) ? "btn-sent" : "btn-send"}`}
+                    disabled={sentReceiverIds.includes(p.id)}
+                    onClick={() => handleSendRequest(p.id)}
+                  >
+                    {sentReceiverIds.includes(p.id) ? "Sent" : "Send Request"}
+                  </button>
                 </div>
               </div>
             </article>

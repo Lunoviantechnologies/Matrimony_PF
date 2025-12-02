@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../styleSheets/profileCard.css";
-// import ViewProfileModal from "./ViewProfileModal"; // ⭐ IMPORT MODAL
-import ViewProfileModal from "./viewprofileModal";
+import ViewProfileModal from "../components/ViewProfileModal";
+
 
 const profiles = [
   {
@@ -116,8 +116,15 @@ const profiles = [
   }
 ];
 
-const ProfileCard = () => {
-  const [activeProfile, setActiveProfile] = useState(null); // ⭐ MODAL STATE
+const ProfileCards = () => {
+  const [activeProfile, setActiveProfile] = useState(null);
+  const [anchorRect, setAnchorRect] = useState(null);
+
+  const openModal = (profile, e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setAnchorRect(rect);
+    setActiveProfile(profile);
+  };
 
   return (
     <div className="profile-main-container">
@@ -126,9 +133,8 @@ const ProfileCard = () => {
       <div className="profile-cards-wrapper">
         {profiles.map((profile) => (
           <div className="profile-card" key={profile.id}>
-            
-            {/* CLICK TO OPEN MODAL */}
-            <div className="image-box" onClick={() => setActiveProfile(profile)}>
+
+            <div className="image-box" onClick={(e) => openModal(profile, e)}>
               <img src={profile.image} alt={profile.name} className="profile-img" />
             </div>
 
@@ -139,10 +145,9 @@ const ProfileCard = () => {
               <p>{profile.location}</p>
               <p>{profile.community}</p>
 
-              {/* OPEN MODAL BUTTON */}
               <button 
                 className="connect-btn"
-                onClick={() => setActiveProfile(profile)}
+                onClick={(e) => openModal(profile, e)}
               >
                 View Profile
               </button>
@@ -155,9 +160,10 @@ const ProfileCard = () => {
   
       {/* ⭐ RENDER MODAL HERE */}
       {activeProfile && (
-        <ViewProfileModal 
-          profile={activeProfile} 
-          onClose={() => setActiveProfile(null)} 
+        <ViewProfileModal
+          profile={activeProfile}
+          anchorRect={anchorRect}
+          onClose={() => setActiveProfile(null)}
         />
       )}
     </div>

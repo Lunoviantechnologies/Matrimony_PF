@@ -20,6 +20,16 @@
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
 }
 
+/* If no requests */
+
+.no-requests-message {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: #777;
+  margin-top: 40px;
+}
+
 /* LEFT SECTION → Image + text */
 .left-section {
   display: flex;

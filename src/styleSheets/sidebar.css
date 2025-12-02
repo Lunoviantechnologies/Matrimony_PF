@@ -20,7 +20,8 @@
 }
 
 .apply-btn {
-    background-color : #3d05e7;
+    background-color : #3d05e7 !important;
+    color: white !important;
     margin-bottom: 20px;
     font-weight: 500;
     border-radius: 6px;
@@ -28,7 +29,7 @@
 
 .apply-btn:hover {
     color: white !important;
-    background-color: #4510e4 !important;
+    background-color: #4417c8 !important;
 }
 
 .filter-section {

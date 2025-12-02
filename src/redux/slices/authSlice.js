@@ -57,6 +57,7 @@ const authSlice = createSlice({
             })
             .addCase(fetchMyProfile.fulfilled, (state, action) => {
                 state.myProfile = action.payload;
+                state.premium = action.payload;
             })
     },
 });

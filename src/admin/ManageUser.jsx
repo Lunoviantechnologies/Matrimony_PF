@@ -70,12 +70,14 @@ const handleDelete = async (id) => {
   const paginatedUsers = filteredUsers.slice((page - 1) * pageSize, page * pageSize);
 
   const openDetail = (user) => setDetailUser(user);
+  const closeDetail = () => setDetailUser(null);
 
   return (
     <div className="manage-users-root">
       {/* ================= HEADER ================= */}
       <div className="mu-header">
         <h2>Manage Users</h2>
+
 
         <div className="mu-controls">
           <input
@@ -161,6 +163,7 @@ const handleDelete = async (id) => {
                       </span>
                     </td>
 
+
                     <td>
                       <span className={`mu-status ${u.profileStatus || "active"}`}>
                         {u.profileStatus || "active"}
@@ -221,7 +224,7 @@ const handleDelete = async (id) => {
 
       {/* ================= VIEW USER MODAL ================= */}
       {detailUser && (
-        <div className="mu-modal-backdrop" onClick={() => setDetailUser(null)}>
+        <div className="mu-modal-backdrop" onClick={closeDetail}>
           <div className="mu-modal" onClick={(e) => e.stopPropagation()}>
             <div className="mu-modal-header">
               <h3>User Details</h3>
@@ -264,9 +267,8 @@ const handleDelete = async (id) => {
                 Extra notes or description can go here
               </div>
             </div>
-
             <div className="mu-modal-footer">
-              <button className="btn" onClick={() => setDetailUser(null)}>
+              <button className="btn" onClick={closeDetail}>
                 Close
               </button>
             </div>

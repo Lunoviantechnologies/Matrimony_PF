@@ -25,12 +25,12 @@ const Login = ({ show, onClose }) => {
             .then((data) => {
                 onClose();
                 const userRole = data.role[0];
-                // console.log("login", data.role);
+                // console.log("Login successful:", data);
                 if (userRole === "ADMIN") {
                     navigate("/admin");
-                } else if (userRole === "PROFILE") {
+                } else if (userRole === "PROFILE")  {
                     navigate("/dashboard");
-                };
+                }
             })
             .catch(() => {
                 alert("Login failed. Please check your credentials.");
