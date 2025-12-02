@@ -14,6 +14,14 @@ export default function AdminSidebar() {
         navigate('/admin');
     };
 
+    const handleMatches = () => {
+        navigate('/admin/managematches');
+    };
+
+    const handleProfiles = () => {
+        navigate('/admin/adminprofiles');
+    };
+
     const handleManageUser = () => {
         navigate('/admin/manageusers');
     };
@@ -24,13 +32,13 @@ export default function AdminSidebar() {
 
             <nav className="sidebar-nav">
                 <button onClick={handleAdminDashboard}><FaChartLine /><span>Dashboard</span></button>
-                <button><FaHeart /><span>Matches</span></button>
-                <button><FaUserPlus /><span>New Profiles</span></button>
+                <button onClick={handleMatches}><FaHeart /><span>Matches</span></button>
+                <button onClick={handleProfiles}><FaUserPlus /><span>New Profiles</span></button>
                 <button onClick={handleManageUser}><FaUserPlus /><span>Manage Users</span></button>
                 <button><FaRupeeSign /><span>Payments</span></button>
                 <button onClick={handleReport}><FaFileAlt /><span>Reports</span></button>
                 <button><FaCheckCircle /><span>Approvals</span></button>
-                <button><FaHeadset /><span>Support</span></button>
+                <button><FaHeadset /><span>User Support</span></button>
             </nav>
         </aside>
     );

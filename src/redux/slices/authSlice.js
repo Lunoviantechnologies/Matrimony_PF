@@ -2,11 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import { loginUser } from "../thunk/loginThunk";
 import { fetchMyProfile } from "../thunk/myProfileThunk";
 
-const intialState = {
-    id: localStorage.getItem("id") || null,
+const initialState = {
+    id: localStorage.getItem("id") ? JSON.parse(localStorage.getItem("id")) : null,
     token: localStorage.getItem("token") || null,
     email: localStorage.getItem("email") || null,
-    role: localStorage.getItem("role") || null,
+    role: localStorage.getItem("role") ? JSON.parse(localStorage.getItem("role")) : null,
     isLoggedIn: !!localStorage.getItem("token"),
     loading: false,
     error: null,
@@ -14,7 +14,7 @@ const intialState = {
 
 const authSlice = createSlice({
     name: "auth",
-    initialState: intialState,
+    initialState,
     reducers: {
         logout: (state, action) => {
             state.id = null;
@@ -39,7 +39,7 @@ const authSlice = createSlice({
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false;
                 const { id, token, email, role } = action.payload;
-                
+
                 state.id = id;
                 state.token = token;
                 state.email = email;
@@ -49,7 +49,7 @@ const authSlice = createSlice({
                 localStorage.setItem("id", JSON.stringify(id));
                 localStorage.setItem("token", token);
                 localStorage.setItem("email", email);
-                localStorage.setItem("role", role);
+                localStorage.setItem("role", JSON.stringify(role));
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;

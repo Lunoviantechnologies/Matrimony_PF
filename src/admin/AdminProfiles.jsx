@@ -1,12 +1,6 @@
 import React, { useMemo } from "react";
 import "../styleSheets/AdminProfile.css";
 
-/**
- * AdminProfile.jsx
- * - Frontend only demo of "recently joined" admin widget.
- * - Replace MOCK_USERS with API data later.
- */
-
 const now = () => new Date();
 
 const MOCK_USERS = [
