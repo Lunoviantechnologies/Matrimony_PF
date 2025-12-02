@@ -1,5 +1,6 @@
 /* Root container – full width */
 .ap-root {
+  background-color: #D9F5E4;
   padding: 18px;
   width: 100%;
   max-width: none;

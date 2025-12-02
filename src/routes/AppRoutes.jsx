@@ -36,6 +36,7 @@ import Rejected from "../pages/Rejected";
 import Received from "../pages/Received";
 import ProtectedRoute from "./ProtectedRoute";
 import ManageMatches from "../admin/ManageMatches";
+import HomeRedirect from "../pages/HomeRedirect";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -44,7 +45,7 @@ const AppRoutes = createBrowserRouter([
         children: [
             {
                 path: "/",
-                element: <Home />
+                element: <HomeRedirect />
             },
             {
                 path: "/aboutUs",
