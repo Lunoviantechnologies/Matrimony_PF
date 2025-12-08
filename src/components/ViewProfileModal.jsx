@@ -12,7 +12,8 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {}, anc
 
   // destructure safely, fallbacks are "—"
   const {
-    name = "—",
+    firstName = "—",
+    lastName = "—",
     age,
     gender = "—",
     height = "—",
@@ -21,9 +22,9 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {}, anc
     motherTongue = "—",
     maritalStatus = "—",
     siblings = "—",
-    education = "—",
+    highestEducation = "—",
     occupation = "—",
-    income = "—",
+    annualIncome = "—",
     city = "—",
     state = "—",
     country = "—",
@@ -67,14 +68,7 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {}, anc
       <div className="vp-pop-backdrop" onClick={handleBackdrop}>
         <div
           className="vp-popover vp-popover-expanded"
-          style={{
-            position: "fixed",
-            left,
-            top,
-            width: popupW,
-            maxHeight: popupH,
-            zIndex: 2000,
-          }}
+          style={{ position: "fixed", left, top, width: popupW, maxHeight: popupH, zIndex: 2000,}}
           onClick={(e) => e.stopPropagation()}
         >
           <button className="vp-close-small" onClick={onClose} aria-label="Close">✕</button>
@@ -85,7 +79,7 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {}, anc
             </div>
 
             <div className="vp-info-small vp-info-scroll">
-              <div className="vp-name-small">{name} <span className="vp-age-small">{age ? `${age} yrs` : ""}</span></div>
+              <div className="vp-name-small">{firstName + " " + lastName} <span className="vp-age-small">{age ? `${age} yrs` : ""}</span></div>
               <div className="vp-subline-small">{gender} {height ? ` • ${height}` : ""}</div>
 
               <div className="vp-meta-small">
@@ -93,9 +87,9 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {}, anc
                 <div><strong>Mother Tongue:</strong> {motherTongue}</div>
                 <div><strong>Marital Status:</strong> {maritalStatus}</div>
                 <div><strong>Siblings:</strong> {siblings}</div>
-                <div><strong>Education:</strong> {education}</div>
+                <div><strong>Education:</strong> {highestEducation}</div>
                 <div><strong>Occupation:</strong> {occupation}</div>
-                <div><strong>Income:</strong> {income}</div>
+                <div><strong>Income:</strong> {annualIncome}</div>
                 <div><strong>Location:</strong> {city}{state ? `, ${state}` : ""}{country ? `, ${country}` : ""}</div>
               </div>
 
@@ -159,9 +153,9 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {}, anc
               <div><strong>Mother Tongue:</strong> {motherTongue}</div>
               <div><strong>Marital Status:</strong> {maritalStatus}</div>
               <div><strong>Siblings:</strong> {siblings}</div>
-              <div><strong>Education:</strong> {education}</div>
+              <div><strong>Education:</strong> {highestEducation}</div>
               <div><strong>Occupation:</strong> {occupation}</div>
-              <div><strong>Income:</strong> {income}</div>
+              <div><strong>Income:</strong> {annualIncome}</div>
               <div><strong>Location:</strong> {city}{state ? `, ${state}` : ""}{country ? `, ${country}` : ""}</div>
             </div>
 

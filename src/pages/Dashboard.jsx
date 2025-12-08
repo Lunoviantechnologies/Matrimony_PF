@@ -14,13 +14,25 @@ const Dashboard = () => {
   const { id } = useSelector(state => state.auth);
 
   useEffect(() => {
-    axios.get(`${backendIP}/friends/accepted`).then((response) => {
-      const filterReceivedRequest = response.data.filter(req => req.receiverId === id)
-      setAcceptedRequests(filterReceivedRequest);
-      console.log("Accepted requests:", filterReceivedRequest);
-    }).catch((error) => {
-      console.error("Error fetching accepted requests:", error);
-    });
+    const fetchAcceptedRequests = async () => {
+      try {
+        // 1) Requests YOU accepted (receiver = you)
+        const receivedAccepted = await axios.get(`${backendIP}/friends/accepted/received/${id}`);
+
+        // 2) Requests THEY accepted (sender = you)
+        const sentAccepted = await axios.get(`${backendIP}/friends/accepted/sent/${id}`);
+
+        // Combine both
+        const merged = [...receivedAccepted.data, ...sentAccepted.data];
+        setAcceptedRequests(merged);
+
+        console.log("Accepted requests:", merged);
+      } catch (error) {
+        console.error("Error fetching accepted requests:", error);
+      }
+    };
+
+    fetchAcceptedRequests();
 
     axios.get(`${backendIP}/friends/received/${id}`).then((response) => {
       console.log("Received requests:", response.data);
@@ -29,13 +41,26 @@ const Dashboard = () => {
       console.error("Error fetching received requests:", error);
     });
 
-    axios.get(`${backendIP}/friends/rejected`).then((response) => {
-      console.log("Rejected requests:", response.data);
-      setRejectedRequests(response.data);
-    }).catch((error) => {
-      console.error("Error fetching rejected requests:", error);
-    });
-  }, []);
+    const fetchRejectedRequests = async () => {
+      try {
+        // 1) Requests YOU rejected (receiver = you)
+        const receivedRejected = await axios.get(`${backendIP}/friends/rejected/received/${id}`);
+
+        // 2) Requests THEY rejected (sender = you)
+        const sentRejected = await axios.get(`${backendIP}/friends/rejected/sent/${id}`);
+
+        // Combine both
+        const merged = [...receivedRejected.data, ...sentRejected.data];
+        setRejectedRequests(merged);
+
+        console.log("Rejected requests:", merged);
+      } catch (error) {
+        console.error("Error fetching accepted requests:", error);
+      }
+    };
+
+    fetchRejectedRequests();
+  }, [id]);
 
   const handleAccept = async (requestId) => {
     try {
@@ -95,19 +120,19 @@ const Dashboard = () => {
         <h2 style={{ color: "#695019", marginBottom: 15 }}>Interest Requests</h2>
 
         <div style={{ display: "flex", gap: 15, marginBottom: 20 }}>
-          <button onClick={ () => { navigate('/dashboard/requests/received')}}
-            style={{ fontWeight: "bold", color: "green", background: "#e8fff2", border: "none", padding: "10px 20px", borderRadius: 25,}}>
-            New Requests
+          <button onClick={() => { navigate('/dashboard/requests/received') }}
+            style={{ fontWeight: "bold", color: "green", background: "#e8fff2", border: "none", padding: "10px 20px", borderRadius: 25, }}>
+            New Requests <span style={{ backgroundColor: 'red', color: "white", borderRadius: '50%', padding: '2px 5px' }}>{receivedRequests.length}</span>
           </button>
 
-          <button onClick={ () => { navigate('/dashboard/requests/accepted')}}
-            style={{fontWeight: "bold", color: "#000", background: "#F8F6F1", border: "none", padding: "10px 20px", borderRadius: 25,}}>
-            Accepted <span style={{backgroundColor: 'red' ,color: "white", borderRadius: '50%', padding: '2px 5px'}}>{acceptedRequests.length}</span>
+          <button onClick={() => { navigate('/dashboard/requests/accepted') }}
+            style={{ fontWeight: "bold", color: "#000", background: "#F8F6F1", border: "none", padding: "10px 20px", borderRadius: 25, }}>
+            Accepted <span style={{ backgroundColor: 'red', color: "white", borderRadius: '50%', padding: '2px 5px' }}>{acceptedRequests.length}</span>
           </button>
 
-          <button onClick={ () => { navigate('/dashboard/requests/rejected')}}
-            style={{ fontWeight: "bold", color: "#000", background: "#F8F6F1", border: "none", padding: "10px 20px", borderRadius: 25,}}>
-            Denied <span style={{backgroundColor: 'red' ,color: "white", borderRadius: '50%', padding: '2px 5px'}}>{rejectedRequests.length}</span>
+          <button onClick={() => { navigate('/dashboard/requests/rejected') }}
+            style={{ fontWeight: "bold", color: "#000", background: "#F8F6F1", border: "none", padding: "10px 20px", borderRadius: 25, }}>
+            Denied <span style={{ backgroundColor: 'red', color: "white", borderRadius: '50%', padding: '2px 5px' }}>{rejectedRequests.length}</span>
           </button>
         </div>
 

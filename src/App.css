@@ -8,7 +8,10 @@
 .navBody {
     background-color: #D9F5E4;
     border-radius: 50px;
-    border-radius: 50px;
+
+    position: sticky;
+    top: 0;
+    z-index: 1050;
 }
 
 .navLink {
@@ -47,6 +50,10 @@
     transform: scale(0.95);
 }
 
+.navDropDownMenu {
+    z-index: 2000 !important;
+}
+
 /* Search Filter */
 
 .searchfilter {
@@ -61,7 +68,7 @@
     line-height: 38px;
     box-sizing: border-box;
     position: relative;
-    top: 6px;  
+    top: 6px;
 }
 
 /* Sub Navbar */
@@ -69,6 +76,10 @@
 .sub_navbar {
     background-color: #f8f9fa;
     padding: 14px 0;
+
+    position: sticky;
+    top: 50px;
+    z-index: 1000;
 }
 
 .subnav_link {
@@ -83,16 +94,6 @@
 .subnav_link:hover {
     color: #025423;
 }
-
-/* .subnav_link.active {
-    border-bottom: 2px solid #04c451;
-    text-decoration: none;
-    color: #025423;
-    font-weight: 500;
-    padding-bottom: 4px;
-    border-bottom: 2px solid transparent;
-    transition: all 0.3s ease;
-} */
 
 .subnav_link.active {
     border-bottom: 2px solid #04c451;
@@ -115,7 +116,7 @@
 }
 
 .request_link:hover {
-    color: #025423;  
+    color: #025423;
 }
 
 .request_link.active {

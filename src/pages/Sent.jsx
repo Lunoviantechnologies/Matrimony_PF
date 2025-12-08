@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 const SentRequests = () => {
 
   const [SentRequests, setSentRequests] = useState([]);
-  const { id } = useSelector( state => state.auth);
+  const { id } = useSelector(state => state.auth);
 
   useEffect(() => {
     axios.get(`${backendIP}/friends/sent/${id}`).then((response) => {
@@ -20,22 +20,24 @@ const SentRequests = () => {
 
   const handleCancelRequest = async (cancelRequestId) => {
     try {
-      const response = await axios.delete(`${backendIP}/friends/sent/delete/${cancelRequestId}`); 
+      const response = await axios.delete(`${backendIP}/friends/sent/delete/${cancelRequestId}`);
       console.log("Request cancelled:", response.data);
       setSentRequests(SentRequests.filter(req => req.requestId !== cancelRequestId));
       alert("Request cancelled successfully");
     } catch (error) {
       console.error("Error cancelling request:", error);
     };
-  }; 
+  };
+
+  const filteredSent = SentRequests.filter(req => req?.status?.toLowerCase() === "pending");
 
   return (
     <div className="received-container">
       {
-        SentRequests.length === 0 ? (
+        filteredSent.length === 0 ? (
           <p className="no-requests-message">No sent requests</p>
         ) : (
-          SentRequests.map((user) => (
+          filteredSent.map((user) => (
             <div className="received-card" key={user.requestId}>
 
               <div className="left-section">

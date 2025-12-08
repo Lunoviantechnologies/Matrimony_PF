@@ -3,38 +3,52 @@ import "../styleSheets/EditProfile.css";
 import { FaCamera, FaChevronRight, FaEdit, FaPlus } from "react-icons/fa";
 import axios from "axios";
 import backendIP from "../api/api";
-
-const PROFILE_ID = 36; // change to dynamic id when ready
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
+import imageCompression from "browser-image-compression";
 
 export default function EditProfile() {
+  const { id, myProfile } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+
   const [loading, setLoading] = useState(true);
-  const [profileData, setProfileData] = useState({}); // full profile object
+  const [profileData, setProfileData] = useState([]); // full profile object
   const [photo, setPhoto] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const [openModal, setOpenModal] = useState(null);
   const [editBuffer, setEditBuffer] = useState({});
 
   const fileInputRef = useRef(null);
 
+  console.log("profileData, id : ", profileData, id);
+
   /* ------------------ GET PROFILE ------------------ */
   useEffect(() => {
-    const fetchProfile = async () => {
-      setLoading(true);
-      try {
-        const res = await axios.get(`${backendIP}/api/admin/profiles/36`);
-        const data = res.data || {};
-        console.log("a:",res.data)
-        setProfileData(data);
+    if (!id) return;
 
-        if (data.photo) setPhoto(data.photo);
-      } catch (err) {
-        console.error("Error fetching profile:", err);
-      } finally {
+    setLoading(true);
+
+    dispatch(fetchMyProfile(id))
+      .then((data) => {
+        setProfileData(data.payload);
+        const remotePhoto =
+          data.payload?.updatePhoto ||
+          data.payload?.photoUrl ||
+          data.payload?.image ||
+          data.payload?.avatar ||
+          null;
+        if (remotePhoto) {
+          setPhoto(remotePhoto);
+        }
         setLoading(false);
-      }
-    };
-    fetchProfile();
-  }, []);
+      })
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
+      });
+
+  }, [id, dispatch]);
 
   /* ------------------ Modal open ------------------ */
   const openSectionModal = (sectionKey) => {
@@ -99,30 +113,26 @@ export default function EditProfile() {
   /* ------------------ Save edited section ------------------ */
   const saveSection = async () => {
     try {
-      // Merge edits into full profile object
-      const updatedProfile = { ...profileData, ...editBuffer, id: PROFILE_ID };
+      const updatedProfile = { ...profileData, ...editBuffer, id }; // ✅ fixed
 
-      // If partnerHobbies/hobbies are arrays, convert to comma-string if your backend expects strings.
-      // (Adjust as needed depending on backend.)
       if (Array.isArray(updatedProfile.hobbies)) {
         updatedProfile.hobbies = updatedProfile.hobbies.join(",");
       }
+
       if (Array.isArray(updatedProfile.partnerHobbies)) {
         updatedProfile.partnerHobbies = updatedProfile.partnerHobbies.join(",");
       }
 
-      // Send full object to update endpoint
-      const res = await axios.put(`${backendIP}/api/admin/update/36`, updatedProfile);
+      const res = await axios.put(`${backendIP}/admin/update/${id}`, updatedProfile);
 
-      // On success update local UI
       setProfileData(updatedProfile);
       setOpenModal(null);
       setEditBuffer({});
-      console.log("Update response:", res.data);
-      alert("Saved successfully");
+      alert("Saved successfully ✅");
+
     } catch (err) {
-      console.error("Error saving section:", err.response || err);
-      alert("Save failed — check console");
+      console.error("Error saving section:", err);
+      alert("Save failed ❌");
     }
   };
 
@@ -135,13 +145,96 @@ export default function EditProfile() {
     setEditBuffer((p) => ({ ...p, [key]: value }));
 
   /* ------------------ Photo upload (preview only) ------------------ */
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => setPhoto(ev.target.result);
-    reader.readAsDataURL(file);
+
+    // optional: limit max selected file size client side
+    const MAX_ALLOWED_MB = 10; // you can change to 5 or 2
+    if (file.size / (1024 * 1024) > MAX_ALLOWED_MB) {
+      if (!window.confirm(`Selected file is > ${MAX_ALLOWED_MB}MB. Continue and compress?`)) {
+        return;
+      }
+    }
+
+    try {
+      // compress
+      const options = {
+        maxSizeMB: 1,            // final max size in MB (tune as needed)
+        maxWidthOrHeight: 1024,  // scale down big images
+        useWebWorker: true,
+        maxIteration: 10
+      };
+      const compressedFile = await imageCompression(file, options);
+
+      // show preview from compressed blob (faster and smaller)
+      const previewUrl = URL.createObjectURL(compressedFile);
+      setPhoto(previewUrl); // temporary preview
+
+      // upload compressed file
+      await uploadPhoto(compressedFile);
+
+      // revoke preview url after some time (cleanup)
+      setTimeout(() => {
+        try { URL.revokeObjectURL(previewUrl); } catch (e) { }
+      }, 30_000);
+
+    } catch (err) {
+      console.error("Compression/upload failed", err);
+      alert("Failed to compress or upload image.");
+    }
   };
+
+  const uploadPhoto = async (file) => {
+    if (!file || !id) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      setUploadProgress(0);
+
+      const res = await axios.put(`${backendIP}/admin/photo/${id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: (progressEvent) => {
+          if (!progressEvent.lengthComputable) return;
+          const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          setUploadProgress(percent);
+        },
+        timeout: 120000
+      });
+
+      // IMPORTANT: Prefer a response that returns a URL to the stored image (not Base64)
+      // e.g. { photoUrl: "/uploads/users/123.jpg" } or full absolute url
+      const payload = res?.data || {};
+      const newUrlRaw = payload.updatePhoto || payload.photoUrl || payload.image || payload.avatar ||
+        (payload.fileName ? `/profile-photos/${payload.fileName}` : null);
+
+      if (newUrlRaw) {
+        // Ensure cache-busting (either server sets unique filename or add timestamp)
+        const newUrl = `${newUrlRaw}${newUrlRaw.includes("?") ? "&" : "?"}t=${Date.now()}`;
+        setPhoto(newUrl);
+
+        // also update profileData locally so UI shows the updated value
+        setProfileData((p) => ({ ...p, updatePhoto: newUrlRaw, photoUrl: newUrlRaw }));
+      } else {
+        // fallback: server didn't return a URL — keep preview (we already set it)
+        console.warn("Upload success but no returned URL from server. Using preview until refresh.");
+      }
+
+      // optional: refetch if you need other fields updated from backend
+      // await dispatch(fetchMyProfile(id));
+
+      alert("Photo updated successfully!");
+
+    } catch (err) {
+      console.error("Photo upload failed:", err);
+      alert("Failed to upload photo");
+    } finally {
+      setUploadProgress(0);
+    }
+  };
+  console.log("updatePhoto : ", profileData.updatePhoto)
 
   const Row = ({ label, value, onAction, actionText }) => (
     <div className="row">
@@ -169,26 +262,43 @@ export default function EditProfile() {
         <aside className="left-column">
           <div className="photo-card">
             <div className="photo-box">
-              {photo ? <img src={photo} alt="Profile" className="photo-preview" /> : (
-                <div className="photo-placeholder">
-                  <FaCamera className="camera-icon" />
-                  <div className="upload-text">Upload Photo</div>
-                </div>
-              )}
-              <div className="camera-action" onClick={() => fileInputRef.current && fileInputRef.current.click()}>
+              <img
+                src={ photo?.startsWith("blob:") ? photo : photo
+                      ? `${backendIP.replace("/api", "")}${photo}` : profileData.updatePhoto
+                        ? `${backendIP.replace("/api", "")}${profileData.updatePhoto}`
+                        : "/default-user.png"
+                }
+                alt="Profile"
+                className="photo-preview"
+              />
+
+              <div
+                className="camera-action"
+                onClick={() => fileInputRef.current && fileInputRef.current.click()}
+              >
                 <FaCamera /> <span>Change</span>
               </div>
+
               <input ref={fileInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={handleFileChange} />
+
+              {/* ✅ Show upload progress while uploading */}
+              {
+                uploadProgress > 0 && uploadProgress < 100 && (
+                  <div className="upload-progress">
+                    Uploading... {uploadProgress}%
+                  </div>
+                )
+              }
             </div>
 
             <div className="photo-caption">
-              <div className="photo-name">{profileData.fullName || `${profileData.firstName || ""} ${profileData.lastName || "Null"}`}</div>
+              <div className="photo-name">{profileData?.fullName || `${profileData?.firstName || ""} ${profileData?.lastName || "Null"}`}</div>
               <div className="photo-sub">Active member • Verified</div>
             </div>
 
-            <div className="photo-actions-row">
+            {/* <div className="photo-actions-row">
               <button className="btn-blue" onClick={() => openSectionModal("personal")}>Edit Profile</button>
-            </div>
+            </div> */}
           </div>
 
           <div className="boxed small-box">
@@ -199,7 +309,7 @@ export default function EditProfile() {
               </button>
             </div>
             <div className="box-body">
-              <Row label="Height" value={profileData.height} />
+              <Row label="Height" value={profileData?.height} />
               <Row label="Weight" value={profileData.weight} />
               <Row label="Body Type" value={profileData.bodyType} />
               <Row label="Complexion" value={profileData.complexion} />
@@ -259,7 +369,7 @@ export default function EditProfile() {
                 <Row label="Experience" value={profileData.experience} />
                 <Row label="Sector" value={profileData.sector} />
                 <Row label="Sports " value={profileData.Sports} />
-                 <Row label="Living with Childrens" value={profileData.livingwithchildrens} />
+                <Row label="Living with Childrens" value={profileData.livingwithchildrens} />
               </div>
             </div>
           </div>
@@ -513,7 +623,7 @@ export default function EditProfile() {
             <div className="field">
               <div className="field-label">Hobbies</div>
               {(buffer.hobbies || []).map((h, i) => (
-                <input key={i} className="hobby-input" value={h} onChange={(e) => updateHobbyInBuffer("hobbies", i, e.target.value)} placeholder={`Hobby ${i+1}`} />
+                <input key={i} className="hobby-input" value={h} onChange={(e) => updateHobbyInBuffer("hobbies", i, e.target.value)} placeholder={`Hobby ${i + 1}`} />
               ))}
               <button type="button" className="add-hobby-btn" onClick={() => addHobbyToBuffer("hobbies")}><FaPlus /> Add Hobby</button>
             </div>
@@ -542,7 +652,7 @@ export default function EditProfile() {
             <div className="field">
               <div className="field-label">Partner Hobbies</div>
               {(buffer.hobbies || []).map((h, i) => (
-                <input key={i} className="hobby-input" value={h} onChange={(e) => updateHobbyInBuffer("hobbies", i, e.target.value)} placeholder={`Partner Hobby ${i+1}`} />
+                <input key={i} className="hobby-input" value={h} onChange={(e) => updateHobbyInBuffer("hobbies", i, e.target.value)} placeholder={`Partner Hobby ${i + 1}`} />
               ))}
               <button type="button" className="add-hobby-btn" onClick={() => addHobbyToBuffer("hobbies")}><FaPlus /> Add Hobby</button>
             </div>
@@ -553,4 +663,4 @@ export default function EditProfile() {
         return <div>Editing not supported</div>;
     }
   }
-}
+};
