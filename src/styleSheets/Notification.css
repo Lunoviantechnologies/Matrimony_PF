@@ -6,7 +6,8 @@
 
 .notif-icon {
   position: relative;
-  padding: 5px;
+  color: #ff833b;
+  /* padding: 5px; */
 }
 
 .notif-badge {

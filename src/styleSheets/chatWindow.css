@@ -3,6 +3,8 @@
     display: flex;
     height: 100vh;
     background-color: #f9fafb;
+    overflow: hidden;
+    /* ⭐ THIS FIXES PAGE JUMP */
 }
 
 /* Left contact list */
