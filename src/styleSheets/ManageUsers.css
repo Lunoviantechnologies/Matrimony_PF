@@ -274,3 +274,22 @@
     justify-content: flex-start;
   }
 }
+.pg-btn {
+  padding: 6px 10px;
+  margin: 0 4px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background: white;
+  border-radius: 5px;
+}
+
+.pg-btn.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.pg-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

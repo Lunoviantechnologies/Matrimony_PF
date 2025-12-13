@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styleSheets/PremiumSubscription.css';
 import axios from 'axios';
@@ -5,6 +6,18 @@ import backendIP from '../api/api';
 
 function PremiumSubscription() {
   const navigate = useNavigate();
+
+  // Load Razorpay checkout script once
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      // optional cleanup
+      document.body.removeChild(script);
+    };
+  }, []);
 
   const plans = [
     {
@@ -91,10 +104,63 @@ function PremiumSubscription() {
     }
   ];
 
-  const handlePlanSelect = (plan) => {
-    navigate(`/cart/${plan.id}`);
-    axios.post(`${backendIP}/payments/create-order`)
-  };
+  // Replace your old handler with this Razorpay integration
+const handlePlanSelect = async (plan) => {
+  try {
+    const planCodeMap = {
+      "gold-3months": "GOLD_3M",
+      "gold-plus-3months": "GOLD_PLUS_3M",
+      "diamond-6months": "DIAMOND_6M",
+      "diamond-plus-6months": "DIAMOND_PLUS_6M",
+      "platinum-plus-12months": "PLATINUM_12M"
+    };
+
+    const backendPlanCode = planCodeMap[plan.id];
+
+    if (!backendPlanCode) {
+      alert("Invalid plan selected");
+      return;
+    }
+
+    // ✅ SEND CORRECT ENUM VALUE
+    const res = await axios.post(`${backendIP}/payments/create-order`, {
+      planCode: backendPlanCode,
+      userId: 1   // replace with logged-in user's real id
+    });
+
+    const { orderId, razorpayKeyId, amount, currency } = res.data;
+
+    const options = {
+      key: razorpayKeyId,      // ✅ ONLY KEY ID
+      amount: amount,         // already in paise
+      currency: currency,
+      name: "SaathJanam Premium",
+      description: plan.name,
+      order_id: orderId,
+
+      handler: async function (response) {
+        await axios.post(`${backendIP}/payments/verify`, {
+          razorpayOrderId: response.razorpay_order_id,
+          razorpayPaymentId: response.razorpay_payment_id,
+          razorpaySignature: response.razorpay_signature,
+          planCode: backendPlanCode,
+          userId: 1
+        });
+
+        navigate(/cart/`${plan.id}`);
+      },
+
+      theme: { color: "#e91e63" }
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+
+  } catch (err) {
+    console.error("Payment error:", err);
+    alert("Payment failed: " + (err.response?.data || err.message));
+  }
+};
 
   return (
     <div className="premium-subscription-container">

@@ -166,3 +166,30 @@
     text-align: left;
   }
 }
+.pagination-controls {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  align-items: center;
+}
+
+.pagination-controls button {
+  padding: 8px 18px;
+  border: none;
+  background-color: #4b7bec;
+  color: #fff;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pagination-controls button:disabled {
+  background-color: #b3c7ff;
+  cursor: not-allowed;
+}
+
+.page-number {
+  font-weight: 600;
+  font-size: 15px;
+}

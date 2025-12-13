@@ -25,8 +25,18 @@ export default function AdminSidebar() {
     const handleManageUser = () => {
         navigate('/admin/manageusers');
     };
+
+     const handlepayments = () => {
+        navigate('/admin/payments');
+    };
     
-    return (
+     const handleaprovals=()=>{
+        navigate('/admin/aprovals')
+     };
+     const handlesupport=()=>{
+        navigate('/admin/support')
+     }
+   return (
         <aside className="admin-sidebar">
             <div className="sidebar-logo">SJ</div>
 
@@ -35,10 +45,10 @@ export default function AdminSidebar() {
                 <button onClick={handleMatches}><FaHeart /><span>Matches</span></button>
                 <button onClick={handleProfiles}><FaUserPlus /><span>New Profiles</span></button>
                 <button onClick={handleManageUser}><FaUserPlus /><span>Manage Users</span></button>
-                <button><FaRupeeSign /><span>Payments</span></button>
+                <button onClick={handlepayments}><FaRupeeSign /><span>Payments</span></button>
                 <button onClick={handleReport}><FaFileAlt /><span>Reports</span></button>
-                <button><FaCheckCircle /><span>Approvals</span></button>
-                <button><FaHeadset /><span>User Support</span></button>
+                <button onClick={handleaprovals}><FaCheckCircle /><span>Approvals</span></button>
+                <button onClick={handlesupport}><FaHeadset /><span>User Support</span></button>
             </nav>
         </aside>
     );
