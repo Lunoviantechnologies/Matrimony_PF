@@ -18,17 +18,17 @@ const AdminDashboard = () => {
 
   const totalUsers = profiles.length;
 
-  const activeUsers = profiles.filter((u) => u.active === true);
-  const inactiveUsers = profiles.filter((u) => u.active === false);
+  const activeUsers = profiles.filter((u) => u.activeFlag === true);
+  const inactiveUsers = profiles.filter((u) => u.activeFlag === false);
 
   const activeCount = activeUsers.length;
   const inactiveCount = inactiveUsers.length;
 
 
   const revenue = profiles
-    .filter((u) => u.paymentStatus === "PAID")   
-    .reduce((sum, user) => sum + (user.amountPaid || 0), 0);
-
+    .filter((u) => u.latestPayment && u.latestPayment.status === "PAID")   
+    .reduce((sum, user) => sum + (user.latestPayment.amount || 0), 0);
+  // console.log("revenue : ", revenue);
   const matches = Math.floor(totalUsers * 0.25);
 
   return (
@@ -68,7 +68,7 @@ const AdminDashboard = () => {
 
           <div className="stat-card blue">
             <div className="icon"><FaRupeeSign /></div>
-            <h3>Revenue</h3>
+            <h3>Recent Revenue</h3>
             <p>₹{revenue}</p>
           </div>
         </section>

@@ -38,6 +38,8 @@ import HomeRedirect from "../pages/HomeRedirect";
 import AdminPayments from "../admin/AdminPayments";
 import AdminApprovals from "../admin/AdminApprovals";
 import AdminSupport from "../admin/AdminSupport";
+import PaymentSuccess from "../successPages/PaymentSuccess";
+import PaymentFailed from "../successPages/paymentFailure";
 const AppRoutes = createBrowserRouter([
     {
         path: "/",
@@ -68,12 +70,22 @@ const AppRoutes = createBrowserRouter([
                 element: <Forgotpassword />
             },
             {
-                path: "premium",
-                element: <PremiumSubscription />
-            },
-            {
                 path: "registration-success",
                 element: <RegisterSuccessPage />
+            },
+            {
+                path: "premium",
+                element: <PremiumSubscription />,
+                children: [
+                    {
+                        path: "payment-success",
+                        element: <PaymentSuccess />
+                    },
+                    {
+                        path: "payment-failed",
+                        element: <PaymentFailed />
+                    }
+                ]
             },
         ],
     },
@@ -146,10 +158,6 @@ const AppRoutes = createBrowserRouter([
                 ]
             },
             {
-                path: "premium",
-                element: <PremiumSubscription />
-            },
-            {
                 path: "requests",
                 element: <Requests />
             },
@@ -179,11 +187,11 @@ const AppRoutes = createBrowserRouter([
                 path: "viewreport",
                 element: <ViewReport />
             },
-             {
+            {
                 path: "payments",
                 element: <AdminPayments />
             },
-               {
+            {
                 path: "aprovals",
                 element: <AdminApprovals />
             },
@@ -199,9 +207,9 @@ const AppRoutes = createBrowserRouter([
                 path: "adminprofiles",
                 element: <AdminProfiles />
             },
-              {
+            {
                 path: "support",
-                element: < AdminSupport/>
+                element: < AdminSupport />
             },
         ]
     }

@@ -14,7 +14,7 @@ export default function AdminPayments() {
   const fetchPayments = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${backendIP}/payments/successful`);
+      const response = await axios.get(`${backendIP}/payment/successful`);
       setPayments(response.data || []);
       setLoading(false);
     } catch (err) {

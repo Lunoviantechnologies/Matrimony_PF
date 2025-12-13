@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../stylesheets/ViewReport.css";
-import {
-  FaUsers,
-  FaRupeeSign,
-  FaChartPie,
-  FaChartLine,
-  FaEnvelope,
-  FaTwitter,
-  FaFacebookF,
-  FaLinkedinIn,
-  FaInstagram,
-} from "react-icons/fa";
+import { FaUsers, FaRupeeSign, FaChartPie, FaChartLine, FaEnvelope, FaTwitter, FaFacebookF, FaLinkedinIn, FaInstagram,} from "react-icons/fa";
 import axios from "axios";
 import backendIP from "../api/api";
 
@@ -22,8 +12,9 @@ const ViewReport = () => {
   const fetchProfiles = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${backendIP}/payments/successful`);
+      const res = await axios.get(`${backendIP}/payment/successful`);
       const data = res.data || [];
+      console.log("Fetched profiles:", data);
 
       // Convert backend → UI model
       const converted = data.map((p) => ({
@@ -51,13 +42,14 @@ const ViewReport = () => {
   }, []);
 
   // Count plans
-  const GOLD_3M = profiles.filter((p) => p.planCode === "GOLD_3M").length;
-  const GOLD_PLUS_3M = profiles.filter((p) => p.planCode === "GOLD_PLUS_3M").length;
-  const DIAMOND_6M = profiles.filter((p) => p.planCode === "DIAMOND_6M").length;
-  const DIAMOND_PLUS_6M = profiles.filter((p) => p.planCode === "DIAMOND_PLUS_6M").length;
-  const PLATINUM_12M = profiles.filter((p) => p.planCode === "PLATINUM_12M").length;
+  const GOLD_3M = profiles.filter((p) => p.planCode === "GOLD_3").length;
+  const GOLD_PLUS_3M = profiles.filter((p) => p.planCode === "GOLDPLUS_3").length;
+  const DIAMOND_6M = profiles.filter((p) => p.planCode === "DIAMOND_6").length;
+  const DIAMOND_PLUS_6M = profiles.filter((p) => p.planCode === "DIAMONDPLUS_6").length;
+  const PLATINUM_12M = profiles.filter((p) => p.planCode === "PLATINUM_12").length;
 
-  const revenue = profiles.reduce((sum, p) => sum + p.amount,0).toFixed(2);
+  const revenue = profiles
+  .reduce((sum, p) => sum + p.amount, 0).toFixed(2);
 
   const activeMembers = profiles.filter((p) => p.isActive).length;
 

@@ -3,9 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import '../styleSheets/PremiumSubscription.css';
 import axios from 'axios';
 import backendIP from '../api/api';
+import { useSelector } from 'react-redux';
 
 function PremiumSubscription() {
+
   const navigate = useNavigate();
+  const { id: myId } = useSelector(state => state.auth);
 
   // Load Razorpay checkout script once
   useEffect(() => {
@@ -100,67 +103,142 @@ function PremiumSubscription() {
         'Standout from Profiles',
         'Matches contact directly'
       ],
-      duration: '12 months'  
+      duration: '12 months'
     }
   ];
 
   // Replace your old handler with this Razorpay integration
-const handlePlanSelect = async (plan) => {
-  try {
-    const planCodeMap = {
-      "gold-3months": "GOLD_3M",
-      "gold-plus-3months": "GOLD_PLUS_3M",
-      "diamond-6months": "DIAMOND_6M",
-      "diamond-plus-6months": "DIAMOND_PLUS_6M",
-      "platinum-plus-12months": "PLATINUM_12M"
-    };
+  // const handlePlanSelect = async (plan) => {
+  //   try {
+  //     const planCodeMap = {
+  //       "gold-3months": "GOLD_3",
+  //       "gold-plus-3months": "GOLDPLUS_3",
+  //       "diamond-6months": "DIAMOND_6",
+  //       "diamond-plus-6months": "DIAMONDPLUS_6",
+  //       "platinum-plus-12months": "PLATINUM_12"
+  //     };
 
-    const backendPlanCode = planCodeMap[plan.id];
+  //     const backendPlanCode = planCodeMap[plan.id];
 
-    if (!backendPlanCode) {
-      alert("Invalid plan selected");
-      return;
-    }
+  //     if (!backendPlanCode) {
+  //       alert("Invalid plan selected");
+  //       return;
+  //     }
 
-    // ✅ SEND CORRECT ENUM VALUE
-    const res = await axios.post(`${backendIP}/payments/create-order`, {
-      planCode: backendPlanCode,
-      userId: 1   // replace with logged-in user's real id
-    });
+  //     // ✅ SEND CORRECT ENUM VALUE
+  //     const res = await axios.post(`${backendIP}/payment/create-order`, {
+  //       planCode: backendPlanCode,
+  //       userId: 1   // replace with logged-in user's real id
+  //     });
 
-    const { orderId, razorpayKeyId, amount, currency } = res.data;
+  //     const { orderId, razorpayKeyId, amount, currency } = res.data;
 
-    const options = {
-      key: razorpayKeyId,      // ✅ ONLY KEY ID
-      amount: amount,         // already in paise
-      currency: currency,
-      name: "SaathJanam Premium",
-      description: plan.name,
-      order_id: orderId,
+  //     const options = {
+  //       key: razorpayKeyId,      // ✅ ONLY KEY ID
+  //       amount: amount,         // already in paise
+  //       currency: currency,
+  //       name: "SaathJanam Premium",
+  //       description: plan.name,
+  //       order_id: orderId,
 
-      handler: async function (response) {
-        await axios.post(`${backendIP}/payments/verify`, {
-          razorpayOrderId: response.razorpay_order_id,
-          razorpayPaymentId: response.razorpay_payment_id,
-          razorpaySignature: response.razorpay_signature,
-          planCode: backendPlanCode,
-          userId: 1
+  //       handler: async function (response) {
+  //         await axios.post(`${backendIP}/payments/verify`, {
+  //           razorpayOrderId: response.razorpay_order_id,
+  //           razorpayPaymentId: response.razorpay_payment_id,
+  //           razorpaySignature: response.razorpay_signature,
+  //           planCode: backendPlanCode,
+  //           userId: 1
+  //         });
+
+  //         navigate(/cart/`${plan.id}`);
+  //       },
+
+  //       theme: { color: "#e91e63" }
+  //     };
+
+  //     const rzp = new window.Razorpay(options);
+  //     rzp.open();
+
+  //   } catch (err) {
+  //     console.error("Payment error:", err);
+  //     alert("Payment failed: " + (err.response?.data || err.message));
+  //   }
+  // };
+
+  const handlePlanSelect = async (plan) => {
+    try {
+      const planCodeMap = {
+        "gold-3months": "GOLD_3",
+        "gold-plus-3months": "GOLDPLUS_3",
+        "diamond-6months": "DIAMOND_6",
+        "diamond-plus-6months": "DIAMONDPLUS_6",
+        "platinum-plus-12months": "PLATINUM_12"
+      };
+
+      const backendPlanCode = planCodeMap[plan.id];
+      if (!backendPlanCode) {
+        alert("Invalid plan selected");
+        return;
+      }
+
+      // ✅ CORRECT API + PAYLOAD
+      const res = await axios.post(`${backendIP}/payment/create-order`, {
+        profileId: myId,
+        planCode: backendPlanCode
+      }
+      );
+
+      const { razorpayOrderId, razorpayKey, amountRupees, currency } = res.data;
+
+      const options = {
+        key: razorpayKey,
+        amount: amountRupees * 100, // convert to paise
+        currency: currency,
+        name: "SaathJanam Premium",
+        description: plan.name,
+        order_id: razorpayOrderId,
+
+        handler: async function (response) {
+          await axios.post(`${backendIP}/payment/verify`, {
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature
+          }
+          );
+
+          navigate("/premium/payment-success", {
+            state: {
+              planId: plan.id,
+              planName: plan.name,
+              amount: plan.discountedPrice
+            }
+          });
+        },
+
+        theme: { color: "#e91e63" }
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+
+      rzp.on("payment.failed", function (response) {
+        console.error("Payment failed:", response.error);
+        navigate("/premium/payment-failed", {
+          state: {
+            reason: response.error.reason,
+            description: response.error.description
+          }
         });
+      });
 
-        navigate(/cart/`${plan.id}`);
-      },
-
-      theme: { color: "#e91e63" }
-    };
-
-    const rzp = new window.Razorpay(options);
-    rzp.open();
-
-  } catch (err) {
-    console.error("Payment error:", err);
-    alert("Payment failed: " + (err.response?.data || err.message));
-  }
-};
+    } catch (err) {
+      console.error("Payment error:", err);
+      alert(
+        "Payment failed: " +
+        (err.response?.data?.error || err.message)
+      );
+    }
+  };
 
   return (
     <div className="premium-subscription-container">

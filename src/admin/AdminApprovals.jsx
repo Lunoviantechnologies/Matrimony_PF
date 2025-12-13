@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 
 export default function AdminApprovals() {
-  const { profiles : pending, loading } = useSelector((state) => state.profiles);
+  const { profiles: pending, loading } = useSelector((state) => state.profiles);
   const dispatch = useDispatch();
 
   // Pagination states
@@ -17,34 +17,35 @@ export default function AdminApprovals() {
   }, [dispatch]);
   // console.log("profiles : ", profiles);
 
-const handleActionApproved = async (userId) => {
-  console.log(userId)
-  try {
-    await axios.post(`${backendIP}/admin/profiles/${userId}/approve`, {
-      userId,
-      status: "Approved"
-    });
-    alert("approve");
-  } catch (error) {
-    console.error(error.response || error);
-    alert("Approval failed!");
-  }
-  fetchPendingApprovals();
-};
+  const handleActionApproved = async (userId) => {
+    try {
+      await axios.post(`${backendIP}/admin/profiles/${userId}/approve`, {
+        userId,
+        status: "Approved",
+      });
 
-const handleActionReject = async (userId) => {
-  try {
-    await axios.post(`${backendIP}/admin/profiles/${userId}/reject`, {
-      userId,
-      status: "Rejected"
-    });
-    alert("Rejection success!");
-  } catch (error) {
-    console.error(error.response || error);
-    alert("Rejection failed!");
-  }
-  fetchPendingApprovals();
-};
+      alert("User profile approved successfully!");
+      dispatch(fetchUserProfiles()); // ✅ refresh list
+    } catch (error) {
+      console.error(error.response || error);
+      alert("Approval failed!");
+    }
+  };
+
+  const handleActionReject = async (userId) => {
+    try {
+      await axios.post(`${backendIP}/admin/profiles/${userId}/reject`, {
+        userId,
+        status: "Rejected",
+      });
+
+      alert("User profile rejection success!");
+      dispatch(fetchUserProfiles()); // ✅ refresh list
+    } catch (error) {
+      console.error(error.response || error);
+      alert("Rejection failed!");
+    }
+  };
 
   // Pagination logic
   const totalPages = Math.ceil(pending.length / pageSize) || 1;
@@ -75,52 +76,70 @@ const handleActionReject = async (userId) => {
         </thead>
 
         <tbody>
-          { loading ? (
-              <p>Loading...</p>
-            ) : paginatedData.length === 0 ? (
-              <tr>
-                <td colSpan="7" className="text-center">
-                  No approvals pending
+          {/* LOADING */}
+          {loading && (
+            <tr>
+              <td colSpan="7" className="text-center">
+                Loading...
+              </td>
+            </tr>
+          )}
+
+          {/* EMPTY */}
+          {!loading && paginatedData.length === 0 && (
+            <tr>
+              <td colSpan="7" className="text-center">
+                No approvals pending
+              </td>
+            </tr>
+          )}
+
+          {/* DATA */}
+          {!loading &&
+            paginatedData.map((u, i) => (
+              <tr key={u.id} className="text-center">
+                <td>{(page - 1) * pageSize + i + 1}</td>
+                <td>{u.id}</td>
+                <td>{u.firstName}</td>
+                <td>{u.aboutYourself}</td>
+
+                <td>
+                  {u.documentUrl ? (
+                    <a
+                      href={u.documentUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View Document
+                    </a>
+                  ) : (
+                    "No Document"
+                  )}
+                </td>
+
+                <td>
+                  {u.createdAt
+                    ? new Date(u.createdAt).toLocaleString()
+                    : "-"}
+                </td>
+
+                <td>
+                  <button
+                    className="btn btn-success btn-sm me-2"
+                    onClick={() => handleActionApproved(u.id)}
+                  >
+                    Approve
+                  </button>
+
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleActionReject(u.id)}
+                  >
+                    Reject
+                  </button>
                 </td>
               </tr>
-            ) : (
-              paginatedData.map((u, i) => (
-                <tr key={u.id} className="text-center">
-                  <td>{(page - 1) * pageSize + i + 1}</td>
-                  <td>{u.id}</td>
-                  <td>{u.firstName}</td>
-                  <td>{u.aboutYourself}</td>
-
-                  <td>
-                    {u.documentUrl ? (
-                      <a href={u.documentUrl} target="_blank" rel="noreferrer">
-                        View Document
-                      </a>
-                    ) : (
-                      "No Document"
-                    )}
-                  </td>
-
-                  <td>{new Date(u.createdAt).toLocaleString()}</td>
-
-                  <td>
-                    <button
-                      className="btn btn-success btn-sm me-2"
-                      onClick={() => handleActionApproved(u.id, "Approved")}
-                    >
-                      Approve
-                    </button>
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => handleActionReject(u.id, "Rejected")}
-                    >
-                      Reject
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )
-          }
+            ))}
         </tbody>
       </table>
 

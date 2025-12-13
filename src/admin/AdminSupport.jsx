@@ -15,6 +15,7 @@ export default function AdminSupport() {
       setLoading(true);
       const res = await axios.get(`${backendIP}/tickets`);
       setTickets(res.data || []);
+      console.log("Fetched tickets:", res.data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching tickets:", error);
@@ -28,8 +29,9 @@ export default function AdminSupport() {
 
   const resolveTicket = async (ticketId) => {
     try {
-      await axios.post(`${backendIP}/profiles`, { ticketId });
+      await axios.delete( `${backendIP}/tickets/${ticketId}/resolve` );
       fetchTickets();
+      alert("Ticket resolved successfully!");
     } catch (error) {
       alert("Failed to resolve ticket!");
     }
@@ -71,7 +73,7 @@ export default function AdminSupport() {
           )}
 
           {currentTickets.map((t, index) => (
-            <tr key={t.ticketId}>
+            <tr key={t.id}>
               <td>{(page - 1) * pageSize + (index + 1)}</td>
               <td>{t.name}</td>
               <td>{t.issueCategory}</td>
@@ -80,7 +82,7 @@ export default function AdminSupport() {
               <td>
                 <button
                   className="btn btn-success btn-sm"
-                  onClick={() => resolveTicket(t.ticketId)}
+                  onClick={() => resolveTicket(t.id)}
                 >
                   Mark as Resolved
                 </button>
