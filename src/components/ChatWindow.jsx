@@ -6,7 +6,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import "../styleSheets/chatWindow.css";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
-
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 
@@ -27,9 +26,10 @@ const ChatWindow = () => {
   const messagesEndRef = useRef(null);
   const stompClientRef = useRef(null);
 
-  /* AUTO SCROLL */
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messages.length > 0) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+    }
   }, [messages]);
 
   /* FETCH ACCEPTED USERS */
@@ -48,7 +48,6 @@ const ChatWindow = () => {
         const merged = [...received.data, ...sent.data];
         setAcceptedList(merged);
 
-        // Auto-select first contact if URL has no userId
         if (merged.length > 0 && (!userId || isNaN(Number(userId)))) {
           const first = merged[0];
           const otherId =
@@ -59,14 +58,12 @@ const ChatWindow = () => {
           navigate(`/dashboard/messages/${otherId}`);
         }
 
-        // Set selected user based on URL param
         const selected = merged.find(
           (c) =>
             Number(c.senderId) === Number(userId) ||
             Number(c.receiverId) === Number(userId)
         );
         setSelectedUser(selected || null);
-
       } catch (err) {
         console.error("Error fetching accepted list:", err);
       }
@@ -99,54 +96,60 @@ const ChatWindow = () => {
       .catch(() => setIsPremium(false));
   }, [myId, dispatch]);
 
-  /* SETUP WEBSOCKET */
+  /* === FIXED WEBSOCKET === */
   useEffect(() => {
     if (!myId) return;
 
-    let subscription = null;
+    console.log("🔄 Initializing WebSocket for user:", myId);
 
-    // If client already exists → just change subscription
-    if (stompClientRef.current && stompClientRef.current.connected) {
+    if (!stompClientRef.current) {
+      const wsUrl = backendIP.replace("/api", "") + `/ws-chat?userId=${myId}`;
+      console.log("🌐 Connecting to:", wsUrl);
 
-      // Remove old subscription (VERY IMPORTANT)
-      stompClientRef.current.unsubscribe("chat-sub");
+      const sock = new SockJS(wsUrl);
 
-      // Create NEW subscription for the correct user
-      subscription = stompClientRef.current.subscribe(
-        `/user/${myId}/queue/messages`,
-        (msg) => handleIncoming(JSON.parse(msg.body)),
-        { id: "chat-sub" }
-      );
+      const client = new Client({
+        webSocketFactory: () => sock,
+        reconnectDelay: 5000,
+        connectHeaders: { "user-id": myId.toString() },
 
-      return () => {
-        stompClientRef.current?.unsubscribe("chat-sub");
-      };
+        onConnect: () => {
+          console.log("🟢 STOMP Connected as:", myId);
+
+          // SUBSCRIBE HERE (IMPORTANT)
+          const subscription = client.subscribe(
+            "/user/queue/messages",
+            (msg) => {
+              console.log("📩 Live message received:", msg.body);
+              handleIncoming(JSON.parse(msg.body));
+            },
+            { id: "chat-sub" }
+          );
+
+          console.log("📡 Subscribed to /user/queue/messages:", subscription);
+        },
+
+        onStompError: (frame) => {
+          console.error("❌ STOMP Error:", frame.headers["message"]);
+          console.error("➡️ Details:", frame.body);
+        },
+
+        onWebSocketClose: () => {
+          console.warn("⚠️ Chat WebSocket closed. Attempting reconnection...");
+        },
+
+        onWebSocketError: (err) => {
+          console.error("🚫 WebSocket Error:", err);
+        }
+      });
+
+      client.activate();
+      stompClientRef.current = client;
     }
 
-    /* First-time WebSocket connect */
-    const socketUrl = backendIP.replace("/api", "") + "/ws-chat";
-    const sock = new SockJS(socketUrl);
-
-    const client = new Client({
-      webSocketFactory: () => sock,
-      reconnectDelay: 5000,
-
-      onConnect: () => {
-        console.log("🟢 STOMP Connected");
-
-        subscription = client.subscribe(
-          `/user/${myId}/queue/messages`,
-          (msg) => handleIncoming(JSON.parse(msg.body)),
-          { id: "chat-sub" }
-        );
-      },
-    });
-
-    client.activate();
-    stompClientRef.current = client;
-
     return () => {
-      subscription?.unsubscribe();
+      console.log("🔌 Disconnecting WebSocket…");
+      stompClientRef.current?.deactivate();
     };
   }, [myId]);
 
@@ -163,32 +166,40 @@ const ChatWindow = () => {
       senderId: myId,
       receiverId,
       message,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
-    // Optimistic UI
+    console.log("📤 Sending message:", msgBody);
+
     setMessages((prev) => [...prev, msgBody]);
     setMessage("");
 
-    // Send via STOMP
     if (stompClientRef.current?.connected) {
       stompClientRef.current.publish({
         destination: `/app/chat.send/${receiverId}`,
         body: JSON.stringify(msgBody),
       });
+
+      console.log(
+        `🚀 Published to /app/chat.send/${receiverId}`,
+        JSON.stringify(msgBody)
+      );
+    } else {
+      console.error("❌ Cannot send — STOMP is NOT connected");
     }
   };
 
   /* FILTER CONTACTS */
   const filteredContacts = acceptedList.filter((c) => {
     const name =
-      Number(c.senderId) === Number(myId) ? c.receiverName : c.senderName;
+      Number(c.senderId) === Number(myId)
+        ? c.receiverName
+        : c.senderName;
 
     return name.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
   const handleIncoming = (body) => {
-    // Only push if message belongs to THIS chat window
     if (
       Number(body.senderId) === Number(userId) ||
       Number(body.receiverId) === Number(userId)
@@ -220,14 +231,25 @@ const ChatWindow = () => {
         <div className="chatlist-scroll">
           {filteredContacts.length > 0 ? (
             filteredContacts.map((c) => {
-              const otherId = Number(c.senderId) === Number(myId) ? c.receiverId : c.senderId;
-              const name = Number(c.senderId) === Number(myId) ? c.receiverName : c.senderName;
-              const img = Number(c.senderId) === Number(myId) ? c.receiverImage : c.senderImage;
+              const otherId =
+                Number(c.senderId) === Number(myId)
+                  ? c.receiverId
+                  : c.senderId;
+              const name =
+                Number(c.senderId) === Number(myId)
+                  ? c.receiverName
+                  : c.senderName;
+              const img =
+                Number(c.senderId) === Number(myId)
+                  ? c.receiverImage
+                  : c.senderImage;
 
               return (
                 <div
                   key={c.requestId}
-                  className={`chatlist-item ${Number(otherId) === Number(userId) ? "active-contact" : ""
+                  className={`chatlist-item ${Number(otherId) === Number(userId)
+                    ? "active-contact"
+                    : ""
                     }`}
                   onClick={() =>
                     navigate(`/dashboard/messages/${otherId}`)
@@ -256,16 +278,20 @@ const ChatWindow = () => {
         {selectedUser ? (
           <div className="chatwindow-header">
             <div className="chatwindow-user">
-              <img src={Number(selectedUser.senderId) === Number(myId)
-                ? selectedUser.receiverImage : selectedUser.senderImage
-              }
+              <img
+                src={
+                  Number(selectedUser.senderId) === Number(myId)
+                    ? selectedUser.receiverImage
+                    : selectedUser.senderImage
+                }
                 alt=""
                 className="chatwindow-avatar"
               />
               <div>
                 <h4>
                   {Number(selectedUser.senderId) === Number(myId)
-                    ? selectedUser.receiverName : selectedUser.senderName}
+                    ? selectedUser.receiverName
+                    : selectedUser.senderName}
                 </h4>
                 <span className="active-status">Active now</span>
               </div>
