@@ -147,3 +147,16 @@
     border-bottom: 2px solid #04c451;
     color: #025423;
 }
+.admin-payments-container {
+  padding: 20px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}

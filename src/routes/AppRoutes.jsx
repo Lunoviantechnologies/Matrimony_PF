@@ -3,7 +3,6 @@ import App from "../App";
 import Register from "../pages/Register";
 import Home from "../pages/Home";
 import PremiumSubscription from '../pages/PremiumSubscription';
-import SubscriptionDescription from '../pages/SubscriptionDescription';
 import Dashboard from "../pages/Dashboard";
 import EditProfile from "../pages/EditProfile";
 import ProfileView from "../pages/ProfileView";
@@ -21,7 +20,6 @@ import ManageUser from "../admin/ManageUser";
 import ViewProfileModal from "../components/ViewProfileModal";
 import Requests from "../pages/Requests";
 import Matches from "../pages/Matches";
-import Cart from "../components/Cart";
 import Forgotpassword from "../components/Forgotpassword";
 import AdminLayout from "../admin/AdminLayout";
 import RegisterSuccessPage from "../successPages/registerSuccessPage";
@@ -37,7 +35,9 @@ import Received from "../pages/Received";
 import ProtectedRoute from "./ProtectedRoute";
 import ManageMatches from "../admin/ManageMatches";
 import HomeRedirect from "../pages/HomeRedirect";
-
+import AdminPayments from "../admin/AdminPayments";
+import AdminApprovals from "../admin/AdminApprovals";
+import AdminSupport from "../admin/AdminSupport";
 const AppRoutes = createBrowserRouter([
     {
         path: "/",
@@ -70,10 +70,6 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "premium",
                 element: <PremiumSubscription />
-            },
-            {
-                path: "cart/:planId",
-                element: <Cart />
             },
             {
                 path: "registration-success",
@@ -183,6 +179,14 @@ const AppRoutes = createBrowserRouter([
                 path: "viewreport",
                 element: <ViewReport />
             },
+             {
+                path: "payments",
+                element: <AdminPayments />
+            },
+               {
+                path: "aprovals",
+                element: <AdminApprovals />
+            },
             {
                 path: "manageusers",
                 element: <ManageUser />
@@ -194,7 +198,11 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "adminprofiles",
                 element: <AdminProfiles />
-            }
+            },
+              {
+                path: "support",
+                element: < AdminSupport/>
+            },
         ]
     }
 ]);

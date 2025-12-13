@@ -1,42 +1,114 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../stylesheets/ViewReport.css";
-import { FaUsers, FaHeart, FaRupeeSign, FaChartPie, FaChartLine, FaEnvelope, FaTwitter, FaFacebookF, FaLinkedinIn, FaInstagram,} from "react-icons/fa";
+import {
+  FaUsers,
+  FaRupeeSign,
+  FaChartPie,
+  FaChartLine,
+  FaEnvelope,
+  FaTwitter,
+  FaFacebookF,
+  FaLinkedinIn,
+  FaInstagram,
+} from "react-icons/fa";
+import axios from "axios";
+import backendIP from "../api/api";
 
 const ViewReport = () => {
+  const [profiles, setProfiles] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch payments
+  const fetchProfiles = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`${backendIP}/payments/successful`);
+      const data = res.data || [];
+
+      // Convert backend → UI model
+      const converted = data.map((p) => ({
+        userId: p.userId,          // IMPORTANT FOR UNIQUE COUNT
+        planCode: p.planCode,      
+        amount: p.amount,          // paise
+        status: p.status,
+        name: p.name || "",
+        city: p.city || "N/A",
+        isActive: p.status === "SUCCESS",
+        createdAt: new Date(p.createdAt),
+      }));
+
+      setProfiles(converted);
+
+    } catch (error) {
+      console.error("Error while loading profiles:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfiles();
+  }, []);
+
+  // Count plans
+  const GOLD_3M = profiles.filter((p) => p.planCode === "GOLD_3M").length;
+  const GOLD_PLUS_3M = profiles.filter((p) => p.planCode === "GOLD_PLUS_3M").length;
+  const DIAMOND_6M = profiles.filter((p) => p.planCode === "DIAMOND_6M").length;
+  const DIAMOND_PLUS_6M = profiles.filter((p) => p.planCode === "DIAMOND_PLUS_6M").length;
+  const PLATINUM_12M = profiles.filter((p) => p.planCode === "PLATINUM_12M").length;
+
+  const revenue = profiles.reduce((sum, p) => sum + p.amount,0).toFixed(2);
+
+  const activeMembers = profiles.filter((p) => p.isActive).length;
+
+  const topCities = ["Hyderabad", "Bangalore", "Mumbai"];
+  console.log(profiles)
+
   return (
     <div className="viewreport-container">
-      {/* Banner Section */}
       <div className="banner">
         <div className="overlay">
           <h1>SaathJanam Matrimony Report - 2025</h1>
-          <p>Bringing hearts together through love and trust 💞</p>
+          <p>Bringing hearts together through love and trust </p>
         </div>
       </div>
 
-      {/* Top Stats */}
+      {/* Stats */}
       <div className="stats-grid">
         <div className="card pink">
           <FaUsers className="icon" />
-          <h2>520</h2>
-          <p>Free Members</p>
+          <h2>{loading ? "Loading..." : GOLD_3M}</h2>
+          <p>Gold Members</p>
         </div>
 
         <div className="card green">
           <FaUsers className="icon" />
-          <h2>230</h2>
-          <p>Premium Members</p>
+          <h2>{loading ? "Loading..." : GOLD_PLUS_3M}</h2>
+          <p>Gold Plus Members</p>
         </div>
 
         <div className="card yellow">
           <FaUsers className="icon" />
-          <h2>85</h2>
-          <p>Elite Members</p>
+          <h2>{loading ? "Loading..." :  DIAMOND_6M}</h2>
+          <p>Diamond Members</p>
+        </div>
+
+        <div className="card green">
+          <FaUsers className="icon" />
+          <h2>{loading ? "Loading..." : DIAMOND_PLUS_6M}</h2>
+          <p>Diamond Plus Members</p>
+        </div>
+
+        <div className="card yellow">
+          <FaUsers className="icon" />
+          <h2>{loading ? "Loading..." : PLATINUM_12M}</h2>
+          <p>Platinum Members</p>
         </div>
 
         <div className="card blue">
           <FaRupeeSign className="icon" />
-          <h2>₹85,000</h2>
-          <p>Monthly Revenue</p>
+          <h2>{loading ? "Loading..." : `₹${revenue}`}</h2>
+          <p>Total Revenue</p>
         </div>
       </div>
 
@@ -59,42 +131,36 @@ const ViewReport = () => {
         </div>
       </div>
 
-      {/* Engagement Summary */}
+      {/* Summary */}
       <div className="summary">
         <h2>Overall Engagement Insights</h2>
         <ul>
-          <li>✅ 85% Active Members</li>
+          <li>✅ Active Members: {activeMembers}</li>
           <li>💬 72% Response Rate</li>
           <li>📅 Avg 3 logins/day</li>
-          <li>🌍 Top Cities: Hyderabad, Chennai, Mumbai</li>
+          <li>🌍 Top Cities:</li>
+          {topCities.map((city, i) => (
+            <li key={i}>🏙 {city}</li>
+          ))}
         </ul>
       </div>
 
-      {/* Contact Section */}
+      {/* Contact */}
       <div className="contact-info">
         <h2>Get in Touch</h2>
         <p>Have questions or suggestions? Reach us anytime!</p>
-
         <div className="social-links">
           <a href="mailto:support@saathjanam.com">
             <FaEnvelope /> support@saathjanam.com
           </a>
-          <a href="#">
-            <FaTwitter /> Twitter
-          </a>
-          <a href="#">
-            <FaFacebookF /> Facebook
-          </a>
-          <a href="#">
-            <FaLinkedinIn /> LinkedIn
-          </a>
-          <a href="#">
-            <FaInstagram /> Instagram
-          </a>
+          <a href="#"><FaTwitter /> Twitter</a>
+          <a href="#"><FaFacebookF /> Facebook</a>
+          <a href="#"><FaLinkedinIn /> LinkedIn</a>
+          <a href="#"><FaInstagram /> Instagram</a>
         </div>
       </div>
     </div>
   );
 };
 
-export default ViewReport;  
+export default ViewReport;

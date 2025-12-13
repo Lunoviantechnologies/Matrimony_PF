@@ -7,8 +7,7 @@ import backendIP from "../api/api";
 
 export default function ManageUser({ pageSize = 10 }) {
   const dispatch = useDispatch();
-  const { profiles = [], loading } = useSelector((state) => state.profiles);
-  console.log("data:", profiles);
+  const { profiles, loading } = useSelector((state) => state.profiles);
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -19,38 +18,26 @@ export default function ManageUser({ pageSize = 10 }) {
   useEffect(() => {
     dispatch(fetchUserProfiles());
   }, [dispatch]);
+  // console.log("profiles :", profiles);
 
-  // ================= SAFE USER ID FUNCTION =================
   const getUserId = (u) => u?.userId || u?.id || u?.profileId;
 
-  /* =========================
-     DELETE USER API
-  ============================ */
-const handleDelete = async (id) => {
-  try {
-    await axios.delete(`${backendIP}/admin/delete/${id}`);
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${backendIP}/admin/delete/${id}`);
+      alert("User deleted successfully");
 
-    setSearch("");
+      dispatch(fetchUserProfiles());
+      setDetailUser(false);
+      setConfirm({ open: false, user: null });
+    } catch (error) {
+      console.error("Delete failed:", error.response?.data || error.message);
+      alert("Delete failed.");
+    }
+  };
 
-    alert("User deleted successfully");
-    dispatch(fetchUserProfiles());
-    setDetailUser(false);
-    setConfirm({ open: false, user: null }); // ✅ THIS CLOSES MODAL
-
-  } catch (error) {
-    console.error("Delete failed:", error.response?.data || error.message);
-
-    alert(
-      "Delete failed. Check if backend API URL matches:\n" +
-        `${backendIP}/admin/delete/${id}`
-    );
-  }
-};
-
-
-  // ================= FILTER + SEARCH =================
   const filteredUsers = useMemo(() => {
-    const safeSearch = String(search || "").toLowerCase(); // ✅ FIXED
+    const safeSearch = String(search || "").toLowerCase();
 
     return profiles.filter((u) => {
       const name = `${u.firstName || ""} ${u.lastName || ""}`.toLowerCase();
@@ -63,19 +50,42 @@ const handleDelete = async (id) => {
     });
   }, [profiles, search, statusFilter]);
 
-  // ================= PAGINATION =================
   const totalPages = Math.ceil(filteredUsers.length / pageSize) || 1;
-  const paginatedUsers = filteredUsers.slice((page - 1) * pageSize, page * pageSize);
+
+  const paginatedUsers = filteredUsers.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
 
   const openDetail = (user) => setDetailUser(user);
   const closeDetail = () => setDetailUser(null);
 
+  // ------------------------------
+  // NUMERIC PAGINATION BUTTONS
+  // ------------------------------
+  const PaginationButtons = () => {
+    let buttons = [];
+
+    for (let i = 1; i <= totalPages; i++) {
+      buttons.push(
+        <button
+          key={i}
+          className={`pg-btn ${page === i ? "active" : ""}`}
+          onClick={() => setPage(i)}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    return buttons;
+  };
+
   return (
     <div className="manage-users-root">
-      {/* ================= HEADER ================= */}
+      {/* HEADER */}
       <div className="mu-header">
         <h2>Manage Users</h2>
-
 
         <div className="mu-controls">
           <input
@@ -100,19 +110,14 @@ const handleDelete = async (id) => {
         </div>
       </div>
 
-      {/* ================= TABLE ================= */}
+      {/* TABLE */}
       <div className="mu-table-wrap">
-        {loading ? (
-          <div className="mu-loading">Loading users...</div>
-        ) : paginatedUsers.length === 0 ? (
-          <div className="mu-empty">No users found</div>
-        ) : (
           <table className="mu-table">
             <thead>
               <tr>
                 <th>Thumbnail</th>
                 <th>User</th>
-                <th>Email</th>
+                <th>Age</th>
                 <th>City</th>
                 <th>Membership</th>
                 <th>Status</th>
@@ -121,10 +126,13 @@ const handleDelete = async (id) => {
             </thead>
 
             <tbody>
-              {paginatedUsers.map((u, index) => {
-                const initials = `${(u.firstName || "U").charAt(0)}${
-                  (u.lastName || "").charAt(0)
-                }`.toUpperCase();
+              {loading ? (
+                <div className="mu-loading">Loading users...</div>
+              ) : paginatedUsers.length === 0 ? (
+                <div className="mu-empty">No users found</div>
+              ) : (
+              paginatedUsers.map((u, index) => {
+                const initials = `${(u.firstName || "U").charAt(0)}${(u.lastName || "").charAt(0)}`.toUpperCase();
 
                 return (
                   <tr
@@ -139,11 +147,9 @@ const handleDelete = async (id) => {
                       <div className="mu-user-cell">
                         <div>
                           <div className="mu-name">
-                            {u.firstName || "No"} {u.lastName || "Name"}
+                            {u.firstName} {u.lastName}
                           </div>
-                          <div className="mu-id">
-                            ID: {getUserId(u) || "N/A"}
-                          </div>
+                          <div className="mu-id">ID: {getUserId(u) || "N/A"}</div>
                         </div>
                       </div>
                     </td>
@@ -161,7 +167,6 @@ const handleDelete = async (id) => {
                       </span>
                     </td>
 
-
                     <td>
                       <span className={`mu-status ${u.profileStatus || "active"}`}>
                         {u.profileStatus || "active"}
@@ -169,10 +174,7 @@ const handleDelete = async (id) => {
                     </td>
 
                     <td className="mu-actions">
-                      <button
-                        className="btn btn-small"
-                        onClick={() => openDetail(u)}
-                      >
+                      <button className="btn btn-small" onClick={() => openDetail(u)}>
                         View
                       </button>
 
@@ -184,14 +186,14 @@ const handleDelete = async (id) => {
                       </button>
                     </td>
                   </tr>
-                );
-              })}
+                )
+              })
+            )}
             </tbody>
           </table>
-        )}
       </div>
 
-      {/* ================= FOOTER ================= */}
+      {/* FOOTER + PAGINATION */}
       <div className="mu-footer">
         <span className="mu-rows-info">
           Showing {paginatedUsers.length} of {filteredUsers.length} users
@@ -199,19 +201,17 @@ const handleDelete = async (id) => {
 
         <div className="mu-pagination">
           <button
-            className="btn btn-small"
+            className="pg-btn"
             disabled={page === 1}
             onClick={() => setPage((p) => p - 1)}
           >
             Prev
           </button>
 
-          <span>
-            {page} / {totalPages}
-          </span>
+          {PaginationButtons()}
 
           <button
-            className="btn btn-small"
+            className="pg-btn"
             disabled={page === totalPages}
             onClick={() => setPage((p) => p + 1)}
           >
@@ -220,7 +220,7 @@ const handleDelete = async (id) => {
         </div>
       </div>
 
-      {/* ================= VIEW USER MODAL ================= */}
+      {/* MODALS (DETAIL + CONFIRM DELETE) */}
       {detailUser && (
         <div className="mu-modal-backdrop" onClick={closeDetail}>
           <div className="mu-modal" onClick={(e) => e.stopPropagation()}>
@@ -233,38 +233,28 @@ const handleDelete = async (id) => {
 
             <div className="mu-modal-body">
               <div className="mu-detail-row">
-                <b>Name:</b> {detailUser.firstName || "-"}{" "}
-                {detailUser.lastName || "-"}
+                <b>Name:</b> {detailUser.firstName} {detailUser.lastName}
               </div>
-
               <div className="mu-detail-row">
-                <b>Email:</b> {detailUser.email || "-"}
+                <b>Email:</b> {detailUser.email}
               </div>
-
               <div className="mu-detail-row">
-                <b>Phone:</b> {detailUser.phoneNumber || "-"}
+                <b>Phone:</b> {detailUser.phoneNumber}
               </div>
-
               <div className="mu-detail-row">
-                <b>Gender:</b> {detailUser.gender || "-"}
+                <b>Gender:</b> {detailUser.gender}
               </div>
-
               <div className="mu-detail-row">
-                <b>City:</b> {detailUser.city || "-"}
+                <b>City:</b> {detailUser.city}
               </div>
-
               <div className="mu-detail-row">
-                <b>Status:</b> {detailUser.profileStatus || "active"}
+                <b>Status:</b> {detailUser.profileStatus}
               </div>
-
               <div className="mu-detail-row">
-                <b>Membership:</b> {detailUser.membership || "Free"}
-              </div>
-
-              <div className="mu-notes">
-                Extra notes or description can go here
+                <b>Membership:</b> {detailUser.membership}
               </div>
             </div>
+
             <div className="mu-modal-footer">
               <button className="btn" onClick={closeDetail}>
                 Close
@@ -274,7 +264,6 @@ const handleDelete = async (id) => {
         </div>
       )}
 
-      {/* ================= DELETE CONFIRM MODAL ================= */}
       {confirm.open && (
         <div className="mu-modal-backdrop">
           <div className="mu-modal">
@@ -285,8 +274,7 @@ const handleDelete = async (id) => {
             <div className="mu-modal-body">
               Are you sure you want to delete{" "}
               <b>
-                {confirm.user?.firstName || "-"}{" "}
-                {confirm.user?.lastName || "-"}
+                {confirm.user?.firstName} {confirm.user?.lastName}
               </b>
               ?
             </div>
