@@ -335,8 +335,8 @@ export default function EditProfile() {
               <button className="edit-inline" onClick={() => openSectionModal("family")}><FaEdit /> Edit</button>
             </div>
             <div className="box-body">
-              <Row label="Father Status" value={profileData.fatherName} />
-              <Row label="Mother Status" value={profileData.motherName} />
+              <Row label="Father Name" value={profileData.fatherName} />
+              <Row label="Mother Name" value={profileData.motherName} />
               <Row label="Number of Brothers" value={profileData.numberofbrothers} />
               <Row label="Number of Sisters" value={profileData.numberofsister} />
               <Row label="ancestral Origin/Native Place" value={profileData.NativePalce} />
