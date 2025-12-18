@@ -24,11 +24,22 @@ const AdminDashboard = () => {
   const activeCount = activeUsers.length;
   const inactiveCount = inactiveUsers.length;
 
+  const today = new Date().toISOString().split("T")[0];
 
-  const revenue = profiles
-    .filter((u) => u.latestPayment && u.latestPayment.status === "PAID")   
-    .reduce((sum, user) => sum + (user.latestPayment.amount || 0), 0);
-  // console.log("revenue : ", revenue);
+  const revenue = profiles.reduce((total, user) => {
+    if (!Array.isArray(user.payments)) return total;
+
+    const todayPaidAmount = user.payments
+      .filter(
+        (p) =>
+          p.status === "PAID" &&
+          p.createdAt?.split("T")[0] === today
+      )
+      .reduce((sum, p) => sum + Number(p.amount || 0), 0);
+
+    return total + todayPaidAmount;
+  }, 0);
+  console.log("revenue : ", revenue);
   const matches = Math.floor(totalUsers * 0.25);
 
   return (
@@ -68,7 +79,7 @@ const AdminDashboard = () => {
 
           <div className="stat-card blue">
             <div className="icon"><FaRupeeSign /></div>
-            <h3>Recent Revenue</h3>
+            <h3>Daily Revenue</h3>
             <p>₹{revenue}</p>
           </div>
         </section>
@@ -92,8 +103,12 @@ const AdminDashboard = () => {
                 {profiles.slice(0, 5).map((p) => (
                   <tr key={p.id}>
                     <td>{p.firstName} {p.lastName}</td>
-                    <td>{p.active ? "Active" : "Inactive"}</td>
-                    <td>{p.payments || "Not Paid"}</td>
+                    <td>{p.activeFlag ? "Active" : "Inactive"}</td>
+                    <td>
+                      {p.latestPayment
+                        ? `₹${p.latestPayment.amount} (${p.latestPayment.status})`
+                        : "Not Paid"}
+                    </td>
                     <td>{new Date(p.createdAt).toLocaleDateString()}</td>
                   </tr>
                 ))}
