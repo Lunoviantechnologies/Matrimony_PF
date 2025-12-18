@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, use } from "react";
 import axios from "axios";
 import backendIP from "../api/api";
 import { FiSend, FiSearch } from "react-icons/fi";
@@ -8,12 +8,13 @@ import "../styleSheets/chatWindow.css";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
+import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 
 const ChatWindow = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const { profiles } = useSelector((state) => state.profiles);
   const { id: myId } = useSelector((state) => state.auth);
 
   const [acceptedList, setAcceptedList] = useState([]);
@@ -31,6 +32,10 @@ const ChatWindow = () => {
       messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
     }
   }, [messages]);
+
+  useEffect(() => {
+    dispatch(fetchUserProfiles());
+  }, [dispatch]);
 
   /* FETCH ACCEPTED USERS */
   useEffect(() => {
@@ -208,6 +213,20 @@ const ChatWindow = () => {
     }
   };
 
+  const getUserImageById = (id) => {
+    if (!profiles || profiles.length === 0) return "/default-avatar.png";
+
+    const user = profiles.find(
+      (p) => Number(p.id) === Number(id)
+    );
+
+    if (!user || !user.updatePhoto) {
+      return "/default-avatar.png";
+    }
+
+    return `${backendIP.replace("/api", "")}/profile-photos/${user.updatePhoto}`;
+  };
+
   return (
     <div className="chatpage-container">
       {/* LEFT PANEL */}
@@ -255,10 +274,16 @@ const ChatWindow = () => {
                     navigate(`/dashboard/messages/${otherId}`)
                   }
                 >
-                  <img
+                  {/* <img
                     src={img}
                     alt={name}
                     className="chatlist-avatar"
+                  /> */}
+                  <img
+                    src={getUserImageById(otherId)}
+                    alt={name}
+                    className="chatlist-avatar"
+                    onError={(e) => (e.target.src = "/default-avatar.png")}
                   />
                   <div>
                     <h4>{name}</h4>
@@ -279,14 +304,15 @@ const ChatWindow = () => {
           <div className="chatwindow-header">
             <div className="chatwindow-user">
               <img
-                src={
+                src={getUserImageById(
                   Number(selectedUser.senderId) === Number(myId)
-                    ? selectedUser.receiverImage
-                    : selectedUser.senderImage
-                }
-                alt=""
+                    ? selectedUser.receiverId : selectedUser.senderId
+                )}
+                alt="User"
                 className="chatwindow-avatar"
+                onError={(e) => (e.target.src = "/default-avatar.png")}
               />
+
               <div>
                 <h4>
                   {Number(selectedUser.senderId) === Number(myId)

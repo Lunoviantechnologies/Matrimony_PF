@@ -52,8 +52,6 @@ export default function EditProfile() {
 
   /* ------------------ Modal open ------------------ */
   const openSectionModal = (sectionKey) => {
-    // We support editing either nested objects (e.g. educationCareer) or root fields.
-    // If the backend returns nested objects under keys like educationCareer, use them; otherwise derive from root.
     const sectionMap = {
       personal: {
         firstName: profileData.firstName || "",
@@ -234,7 +232,7 @@ export default function EditProfile() {
       setUploadProgress(0);
     }
   };
-  console.log("updatePhoto : ", profileData.updatePhoto)
+  // console.log("updatePhoto : ", profileData.updatePhoto);
 
   const Row = ({ label, value, onAction, actionText }) => (
     <div className="row">

@@ -6,8 +6,10 @@ import axios from "axios";
 import backendIP from "../api/api";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import ViewProfileModal from "../components/ViewProfileModal";
+import { useNavigate } from "react-router-dom";
 
 const MyMatches = () => {
+  const navigate = useNavigate();
   const { profiles } = useSelector((state) => state.profiles);
   const { id, myProfile } = useSelector((state) => state.auth);
 
@@ -82,6 +84,19 @@ const MyMatches = () => {
     .filter(p => p.gender !== myProfile?.gender)
     .filter(p => !allHiddenIds.includes(p.id));
 
+  const getImageUrl = (photo, gender) => {
+    if (!photo) {
+      return gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+    }
+
+    if (photo.startsWith("blob:") || photo.startsWith("http")) {
+      return photo;
+    }
+
+    // filename from backend → /uploads/
+    return `${backendIP.replace("/api", "")}/profile-photos/${photo}`;
+  };
+
   return (
     <div className="profile-main-container">
       <h2 className="profile-title">Top Matches For You</h2>
@@ -93,11 +108,19 @@ const MyMatches = () => {
           return (
             <article className="profile-card" key={p.id}>
               <div className="image-box">
-                <img
-                  src={p.updatePhoto ? p.updatePhoto : p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
-                  alt={p.firstName + " " + p.lastName}
-                  className="profile-img"
+                <img src={getImageUrl(p.updatePhoto, p.gender)}
+                  alt={`${p.firstName} ${p.lastName}`}
+                  className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
+                  onError={(e) => {
+                    e.target.src = p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+                  }}
                 />
+
+                {!myProfile?.premium && (
+                  <div className="premium-overlay" onClick={() => navigate("/premium")}>
+                    🔒 Upgrade to Premium
+                  </div>
+                )}
               </div>
 
               <div className="profile-details">
