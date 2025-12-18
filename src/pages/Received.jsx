@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "../styleSheets/requestCSS/profileRequest.css"
 import axios from "axios";
 import backendIP from "../api/api";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 
 const Received = () => {
 
   const { id } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+  const { profiles } = useSelector(state => state.profiles);
   const [receivedRequests, setReceivedRequests] = useState([]);
 
   useEffect(() => {
@@ -40,13 +43,33 @@ const Received = () => {
     }
   };
 
+  useEffect(() => {
+      dispatch(fetchUserProfiles());
+    }, [dispatch]);
+  
+    const receivedWithImages = useMemo(() => {
+      if (!receivedRequests.length || !profiles.length) return [];
+  
+      return receivedRequests.map(req => {
+        const otherUserId =
+          req.senderId === id ? req.receiverId : req.senderId;
+  
+        const profile = profiles.find(p => p.id === otherUserId);
+  
+        return {
+          ...req,
+          image: profile?.updatePhoto ? `${backendIP.replace("/api", "")}/profile-photos/${profile.updatePhoto}` : "/default-user.png",
+        };
+      });
+    }, [receivedRequests, profiles, id]);
+
   return (
     <div className="received-container">
       {
-        receivedRequests.length === 0 ? (
+        receivedWithImages.length === 0 ? (
           <p className="no-requests-message">No received requests</p>
         ) : (
-          receivedRequests.map((user) => (
+          receivedWithImages.map((user) => (
             <div className="received-card" key={user.requestId}>
               <div className="left-section">
                 <div className="img-box">

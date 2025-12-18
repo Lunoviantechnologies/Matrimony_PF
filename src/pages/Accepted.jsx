@@ -1,28 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "../styleSheets/requestCSS/profileRequest.css";
 import axios from "axios";
 import backendIP from "../api/api";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 
 const Accepted = () => {
   const [acceptedRequests, setAcceptedRequests] = useState([]);
+
   const { id } = useSelector(state => state.auth);
+  const { profiles } = useSelector(state => state.profiles);
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    if (!id) return;
+
     const fetchAcceptedRequests = async () => {
       try {
-        // 1) Requests YOU accepted (receiver = you)
-        const receivedAccepted = await axios.get(`${backendIP}/friends/accepted/received/${id}`);
+        const receivedAccepted = await axios.get(
+          `${backendIP}/friends/accepted/received/${id}`
+        );
 
-        // 2) Requests THEY accepted (sender = you)
-        const sentAccepted = await axios.get(`${backendIP}/friends/accepted/sent/${id}`);
+        const sentAccepted = await axios.get(
+          `${backendIP}/friends/accepted/sent/${id}`
+        );
 
-        // Combine both
         const merged = [...receivedAccepted.data, ...sentAccepted.data];
-        setAcceptedRequests(merged);
 
+        setAcceptedRequests(merged);
         console.log("Accepted requests:", merged);
       } catch (error) {
         console.error("Error fetching accepted requests:", error);
@@ -32,17 +40,40 @@ const Accepted = () => {
     fetchAcceptedRequests();
   }, [id]);
 
+  useEffect(() => {
+    dispatch(fetchUserProfiles());
+  }, [dispatch]);
+
+  const acceptedWithImages = useMemo(() => {
+    if (!acceptedRequests.length || !profiles.length) return [];
+
+    return acceptedRequests.map(req => {
+      const otherUserId =
+        req.senderId === id ? req.receiverId : req.senderId;
+
+      const profile = profiles.find(p => p.id === otherUserId);
+
+      return {
+        ...req,
+        image: profile?.updatePhoto ? `${backendIP.replace("/api", "")}/profile-photos/${profile.updatePhoto}` : "/default-user.png",
+      };
+    });
+  }, [acceptedRequests, profiles, id]);
+
   return (
     <div className="received-container">
-      {acceptedRequests.length === 0 ? (
+      {acceptedWithImages.length === 0 ? (
         <p className="no-requests-message">No accepted requests</p>
       ) : (
-        acceptedRequests.map((user) => (
+        acceptedWithImages.map(user => (
           <div className="received-card" key={user.requestId}>
-
             <div className="left-section">
               <div className="img-box">
-                <img src={user.image || "/default-user.png"} alt="profile" className="profile-img"/>
+                <img src={user.image} alt="profile" className="profile-img"
+                  onError={(e) => {
+                    e.target.src = "/default-user.png";
+                  }}
+                />
               </div>
 
               <div className="text-section">
@@ -59,12 +90,11 @@ const Accepted = () => {
             <div className="btn-section">
               <button
                 className="accept"
-                onClick={() => navigate(`/dashboard/messages/${user.senderId === id ? user.receiverId : user.senderId }`)}
+                onClick={() => navigate( `/dashboard/messages/${user.senderId === id ? user.receiverId : user.senderId}` )}
               >
                 Message
               </button>
             </div>
-
           </div>
         ))
       )}

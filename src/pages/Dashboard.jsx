@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "../styleSheets/Dashboard.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import backendIP from "../api/api";
 import { useNavigate } from "react-router-dom";
+import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 
 const Dashboard = () => {
 
@@ -11,7 +12,13 @@ const Dashboard = () => {
   const [acceptedRequests, setAcceptedRequests] = useState([]);
   const [receivedRequests, setReceivedRequests] = useState([]);
   const [rejectedRequests, setRejectedRequests] = useState([]);
-  const { id } = useSelector(state => state.auth);
+  const { id, myProfile } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchMyProfile(id));
+  }, [id]);
+  console.log("My Profile in Dashboard:", myProfile);
 
   useEffect(() => {
     const fetchAcceptedRequests = async () => {

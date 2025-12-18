@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import "../styleSheets/ViewProfileModal.css";
+import backendIP from "../api/api";
 
 export default function ViewProfileModal({ profile = {}, onClose = () => {}, anchorRect = null }) {
   useEffect(() => {
@@ -34,10 +35,11 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {}, anc
     phone = "",
     email = "",
     id,
-    image
+    updatePhoto : image,
   } = profile;
 
-  const imgSrc = image || photos[0] || "/mnt/data/Screenshot 2025-11-21 110558.png";
+  const imgSrc = `${backendIP.replace("/api", "")}/profile-photos/${image}` || photos[0] || "/mnt/data/Screenshot 2025-11-21 110558.png";
+  // console.log("ViewProfileModal imgSrc:", imgSrc);
 
   const handleBackdrop = (e) => {
     if (e.target.classList && (e.target.classList.contains("vp-backdrop") || e.target.classList.contains("vp-pop-backdrop"))) {
@@ -49,8 +51,8 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {}, anc
   const renderPopover = () => {
     if (!anchorRect) return null;
 
-    const popupW = 380;
     const popupH = 340;
+    const popupW = 500;
     const pad = 8;
     const vw = window.innerWidth;
     const vh = window.innerHeight;
@@ -75,7 +77,7 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {}, anc
 
           <div className="vp-pop-row">
             <div className="vp-passport-small">
-              <img src={imgSrc} alt={name} />
+              <img src={imgSrc} alt={firstName} />
             </div>
 
             <div className="vp-info-small vp-info-scroll">
@@ -114,7 +116,7 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {}, anc
               <div className="vp-contact-small">
                 {phone && <div><strong>Phone:</strong> <a href={`tel:${phone}`}>{phone}</a></div>}
                 {email && <div><strong>Email:</strong> <a href={`mailto:${email}`}>{email}</a></div>}
-                <div><strong>Profile ID:</strong> {id || "—"}</div>
+                {/* <div><strong>Profile ID:</strong> {id || "—"}</div> */}
               </div>
 
               <div className="vp-actions-small">
@@ -178,13 +180,12 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {}, anc
             <div className="vp-contact">
               {phone && <div><strong>Phone:</strong> <a href={`tel:${phone}`}>{phone}</a></div>}
               {email && <div><strong>Email:</strong> <a href={`mailto:${email}`}>{email}</a></div>}
-              <div><strong>Profile ID:</strong> {id || "—"}</div>
+              {/* <div><strong>Profile ID:</strong> {id || "—"}</div> */}
             </div>
 
             <div className="vp-actions">
               <button className="connect-btn" onClick={() => alert("Send Request (mock)")}>Send Request</button>
               <button className="connect-btn secondary" onClick={() => alert("Message (mock)")}>Message</button>
-              <button className="connect-btn secondary" onClick={() => alert("Shortlist (mock)")}>Shortlist</button>
             </div>
           </div>
         </div>

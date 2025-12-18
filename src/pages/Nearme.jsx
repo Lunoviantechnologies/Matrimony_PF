@@ -78,6 +78,19 @@ const Nearme = () => {
     .filter(p => p.city === myProfile?.city)     // Near Me
     .filter(p => !allHiddenIds.includes(p.id)); // hide sent, received, accepted, rejected
 
+  const getImageUrl = (photo, gender) => {
+    if (!photo) {
+      return gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+    }
+
+    if (photo.startsWith("blob:") || photo.startsWith("http")) {
+      return photo;
+    }
+
+    // filename from backend → /uploads/
+    return `${backendIP.replace("/api", "")}/profile-photos/${photo}`;
+  };
+  
   return (
     <div className="profile-main-container">
       <h2 className="profile-title">Near Matches For You</h2>
@@ -88,10 +101,12 @@ const Nearme = () => {
           return (
             <article className="profile-card" key={p.id}>
               <div className="image-box">
-                <img
-                  src={p.image ? p.image : p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
-                  alt={p.name}
+                <img src={getImageUrl(p.updatePhoto, p.gender)}
+                  alt={`${p.firstName} ${p.lastName}`}
                   className="profile-img"
+                  onError={(e) => {
+                    e.target.src = p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+                  }}
                 />
               </div>
 
