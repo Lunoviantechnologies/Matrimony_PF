@@ -24,11 +24,22 @@ const AdminDashboard = () => {
   const activeCount = activeUsers.length;
   const inactiveCount = inactiveUsers.length;
 
+  const today = new Date().toISOString().split("T")[0];
 
-  const revenue = profiles
-    .filter((u) => u.payments && u.payments.status === "PAID")
-    .reduce((sum, user) => sum + (user.payments.amount || 0), 0);
-  // console.log("revenue : ", revenue);
+  const revenue = profiles.reduce((total, user) => {
+    if (!Array.isArray(user.payments)) return total;
+
+    const todayPaidAmount = user.payments
+      .filter(
+        (p) =>
+          p.status === "PAID" &&
+          p.createdAt?.split("T")[0] === today
+      )
+      .reduce((sum, p) => sum + Number(p.amount || 0), 0);
+
+    return total + todayPaidAmount;
+  }, 0);
+  console.log("revenue : ", revenue);
   const matches = Math.floor(totalUsers * 0.25);
 
   return (
@@ -68,6 +79,7 @@ const AdminDashboard = () => {
 
           <div className="stat-card blue">
             <div className="icon"><FaRupeeSign /></div>
+            <h3>Daily Revenue</h3>
             <h3>Daily Revenue</h3>
             <p>₹{revenue}</p>
           </div>

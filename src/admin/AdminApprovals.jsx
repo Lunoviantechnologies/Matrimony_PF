@@ -5,70 +5,89 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 
 export default function AdminApprovals() {
-  const { profiles: pending, loading } = useSelector((state) => state.profiles);
   const dispatch = useDispatch();
+  const { profiles = [], loading } = useSelector((state) => state.profiles);
 
-  // Pagination states
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
+  // Local UI state for only pending profiles
+  const [visibleProfiles, setVisibleProfiles] = useState([]);
+
+  // Fetch profiles on mount
   useEffect(() => {
     dispatch(fetchUserProfiles());
   }, [dispatch]);
-  // console.log("profiles : ", profiles);
 
+  // Filter pending profiles
+  useEffect(() => {
+    const pendingOnly = profiles.filter((p) => {
+      return (
+        p.accountStatus?.toUpperCase() === "PENDING VERIFICATION" ||
+        p.accountStatus === null ||
+        p.accountStatus === undefined ||
+        p.approved === false ||
+        p.isApproved === false
+      );
+    });
+    setVisibleProfiles(pendingOnly);
+    setPage(1);
+  }, [profiles]);
+
+  // Approve
   const handleActionApproved = async (userId) => {
     try {
-      await axios.post(`${backendIP}/admin/profiles/${userId}/approve`, {
-        userId,
-        status: "Approved",
-      });
+      // Optimistic UI: remove immediately
+      setVisibleProfiles((prev) => prev.filter((u) => u.id !== userId));
+
+      // Call backend
+      await axios.post(`${backendIP}/admin/profiles/${userId}/approve`, {});
 
       alert("User profile approved successfully!");
-      dispatch(fetchUserProfiles()); // ✅ refresh list
+      // Optional: refetch from backend to sync
+      dispatch(fetchUserProfiles());
     } catch (error) {
-      console.error(error.response || error);
+      console.error("Approve error:", error);
       alert("Approval failed!");
+      dispatch(fetchUserProfiles());
     }
   };
 
+  // Reject
   const handleActionReject = async (userId) => {
     try {
-      await axios.post(`${backendIP}/admin/profiles/${userId}/reject`, {
-        userId,
-        status: "Rejected",
-      });
+      setVisibleProfiles((prev) => prev.filter((u) => u.id !== userId));
 
-      alert("User profile rejection success!");
-      dispatch(fetchUserProfiles()); // ✅ refresh list
+      await axios.post(`${backendIP}/admin/profiles/${userId}/reject`, {});
+
+      alert("User profile rejected successfully!");
+      dispatch(fetchUserProfiles());
     } catch (error) {
-      console.error(error.response || error);
+      console.error("Reject error:", error);
       alert("Rejection failed!");
+      dispatch(fetchUserProfiles());
     }
   };
 
-  // Pagination logic
-  const totalPages = Math.ceil(pending.length / pageSize) || 1;
-  const paginatedData = pending.slice(
-    (page - 1) * pageSize,
-    page * pageSize
-  );
+  // Pagination
+  const totalPages = Math.max(1, Math.ceil(visibleProfiles.length / pageSize));
+  const paginatedData = visibleProfiles.slice((page - 1) * pageSize, page * pageSize);
 
   const changePage = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) setPage(newPage);
   };
-
+console.log("statuss : ", visibleProfiles);
   return (
     <div className="container mt-4">
-      <h2 className="fw-bold">Admin Approvals</h2>
+      <h2 className="fw-bold mb-3">Admin Approvals</h2>
 
-      <table className="table table-bordered table-striped mt-3">
+      <table className="table table-bordered table-striped">
         <thead>
           <tr>
             <th className="text-center">S.No</th>
             <th className="text-center">User ID</th>
             <th className="text-center">User</th>
-            <th className="text-center">Bio/Profile</th>
+            <th className="text-center">Bio</th>
             <th className="text-center">Document</th>
             <th className="text-center">Requested On</th>
             <th className="text-center">Action</th>
@@ -76,107 +95,53 @@ export default function AdminApprovals() {
         </thead>
 
         <tbody>
-          {/* LOADING */}
           {loading && (
             <tr>
-              <td colSpan="7" className="text-center">
-                Loading...
-              </td>
+              <td colSpan="7" className="text-center">Loading...</td>
             </tr>
           )}
 
-          {/* EMPTY */}
           {!loading && paginatedData.length === 0 && (
             <tr>
-              <td colSpan="7" className="text-center">
-                No approvals pending
-              </td>
+              <td colSpan="7" className="text-center">No approvals pending</td>
             </tr>
           )}
 
-          {/* DATA */}
-          {!loading &&
-            paginatedData.map((u, i) => (
-              <tr key={u.id} className="text-center">
-                <td>{(page - 1) * pageSize + i + 1}</td>
-                <td>{u.id}</td>
-                <td>{u.firstName}</td>
-                <td>{u.aboutYourself}</td>
-
-                <td>
-                  {u.documentUrl ? (
-                    <a
-                      href={u.documentUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      View Document
-                    </a>
-                  ) : (
-                    "No Document"
-                  )}
-                </td>
-
-                <td>
-                  {u.createdAt
-                    ? new Date(u.createdAt).toLocaleString()
-                    : "-"}
-                </td>
-
-                <td>
-                  <button
-                    className="btn btn-success btn-sm me-2"
-                    onClick={() => handleActionApproved(u.id)}
-                  >
-                    Approve
-                  </button>
-
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleActionReject(u.id)}
-                  >
-                    Reject
-                  </button>
-                </td>
-              </tr>
-            ))}
+          {!loading && paginatedData.map((u, index) => (
+            <tr key={u.id} className="text-center">
+              <td>{(page - 1) * pageSize + index + 1}</td>
+              <td>{u.id}</td>
+              <td>{u.firstName}</td>
+              <td>{u.aboutYourself || "-"}</td>
+              <td>{u.documentUrl ? <a href={u.documentUrl} target="_blank" rel="noreferrer">View</a> : "No Document"}</td>
+              <td>{u.createdAt ? new Date(u.createdAt).toLocaleString() : "-"}</td>
+              <td>
+                <button className="btn btn-success btn-sm me-2" onClick={() => handleActionApproved(u.id)}>Approve</button>
+                <button className="btn btn-danger btn-sm" onClick={() => handleActionReject(u.id)}>Reject</button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
 
-      {/* PAGINATION CONTROL */}
       <div className="d-flex justify-content-between align-items-center mt-3">
         <span className="text-muted">
-          Showing {(page - 1) * pageSize + 1}–
-          {Math.min(page * pageSize, pending.length)} of {pending.length}
+          Showing {visibleProfiles.length === 0 ? 0 : (page - 1) * pageSize + 1}–{Math.min(page * pageSize, visibleProfiles.length)} of {visibleProfiles.length}
         </span>
 
-        <nav>
-          <ul className="pagination mb-0">
-            <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
-              <button className="page-link" onClick={() => changePage(page - 1)}>
-                Prev
-              </button>
+        <ul className="pagination mb-0">
+          <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
+            <button className="page-link" onClick={() => changePage(page - 1)}>Prev</button>
+          </li>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
+            <li key={num} className={`page-item ${page === num ? "active" : ""}`}>
+              <button className="page-link" onClick={() => changePage(num)}>{num}</button>
             </li>
-
-            {/* Page numbers */}
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-              <li
-                key={num}
-                className={`page-item ${page === num ? "active" : ""}`}
-              >
-                <button className="page-link" onClick={() => changePage(num)}>
-                  {num}
-                </button>
-              </li>
-            ))}
-
-            <li className={`page-item ${page === totalPages ? "disabled" : ""}`}>
-              <button className="page-link" onClick={() => changePage(page + 1)}>
-                Next
-              </button>
-            </li>
-          </ul>
-        </nav>
+          ))}
+          <li className={`page-item ${page === totalPages ? "disabled" : ""}`}>
+            <button className="page-link" onClick={() => changePage(page + 1)}>Next</button>
+          </li>
+        </ul>
       </div>
     </div>
   );
