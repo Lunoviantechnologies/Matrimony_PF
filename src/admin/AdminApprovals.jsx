@@ -79,18 +79,18 @@ export default function AdminApprovals() {
 console.log("statuss : ", visibleProfiles);
   return (
     <div className="container mt-4">
-      <h2 className="fw-bold mb-3">Admin Approvals</h2>
+      <h2 className="fw-bold mb-3" style={{color : "#00695C"}}>Admin Approvals</h2>
 
       <table className="table table-bordered table-striped">
         <thead>
           <tr>
-            <th className="text-center">S.No</th>
-            <th className="text-center">User ID</th>
-            <th className="text-center">User</th>
-            <th className="text-center">Bio</th>
-            <th className="text-center">Document</th>
-            <th className="text-center">Requested On</th>
-            <th className="text-center">Action</th>
+            <th className="approveHeader text-center">S.No</th>
+            <th className="approveHeader text-center">User ID</th>
+            <th className="approveHeader text-center">User</th>
+            <th className="approveHeader text-center">Bio</th>
+            <th className="approveHeader text-center">Document</th>
+            <th className="approveHeader text-center">Requested On</th>
+            <th className="approveHeader text-center">Action</th>
           </tr>
         </thead>
 

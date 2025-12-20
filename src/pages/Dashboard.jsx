@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import "../styleSheets/Dashboard.css";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import backendIP from "../api/api";
 import { useNavigate } from "react-router-dom";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
+import { fetchUserProfiles } from "../redux/thunk/profileThunk";
+import { FaCrown } from "react-icons/fa";
+import { RiSecurePaymentFill } from "react-icons/ri";
 
 const Dashboard = () => {
 
@@ -13,12 +16,55 @@ const Dashboard = () => {
   const [receivedRequests, setReceivedRequests] = useState([]);
   const [rejectedRequests, setRejectedRequests] = useState([]);
   const { id, myProfile } = useSelector(state => state.auth);
+  const { profiles } = useSelector(state => state.profiles);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchMyProfile(id));
-  }, [id]);
+    dispatch(fetchUserProfiles());
+  }, [id, dispatch]);
   console.log("My Profile in Dashboard:", myProfile);
+
+  const now = new Date();
+  // Date 4 days ago (including today)
+  const fourDaysAgo = new Date();
+  fourDaysAgo.setDate(now.getDate() - 4);
+
+  const filteredProfiles = profiles.filter(p => p.id !== id)
+    .filter(p => p.gender !== myProfile?.gender)
+    .filter(p => {
+      if (!p.createdAt) return false;
+      const createdDate = new Date(p.createdAt);
+      return createdDate >= fourDaysAgo && createdDate <= now;
+    })
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 5);
+  // console.log("filtered Profiles in Dashboard:", filteredProfiles);
+
+  const premiumFilteredProfiles = profiles.filter(p => p.id !== id)
+    .filter(p => p.gender !== myProfile?.gender)
+    .filter(p => p.premium)
+    .slice(0, 5);
+  // console.log("Premium filtered Profiles in Dashboard:", premiumFilteredProfiles);
+
+  const userPayment = myProfile?.payments?.length > 0 ? myProfile.payments[myProfile.payments.length - 1] : null;
+  // console.log("User Payments in Dashboard:", userPayment);
+  const getPlanMonths = (planCode = "") => {
+    const parts = planCode.split("_");
+    return Number(parts[parts.length - 1]);
+  };
+
+  const getPlanEndDate = (createdAt, planCode) => {
+    if (!createdAt || !planCode) return null;
+
+    const startDate = new Date(createdAt);
+    const months = getPlanMonths(planCode);
+
+    const endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth() + months);
+
+    return endDate;
+  };
 
   useEffect(() => {
     const fetchAcceptedRequests = async () => {
@@ -91,6 +137,35 @@ const Dashboard = () => {
     }
   };
 
+  const getImageUrl = (photo, gender) => {
+    if (!photo) {
+      return gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+    }
+
+    if (photo.startsWith("blob:") || photo.startsWith("http")) {
+      return photo;
+    }
+
+    // filename from backend → /uploads/
+    return `${backendIP.replace("/api", "")}/profile-photos/${photo}`;
+  };
+
+  const receivedWithImages = useMemo(() => {
+    if (!receivedRequests.length || !profiles.length) return [];
+
+    return receivedRequests.map(req => {
+      const otherUserId =
+        req.senderId === id ? req.receiverId : req.senderId;
+
+      const profile = profiles.find(p => p.id === otherUserId);
+
+      return {
+        ...req,
+        image: profile?.updatePhoto ? `${backendIP.replace("/api", "")}/profile-photos/${profile.updatePhoto}` : "/default-user.png",
+      };
+    });
+  }, [receivedRequests, profiles, id]);
+
   return (
     <div className="dashboard_body">
       {/* ====== Matches Section ====== */}
@@ -100,14 +175,27 @@ const Dashboard = () => {
         </h2>
 
         <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
-          {[1, 2, 3, 4].map((i) => (
-            <div className="matchSection_map" key={i}>
-              <img src={`https://picsum.photos/80?random=${i + 30}`} alt={`Profile ${i}`}
-                style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(80%)", }} />
+          {filteredProfiles.map((i) => (
+            <div className="matchSection_map" key={i.id}>
+              <img
+                src={getImageUrl(i.updatePhoto, i.gender)} alt={i.firstName}
+                style={{ objectFit: "cover", }}
+                className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
+                onError={(e) => {
+                  e.target.src = p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+                }}
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+              />
+              {!myProfile?.premium && (
+                <div className="premium-overlay" onClick={() => navigate("/premium")}>
+                  🔒 Upgrade to Premium
+                </div>
+              )}
               <div
                 style={{ position: "absolute", bottom: 15, left: 0, right: 0, textAlign: "center", color: "#fff", }}>
-                <div style={{ fontWeight: "bold", fontSize: 18 }}>Julia Ann</div>
-                <div style={{ fontSize: 14 }}>New York • 22 Years old</div>
+                <div style={{ fontWeight: "bold", fontSize: 18 }}>{i.firstName}</div>
+                <div style={{ fontSize: 14 }}>{i.city} • {i.age} Years old</div>
               </div>
               {/* Online Indicator */}
               <div
@@ -143,14 +231,24 @@ const Dashboard = () => {
           </button>
         </div>
 
-        {receivedRequests.map((req) => (
+        {receivedWithImages.map((req) => (
           <div
             key={req.requestId}
-            style={{ display: "flex", alignItems: "center", marginBottom: 22, background: "#fff", padding: 10, borderRadius: 10, boxShadow: "0 1px 6px #ddd", }}>
-            <img
-              src={`https://picsum.photos/110?random=${req.requestId}`}
-              alt="User"
-              style={{ width: 110, height: 90, borderRadius: 15, marginRight: 22, objectFit: "cover", }} />
+            style={{ display: "flex", alignItems: "center", marginBottom: 22, background: "#fff", padding: 10, borderRadius: 10, boxShadow: "0 1px 6px #ddd", }}
+          >
+            <div>
+              <img
+                src={req.image}
+                alt={req.senderName}
+                className={`request-img ${!myProfile?.premium ? "requestblur-image" : ""}`}
+                style={{ width: 110, height: 90, borderRadius: 15, marginRight: 22, objectFit: "cover", }}
+                onError={(e) => {
+                  e.target.src = p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+                }}
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </div>
             <div style={{ flex: 1 }}>
               <div style={{ fontWeight: "bold", fontSize: 20 }}>{req.senderName}</div>
             </div>
@@ -172,33 +270,70 @@ const Dashboard = () => {
       <section style={{ display: "flex", gap: 32, flexWrap: "wrap" }}>
         {/* Plan Details */}
         <div className="planSection">
-          <h3 style={{ color: "#695019" }}>Plan Details</h3>
+          {/* <h3 style={{ color: "#695019" }}><RiSecurePaymentFill /> Plan Details</h3>
           <img
             src="https://img.icons8.com/emoji/96/gift-emoji.png"
             alt="Plan"
             style={{ margin: "20px auto" }}
           />
-          <p style={{ fontWeight: "bold" }}>Plan Name: Standard</p>
-          <p>Validity: 6 Months</p>
+          <p style={{ fontWeight: "bold" }}>Plan Name: {userPayment.planCode}</p>
+          <p>Amount: {userPayment.currency} {userPayment.amount}</p>
+          <p>Paid Date:{" "}
+            {new Date(userPayment.createdAt).toLocaleDateString("en-IN", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            })}</p>
+          <p>Validity: 6 Months</p> */}
+          {userPayment && (
+            <div className="planSection">
+              <h3 style={{ color: "#695019" }}> <RiSecurePaymentFill /> Plan Details </h3>
+              <p style={{ fontWeight: "bold" }}> Plan Name: {userPayment.planCode} </p>
+              <p> Amount: {userPayment.currency} {userPayment.amount} </p>
+              <p>
+                Paid Date:{" "}
+                {new Date(userPayment.createdAt).toLocaleDateString("en-IN", {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </p>
+
+              <p> Validity: {getPlanMonths(userPayment.planCode)} Months </p>
+
+              <p>
+                Valid Till:{" "}
+                {getPlanEndDate(
+                  userPayment.createdAt,
+                  userPayment.planCode
+                )?.toLocaleDateString("en-IN", {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Recent Chat List */}
         <div className="chatList">
           <h3 style={{ color: "#695019", marginBottom: 20 }}>
-            Recent Chat List
+            <FaCrown /> Premium Members
           </h3>
 
-          {[1, 2, 3, 4].map((i) => (
-            <div className="chatList_map" key={i}>
+          {premiumFilteredProfiles.map((i) => (
+            <div className="chatList_map" key={i.id}>
               <img
-                src={`https://picsum.photos/60?random=${i + 50}`}
-                alt="User"
+                src={getImageUrl(i.updatePhoto, i.gender)}
+                alt={i.firstName}
+                className={`premium-img ${!myProfile?.premium ? "premiumblur-image" : ""}`}
                 style={{ width: 60, height: 60, borderRadius: 15, objectFit: "cover", marginRight: 15, }} />
               <div>
                 <div style={{ fontWeight: "bold", fontSize: 18, color: "#5C4218", }}>
-                  Julia Ann
+                  {i.firstName} {i.lastName}
                 </div>
-                <div style={{ color: "#8A6F47" }}>Illinois, United States</div>
+                <div style={{ color: "#8A6F47" }}>{i.city}, {i.country} || {i.age} years || {i.motherTongue}</div>
               </div>
             </div>
           ))}

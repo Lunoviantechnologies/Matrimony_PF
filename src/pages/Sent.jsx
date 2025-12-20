@@ -43,7 +43,7 @@ const SentRequests = () => {
     if (!filteredSent.length || !profiles.length) return [];
 
     return filteredSent.map(req => {
-      const otherUserId =  req.senderId === id ? req.receiverId : req.senderId;
+      const otherUserId = req.senderId === id ? req.receiverId : req.senderId;
 
       const profile = profiles.find(p => p.id === otherUserId);
 

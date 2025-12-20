@@ -44,24 +44,24 @@ const Received = () => {
   };
 
   useEffect(() => {
-      dispatch(fetchUserProfiles());
-    }, [dispatch]);
-  
-    const receivedWithImages = useMemo(() => {
-      if (!receivedRequests.length || !profiles.length) return [];
-  
-      return receivedRequests.map(req => {
-        const otherUserId =
-          req.senderId === id ? req.receiverId : req.senderId;
-  
-        const profile = profiles.find(p => p.id === otherUserId);
-  
-        return {
-          ...req,
-          image: profile?.updatePhoto ? `${backendIP.replace("/api", "")}/profile-photos/${profile.updatePhoto}` : "/default-user.png",
-        };
-      });
-    }, [receivedRequests, profiles, id]);
+    dispatch(fetchUserProfiles());
+  }, [dispatch]);
+
+  const receivedWithImages = useMemo(() => {
+    if (!receivedRequests.length || !profiles.length) return [];
+
+    return receivedRequests.map(req => {
+      const otherUserId =
+        req.senderId === id ? req.receiverId : req.senderId;
+
+      const profile = profiles.find(p => p.id === otherUserId);
+
+      return {
+        ...req,
+        image: profile?.updatePhoto ? `${backendIP.replace("/api", "")}/profile-photos/${profile.updatePhoto}` : "/default-user.png",
+      };
+    });
+  }, [receivedRequests, profiles, id]);
 
   return (
     <div className="received-container">

@@ -1,136 +1,37 @@
-import React, { useState } from "react";
-import { Tabs, Tab, TextField, Switch, FormControlLabel, Button, MenuItem, Card, CardContent, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Tabs, Tab, Typography } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
+import { useNavigate } from "react-router-dom";
+import NotificationSettings from "./settings/NotificationSettings";
+import SubscriptionSettings from "./settings/SubscriptionSettings";
+import SupportSettings from "./settings/SupportSettings";
+import PrivacySettings from "./settings/privacySettings";
+import SecuritySettings from "./settings/securitySettings";
 
 export default function Settings() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { id, myProfile } = useSelector(state => state.auth);
+
   const [tab, setTab] = useState(0);
+  const [securityPassword, setSecurityPassword] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
 
-  const AccountSettings = () => (
-    <Card>
-      <CardContent>
-        <Typography variant="h6" fontWeight="600" gutterBottom>
-          Account Details
-        </Typography>
-
-        <TextField label="Full Name" fullWidth margin="normal" />
-        <TextField label="Email Address" fullWidth margin="normal" />
-        <TextField label="Phone Number" fullWidth margin="normal" />
-
-        <Button variant="contained" color="primary" sx={{ mt: 2 }}>
-          Save Changes
-        </Button>
-      </CardContent>
-    </Card>
-  );
-
-  const PrivacySettings = () => (
-    <Card>
-      <CardContent>
-        <Typography variant="h6" fontWeight="600" gutterBottom>
-          Privacy Settings
-        </Typography>
-
-        <TextField select label="Profile Visibility" fullWidth margin="normal">
-          <MenuItem>Everyone</MenuItem>
-          <MenuItem>Only Matches</MenuItem>
-          <MenuItem>Premium Members</MenuItem>
-        </TextField>
-
-        <FormControlLabel control={<Switch />} label="Hide Profile Photo" />
-
-        <Button variant="contained" color="primary" sx={{ mt: 2 }}>
-          Save Changes
-        </Button>
-      </CardContent>
-    </Card>
-  );
-
-  const NotificationSettings = () => (
-    <Card>
-      <CardContent>
-        <Typography variant="h6" fontWeight="600" gutterBottom>
-          Notification Preferences
-        </Typography>
-
-        <FormControlLabel control={<Switch />} label="Email Notifications" />
-        <FormControlLabel control={<Switch />} label="SMS Alerts" />
-        <FormControlLabel control={<Switch />} label="App Push Notifications" />
-
-        <Button variant="contained" color="primary" sx={{ mt: 2 }}>
-          Save Preferences
-        </Button>
-      </CardContent>
-    </Card>
-  );
-
-  const SubscriptionSettings = () => (
-    <Card>
-      <CardContent>
-        <Typography variant="h6" fontWeight="600" gutterBottom>
-          Subscription Details
-        </Typography>
-
-        <Typography variant="body1" gutterBottom>
-          Current Plan: <b>Free Plan</b>
-        </Typography>
-
-        <Button variant="contained" color="success" sx={{ mt: 2 }}>
-          Upgrade Plan
-        </Button>
-      </CardContent>
-    </Card>
-  );
-
-  const SecuritySettings = () => (
-    <Card>
-      <CardContent>
-        <Typography variant="h6" fontWeight="600" gutterBottom>
-          Security Settings
-        </Typography>
-
-        <TextField type="password" label="New Password" fullWidth margin="normal" />
-        <TextField type="password" label="Confirm Password" fullWidth margin="normal" />
-
-        <Button variant="contained" color="primary" sx={{ mt: 2 }}>
-          Update Password
-        </Button>
-      </CardContent>
-    </Card>
-  );
-
-  const SupportSettings = () => (
-    <Card>
-      <CardContent>
-        <Typography variant="h6" fontWeight="600" gutterBottom>
-          Help & Support   
-        </Typography>
-
-        <Button fullWidth variant="contained" color="secondary" sx={{ mt: 1 }}>
-          View FAQ
-        </Button>
-        <Button fullWidth variant="contained" color="secondary" sx={{ mt: 1 }}>
-          Contact Support
-        </Button>
-        <Button fullWidth variant="contained" color="error" sx={{ mt: 1 }}>
-          Delete Account
-        </Button>
-      </CardContent>
-    </Card>
-  );
+  useEffect(() => {
+    dispatch(fetchMyProfile(id));
+  }, [id, dispatch]);
 
   return (
-    <div style={{ width: "100%", padding: "10px" }}>
+    <div style={{ padding: 10 }}>
       <Typography variant="h4" fontWeight="bold" gutterBottom>
         Settings
       </Typography>
 
-      <Tabs
-        value={tab}
-        onChange={(e, v) => setTab(v)}
-        variant="scrollable"
-        scrollButtons
-        allowScrollButtonsMobile
-      >
-        <Tab label="Account" />
+      <Tabs value={tab} onChange={(e, v) => setTab(v)} variant="scrollable">
         <Tab label="Privacy" />
         <Tab label="Notifications" />
         <Tab label="Subscription" />
@@ -138,13 +39,20 @@ export default function Settings() {
         <Tab label="Support" />
       </Tabs>
 
-      <div style={{ marginTop: "20px" }}>
-        {tab === 0 && <AccountSettings />}
-        {tab === 1 && <PrivacySettings />}
-        {tab === 2 && <NotificationSettings />}
-        {tab === 3 && <SubscriptionSettings />}
-        {tab === 4 && <SecuritySettings />}
-        {tab === 5 && <SupportSettings />}
+      <div style={{ marginTop: 20 }}>
+        {tab === 0 && <PrivacySettings userId={id} />}
+        {tab === 1 && <NotificationSettings userId={id} />}
+        {tab === 2 && (
+          <SubscriptionSettings myProfile={myProfile} navigate={navigate} />
+        )}
+        {tab === 3 && (
+          <SecuritySettings
+            securityPassword={securityPassword}
+            setSecurityPassword={setSecurityPassword}
+            userId={id}
+          />
+        )}
+        {tab === 4 && <SupportSettings userId={id} />}
       </div>
     </div>
   );

@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "../styleSheets/ManageMatches.css";
+import { TbHeartHandshake } from "react-icons/tb";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 
 // --- MOCK USERS & MATCHES ---
 const USERS = {
@@ -63,10 +66,35 @@ const MATCHES = [
 ];
 
 export default function ManageMatches() {
-  const [matches] = useState(MATCHES);
+  // const [matches] = useState(MATCHES);
   const [activeProfile, setActiveProfile] = useState(null);
   const [anchorRect, setAnchorRect] = useState(null);
   const [viewport, setViewport] = useState({ w: 0, h: 0 });
+  const [loading, setLoading] = useState(true);
+  const [matches, setMatches] = useState([]);
+  const { profiles } = useSelector((state) => state.profiles);
+  const dispatch = useDispatch();
+
+  // 🔹 Fetch accepted matches
+  useEffect(() => {
+    const fetchMatches = async () => {
+      try {
+        const res = await axios.get(`${backendIP}/friends/all`);
+        setMatches(res.data || []);
+        console.log("Fetched matches: ", res.data);
+      } catch (err) {
+        console.error("Error fetching matches", err);
+      }
+    };
+
+    fetchMatches();
+  }, []);
+
+  // 🔹 Fetch all profiles (for images)
+  useEffect(() => {
+    dispatch(fetchUserProfiles());
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     const update = () =>
@@ -159,7 +187,7 @@ export default function ManageMatches() {
               {/* center note + heart */}
               <div className="mm-center">
                 <div className="mm-note">{m.note}</div>
-                <div className="mm-heart">❤️</div>
+                <div className="mm-heart text-danger"><TbHeartHandshake /></div>
               </div>
 
               {/* Right user */}
@@ -324,4 +352,109 @@ export default function ManageMatches() {
       )}
     </div>
   );
-}
+};
+
+// import { useEffect, useState } from "react";
+// import axios from "axios";
+// import backendIP from "../api/api";
+// import "../styleSheets/ManageMatches.css";
+
+// export default function ManageMatches() {
+//   const [matches, setMatches] = useState([]);
+//   const [profiles, setProfiles] = useState([]);
+//   const [loading, setLoading] = useState(true);
+
+//   // 🔹 Fetch accepted matches
+//   useEffect(() => {
+//     const fetchMatches = async () => {
+//       try {
+//         const res = await axios.get(`${backendIP}/friends/all`);
+//         setMatches(res.data || []);
+//       } catch (err) {
+//         console.error("Error fetching matches", err);
+//       }
+//     };
+
+//     fetchMatches();
+//   }, []);
+
+//   // 🔹 Fetch all profiles (for images)
+//   useEffect(() => {
+//     const fetchProfiles = async () => {
+//       try {
+//         const res = await axios.get(`${backendIP}/admin/profiles`);
+//         setProfiles(res.data || []);
+//       } catch (err) {
+//         console.error("Error fetching profiles", err);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchProfiles();
+//   }, []);
+
+//   // 🔹 Create image map (name -> image)
+//   const profileImageMap = {};
+//   profiles.forEach(p => {
+//     profileImageMap[p.name] = p.image;
+//   });
+
+//   // 🔹 Only ACCEPTED matches
+//   const acceptedMatches = matches.filter(
+//     m => m.status?.toUpperCase() === "ACCEPTED"
+//   );
+
+//   if (loading) return <p>Loading matches...</p>;
+
+//   return (
+//     <div className="mm-container">
+//       <h2 className="mm-title">Matched Profiles</h2>
+
+//       {acceptedMatches.length === 0 && (
+//         <p>No accepted matches found</p>
+//       )}
+
+//       <div className="mm-list">
+//         {acceptedMatches.map(match => (
+//           <div key={match.requestId} className="mm-pair-card">
+
+//             {/* 🔹 Sender */}
+//             <div className="mm-user">
+//               <img
+//                 src={
+//                   profileImageMap[match.senderName] ||
+//                   "/default-user.png"
+//                 }
+//                 alt={match.senderName}
+//                 className="mm-img"
+//               />
+//               <div className="mm-info">
+//                 <h4>{match.senderName}</h4>
+//                 <p>{match.profile}</p>
+//               </div>
+//             </div>
+
+//             <div className="mm-heart">matched</div>
+
+//             {/* 🔹 Receiver */}
+//             <div className="mm-user">
+//               <img
+//                 src={
+//                   profileImageMap[match.receiverName] ||
+//                   "/default-user.png"
+//                 }
+//                 alt={match.receiverName}
+//                 className="mm-img"
+//               />
+//               <div className="mm-info">
+//                 <h4>{match.receiverName}</h4>
+//               </div>
+//             </div>
+
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// }

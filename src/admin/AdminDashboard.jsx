@@ -61,26 +61,25 @@ const AdminDashboard = () => {
 
           <div className="stat-card pink">
             <div className="icon"><FaUsers /></div>
-            <h3>Total Users</h3>
+            <h5>Total Users</h5>
             <p>{loading ? "Loading..." : totalUsers}</p>
           </div>
 
           <div className="stat-card green">
             <div className="icon"><FaCheckCircle /></div>
-            <h3>Active Profiles</h3>
+            <h5>Active Profiles</h5>
             <p>{loading ? "Loading..." : activeCount}</p>
           </div>
 
           <div className="stat-card red">
             <div className="icon"><FaTimesCircle /></div>
-            <h3>Inactive Profiles</h3>
+            <h5>Inactive Profiles</h5>
             <p>{loading ? "Loading..." : inactiveCount}</p>
           </div>
 
           <div className="stat-card blue">
             <div className="icon"><FaRupeeSign /></div>
-            <h3>Daily Revenue</h3>
-            <h3>Daily Revenue</h3>
+            <h5>Daily Revenue</h5>
             <p>₹{revenue}</p>
           </div>
         </section>

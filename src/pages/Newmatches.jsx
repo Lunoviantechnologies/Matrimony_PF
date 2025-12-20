@@ -93,12 +93,22 @@ const NewMatches = () => {
     return `${backendIP.replace("/api", "")}/profile-photos/${photo}`;
   };
 
+  const now = new Date();
+  // Date 4 days ago (including today)
+  const fourDaysAgo = new Date();
+  fourDaysAgo.setDate(now.getDate() - 4);
+
   // Filtered profiles (friend request + sidebar filters)
   const filteredProfiles = useMemo(() => {
     return profiles
       .filter(p => p.id !== id)
       .filter(p => p.gender !== myProfile?.gender)
       .filter(p => !allHiddenIds.includes(p.id))
+      .filter(p => {
+        if (!p.createdAt) return false;
+        const createdDate = new Date(p.createdAt);
+        return createdDate >= fourDaysAgo && createdDate <= now;
+      })
       .filter(p => {
         const age = getAge(p.dateOfBirth);
 
@@ -117,6 +127,7 @@ const NewMatches = () => {
         return matchAge && matchReligion && matchCaste && matchCountry && matchEducation && matchProfession && matchLifestyle;
       });
   }, [profiles, filters, allHiddenIds, myProfile, id]);
+  console.log("filtered Profiles in Dashboard:", filteredProfiles);
 
   return (
     <div className="profile-main-container">

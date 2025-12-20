@@ -86,12 +86,15 @@ export default function EditProfile() {
       family: {
         fatherName: profileData.fatherName || "",
         motherName: profileData.motherName || "",
-        siblings: profileData.siblings || "",
-        familyStatus: profileData.familyStatus || ""
+        numberOfBrothers: profileData.numberOfBrothers || "",
+        numberOfSisters: profileData.numberOfSisters || "",
+        familyStatus: profileData.familyStatus || "",
+        familyType: profileData.familyType || ""
       },
       astro: {
         rashi: profileData.rashi || "",
         nakshatra: profileData.nakshatra || "",
+        dosham: profileData.dosham || "",
         ascendant: profileData.ascendant || "",
         basicPlanetaryPosition: profileData.basicPlanetaryPosition || ""
       },
@@ -322,6 +325,7 @@ export default function EditProfile() {
             <div className="box-body">
               <Row label="Rashi" value={profileData.rashi} />
               <Row label="Nakshatra" value={profileData.nakshatra} />
+              <Row label="Dosham" value={profileData.dosham} />
               <Row label="Ascendant" value={profileData.ascendant} />
               <Row label="Basic planetary position" value={profileData.basicPlanetaryPosition} />
             </div>
@@ -335,9 +339,10 @@ export default function EditProfile() {
             <div className="box-body">
               <Row label="Father Name" value={profileData.fatherName} />
               <Row label="Mother Name" value={profileData.motherName} />
-              <Row label="Number of Brothers" value={profileData.numberofbrothers} />
-              <Row label="Number of Sisters" value={profileData.numberofsister} />
-              <Row label="ancestral Origin/Native Place" value={profileData.NativePalce} />
+              <Row label="Number of Brothers" value={profileData.numberOfBrothers} />
+              <Row label="Number of Sisters" value={profileData.numberOfSisters} />
+              <Row label="Family Status" value={profileData.familyStatus} />
+              <Row label="Family Type" value={profileData.familyType} />
             </div>
           </div>
         </aside>
@@ -503,11 +508,16 @@ export default function EditProfile() {
             <label className="field"><div className="field-label">Mother's Name</div>
               <input value={buffer.motherName || ""} onChange={(e) => handleEditInputLocal("motherName", e.target.value)} />
             </label>
-            <label className="field"><div className="field-label">Siblings</div>
-              <input value={buffer.siblings || ""} onChange={(e) => handleEditInputLocal("siblings", e.target.value)} />
+            <label className="field"><div className="field-label">Number of Brothers</div>
+              <input value={buffer.numberOfBrothers || ""} onChange={(e) => handleEditInputLocal("numberOfBrothers", e.target.value)} placeholder="leave if no brothers..."/>
+            </label><label className="field"><div className="field-label">Number of Sisters</div>
+              <input value={buffer.numberOfSisters || ""} onChange={(e) => handleEditInputLocal("numberOfSisters", e.target.value)} placeholder="leave if no sisters..."/>
             </label>
             <label className="field"><div className="field-label">Family Status</div>
-              <input value={buffer.familyStatus || ""} onChange={(e) => handleEditInputLocal("familyStatus", e.target.value)} />
+              <input value={buffer.familyStatus || ""} onChange={(e) => handleEditInputLocal("familyStatus", e.target.value)} placeholder="below or middle or above middle class..."/>
+            </label>
+            <label className="field"><div className="field-label">Family Type</div>
+              <input value={buffer.familyType || ""} onChange={(e) => handleEditInputLocal("familyType", e.target.value)} placeholder="nuclear or joint..."/>
             </label>
           </div>
         );
@@ -569,6 +579,9 @@ export default function EditProfile() {
             </label>
             <label className="field"><div className="field-label">Nakshatra</div>
               <input value={buffer.nakshatra || ""} onChange={(e) => handleEditInputLocal("nakshatra", e.target.value)} />
+            </label>
+            <label className="field"><div className="field-label">Dosham</div>
+              <input value={buffer.dosham || ""} onChange={(e) => handleEditInputLocal("dosham", e.target.value)} />
             </label>
             <label className="field"><div className="field-label">Ascendant</div>
               <input value={buffer.ascendant || ""} onChange={(e) => handleEditInputLocal("ascendant", e.target.value)} />
@@ -632,27 +645,27 @@ export default function EditProfile() {
         return (
           <div className="modal-form">
             <label className="field"><div className="field-label">Age Range</div>
-              <input value={buffer.ageRange || ""} onChange={(e) => handleEditInputLocal("ageRange", e.target.value)} />
+              <input value={buffer.partnerAgeRange || ""} onChange={(e) => handleEditInputLocal("partnerAgeRange", e.target.value)} />
             </label>
 
             <label className="field"><div className="field-label">Religion</div>
-              <input value={buffer.religion || ""} onChange={(e) => handleEditInputLocal("religion", e.target.value)} />
+              <input value={buffer.partnerReligion || ""} onChange={(e) => handleEditInputLocal("partnerReligion", e.target.value)} />
             </label>
 
             <label className="field"><div className="field-label">Education</div>
-              <input value={buffer.education || ""} onChange={(e) => handleEditInputLocal("education", e.target.value)} />
+              <input value={buffer.partnerEducation || ""} onChange={(e) => handleEditInputLocal("partnerEducation", e.target.value)} />
             </label>
 
             <label className="field"><div className="field-label">Work</div>
-              <input value={buffer.work || ""} onChange={(e) => handleEditInputLocal("work", e.target.value)} />
+              <input value={buffer.partnerWork || ""} onChange={(e) => handleEditInputLocal("partnerWork", e.target.value)} />
             </label>
 
             <div className="field">
               <div className="field-label">Partner Hobbies</div>
-              {(buffer.hobbies || []).map((h, i) => (
-                <input key={i} className="hobby-input" value={h} onChange={(e) => updateHobbyInBuffer("hobbies", i, e.target.value)} placeholder={`Partner Hobby ${i + 1}`} />
+              {(buffer.partnerHobbies || []).map((h, i) => (
+                <input key={i} className="hobby-input" value={h} onChange={(e) => updateHobbyInBuffer("partnerHobbies", i, e.target.value)} placeholder={`Partner Hobby ${i + 1}`} />
               ))}
-              <button type="button" className="add-hobby-btn" onClick={() => addHobbyToBuffer("hobbies")}><FaPlus /> Add Hobby</button>
+              <button type="button" className="add-hobby-btn" onClick={() => addHobbyToBuffer("partnerHobbies")}><FaPlus /> Add Hobby</button>
             </div>
           </div>
         );
