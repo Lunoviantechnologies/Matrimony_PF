@@ -205,9 +205,17 @@ const ChatWindow = () => {
   });
 
   const handleIncoming = (body) => {
+    console.log("🧪 Incoming WS payload:", body);
+
+    if (!body || !body.senderId) {
+      console.warn("⚠️ Invalid WS payload:", body);
+      return;
+    }
+
+    const chatUserId = Number(userId);
     if (
-      Number(body.senderId) === Number(userId) ||
-      Number(body.receiverId) === Number(userId)
+      Number(body.senderId) === chatUserId ||
+      Number(body.receiverId) === chatUserId
     ) {
       setMessages((prev) => [...prev, body]);
     }
@@ -303,6 +311,13 @@ const ChatWindow = () => {
         {selectedUser ? (
           <div className="chatwindow-header">
             <div className="chatwindow-user">
+              {/* <img
+                src={
+                  Number(selectedUser.senderId) === Number(myId) ? selectedUser.receiverImage : selectedUser.senderImage
+                }
+                alt=""
+                className="chatwindow-avatar"
+              /> */}
               <img
                 src={getUserImageById(
                   Number(selectedUser.senderId) === Number(myId)

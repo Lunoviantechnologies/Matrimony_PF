@@ -75,19 +75,17 @@ const AppRoutes = createBrowserRouter([
             },
             {
                 path: "premium",
-                element: <PremiumSubscription />,
-                children: [
-                    {
-                        path: "payment-success",
-                        element: <PaymentSuccess />
-                    },
-                    {
-                        path: "payment-failed",
-                        element: <PaymentFailed />
-                    }
-                ]
+                element: <PremiumSubscription />
             },
         ],
+    },
+    {
+        path: "payment-success",
+        element: <PaymentSuccess />
+    },
+    {
+        path: "payment-failed",
+        element: <PaymentFailed />
     },
     {
         path: "/dashboard",

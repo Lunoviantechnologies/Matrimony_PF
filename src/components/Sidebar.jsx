@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import "../styleSheets/sidebar.css";
 
-const Sidebar = () => {
-    const [filters, setFilters] = useState({
-        age: [],
-        religion: [],
-        caste: [],  
-        country: [],
-        education: [],
-        profession: [],
-        lifestyle: [],
-    });
+const Sidebar = ({ filters, setFilters }) => {
+    // const [filters, setFilters] = useState({
+    //     age: [],
+    //     religion: [],
+    //     caste: [],  
+    //     country: [],
+    //     education: [],
+    //     profession: [],
+    //     lifestyle: [],
+    // });
 
     const handleCheckboxChange = (category, value) => {
         setFilters((prev) => {
@@ -21,9 +21,9 @@ const Sidebar = () => {
         });
     };
 
-    const handleApplyFilters = () => {
-        console.log("Applied Filters:", filters);
-    };
+    // const handleApplyFilters = () => {
+    //     console.log("Applied Filters:", filters);
+    // };
 
     const sections = [
         {
@@ -75,9 +75,9 @@ const Sidebar = () => {
         <div className="sidebar">
             <h5 className="sidebar-title text-center">Search Filters</h5>
 
-            <button className="btn w-100 apply-btn" onClick={handleApplyFilters}>
+            {/* <button className="btn w-100 apply-btn" onClick={handleApplyFilters}>
                 Apply Filters
-            </button>
+            </button> */}
 
             {sections.map((section) => (
                 <div key={section.category} className="filter-section">

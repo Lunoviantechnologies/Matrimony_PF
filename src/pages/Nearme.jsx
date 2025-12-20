@@ -1,37 +1,42 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import "../styleSheets/profileCard.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import axios from "axios";
 import backendIP from "../api/api";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
+import ViewProfileModal from "../components/ViewProfileModal";
+import { useOutletContext, useNavigate } from "react-router-dom";
 
 const Nearme = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const { profiles } = useSelector((state) => state.profiles);
   const { id, myProfile } = useSelector((state) => state.auth);
+  const { filters } = useOutletContext();
 
   const [sentRequests, setSentRequests] = useState([]);
   const [receivedRequests, setReceivedRequests] = useState([]);
   const [acceptedList, setAcceptedList] = useState([]);
   const [rejectedList, setRejectedList] = useState([]);
 
-  const dispatch = useDispatch();
+  const [anchorRect, setAnchorRect] = useState(null);
+  const [selectedProfile, setSelectedProfile] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     dispatch(fetchUserProfiles());
     dispatch(fetchMyProfile(id));
 
-    // 1️⃣ Sent Requests
     axios.get(`${backendIP}/friends/sent/${id}`)
       .then(res => setSentRequests(res.data))
       .catch(err => console.error(err));
 
-    // 2️⃣ Received Requests
     axios.get(`${backendIP}/friends/received/${id}`)
       .then(res => setReceivedRequests(res.data))
       .catch(err => console.error(err));
 
-    // 3️⃣ Accepted Requests (both received & sent)
     const fetchAcceptedRequests = async () => {
       try {
         const receivedAccepted = await axios.get(`${backendIP}/friends/accepted/received/${id}`);
@@ -43,7 +48,6 @@ const Nearme = () => {
     };
     fetchAcceptedRequests();
 
-    // 4️⃣ Rejected Requests (both received & sent)
     const fetchRejectedRequests = async () => {
       try {
         const receivedRejected = await axios.get(`${backendIP}/friends/rejected/received/${id}`);
@@ -54,7 +58,6 @@ const Nearme = () => {
       }
     };
     fetchRejectedRequests();
-
   }, [dispatch, id]);
 
   // ---- Combine all hidden IDs ----
@@ -67,16 +70,45 @@ const Nearme = () => {
 
   const handleSendRequest = (receiverId) => {
     axios.post(`${backendIP}/friends/send/${id}/${receiverId}`)
-      .then(() => alert("Request sent successfully"))
+      .then(() => {
+        alert("Request sent successfully");
+        setSentRequests(prev => [...prev, { senderId: id, receiverId }]);
+      })
       .catch(err => console.error(err));
   };
 
+  // Helper to calculate age from dateOfBirth
+  const getAge = (dob) => {
+    if (!dob) return 0;
+    const birthDate = new Date(dob);
+    const ageDifMs = Date.now() - birthDate.getTime();
+    return Math.floor(ageDifMs / (365.25 * 24 * 60 * 60 * 1000));
+  };
+
   // ---- Filter profiles ----
-  const filteredProfiles = profiles
-    .filter(p => p.id !== id)                    // remove self
-    .filter(p => p.gender !== myProfile?.gender) // opposite gender
-    .filter(p => p.city === myProfile?.city)     // Near Me
-    .filter(p => !allHiddenIds.includes(p.id)); // hide sent, received, accepted, rejected
+  const filteredProfiles = useMemo(() => {
+    return profiles
+      .filter(p => p.id !== id)
+      .filter(p => p.gender !== myProfile?.gender)
+      .filter(p => !allHiddenIds.includes(p.id))
+      .filter(p => {
+        const age = getAge(p.dateOfBirth);
+
+        const matchAge = !filters.age.length || filters.age.some(range => {
+          const [min, max] = range.split("-").map(Number);
+          return age >= min && age <= max;
+        });
+
+        const matchReligion = !filters.religion.length || filters.religion.includes(p.religion || "");
+        const matchCaste = !filters.caste.length || filters.caste.includes(p.subCaste || "");
+        const matchCountry = !filters.country.length || filters.country.includes(p.country || "");
+        const matchEducation = !filters.education.length || filters.education.includes(p.highestEducation || "");
+        const matchProfession = !filters.profession.length || filters.profession.includes(p.occupation || "");
+        const matchLifestyle = !filters.lifestyle.length || (p.yourHobbies ? filters.lifestyle.some(f => p.yourHobbies.includes(f)) : false);
+
+        return matchAge && matchReligion && matchCaste && matchCountry && matchEducation && matchProfession && matchLifestyle;
+      });
+  }, [profiles, filters, allHiddenIds, myProfile, id]);
 
   const getImageUrl = (photo, gender) => {
     if (!photo) {
@@ -90,7 +122,7 @@ const Nearme = () => {
     // filename from backend → /uploads/
     return `${backendIP.replace("/api", "")}/profile-photos/${photo}`;
   };
-  
+
   return (
     <div className="profile-main-container">
       <h2 className="profile-title">Near Matches For You</h2>
@@ -103,11 +135,19 @@ const Nearme = () => {
               <div className="image-box">
                 <img src={getImageUrl(p.updatePhoto, p.gender)}
                   alt={`${p.firstName} ${p.lastName}`}
-                  className="profile-img"
+                  className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
                   onError={(e) => {
                     e.target.src = p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
                   }}
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
                 />
+
+                {!myProfile?.premium && (
+                  <div className="premium-overlay" onClick={() => navigate("/premium")}>
+                    🔒 Upgrade to Premium
+                  </div>
+                )}
               </div>
 
               <div className="profile-details">
@@ -118,7 +158,16 @@ const Nearme = () => {
                 <p className="line">{p.religion} | {p.subCaste}</p>
 
                 <div className="btn-row">
-                  <button className="btn btn-view">View Profile</button>
+                  <button
+                    className="btn btn-view"
+                    onClick={(e) => {
+                      setSelectedProfile(p);
+                      setAnchorRect(e.target.getBoundingClientRect());
+                      setShowModal(true);
+                    }}
+                  >
+                    View Profile
+                  </button>
 
                   <button
                     className={`btn ${isSent ? "btn-sent" : "btn-send"}`}
@@ -133,6 +182,14 @@ const Nearme = () => {
           );
         })}
       </div>
+
+      {showModal && (
+        <ViewProfileModal
+          profile={selectedProfile}
+          anchorRect={anchorRect}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 };

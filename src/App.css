@@ -108,20 +108,21 @@
 
 .request_link {
     text-decoration: none;
-    color: #025423;
+    padding: 8px 16px;
+    border-radius: 20px;
     font-weight: 500;
-    padding-bottom: 4px;
-    border-bottom: 2px solid transparent;
+    color: #555;
+    background-color: #f2f2f2;
     transition: all 0.3s ease;
 }
 
 .request_link:hover {
-    color: #025423;
+    background-color: #e0e0e0;
 }
 
 .request_link.active {
-    border-bottom: 2px solid #04c451;
-    color: #025423;
+    background-color: #037430;
+    color: white;
 }
 
 /*  Matches Profiles */
@@ -132,31 +133,34 @@
 
 .matches_link {
     text-decoration: none;
-    color: #025423;
+    padding: 8px 16px;
+    border-radius: 20px;
     font-weight: 500;
-    padding-bottom: 4px;
-    border-bottom: 2px solid transparent;
+    color: #555;
+    background-color: #f2f2f2;
     transition: all 0.3s ease;
 }
 
 .matches_link:hover {
-    color: #025423;
+    background-color: #e0e0e0;
 }
 
 .matches_link.active {
-    border-bottom: 2px solid #04c451;
-    color: #025423;
+    background-color: #037430;
+    color: white;
 }
+
+/* Admin Payments Page */
 .admin-payments-container {
-  padding: 20px;
+    padding: 20px;
 }
 
 .title {
-  font-size: 22px;
-  font-weight: bold;
+    font-size: 22px;
+    font-weight: bold;
 }
 
 .error {
-  color: red;
-  margin-top: 10px;
+    color: red;
+    margin-top: 10px;
 }

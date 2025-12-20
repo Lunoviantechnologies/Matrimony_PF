@@ -121,6 +121,11 @@ const Register = () => {
   const totalSteps = 9;
   const navigate = useNavigate();
 
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [loading, setLoading] = useState(false);
+
   /* -------------------------------------------------------------
      NEXT STEP HANDLER
   ------------------------------------------------------------- */
@@ -205,6 +210,44 @@ const Register = () => {
       });
   };
 
+  const sendEmailOtp = async (email) => {
+    try {
+      setLoading(true);
+      await axios.post(`${backendIP}/auth/register/send-otp`, { email });
+      setOtpSent(true);
+      alert("OTP sent to email");
+    } catch (err) {
+      alert("Failed to send OTP");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const verifyEmailOtp = async (email) => {
+    try {
+      setLoading(true);
+
+      const res = await axios.post(`${backendIP}/auth/register/verify-otp`,
+        {
+          email: email,
+          otp: Number(otp)
+        }
+      );
+      console.log("OTP verification response:", email, otp, res.data);
+
+      if (res.data === "Email verified successfully") {
+        setEmailVerified(true);
+        alert("Email verified successfully");
+      } else {
+        alert("Invalid OTP");
+      }
+    } catch (err) {
+      alert("OTP verification failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   /* -------------------------------------------------------------
      RENDER STEP CONTENT
   ------------------------------------------------------------- */
@@ -219,7 +262,7 @@ const Register = () => {
 
             {/* PROFILE FOR OPTIONS */}
             <div className="option-group">
-              {[ "Myself", "My Son", "My Daughter", "My Brother", "My Sister", "My Friend", "My Relative",].map((option) => (
+              {["Myself", "My Son", "My Daughter", "My Brother", "My Sister", "My Friend", "My Relative",].map((option) => (
                 <button
                   type="button"
                   key={option}
@@ -352,7 +395,7 @@ const Register = () => {
 
             <ErrorMessage name="caste" component="div" className="error-text" />
 
-            <Field name="subCaste" className="form-input" placeholder="Sub-community (optional)" />
+            <Field name="subCaste" className="form-input" placeholder="Sub-community *" />
           </>
         );
 
@@ -470,8 +513,56 @@ const Register = () => {
             <div className="step-icon"><FaUser /></div>
             <h2>Contact Information</h2>
 
-            <Field name="emailId" className="form-input" placeholder="Email Address" />
+            {/* EMAIL */}
+            <div className="email-verify-box">
+              <Field
+                name="emailId"
+                className="form-input"
+                placeholder="Email Address"
+                disabled={emailVerified}
+                onChange={(e) => {
+                  setFieldValue("emailId", e.target.value);
+                }}
+              />
+
+              {!emailVerified && (
+                <button
+                  type="button"
+                  className="verify-btn"
+                  disabled={!values.emailId || loading}
+                  onClick={() => sendEmailOtp(values.emailId)}
+                >
+                  {otpSent ? "Resend OTP" : "Verify Email"}
+                </button>
+              )}
+
+              {emailVerified && (
+                <span className="verified-text">✅ Verified</span>
+              )}
+            </div>
+
             <ErrorMessage name="emailId" component="div" className="error-text" />
+
+            {/* OTP */}
+            {otpSent && !emailVerified && (
+              <div className="otp-box">
+                <input
+                  type="text"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  placeholder="Enter OTP"
+                  className="form-input"
+                />
+                <button
+                  type="button"
+                  className="verify-btn"
+                  disabled={!otp || loading}
+                  onClick={() => verifyEmailOtp(values.emailId)}
+                >
+                  Confirm OTP
+                </button>
+              </div>
+            )}
 
             <Field name="mobileNumber" className="form-input" placeholder="Mobile Number" />
             <ErrorMessage name="mobileNumber" component="div" className="error-text" />
@@ -536,6 +627,7 @@ const Register = () => {
                   <button
                     type="button"
                     className="next-btn"
+                    disabled={step === 8 && !emailVerified}
                     onClick={() => nextStep(validateForm, setTouched)}
                   >
                     NEXT

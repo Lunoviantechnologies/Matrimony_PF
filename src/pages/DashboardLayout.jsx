@@ -1,21 +1,25 @@
-import React from "react"; 
+import React from "react";
 import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
+import SubNavbar from "../components/SubNavbar";
 import { Outlet } from "react-router-dom";
 import Footer from "../components/Footer";
-import SubNavbar from "../components/SubNavbar";
 
 const DashboardLayout = () => {
     return (
-        <div style={{backgroundColor: '#D9F5E4'}}>
+        <div
+            className="d-flex flex-column min-vh-100"
+            style={{ backgroundColor: "#D9F5E4" }}
+        >
+            {/* Top Navigation */}
             <Navbar />
-            <SubNavbar />  
-            <div style={{ display: "flex", marginTop: "10px" }}>
-                <Sidebar />
-                <div style={{ flex: 1, background: "#D9F5E4", minHeight: "100vh", padding: 20 }}>
-                    <Outlet />
-                </div>
-            </div>
+            <SubNavbar />
+
+            {/* Main Content */}
+            <main className="flex-grow-1 container-fluid px-3 px-md-4 py-3">
+                <Outlet />
+            </main>
+
+            {/* Footer */}
             <Footer />
         </div>
     );

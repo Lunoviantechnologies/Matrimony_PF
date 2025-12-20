@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {FaUsers,FaHeart,FaCheckCircle, FaRupeeSign,FaTimesCircle, FaHeadset,} from "react-icons/fa";
+import { FaUsers, FaHeart, FaCheckCircle, FaRupeeSign, FaTimesCircle, FaHeadset, } from "react-icons/fa";
 import axios from "axios";
 import "../stylesheets/adminDashboard.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,8 +26,8 @@ const AdminDashboard = () => {
 
 
   const revenue = profiles
-    .filter((u) => u.latestPayment && u.latestPayment.status === "PAID")   
-    .reduce((sum, user) => sum + (user.latestPayment.amount || 0), 0);
+    .filter((u) => u.payments && u.payments.status === "PAID")
+    .reduce((sum, user) => sum + (user.payments.amount || 0), 0);
   // console.log("revenue : ", revenue);
   const matches = Math.floor(totalUsers * 0.25);
 
@@ -68,7 +68,7 @@ const AdminDashboard = () => {
 
           <div className="stat-card blue">
             <div className="icon"><FaRupeeSign /></div>
-            <h3>Recent Revenue</h3>
+            <h3>Daily Revenue</h3>
             <p>₹{revenue}</p>
           </div>
         </section>
@@ -82,18 +82,36 @@ const AdminDashboard = () => {
             <table>
               <thead>
                 <tr>
-                  <th>User</th>
-                  <th>Status</th>
-                  <th>Payment</th>
-                  <th>Joined Date</th>
+                  <th className="text-center">User</th>
+                  <th className="text-center">Status</th>
+                  <th className="text-center">Payment</th>
+                  <th className="text-center">Plan</th>
+                  <th className="text-center">Joined Date</th>
                 </tr>
               </thead>
               <tbody>
                 {profiles.slice(0, 5).map((p) => (
-                  <tr key={p.id}>
+                  <tr key={p.id} className="text-center">
                     <td>{p.firstName} {p.lastName}</td>
                     <td>{p.active ? "Active" : "Inactive"}</td>
-                    <td>{p.payments || "Not Paid"}</td>
+                    <td>
+                      {p.payments?.length
+                        ? p.payments.map(pay => (
+                          <div key={pay.id}>
+                            ₹ {pay.amount}
+                          </div>
+                        ))
+                        : "Not Paid"}
+                    </td>
+                    <td>
+                      {p.payments?.length
+                        ? p.payments.map(pay => (
+                          <div key={pay.id}>
+                            {pay.planCode}
+                          </div>
+                        ))
+                        : " - "}
+                    </td>
                     <td>{new Date(p.createdAt).toLocaleDateString()}</td>
                   </tr>
                 ))}

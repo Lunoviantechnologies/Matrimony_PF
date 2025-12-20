@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import "../styleSheets/profileCard.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
@@ -6,22 +6,24 @@ import axios from "axios";
 import backendIP from "../api/api";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import ViewProfileModal from "../components/ViewProfileModal";
-import { useNavigate } from "react-router-dom";
+import { useOutletContext, useNavigate } from "react-router-dom";
 
 const MyMatches = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const { profiles } = useSelector((state) => state.profiles);
   const { id, myProfile } = useSelector((state) => state.auth);
+  const { filters } = useOutletContext();
 
   const [sentRequests, setSentRequests] = useState([]);
   const [receivedRequests, setReceivedRequests] = useState([]);
   const [acceptedList, setAcceptedList] = useState([]);
   const [rejectedList, setRejectedList] = useState([]);
+
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [anchorRect, setAnchorRect] = useState(null);
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchUserProfiles());
@@ -65,6 +67,7 @@ const MyMatches = () => {
   const handleSendRequest = (receiverId) => {
     axios.post(`${backendIP}/friends/send/${id}/${receiverId}`)
       .then(() => {
+        alert("Request sent successfully");
         setSentRequests(prev => [...prev, { senderId: id, receiverId }]);
       })
       .catch(err => console.error(err));
@@ -78,11 +81,38 @@ const MyMatches = () => {
 
   const allHiddenIds = [...sentIds, ...receivedIds, ...acceptedIds, ...rejectedIds];
 
+  // Helper to calculate age from dateOfBirth
+  const getAge = (dob) => {
+    if (!dob) return 0;
+    const birthDate = new Date(dob);
+    const ageDifMs = Date.now() - birthDate.getTime();
+    return Math.floor(ageDifMs / (365.25 * 24 * 60 * 60 * 1000));
+  };
+
   // ---- Filter profiles ----
-  const filteredProfiles = profiles
-    .filter(p => p.id !== id)
-    .filter(p => p.gender !== myProfile?.gender)
-    .filter(p => !allHiddenIds.includes(p.id));
+  const filteredProfiles = useMemo(() => {
+    return profiles
+      .filter(p => p.id !== id)
+      .filter(p => p.gender !== myProfile?.gender)
+      .filter(p => !allHiddenIds.includes(p.id))
+      .filter(p => {
+        const age = getAge(p.dateOfBirth);
+
+        const matchAge = !filters.age.length || filters.age.some(range => {
+          const [min, max] = range.split("-").map(Number);
+          return age >= min && age <= max;
+        });
+
+        const matchReligion = !filters.religion.length || filters.religion.includes(p.religion || "");
+        const matchCaste = !filters.caste.length || filters.caste.includes(p.subCaste || "");
+        const matchCountry = !filters.country.length || filters.country.includes(p.country || "");
+        const matchEducation = !filters.education.length || filters.education.includes(p.highestEducation || "");
+        const matchProfession = !filters.profession.length || filters.profession.includes(p.occupation || "");
+        const matchLifestyle = !filters.lifestyle.length || (p.yourHobbies ? filters.lifestyle.some(f => p.yourHobbies.includes(f)) : false);
+
+        return matchAge && matchReligion && matchCaste && matchCountry && matchEducation && matchProfession && matchLifestyle;
+      });
+  }, [profiles, filters, allHiddenIds, myProfile, id]);
 
   const getImageUrl = (photo, gender) => {
     if (!photo) {
@@ -104,7 +134,6 @@ const MyMatches = () => {
       <div className="profile-cards-wrapper">
         {filteredProfiles.map((p) => {
           const isSent = sentIds.includes(p.id);
-
           return (
             <article className="profile-card" key={p.id}>
               <div className="image-box">
@@ -114,6 +143,8 @@ const MyMatches = () => {
                   onError={(e) => {
                     e.target.src = p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
                   }}
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
                 />
 
                 {!myProfile?.premium && (

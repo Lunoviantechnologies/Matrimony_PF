@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import '../styleSheets/PremiumSubscription.css';
 import axios from 'axios';
 import backendIP from '../api/api';
@@ -107,64 +107,6 @@ function PremiumSubscription() {
     }
   ];
 
-  // Replace your old handler with this Razorpay integration
-  // const handlePlanSelect = async (plan) => {
-  //   try {
-  //     const planCodeMap = {
-  //       "gold-3months": "GOLD_3",
-  //       "gold-plus-3months": "GOLDPLUS_3",
-  //       "diamond-6months": "DIAMOND_6",
-  //       "diamond-plus-6months": "DIAMONDPLUS_6",
-  //       "platinum-plus-12months": "PLATINUM_12"
-  //     };
-
-  //     const backendPlanCode = planCodeMap[plan.id];
-
-  //     if (!backendPlanCode) {
-  //       alert("Invalid plan selected");
-  //       return;
-  //     }
-
-  //     // ✅ SEND CORRECT ENUM VALUE
-  //     const res = await axios.post(`${backendIP}/payment/create-order`, {
-  //       planCode: backendPlanCode,
-  //       userId: 1   // replace with logged-in user's real id
-  //     });
-
-  //     const { orderId, razorpayKeyId, amount, currency } = res.data;
-
-  //     const options = {
-  //       key: razorpayKeyId,      // ✅ ONLY KEY ID
-  //       amount: amount,         // already in paise
-  //       currency: currency,
-  //       name: "SaathJanam Premium",
-  //       description: plan.name,
-  //       order_id: orderId,
-
-  //       handler: async function (response) {
-  //         await axios.post(`${backendIP}/payments/verify`, {
-  //           razorpayOrderId: response.razorpay_order_id,
-  //           razorpayPaymentId: response.razorpay_payment_id,
-  //           razorpaySignature: response.razorpay_signature,
-  //           planCode: backendPlanCode,
-  //           userId: 1
-  //         });
-
-  //         navigate(/cart/`${plan.id}`);
-  //       },
-
-  //       theme: { color: "#e91e63" }
-  //     };
-
-  //     const rzp = new window.Razorpay(options);
-  //     rzp.open();
-
-  //   } catch (err) {
-  //     console.error("Payment error:", err);
-  //     alert("Payment failed: " + (err.response?.data || err.message));
-  //   }
-  // };
-
   const handlePlanSelect = async (plan) => {
     try {
       const planCodeMap = {
@@ -206,7 +148,7 @@ function PremiumSubscription() {
           }
           );
 
-          navigate("/premium/payment-success", {
+          navigate("/payment-success", {
             state: {
               planId: plan.id,
               planName: plan.name,
@@ -223,7 +165,7 @@ function PremiumSubscription() {
 
       rzp.on("payment.failed", function (response) {
         console.error("Payment failed:", response.error);
-        navigate("/premium/payment-failed", {
+        navigate("/payment-failed", {
           state: {
             reason: response.error.reason,
             description: response.error.description
@@ -241,88 +183,91 @@ function PremiumSubscription() {
   };
 
   return (
-    <div className="premium-subscription-container">
-      <header className="subscription-header">
-        <div className="logo">SaathJanam</div>
-      </header>
+    <div>
+      {/* <Outlet /> */}
+      <div className="premium-subscription-container">
+        <header className="subscription-header">
+          <div className="logo">SaathJanam</div>
+        </header>
 
-      <div className="banner-section">
-        <h1>Upgrade now & Get upto 66% discount!</h1>
-        <p>Save upto 66%. Expires in 07h: 48m: 27s</p>
-        <div className="banner-actions">
-          <span>Personalised Plans Help</span>
-          <span>Do This Later</span>
+        <div className="banner-section">
+          <h1>Upgrade now & Get upto 66% discount!</h1>
+          <p>Save upto 66%. Expires in 07h: 48m: 27s</p>
+          <div className="banner-actions">
+            <span>Personalised Plans Help</span>
+            <span>Do This Later</span>
+          </div>
         </div>
-      </div>
 
-      <div className="plans-section">
-        <div className="plans-container-compact">
-          {plans.map((plan) => (
-            <div key={plan.id} className="plan-card-compact">
-              {plan.badge && <div className="plan-badge-compact">{plan.badge}</div>}
-              <div className="plan-header-compact">
-                <h3>{plan.name}</h3>
-                <div className="discount-badge-compact">{plan.discount}</div>
+        <div className="plans-section">
+          <div className="plans-container-compact">
+            {plans.map((plan) => (
+              <div key={plan.id} className="plan-card-compact">
+                {plan.badge && <div className="plan-badge-compact">{plan.badge}</div>}
+                <div className="plan-header-compact">
+                  <h3>{plan.name}</h3>
+                  <div className="discount-badge-compact">{plan.discount}</div>
+                </div>
+                <div className="price-section-compact">
+                  <div className="original-price-compact">{plan.originalPrice}</div>
+                  <div className="discounted-price-compact">{plan.discountedPrice}</div>
+                  <div className="per-month-compact">{plan.perMonth}</div>
+                </div>
+                <button
+                  className="continue-btn-compact"
+                  onClick={() => handlePlanSelect(plan)}
+                >
+                  Continue
+                </button>
+                <div className="features-compact">
+                  {plan.features.map((feature, index) => (
+                    <div key={index} className="feature-item-compact">✔ {feature}</div>
+                  ))}
+                </div>
+                <div className="auto-renewal-compact">Auto-renews on expiry</div>
               </div>
-              <div className="price-section-compact">
-                <div className="original-price-compact">{plan.originalPrice}</div>
-                <div className="discounted-price-compact">{plan.discountedPrice}</div>
-                <div className="per-month-compact">{plan.perMonth}</div>
-              </div>
-              <button
-                className="continue-btn-compact"
-                onClick={() => handlePlanSelect(plan)}
-              >
-                Continue
-              </button>
-              <div className="features-compact">
-                {plan.features.map((feature, index) => (
-                  <div key={index} className="feature-item-compact">✔ {feature}</div>
-                ))}
-              </div>
-              <div className="auto-renewal-compact">Auto-renews on expiry</div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+
+        <div className="vip-section-compact">
+          <div className="vip-badge-compact">VIP SAATHJANAM</div>
+          <h2>No.1 Matchmaking Service for the Elite</h2>
+          <div className="vip-features-compact">
+            <div className="vip-feature-compact">5x Success + 100% Privacy</div>
+            <div className="vip-feature-compact">50K+ VIPs + Top Consultant</div>
+          </div>
+          <button className="consultation-btn-compact">Book a FREE Consultation</button>
+        </div>
+
+        <div className="faq-section-compact">
+          <h2>You have questions. We have the answers...</h2>
+
+          <div className="faq-item-compact">
+            <h3>What are some of the benefits of Premium plans?</h3>
+            <p>As a Premium member, you can chat unlimited with your Matches, view their contact numbers and view hidden photos. You also get Premium Assistance on priority.</p>
+          </div>
+
+          <div className="faq-item-compact">
+            <h3>What payment options do you offer?</h3>
+            <p>We offer multiple Online and offline payment options for you to pick and choose from based on your location.</p>
+          </div>
+
+          <div className="faq-item-compact">
+            <h3>What offers and discounts can I avail?</h3>
+            <p>We keep you informed from time to time whenever you are eligible for different discounts and offers.</p>
+          </div>
+
+          <div className="faq-item-compact">
+            <h3>How can I be safe on SaathJanam.com?</h3>
+            <p>We go to great lengths to make sure you get the best possible experience here. Every single profile is screened.</p>
+          </div>
+        </div>
+
+        <footer className="footer-compact">
+          <p>The safest, smartest and the most secure matchmaking service in India</p>
+        </footer>
       </div>
-
-      <div className="vip-section-compact">
-        <div className="vip-badge-compact">VIP SAATHJANAM</div>
-        <h2>No.1 Matchmaking Service for the Elite</h2>
-        <div className="vip-features-compact">
-          <div className="vip-feature-compact">5x Success + 100% Privacy</div>
-          <div className="vip-feature-compact">50K+ VIPs + Top Consultant</div>
-        </div>
-        <button className="consultation-btn-compact">Book a FREE Consultation</button>
-      </div>
-
-      <div className="faq-section-compact">
-        <h2>You have questions. We have the answers...</h2>
-
-        <div className="faq-item-compact">
-          <h3>What are some of the benefits of Premium plans?</h3>
-          <p>As a Premium member, you can chat unlimited with your Matches, view their contact numbers and view hidden photos. You also get Premium Assistance on priority.</p>
-        </div>
-
-        <div className="faq-item-compact">
-          <h3>What payment options do you offer?</h3>
-          <p>We offer multiple Online and offline payment options for you to pick and choose from based on your location.</p>
-        </div>
-
-        <div className="faq-item-compact">
-          <h3>What offers and discounts can I avail?</h3>
-          <p>We keep you informed from time to time whenever you are eligible for different discounts and offers.</p>
-        </div>
-
-        <div className="faq-item-compact">
-          <h3>How can I be safe on SaathJanam.com?</h3>
-          <p>We go to great lengths to make sure you get the best possible experience here. Every single profile is screened.</p>
-        </div>
-      </div>
-
-      <footer className="footer-compact">
-        <p>The safest, smartest and the most secure matchmaking service in India</p>
-      </footer>
     </div>
   );
 }
