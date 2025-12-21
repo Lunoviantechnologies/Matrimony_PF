@@ -13,6 +13,22 @@
   color: #222;
 }
 
+/* EMPTY STATE */
+.empty-state {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40vh;
+  text-align: center;
+}
+
+.empty-state p {
+  font-size: clamp(14px, 2.5vw, 16px);
+  color: #6b7280;
+  padding: 1rem;
+}
+
 /* GRID CONTAINER — SMALL CARDS */
 .profile-cards-wrapper {
   width: 100%;

@@ -91,6 +91,7 @@ const Nearme = () => {
       .filter(p => p.id !== id)
       .filter(p => p.gender !== myProfile?.gender)
       .filter(p => !allHiddenIds.includes(p.id))
+      .filter(p => p.city === myProfile?.city)
       .filter(p => {
         const age = getAge(p.dateOfBirth);
 
@@ -128,59 +129,65 @@ const Nearme = () => {
       <h2 className="profile-title">Near Matches For You</h2>
 
       <div className="profile-cards-wrapper">
-        {filteredProfiles.map((p) => {
-          const isSent = sentIds.includes(p.id);
-          return (
-            <article className="profile-card" key={p.id}>
-              <div className="image-box">
-                <img src={getImageUrl(p.updatePhoto, p.gender)}
-                  alt={`${p.firstName} ${p.lastName}`}
-                  className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
-                  onError={(e) => {
-                    e.target.src = p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
-                  }}
-                  draggable={false}
-                  onContextMenu={(e) => e.preventDefault()}
-                />
+        {
+          filteredProfiles.length === 0 ? (
+            <p className="empty-state">No profiles found matching your criteria.</p>
+          ) : (
+            filteredProfiles.map((p) => {
+              const isSent = sentIds.includes(p.id);
+              return (
+                <article className="profile-card" key={p.id}>
+                  <div className="image-box">
+                    <img src={getImageUrl(p.updatePhoto, p.gender)}
+                      alt={`${p.firstName} ${p.lastName}`}
+                      className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
+                      onError={(e) => {
+                        e.target.src = p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+                      }}
+                      draggable={false}
+                      onContextMenu={(e) => e.preventDefault()}
+                    />
 
-                {!myProfile?.premium && (
-                  <div className="premium-overlay" onClick={() => navigate("/premium")}>
-                    🔒 Upgrade to Premium
+                    {!myProfile?.premium && (
+                      <div className="premium-overlay" onClick={() => navigate("/premium")}>
+                        🔒 Upgrade to Premium
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
-              <div className="profile-details">
-                <h3 className="name">{p.firstName + " " + p.lastName}</h3>
-                <span className="meta">{p.age} yrs • {p.height}</span>
-                <p className="line">{p.occupation} • {p.highestEducation}</p>
-                <p className="line">{p.city}</p>
-                <p className="line">{p.religion} | {p.subCaste}</p>
+                  <div className="profile-details">
+                    <h3 className="name">{p.firstName + " " + p.lastName}</h3>
+                    <span className="meta">{p.age} yrs • {p.height}</span>
+                    <p className="line">{p.occupation} • {p.highestEducation}</p>
+                    <p className="line">{p.city}</p>
+                    <p className="line">{p.religion} | {p.subCaste}</p>
 
-                <div className="btn-row">
-                  <button
-                    className="btn btn-view"
-                    onClick={(e) => {
-                      setSelectedProfile(p);
-                      setAnchorRect(e.target.getBoundingClientRect());
-                      setShowModal(true);
-                    }}
-                  >
-                    View Profile
-                  </button>
+                    <div className="btn-row">
+                      <button
+                        className="btn btn-view"
+                        onClick={(e) => {
+                          setSelectedProfile(p);
+                          setAnchorRect(e.target.getBoundingClientRect());
+                          setShowModal(true);
+                        }}
+                      >
+                        View Profile
+                      </button>
 
-                  <button
-                    className={`btn ${isSent ? "btn-sent" : "btn-send"}`}
-                    disabled={isSent}
-                    onClick={() => handleSendRequest(p.id)}
-                  >
-                    {isSent ? "Sent" : "Send Request"}
-                  </button>
-                </div>
-              </div>
-            </article>
-          );
-        })}
+                      <button
+                        className={`btn ${isSent ? "btn-sent" : "btn-send"}`}
+                        disabled={isSent}
+                        onClick={() => handleSendRequest(p.id)}
+                      >
+                        {isSent ? "Sent" : "Send Request"}
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              );
+            })
+          )
+        }
       </div>
 
       {showModal && (

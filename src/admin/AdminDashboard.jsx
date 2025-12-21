@@ -18,8 +18,8 @@ const AdminDashboard = () => {
 
   const totalUsers = profiles.length;
 
-  const activeUsers = profiles.filter((u) => u.activeFlag === true);
-  const inactiveUsers = profiles.filter((u) => u.activeFlag === false);
+  const activeUsers = profiles.filter((u) => u.active === true);
+  const inactiveUsers = profiles.filter((u) => u.active === false);
 
   const activeCount = activeUsers.length;
   const inactiveCount = inactiveUsers.length;

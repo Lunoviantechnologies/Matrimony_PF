@@ -7,6 +7,7 @@ import backendIP from "../api/api";
 
 export default function ManageUser({ pageSize = 10 }) {
   const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.auth);
   const { profiles, loading } = useSelector((state) => state.profiles);
 
   const [search, setSearch] = useState("");
@@ -18,13 +19,17 @@ export default function ManageUser({ pageSize = 10 }) {
   useEffect(() => {
     dispatch(fetchUserProfiles());
   }, [dispatch]);
-  // console.log("profiles :", profiles);
+  console.log("token :", `Bearer ${token}`);
 
   const getUserId = (u) => u?.userId || u?.id || u?.profileId;
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${backendIP}/admin/delete/${id}`);
+      await axios.delete(`${backendIP}/admin/delete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       alert("User deleted successfully");
 
       dispatch(fetchUserProfiles());
@@ -41,11 +46,8 @@ export default function ManageUser({ pageSize = 10 }) {
 
     return profiles.filter((u) => {
       const name = `${u.firstName || ""} ${u.lastName || ""}`.toLowerCase();
-
       const matchSearch = name.includes(safeSearch);
-
       const matchStatus = statusFilter ? u.profileStatus === statusFilter : true;
-
       return matchSearch && matchStatus;
     });
   }, [profiles, search, statusFilter]);
@@ -112,25 +114,33 @@ export default function ManageUser({ pageSize = 10 }) {
 
       {/* TABLE */}
       <div className="mu-table-wrap">
-          <table className="mu-table">
-            <thead>
-              <tr>
-                <th>Thumbnail</th>
-                <th>User</th>
-                <th>Age</th>
-                <th>City</th>
-                <th>Membership</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
+        <table className="mu-table">
+          <thead>
+            <tr>
+              <th>Thumbnail</th>
+              <th>User</th>
+              <th>Age</th>
+              <th>City</th>
+              <th>Membership</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
 
-            <tbody>
-              {loading ? (
-                <div className="mu-loading">Loading users...</div>
-              ) : paginatedUsers.length === 0 ? (
-                <div className="mu-empty">No users found</div>
-              ) : (
+          <tbody>
+            {loading ? (
+              <tr>
+                <td colSpan={7} className="mu-loading">
+                  Loading users...
+                </td>
+              </tr>
+            ) : paginatedUsers.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="mu-empty">
+                  No users found
+                </td>
+              </tr>
+            ) : (
               paginatedUsers.map((u, index) => {
                 const initials = `${(u.firstName || "U").charAt(0)}${(u.lastName || "").charAt(0)}`.toUpperCase();
 
@@ -159,9 +169,8 @@ export default function ManageUser({ pageSize = 10 }) {
 
                     <td>
                       <span
-                        className={`mu-badge ${
-                          u.membership === "Premium" ? "premium" : ""
-                        }`}
+                        className={`mu-badge ${u.membership === "Premium" ? "premium" : ""
+                          }`}
                       >
                         {u.membership || "Free"}
                       </span>
@@ -186,11 +195,11 @@ export default function ManageUser({ pageSize = 10 }) {
                       </button>
                     </td>
                   </tr>
-                )
+                );
               })
             )}
-            </tbody>
-          </table>
+          </tbody>
+        </table>
       </div>
 
       {/* FOOTER + PAGINATION */}
@@ -236,10 +245,10 @@ export default function ManageUser({ pageSize = 10 }) {
                 <b>Name:</b> {detailUser.firstName} {detailUser.lastName}
               </div>
               <div className="mu-detail-row">
-                <b>Email:</b> {detailUser.email}
+                <b>Email:</b> {detailUser.emailId}
               </div>
               <div className="mu-detail-row">
-                <b>Phone:</b> {detailUser.phoneNumber}
+                <b>Phone:</b> {detailUser.mobileNumber}
               </div>
               <div className="mu-detail-row">
                 <b>Gender:</b> {detailUser.gender}
@@ -248,10 +257,10 @@ export default function ManageUser({ pageSize = 10 }) {
                 <b>City:</b> {detailUser.city}
               </div>
               <div className="mu-detail-row">
-                <b>Status:</b> {detailUser.profileStatus}
+                <b>Status:</b> {detailUser.active ? "Active" : "Inactive"}
               </div>
               <div className="mu-detail-row">
-                <b>Membership:</b> {detailUser.membership}
+                <b>Membership:</b> {detailUser.premium ? "Premium" : "Free"}
               </div>
             </div>
 

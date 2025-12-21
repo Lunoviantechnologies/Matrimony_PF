@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import backendIP from "../api/api";
-import SearchFilters from "./SearchFilters";
+// import SearchFilters from "./SearchFilters";
 import Notification from "./Notification";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import { useDispatch } from "react-redux";
@@ -34,7 +34,7 @@ const UserNavbar = () => {
 
     return (
         <>
-            <SearchFilters />
+            {/* <SearchFilters /> */}
             <Link className="navLink" to="/help">Help</Link>
             <Link className="navLink" to="/premium">Upgrade</Link>
             <Notification />

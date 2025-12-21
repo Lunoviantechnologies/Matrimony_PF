@@ -36,12 +36,13 @@ export default function AdminApprovals() {
 
   // Approve
   const handleActionApproved = async (userId) => {
+    // console.log("approving userId :", userId);
     try {
       // Optimistic UI: remove immediately
       setVisibleProfiles((prev) => prev.filter((u) => u.id !== userId));
 
       // Call backend
-      await axios.post(`${backendIP}/admin/profiles/${userId}/approve`, {});
+      await axios.post(`${backendIP}/admin/profiles/approve/${userId}`);
 
       alert("User profile approved successfully!");
       // Optional: refetch from backend to sync
@@ -58,7 +59,7 @@ export default function AdminApprovals() {
     try {
       setVisibleProfiles((prev) => prev.filter((u) => u.id !== userId));
 
-      await axios.post(`${backendIP}/admin/profiles/${userId}/reject`, {});
+      await axios.post(`${backendIP}/admin/profiles/reject/${userId}`);
 
       alert("User profile rejected successfully!");
       dispatch(fetchUserProfiles());

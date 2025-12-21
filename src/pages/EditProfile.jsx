@@ -62,7 +62,11 @@ export default function EditProfile() {
         motherTongue: profileData.motherTongue || "",
         maritalStatus: profileData.maritalStatus || "",
         location: profileData.location || "",
-        about: profileData.about || ""
+        about: profileData.about || "",
+        state: profileData.state || "",
+        sports: profileData.sports || "",
+        aboutYourself: profileData.aboutYourself || "",
+        isChildrenLivingWithYou: profileData.isChildrenLivingWithYou ? "Yes" : "No" || "",
       },
       basics: {
         height: profileData.height || "",
@@ -73,13 +77,12 @@ export default function EditProfile() {
       educationCareer: {
         highestEducation: profileData.highestEducation || "",
         collegeName: profileData.collegeName || "",
-        employedIn: profileData.employedIn || "",
+        // employedIn: profileData.employedIn || "",
         sector: profileData.sector || "",
         occupation: profileData.occupation || "",
         companyName: profileData.companyName || "",
         annualIncome: profileData.annualIncome || "",
         workLocation: profileData.workLocation || "",
-        state: profileData.state || "",
         country: profileData.country || "",
         city: profileData.city || ""
       },
@@ -264,10 +267,10 @@ export default function EditProfile() {
           <div className="photo-card">
             <div className="photo-box">
               <img
-                src={ photo?.startsWith("blob:") ? photo : photo
-                      ? `${backendIP.replace("/api", "")}${photo}` : profileData.updatePhoto
-                        ? `${backendIP.replace("/api", "")}${profileData.updatePhoto}`
-                        : "/default-user.png"
+                src={photo?.startsWith("blob:") ? photo : photo
+                  ? `${backendIP.replace("/api", "")}${photo}` : profileData.updatePhoto
+                    ? `${backendIP.replace("/api", "")}${profileData.updatePhoto}`
+                    : "/default-user.png"
                 }
                 alt="Profile"
                 className="photo-preview"
@@ -296,10 +299,6 @@ export default function EditProfile() {
               <div className="photo-name">{profileData?.fullName || `${profileData?.firstName || ""} ${profileData?.lastName || "Null"}`}</div>
               <div className="photo-sub">Active member • Verified</div>
             </div>
-
-            {/* <div className="photo-actions-row">
-              <button className="btn-blue" onClick={() => openSectionModal("personal")}>Edit Profile</button>
-            </div> */}
           </div>
 
           <div className="boxed small-box">
@@ -371,8 +370,9 @@ export default function EditProfile() {
                 <Row label="Company" value={profileData.companyName} />
                 <Row label="Experience" value={profileData.experience} />
                 <Row label="Sector" value={profileData.sector} />
-                <Row label="Sports " value={profileData.Sports} />
-                <Row label="Living with Childrens" value={profileData.livingwithchildrens} />
+                <Row label="Sports " value={profileData.sports} />
+                <Row label="Living with Childrens" value={profileData.isChildrenLivingWithYou ? "Yes" : "No"} />
+                <Row label="State" value={profileData.state} />
               </div>
             </div>
           </div>
@@ -386,7 +386,7 @@ export default function EditProfile() {
               <div className="left-col underlined-block">
                 <Row label="Highest Education" value={profileData.highestEducation} />
                 <Row label="College Name" value={profileData.collegeName} />
-                <Row label="Employed In" value={profileData.employedIn} />
+                {/* <Row label="Employed In" value={profileData.employedIn} /> */}
                 <Row label="Sector" value={profileData.sector} />
               </div>
               <div className="right-col underlined-block">
@@ -394,9 +394,8 @@ export default function EditProfile() {
                 <Row label="Company Name" value={profileData.companyName} />
                 <Row label="Annual Income" value={profileData.annualIncome} />
                 <Row label="Work Location" value={profileData.workLocation} />
-                <Row label="State" value={profileData.state} />
-                <Row label="Country" value={profileData.country} />
-                <Row label="City" value={profileData.city} />
+                <Row label="Present Country" value={profileData.country} />
+                <Row label="Present City" value={profileData.city} />
               </div>
             </div>
           </div>
@@ -509,15 +508,15 @@ export default function EditProfile() {
               <input value={buffer.motherName || ""} onChange={(e) => handleEditInputLocal("motherName", e.target.value)} />
             </label>
             <label className="field"><div className="field-label">Number of Brothers</div>
-              <input value={buffer.numberOfBrothers || ""} onChange={(e) => handleEditInputLocal("numberOfBrothers", e.target.value)} placeholder="leave if no brothers..."/>
+              <input value={buffer.numberOfBrothers || ""} onChange={(e) => handleEditInputLocal("numberOfBrothers", e.target.value)} placeholder="leave if no brothers..." />
             </label><label className="field"><div className="field-label">Number of Sisters</div>
-              <input value={buffer.numberOfSisters || ""} onChange={(e) => handleEditInputLocal("numberOfSisters", e.target.value)} placeholder="leave if no sisters..."/>
+              <input value={buffer.numberOfSisters || ""} onChange={(e) => handleEditInputLocal("numberOfSisters", e.target.value)} placeholder="leave if no sisters..." />
             </label>
             <label className="field"><div className="field-label">Family Status</div>
-              <input value={buffer.familyStatus || ""} onChange={(e) => handleEditInputLocal("familyStatus", e.target.value)} placeholder="below or middle or above middle class..."/>
+              <input value={buffer.familyStatus || ""} onChange={(e) => handleEditInputLocal("familyStatus", e.target.value)} placeholder="below or middle or above middle class..." />
             </label>
             <label className="field"><div className="field-label">Family Type</div>
-              <input value={buffer.familyType || ""} onChange={(e) => handleEditInputLocal("familyType", e.target.value)} placeholder="nuclear or joint..."/>
+              <input value={buffer.familyType || ""} onChange={(e) => handleEditInputLocal("familyType", e.target.value)} placeholder="nuclear or joint..." />
             </label>
           </div>
         );
@@ -533,9 +532,9 @@ export default function EditProfile() {
               <input value={buffer.collegeName || ""} onChange={(e) => handleEditInputLocal("collegeName", e.target.value)} />
             </label>
 
-            <label className="field"><div className="field-label">Employed In</div>
+            {/* <label className="field"><div className="field-label">Employed In</div>
               <input value={buffer.employedIn || ""} onChange={(e) => handleEditInputLocal("employedIn", e.target.value)} />
-            </label>
+            </label> */}
 
             <label className="field"><div className="field-label">Sector</div>
               <input value={buffer.sector || ""} onChange={(e) => handleEditInputLocal("sector", e.target.value)} />
@@ -557,15 +556,11 @@ export default function EditProfile() {
               <input value={buffer.workLocation || ""} onChange={(e) => handleEditInputLocal("workLocation", e.target.value)} />
             </label>
 
-            <label className="field"><div className="field-label">State</div>
-              <input value={buffer.state || ""} onChange={(e) => handleEditInputLocal("state", e.target.value)} />
-            </label>
-
-            <label className="field"><div className="field-label">City</div>
+            <label className="field"><div className="field-label">Present City</div>
               <input value={buffer.city || ""} onChange={(e) => handleEditInputLocal("city", e.target.value)} />
             </label>
 
-            <label className="field"><div className="field-label">Country</div>
+            <label className="field"><div className="field-label">Present Country</div>
               <input value={buffer.country || ""} onChange={(e) => handleEditInputLocal("country", e.target.value)} />
             </label>
           </div>
@@ -627,8 +622,20 @@ export default function EditProfile() {
               <input value={buffer.location || ""} onChange={(e) => handleEditInputLocal("location", e.target.value)} />
             </label>
 
+            <label className="field"><div className="field-label">State</div>
+              <input value={buffer.state || ""} onChange={(e) => handleEditInputLocal("state", e.target.value)} />
+            </label>
+
+            <label className="field"><div className="field-label">Sports</div>
+              <input value={buffer.sports || ""} onChange={(e) => handleEditInputLocal("sports", e.target.value)} />
+            </label>
+
             <label className="field"><div className="field-label">About Yourself</div>
-              <textarea rows="4" value={buffer.about || ""} onChange={(e) => handleEditInputLocal("about", e.target.value)} />
+              <textarea rows="4" value={buffer.aboutYourself || ""} onChange={(e) => handleEditInputLocal("aboutYourself", e.target.value)} />
+            </label>
+
+            <label className="field"><div className="field-label">Living with Childrens</div>
+              <input value={buffer.isChildrenLivingWithYou || ""} onChange={(e) => handleEditInputLocal("isChildrenLivingWithYou", e.target.value)} placeholder="If divorced or widow have childern with you type true or false..."/>
             </label>
 
             <div className="field">

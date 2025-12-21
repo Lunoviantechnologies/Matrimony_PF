@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "../styleSheets/successPageCSS/paymentSuccess.css";
 
 function PaymentSuccess() {
@@ -12,6 +12,9 @@ function PaymentSuccess() {
         <p><strong>Plan:</strong> {state?.planName}</p>
         <p><strong>Amount Paid:</strong> {state?.amount}</p>
         <p className="payment-description">Thank you for subscribing to our premium plan! Enjoy the exclusive features and benefits.</p>
+        <Link to="/dashboard" className="dashboard-link">
+          Click here to redirect to Dashboard
+        </Link>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@
 /* Page background / header */
 .manage-users-root {
   padding: 18px;
-  background: #eaf9f0; /* pale green page bg */
+  background: #ffffff; /* pale green page bg */
   min-height: 100vh;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
     Arial;
@@ -68,15 +68,15 @@
   width: 100%;
   border-collapse: collapse;
   min-width: 900px;
-  background: transparent;
+  background: #D9F5E4;
 }
 
 /* header */
 .mu-table thead th {
   text-align: left;
   padding: 14px 16px;
-  background: #dff4ea;
-  color: #08332b;
+  background: #00695C;
+  color: #ffffff;
   font-weight: 700;
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
@@ -221,7 +221,7 @@
 }
 .mu-modal {
   background: #fff;
-  width: 720px;
+  width: 520px;
   max-width: 95%;
   border-radius: 12px;
   padding: 18px;

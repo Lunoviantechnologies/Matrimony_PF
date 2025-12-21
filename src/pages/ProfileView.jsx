@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import '../styleSheets/ProfileView.css';
-import { LineChart, Line,XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,} from "recharts";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, } from "recharts";
 import { FiCamera, FiUpload, FiEdit, FiChevronDown } from "react-icons/fi";
-import { FaHeart, FaEye, FaHandshake, FaMousePointer } from "react-icons/fa"; 
+import { FaHeart, FaEye, FaHandshake, FaMousePointer } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
+import { useNavigate } from "react-router-dom";
+import backendIP from "../api/api";
 
 const MONTHS = [
   "September 2025",
@@ -101,13 +105,16 @@ const initialProfile = {
 };
 
 export default function ProfileView() {
+  const navigate = useNavigate();
+  const { id, myProfile } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+
   const [selectedMonth, setSelectedMonth] = useState(MONTHS[0]);
   const [chartData, setChartData] = useState(SAMPLE_DATA[MONTHS[0]]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   // profile / modal state
   const [profile, setProfile] = useState(initialProfile);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [editName, setEditName] = useState(profile.name);
   const [uploadPreview, setUploadPreview] = useState(profile.photoUrl);
   const fileInputRef = useRef(null);
@@ -115,7 +122,9 @@ export default function ProfileView() {
   useEffect(() => {
     // update chart data when selectedMonth changes
     setChartData(SAMPLE_DATA[selectedMonth] || []);
-  }, [selectedMonth]);
+    dispatch(fetchMyProfile(id));
+  }, [selectedMonth, id]);
+  console.log("myProfile in ProfileView:", myProfile);
 
   // when month is switched, we might update metrics or completion (sample)
   useEffect(() => {
@@ -143,48 +152,31 @@ export default function ProfileView() {
     setDropdownOpen(false);
   }
 
-  // Modal handlers
-  function openEditModal() {
-    setEditName(profile.name);
-    setUploadPreview(profile.photoUrl);
-    setIsModalOpen(true);
-  }
-  function closeModal() {
-    setIsModalOpen(false);
-    // clear temporary upload preview? keep it as is
-  }
-
-  function handleFileChange(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const url = URL.createObjectURL(file);
-    setUploadPreview(url);
-    // store file in a temp ref if needed; here we just preview
-  }
-
-  function handleSaveProfile() {
-    setProfile((p) => ({
-      ...p,
-      name: editName || p.name,
-      photoUrl: uploadPreview,
-    }));
-    setIsModalOpen(false);
-  }
-
-  function triggerFileInput() {
-    if (fileInputRef.current) fileInputRef.current.click();
-  }
-
   // helpers
   const percentage = profile.completion;
   const circumference = 2 * Math.PI * 44; // r=44
   const offset = circumference - (percentage / 100) * circumference;
 
+  const getImageUrl = (photo, gender) => {
+    if (!photo) {
+      return gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+    }
+
+    if (photo.startsWith("/")) {
+      return `${backendIP.replace("/api", "")}${photo}`;
+    }
+
+    if (photo.startsWith("blob:") || photo.startsWith("http")) {
+      return photo;
+    }
+    return `${backendIP.replace("/api", "")}/profile-photos/${photo}`;
+  };
+
   return (
     <div className="pv-container">
       <div className="pv-top">
         <div className="pv-header">
-          <h2>Profiles views</h2>  
+          <h2>Profiles views</h2>
           <div className="pv-month-dropdown">
             <button
               className="pv-dropdown-toggle"
@@ -201,9 +193,8 @@ export default function ProfileView() {
                 {MONTHS.map((m) => (
                   <li
                     key={m}
-                    className={`pv-dropdown-item ${
-                      m === selectedMonth ? "selected" : ""
-                    }`}
+                    className={`pv-dropdown-item ${m === selectedMonth ? "selected" : ""
+                      }`}
                     onClick={() => selectMonth(m)}
                   >
                     {m}
@@ -261,23 +252,29 @@ export default function ProfileView() {
         <div className="pv-profile-card">
           <div className="pv-profile-top">
             <div className="pv-profile-photo-wrap">
-              {profile.photoUrl ? (
+              {myProfile?.updatePhoto ? (
                 // blurred photo for privacy in main card
                 <img
-                  src={profile.photoUrl}
-                  alt="profile"
-                  className="pv-profile-photo blurred"
+                  src={getImageUrl(myProfile?.updatePhoto, myProfile?.gender)}
+                  alt={myProfile?.firstName}
+                  className="pv-profile-photo"
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      myProfile?.gender === "Female"
+                        ? "/placeholder_girl.png"
+                        : "/placeholder_boy.png";
+                  }}
                 />
               ) : (
-                <div className="pv-profile-placeholder blurred">
+                <div className="pv-profile-placeholder">
                   <span>Photo</span>
                 </div>
               )}
             </div>
 
             <div className="pv-profile-actions">
-              <h3 className="pv-profile-name">{profile.name}</h3>
-              <button className="pv-edit-btn" onClick={openEditModal}>
+              <h3 className="pv-profile-name">{myProfile?.firstName + " " + myProfile?.lastName}</h3>
+              <button className="pv-edit-btn" onClick={() => { navigate("/dashboard/editProfile") }}>
                 <FiEdit /> EDIT PROFILE
               </button>
             </div>
@@ -285,8 +282,7 @@ export default function ProfileView() {
 
           <div className="pv-profile-body">
             <p className="pv-profile-desc">
-              Short bio or status — keep it concise. This matches the screenshot
-              style.
+              {myProfile?.aboutYourself || "No description provided."}
             </p>
             <div className="pv-profile-footer">
               <div className="pv-small-metric">
@@ -401,66 +397,6 @@ export default function ProfileView() {
           </div>
         </div>
       </div>
-
-      {/* Edit profile modal */}
-      {isModalOpen && (
-        <div className="pv-modal-overlay" onClick={closeModal}>
-          <div
-            className="pv-modal"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            role="dialog"
-            aria-modal="true"
-          >
-            <h3>Edit profile</h3>
-            <div className="pv-modal-body">
-              <div className="pv-upload-column">
-                <div className="pv-upload-preview">
-                  {uploadPreview ? (
-                    <img src={uploadPreview} alt="preview" />
-                  ) : (
-                    <div className="pv-upload-placeholder">No photo</div>
-                  )}
-                </div>
-
-                <div className="pv-upload-actions">
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    style={{ display: "none" }}
-                    onChange={handleFileChange}
-                  />
-                  <button className="pv-upload-btn" onClick={triggerFileInput}>
-                    <FiCamera /> Camera / Upload
-                  </button>
-                </div>
-              </div>
-
-              <div className="pv-form-column">
-                <label>
-                  Full name
-                  <input
-                    type="text"
-                    value={editName}
-                    onChange={(e) => setEditName(e.target.value)}
-                  />
-                </label>
-
-                <div className="pv-modal-actions">
-                  <button className="pv-btn-secondary" onClick={closeModal}>
-                    Cancel
-                  </button>
-                  <button className="pv-btn-primary" onClick={handleSaveProfile}>
-                    Save changes
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

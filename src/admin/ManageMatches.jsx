@@ -3,85 +3,33 @@ import "../styleSheets/ManageMatches.css";
 import { TbHeartHandshake } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
-
-// --- MOCK USERS & MATCHES ---
-const USERS = {
-  u1: {
-    id: "u1",
-    name: "Aarushi Sharma",
-    age: 24,
-    gender: "Female",
-    height: `5'4"`,
-    city: "Hyderabad",
-    community: "Hindu | Brahmin",
-    job: "Software Engineer",
-    education: "B.Tech",
-    image: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg",
-    bio: "Loves cooking and travelling.",
-  },
-  u2: {
-    id: "u2",
-    name: "Arjun Reddy",
-    age: 27,
-    gender: "Male",
-    height: `5'9"`,
-    city: "Bangalore",
-    community: "Hindu | Reddy",
-    job: "Business Analyst",
-    education: "MBA",
-    image: "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg",
-    bio: "Enjoys hiking and reading.",
-  },
-  u3: {
-    id: "u3",
-    name: "Sneha Patil",
-    age: 25,
-    gender: "Female",
-    height: `5'5"`,
-    city: "Pune",
-    community: "Hindu | Maratha",
-    job: "Doctor",
-    education: "MBBS",
-    image: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg",
-    bio: "Cooking and sports lover.",
-  },
-  u4: {
-    id: "u4",
-    name: "Rohit Verma",
-    age: 29,
-    gender: "Male",
-    height: `6'0"`,
-    city: "Delhi",
-    community: "Hindu | Kayastha",
-    job: "Civil Engineer",
-    education: "M.Tech",
-    image: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
-    bio: "Travels and photography.",
-  },
-};
-
-const MATCHES = [
-  { id: 1, a: "u1", b: "u2", note: "High compatibility" },
-  { id: 2, a: "u3", b: "u4", note: "Good location & career match" },
-];
+import axios from "axios";
+import backendIP from "../api/api";
 
 export default function ManageMatches() {
-  // const [matches] = useState(MATCHES);
+  const dispatch = useDispatch();
+
+  const { profiles } = useSelector((state) => state.profiles);
+  const { id: myId } = useSelector((state) => state.auth);
+
+  const [matches, setMatches] = useState([]);
   const [activeProfile, setActiveProfile] = useState(null);
   const [anchorRect, setAnchorRect] = useState(null);
   const [viewport, setViewport] = useState({ w: 0, h: 0 });
-  const [loading, setLoading] = useState(true);
-  const [matches, setMatches] = useState([]);
-  const { profiles } = useSelector((state) => state.profiles);
-  const dispatch = useDispatch();
 
-  // 🔹 Fetch accepted matches
+  /* -----------------------------------
+     Fetch ACCEPTED friends
+  ----------------------------------- */
   useEffect(() => {
     const fetchMatches = async () => {
       try {
         const res = await axios.get(`${backendIP}/friends/all`);
-        setMatches(res.data || []);
-        console.log("Fetched matches: ", res.data);
+
+        const accepted = res.data.filter(
+          (m) => m.status?.toUpperCase() === "ACCEPTED"
+        );
+
+        setMatches(accepted || []);
       } catch (err) {
         console.error("Error fetching matches", err);
       }
@@ -90,29 +38,54 @@ export default function ManageMatches() {
     fetchMatches();
   }, []);
 
-  // 🔹 Fetch all profiles (for images)
+  /* -----------------------------------
+     Fetch all profiles
+  ----------------------------------- */
   useEffect(() => {
     dispatch(fetchUserProfiles());
-    setLoading(false);
-  }, []);
+  }, [dispatch]);
 
+  /* -----------------------------------
+     Viewport for popover positioning
+  ----------------------------------- */
   useEffect(() => {
     const update = () =>
       setViewport({ w: window.innerWidth, h: window.innerHeight });
+
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  const findUser = (id) => USERS[id] || null;
+  /* -----------------------------------
+     Helpers
+  ----------------------------------- */
+  const getProfileById = (id) =>
+    profiles.find((p) => p.id === id);
 
-  const openAt = (userId, e) => {
+  const friendPairs = matches
+    .map((m) => {
+      const userA = getProfileById(m.senderId);
+      const userB = getProfileById(m.receiverId);
+
+      if (!userA || !userB) return null;
+
+      return {
+        id: m.id,
+        a: userA,
+        b: userB,
+      };
+    })
+    .filter(Boolean);
+
+  /* -----------------------------------
+     Popover handlers
+  ----------------------------------- */
+  const openAt = (profile, e) => {
     e.stopPropagation();
-    const u = findUser(userId);
-    if (!u) return;
     const rect = e.currentTarget.getBoundingClientRect();
     setAnchorRect(rect);
-    setActiveProfile(u);
+    setActiveProfile(profile);
   };
 
   const closePopover = () => {
@@ -122,339 +95,127 @@ export default function ManageMatches() {
 
   const getPopoverStyle = () => {
     if (!anchorRect) return { display: "none" };
+
     const popupW = 380;
-    const popupH = 300;
+    const popupH = 320;
     const pad = 8;
-    const vw = viewport.w || window.innerWidth;
-    const vh = viewport.h || window.innerHeight;
 
     let left = anchorRect.right + pad;
     let top = anchorRect.top;
 
-    if (left + popupW > vw - 12) left = anchorRect.left - popupW - pad;
-    if (top + popupH > vh - 12) top = Math.max(12, vh - popupH - 12);
+    if (left + popupW > viewport.w)
+      left = anchorRect.left - popupW - pad;
 
-    left = Math.max(8, Math.min(left, vw - popupW - 8));
-    top = Math.max(8, Math.min(top, vh - popupH - 8));
+    if (top + popupH > viewport.h)
+      top = viewport.h - popupH - pad;
 
     return {
       position: "fixed",
       left,
       top,
       width: popupW,
-      maxHeight: popupH,
       zIndex: 3000,
       background: "#fff",
       borderRadius: 10,
       padding: 12,
       boxShadow: "0 12px 30px rgba(0,0,0,0.14)",
-      overflow: "auto",
-      border: "1px solid #eee",
     };
   };
 
-  const handleMessage = (user) => {
-    alert(`Open chat with ${user.name} (mock)`);
+  const getImageUrl = (photo, gender) => {
+    if (!photo) {
+      return gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+    }
+
+    if (photo.startsWith("blob:") || photo.startsWith("http")) {
+      return photo;
+    }
+
+    // filename from backend → /uploads/
+    return `${backendIP.replace("/api", "")}/profile-photos/${photo}`;
   };
 
+  /* -----------------------------------
+     Render
+  ----------------------------------- */
   return (
     <div className="mm-container">
       <h2 className="mm-title">Matched Profiles</h2>
 
       <div className="mm-list">
-        {matches.map((m) => {
-          const A = findUser(m.a);
-          const B = findUser(m.b);
-          return (
-            <div key={m.id} className="mm-pair-card">
-              {/* Left user */}
-              <div className="mm-user">
-                <img
-                  src={A.image}
-                  alt={A.name}
-                  className="mm-img"
-                  onClick={(e) => openAt(A.id, e)}
-                />
-                <div className="mm-info">
-                  <h4>{A.name}</h4>
-                  <p>
-                    {A.age} yrs • {A.height}
-                  </p>
-                  <p>{A.city}</p>
-                </div>
-              </div>
+        {friendPairs.map((m) => (
+          <div key={m.id} className="mm-pair-card">
 
-              {/* center note + heart */}
-              <div className="mm-center">
-                <div className="mm-note">{m.note}</div>
-                <div className="mm-heart text-danger"><TbHeartHandshake /></div>
-              </div>
-
-              {/* Right user */}
-              <div className="mm-user mm-user-right">
-                <div className="mm-info">
-                  <h4>{B.name}</h4>
-                  <p>
-                    {B.age} yrs • {B.height}
-                  </p>
-                  <p>{B.city}</p>
-                </div>
-                <img
-                  src={B.image}
-                  alt={B.name}
-                  className="mm-img"
-                  onClick={(e) => openAt(B.id, e)}
-                />
-              </div>
-
-              {/* actions column: 3 equal curved buttons */}
-              <div className="mm-actions">
-                <span className="mm-matched-tag">Matched ✓</span>
-                <button
-                  className="mm-view-btn"
-                  onClick={(e) => openAt(A.id, e)}
-                >
-                  View Aarushi Sharma
-                </button>
-                <button
-                  className="mm-view-btn"
-                  onClick={(e) => openAt(B.id, e)}
-                >
-                  View Arjun Reddy
-                </button>
+            {/* Left user */}
+            <div className="mm-user">
+              <img
+                src={getImageUrl(m.a.updatePhoto, m.a.gender)}
+                alt={m.a.firstName}
+                className="mm-img"
+                onClick={(e) => openAt(m.a, e)}
+              />
+              <div className="mm-info">
+                <h4>{m.a.firstName} {m.a.lastName}</h4>
+                <p>{m.a.age} yrs</p>
+                <p>{m.a.city}</p>
               </div>
             </div>
-          );
-        })}
+
+            {/* Center */}
+            <div className="mm-center">
+              <div className="mm-note">Matched</div>
+              <div className="mm-heart text-danger">
+                <TbHeartHandshake />
+              </div>
+            </div>
+
+            {/* Right user */}
+            <div className="mm-user mm-user-right">
+              <div className="mm-info">
+                <h4>{m.b.firstName} {m.b.lastName}</h4>
+                <p>{m.b.age} yrs</p>
+                <p>{m.b.city}</p>
+              </div>
+              <img
+                src={getImageUrl(m.b.updatePhoto, m.b.gender)}
+                alt={m.b.firstName}
+                className="mm-img"
+                onClick={(e) => openAt(m.b, e)}
+              />
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* popover */}
+      {/* Popover */}
       {activeProfile && (
         <>
           <div
             onClick={closePopover}
-            style={{
-              position: "fixed",
-              inset: 0,
-              zIndex: 2500,
-              background: "transparent",
-            }}
+            style={{ position: "fixed", inset: 0, zIndex: 2500 }}
           />
+
           <div style={getPopoverStyle()} onClick={(e) => e.stopPropagation()}>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <button
-                onClick={closePopover}
-                style={{
-                  border: "none",
-                  background: "#222",
-                  color: "#fff",
-                  borderRadius: 6,
-                  width: 28,
-                  height: 28,
-                  cursor: "pointer",
-                }}
-              >
-                ✕
-              </button>
+            <div style={{ textAlign: "right" }}>
+              <button onClick={closePopover}>✕</button>
             </div>
 
-            <div style={{ display: "flex", gap: 12 }}>
-              <div style={{ flex: "0 0 120px" }}>
-                <img
-                  src={activeProfile.image}
-                  alt={activeProfile.name}
-                  style={{
-                    width: 120,
-                    height: 140,
-                    objectFit: "cover",
-                    borderRadius: 8,
-                  }}
-                />
-              </div>
+            <img
+              src={activeProfile.profileImage}
+              style={{ width: "100%", borderRadius: 8 }}
+              alt=""
+            />
 
-              <div style={{ flex: 1 }}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "baseline",
-                    gap: 8,
-                  }}
-                >
-                  <h3 style={{ margin: 0 }}>{activeProfile.name}</h3>
-                  <div style={{ color: "#666" }}>
-                    {activeProfile.age ? `${activeProfile.age} yrs` : ""}
-                  </div>
-                </div>
+            <h3>{activeProfile.firstName} {activeProfile.lastName}</h3>
+            <p>{activeProfile.age} yrs • {activeProfile.city}</p>
+            <p><b>Gender:</b> {activeProfile.gender}</p>
+            <p><b>Education:</b> {activeProfile.education}</p>
+            <p><b>Occupation:</b> {activeProfile.occupation}</p>
 
-                <div style={{ marginTop: 8, color: "#333" }}>
-                  <div>
-                    <strong>Gender:</strong> {activeProfile.gender || "—"}
-                  </div>
-                  <div>
-                    <strong>Religion / Community:</strong>{" "}
-                    {activeProfile.community || "—"}
-                  </div>
-                  <div>
-                    <strong>Mother Tongue:</strong> —
-                  </div>
-                </div>
-
-                <div style={{ marginTop: 10, color: "#333" }}>
-                  <div>
-                    <strong>Education:</strong>{" "}
-                    {activeProfile.education || "—"}
-                  </div>
-                  <div>
-                    <strong>Occupation:</strong> {activeProfile.job || "—"}
-                  </div>
-                  <div>
-                    <strong>Location:</strong> {activeProfile.city || "—"}
-                  </div>
-                </div>
-
-                {activeProfile.bio && (
-                  <div style={{ marginTop: 10 }}>
-                    <strong>About:</strong>
-                    <div
-                      style={{
-                        fontSize: 13,
-                        color: "#444",
-                        marginTop: 6,
-                      }}
-                    >
-                      {activeProfile.bio}
-                    </div>
-                  </div>
-                )}
-
-                <div style={{ marginTop: 12 }}>
-                  <button
-                    onClick={() => handleMessage(activeProfile)}
-                    style={{
-                      width: "100%",
-                      padding: "10px 12px",
-                      background: "#2563eb",
-                      color: "#fff",
-                      border: "none",
-                      borderRadius: 8,
-                      cursor: "pointer",
-                      fontWeight: 600,
-                    }}
-                  >
-                    Message
-                  </button>
-                </div>
-              </div>
-            </div>
+            <button className="mm-message-btn">Message</button>
           </div>
         </>
       )}
     </div>
   );
 };
-
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-// import backendIP from "../api/api";
-// import "../styleSheets/ManageMatches.css";
-
-// export default function ManageMatches() {
-//   const [matches, setMatches] = useState([]);
-//   const [profiles, setProfiles] = useState([]);
-//   const [loading, setLoading] = useState(true);
-
-//   // 🔹 Fetch accepted matches
-//   useEffect(() => {
-//     const fetchMatches = async () => {
-//       try {
-//         const res = await axios.get(`${backendIP}/friends/all`);
-//         setMatches(res.data || []);
-//       } catch (err) {
-//         console.error("Error fetching matches", err);
-//       }
-//     };
-
-//     fetchMatches();
-//   }, []);
-
-//   // 🔹 Fetch all profiles (for images)
-//   useEffect(() => {
-//     const fetchProfiles = async () => {
-//       try {
-//         const res = await axios.get(`${backendIP}/admin/profiles`);
-//         setProfiles(res.data || []);
-//       } catch (err) {
-//         console.error("Error fetching profiles", err);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchProfiles();
-//   }, []);
-
-//   // 🔹 Create image map (name -> image)
-//   const profileImageMap = {};
-//   profiles.forEach(p => {
-//     profileImageMap[p.name] = p.image;
-//   });
-
-//   // 🔹 Only ACCEPTED matches
-//   const acceptedMatches = matches.filter(
-//     m => m.status?.toUpperCase() === "ACCEPTED"
-//   );
-
-//   if (loading) return <p>Loading matches...</p>;
-
-//   return (
-//     <div className="mm-container">
-//       <h2 className="mm-title">Matched Profiles</h2>
-
-//       {acceptedMatches.length === 0 && (
-//         <p>No accepted matches found</p>
-//       )}
-
-//       <div className="mm-list">
-//         {acceptedMatches.map(match => (
-//           <div key={match.requestId} className="mm-pair-card">
-
-//             {/* 🔹 Sender */}
-//             <div className="mm-user">
-//               <img
-//                 src={
-//                   profileImageMap[match.senderName] ||
-//                   "/default-user.png"
-//                 }
-//                 alt={match.senderName}
-//                 className="mm-img"
-//               />
-//               <div className="mm-info">
-//                 <h4>{match.senderName}</h4>
-//                 <p>{match.profile}</p>
-//               </div>
-//             </div>
-
-//             <div className="mm-heart">matched</div>
-
-//             {/* 🔹 Receiver */}
-//             <div className="mm-user">
-//               <img
-//                 src={
-//                   profileImageMap[match.receiverName] ||
-//                   "/default-user.png"
-//                 }
-//                 alt={match.receiverName}
-//                 className="mm-img"
-//               />
-//               <div className="mm-info">
-//                 <h4>{match.receiverName}</h4>
-//               </div>
-//             </div>
-
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }
