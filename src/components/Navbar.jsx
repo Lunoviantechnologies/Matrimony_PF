@@ -93,7 +93,7 @@
 
 // export default Navbar;
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import UserNavbar from "./UserNavbar";
 import Login from "../pages/Login";
@@ -101,12 +101,21 @@ import { useState } from "react";
 import AdminNavbar from "../admin/AdminNavbar";
 
 const Navbar = () => {
+    const navigate = useNavigate();
     const { isLoggedIn, role } = useSelector(state => state.auth);
     const [showLogin, setShowLogin] = useState(false);
 
+    const handleDashboard = () => {
+        if (role[0] === "USER") {
+            navigate("/dashboard");
+        } else if (role[0] === "ADMIN") {
+            navigate("/admin");
+        }
+    };
+
     return (
         <nav className="navBody sticky-top container w-75 d-flex justify-content-between align-items-center">
-            <img src="/saathjanam_logo.png" height="50" />
+            <img src="/saathjanam_logo.png" height="50" onClick={handleDashboard} />
 
             <div className="d-flex gap-4 align-items-center">
 

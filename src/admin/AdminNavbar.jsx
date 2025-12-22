@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
-import Notification from "../components/Notification";
+import AdminNotification from "./AdminNotifications";
 
 const AdminNavbar = () => {
 
@@ -18,7 +18,7 @@ const AdminNavbar = () => {
 
     return (
         <>
-            <Notification />
+            <AdminNotification />
 
             <div className="dropdown">
                 <button className="btn" data-bs-toggle="dropdown">

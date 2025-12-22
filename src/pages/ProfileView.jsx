@@ -157,21 +157,6 @@ export default function ProfileView() {
   const circumference = 2 * Math.PI * 44; // r=44
   const offset = circumference - (percentage / 100) * circumference;
 
-  const getImageUrl = (photo, gender) => {
-    if (!photo) {
-      return gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
-    }
-
-    if (photo.startsWith("/")) {
-      return `${backendIP.replace("/api", "")}${photo}`;
-    }
-
-    if (photo.startsWith("blob:") || photo.startsWith("http")) {
-      return photo;
-    }
-    return `${backendIP.replace("/api", "")}/profile-photos/${photo}`;
-  };
-
   return (
     <div className="pv-container">
       <div className="pv-top">
@@ -255,7 +240,7 @@ export default function ProfileView() {
               {myProfile?.updatePhoto ? (
                 // blurred photo for privacy in main card
                 <img
-                  src={getImageUrl(myProfile?.updatePhoto, myProfile?.gender)}
+                  src={myProfile?.updatePhoto ? myProfile.updatePhoto : myProfile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
                   alt={myProfile?.firstName}
                   className="pv-profile-photo"
                   onError={(e) => {

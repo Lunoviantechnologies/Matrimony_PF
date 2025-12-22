@@ -130,6 +130,21 @@
     color: #777;
 }
 
+/* online or offline */
+
+/* .active-status {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.active-status.online {
+    color: #2ecc71;
+}
+
+.active-status.offline {
+    color: #999;
+} */
+
 /* Messages */
 .chatwindow-messages {
     flex: 1;
@@ -138,6 +153,26 @@
     display: flex;
     flex-direction: column;
     background: #f9fafb;
+}
+
+.blur-message {
+    filter: blur(6px);
+    user-select: none;
+    pointer-events: none;
+    position: relative;
+}
+
+.blur-message::after {
+    content: "Upgrade to Premium to read this message";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    filter: blur(0);
 }
 
 .chat-bubble {
@@ -151,8 +186,8 @@
 
 .my-message {
     align-self: flex-end;
-    background: #0078ff;
-    color: white;
+    background: #D9F5E4;
+    color: black;
 }
 
 .their-message {

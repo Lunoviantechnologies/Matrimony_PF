@@ -9,13 +9,14 @@ import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
+import api from "../api/axiosInstance";
 
 const ChatWindow = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { profiles } = useSelector((state) => state.profiles);
-  const { id: myId } = useSelector((state) => state.auth);
+  const { id: myId, token } = useSelector((state) => state.auth);
 
   const [acceptedList, setAcceptedList] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -23,6 +24,7 @@ const ChatWindow = () => {
   const [message, setMessage] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [isPremium, setIsPremium] = useState(false);
+  const [onlineStatus, setOnlineStatus] = useState(false);
 
   const messagesEndRef = useRef(null);
   const stompClientRef = useRef(null);
@@ -37,18 +39,31 @@ const ChatWindow = () => {
     dispatch(fetchUserProfiles());
   }, [dispatch]);
 
+  // user online or offline
+  useEffect(() => {
+    if (!selectedUser) return;
+
+    const otherUserId =
+      Number(selectedUser.senderId) === Number(myId)
+        ? selectedUser.receiverId
+        : selectedUser.senderId;
+
+    api.get(`/chat/online/${otherUserId}`)
+      .then(res => {
+        setOnlineStatus(res.data.online);
+      })
+      .catch(() => setOnlineStatus(false));
+  }, [selectedUser, myId]);
+
+
   /* FETCH ACCEPTED USERS */
   useEffect(() => {
     if (!myId) return;
 
     const fetchAcceptedRequests = async () => {
       try {
-        const received = await axios.get(
-          `${backendIP}/friends/accepted/received/${myId}`
-        );
-        const sent = await axios.get(
-          `${backendIP}/friends/accepted/sent/${myId}`
-        );
+        const received = await api.get(`/friends/accepted/received/${myId}`);
+        const sent = await api.get(`/friends/accepted/sent/${myId}`);
 
         const merged = [...received.data, ...sent.data];
         setAcceptedList(merged);
@@ -82,8 +97,7 @@ const ChatWindow = () => {
     if (!myId) return;
     if (!userId || isNaN(Number(userId))) return;
 
-    axios
-      .get(`${backendIP}/chat/conversation/${myId}/${Number(userId)}`)
+    api.get(`/chat/conversation/${myId}/${Number(userId)}`)
       .then((res) => {
         setMessages(res.data.content || []);
       })
@@ -116,7 +130,9 @@ const ChatWindow = () => {
       const client = new Client({
         webSocketFactory: () => sock,
         reconnectDelay: 5000,
-        connectHeaders: { "user-id": myId.toString() },
+        connectHeaders: {
+          Authorization: `Bearer ${token}`
+        },
 
         onConnect: () => {
           console.log("🟢 STOMP Connected as:", myId);
@@ -224,15 +240,12 @@ const ChatWindow = () => {
   const getUserImageById = (id) => {
     if (!profiles || profiles.length === 0) return "/default-avatar.png";
 
-    const user = profiles.find(
-      (p) => Number(p.id) === Number(id)
-    );
+    const user = profiles.find((p) => Number(p.id) === Number(id));
 
     if (!user || !user.updatePhoto) {
       return "/default-avatar.png";
     }
-
-    return `${backendIP.replace("/api", "")}/profile-photos/${user.updatePhoto}`;
+    return user.updatePhoto ? user.updatePhoto : user.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
   };
 
   return (
@@ -320,8 +333,7 @@ const ChatWindow = () => {
               /> */}
               <img
                 src={getUserImageById(
-                  Number(selectedUser.senderId) === Number(myId)
-                    ? selectedUser.receiverId : selectedUser.senderId
+                  Number(selectedUser.senderId) === Number(myId) ? selectedUser.receiverId : selectedUser.senderId
                 )}
                 alt="User"
                 className="chatwindow-avatar"
@@ -334,6 +346,11 @@ const ChatWindow = () => {
                     ? selectedUser.receiverName
                     : selectedUser.senderName}
                 </h4>
+                {/* <span
+                  className={`active-status ${onlineStatus ? "online" : "offline"}`}
+                >
+                  {onlineStatus ? "Active now" : "Offline"}
+                </span> */}
                 <span className="active-status">Active now</span>
               </div>
             </div>
@@ -351,7 +368,10 @@ const ChatWindow = () => {
                 : "their-message"
                 }`}
             >
-              <div>{msg.message}</div>
+              <div className={!isPremium && Number(msg.senderId) !== Number(myId) ? "blur-message" : ""}>
+                {!isPremium && Number(msg.senderId) !== Number(myId) ? "Premium message" : msg.message}
+              </div>
+
               <div className="chat-time">
                 {new Date(msg.timestamp).toLocaleTimeString([], {
                   hour: "2-digit",

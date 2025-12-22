@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styleSheets/raiseTicket.css";
 import backendIP from "../api/api";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import api from "../api/axiosInstance";
 
 const RaiseTicket = () => {
+  const { id } = useSelector(state => state.auth);
   const [form, setForm] = useState({
     category: "",
     name: "",
     email: "",
     phone: "",
     message: "",
-    memberId: "",
+    memberId: id,
   });
 
   const [loading, setLoading] = useState(false);
@@ -60,17 +64,14 @@ const RaiseTicket = () => {
     console.log("Sending fixed payload:", payload);
 
     try {
-      await axios.post(
-        `${backendIP}/api/tickets`,
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+      await api.post(`/tickets`, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
       );
 
-      alert("✅ Ticket submitted successfully");
+      toast.success("Ticket raised successfully");
 
       // ✅ Reset form after success
       setForm({
@@ -84,7 +85,7 @@ const RaiseTicket = () => {
 
     } catch (error) {
       console.log("Backend error:", error.response?.data);
-      alert("❌ " + (error.response?.data?.message || "Submission Failed"));
+      toast.error("Ticket raised Failed");
     } finally {
       setLoading(false);
     }
@@ -146,6 +147,7 @@ const RaiseTicket = () => {
           <input
             type="text"
             name="memberId"
+            disabled
             placeholder="Example: SJ123456"
             value={form.memberId}
             onChange={handleChange}
@@ -163,7 +165,7 @@ const RaiseTicket = () => {
           <button type="submit" className="ticket-btn" disabled={loading}>
             {loading ? "Submitting..." : "Submit Ticket"}
           </button>
-        </form>  
+        </form>
       </div>
     </div>
   );

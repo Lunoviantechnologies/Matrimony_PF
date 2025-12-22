@@ -8,7 +8,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import api from "../api/axiosInstance";
 
-const Notification = ({ onNavigate }) => {
+const AdminNotification = ({ onNavigate }) => {
   const { id: myId, token } = useSelector((state) => state.auth);
 
   const [notifications, setNotifications] = useState([]);
@@ -68,7 +68,7 @@ const Notification = ({ onNavigate }) => {
         console.log("🟢 WS CONNECTED for user:", myId);
 
         client.subscribe(
-          `/user/queue/notifications/user`,
+          `/user/queue/notifications/admin`,
           (message) => {
             console.log("📨 Live notification received:", message);
 
@@ -179,4 +179,4 @@ const Notification = ({ onNavigate }) => {
   );
 };
 
-export default Notification;
+export default AdminNotification;

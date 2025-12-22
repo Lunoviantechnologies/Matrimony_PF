@@ -2,6 +2,7 @@ import React from "react";
 import { Card, CardContent, Typography, TextField, Button } from "@mui/material";
 import axios from "axios";
 import backendIP from "../../api/api";
+import api from "../../api/axiosInstance";
 
 export default function SecuritySettings({
     securityPassword,
@@ -25,7 +26,7 @@ export default function SecuritySettings({
             return;
         }
 
-        axios.put(`${backendIP}/auth/change-password/${userId}`, {
+        api.put(`/auth/change-password/${userId}`, {
             currentPassword: oldPassword,
             newPassword,
             confirmPassword,

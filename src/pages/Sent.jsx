@@ -4,6 +4,7 @@ import backendIP from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
+import { toast } from "react-toastify";
 
 const SentRequests = () => {
 
@@ -26,9 +27,10 @@ const SentRequests = () => {
       const response = await api.delete(`/friends/sent/delete/${cancelRequestId}`);
       console.log("Request cancelled:", response.data);
       setSentRequests(sentRequests.filter(req => req.requestId !== cancelRequestId));
-      alert("Request cancelled successfully");
+      toast.success("Request cancelled successfully");
     } catch (error) {
       console.error("Error cancelling request:", error);
+      toast.error("Failed to cancel request");
     };
   };
 
@@ -49,7 +51,7 @@ const SentRequests = () => {
 
       return {
         ...req,
-        image: profile?.updatePhoto ? `${backendIP.replace("/api", "")}/profile-photos/${profile.updatePhoto}` : "/default-user.png",
+        image: profile?.updatePhoto ? profile.updatePhoto : profile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png",
       };
     });
   }, [filteredSent, profiles, id]);

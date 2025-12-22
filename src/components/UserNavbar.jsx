@@ -16,7 +16,7 @@ const UserNavbar = () => {
     const navigate = useNavigate();
 
     const userName = myProfile?.firstName || "User";
-    const userPhoto = myProfile?.updatePhoto ? `${backendIP.replace("/api", "")}${myProfile.updatePhoto}` : "/default-user.png";
+    const userPhoto = myProfile?.updatePhoto ? myProfile.updatePhoto : myProfile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
 
     useEffect(() => {
         if (id && role[0] === "USER") {

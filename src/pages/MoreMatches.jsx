@@ -116,18 +116,6 @@ const MoreMatches = () => {
       });
   }, [profiles, filters, allHiddenIds, myProfile, id]);
 
-  const getImageUrl = (photo, gender) => {
-    if (!photo) {
-      return gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
-    }
-
-    if (photo.startsWith("blob:") || photo.startsWith("http")) {
-      return photo;
-    }
-
-    // filename from backend → /uploads/
-    return `${backendIP.replace("/api", "")}/profile-photos/${photo}`;
-  };
   console.log("Filtered Profiles:", filteredProfiles);
 
   return (
@@ -141,7 +129,7 @@ const MoreMatches = () => {
           return (
             <article className="profile-card" key={p.id}>
               <div className="image-box">
-                <img src={getImageUrl(p.updatePhoto, p.gender)}
+                <img src={p.updatePhoto ? p.updatePhoto : p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
                   alt={`${p.firstName} ${p.lastName}`}
                   className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
                   onError={(e) => {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardContent, Typography, TextField, MenuItem, Switch, FormControlLabel, Button } from "@mui/material";
 import axios from "axios";
 import backendIP from "../../api/api";
+import api from "../../api/axiosInstance";
 
 export default function PrivacySettings({ userId }) {
     const [profileVisibility, setProfileVisibility] = useState("Everyone");
@@ -13,7 +14,7 @@ export default function PrivacySettings({ userId }) {
         // Fetch current privacy settings
         const fetchPrivacySettings = async () => {
             try {
-                const response = await axios.get(`${backendIP}/profiles/${userId}/privacy`);
+                const response = await api.get(`/profiles/${userId}/privacy`);
                 setProfileVisibility(response.data.profileVisibility || "Everyone");
                 setHideProfilePhoto(response.data.hideProfilePhoto || false);
             } catch (error) {
@@ -29,7 +30,7 @@ export default function PrivacySettings({ userId }) {
     const handleSave = async () => {
         setSaving(true);
         try {
-            await axios.put(`${backendIP}/profiles/${userId}/privacy`, {
+            await api.put(`/profiles/${userId}/privacy`, {
                 profileVisibility,
                 hideProfilePhoto
             });

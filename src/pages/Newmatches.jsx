@@ -87,13 +87,6 @@ const NewMatches = () => {
     return Math.floor(ageDifMs / (365.25 * 24 * 60 * 60 * 1000));
   };
 
-  // Helper to get profile image
-  const getImageUrl = (photo, gender) => {
-    if (!photo) return gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
-    if (photo.startsWith("blob:") || photo.startsWith("http")) return photo;
-    return `${backendIP.replace("/api", "")}/profile-photos/${photo}`;
-  };
-
   const now = new Date();
   // Date 4 days ago (including today)
   const fourDaysAgo = new Date();
@@ -142,7 +135,7 @@ const NewMatches = () => {
             <article className="profile-card" key={p.id}>
               <div className="image-box">
                 <img
-                  src={getImageUrl(p.updatePhoto, p.gender)}
+                  src={p.updatePhoto ? p.updatePhoto : p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
                   alt={`${p.firstName || ""} ${p.lastName || ""}`}
                   className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
                   onError={(e) => {

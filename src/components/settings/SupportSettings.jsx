@@ -4,6 +4,7 @@ import backendIP from "../../api/api";
 import React from "react";
 import { logout } from "../../redux/slices/authSlice";
 import { useDispatch } from "react-redux";
+import api from "../../api/axiosInstance";
 
 export default function SupportSettings({ userId }) {
     const dispatch = useDispatch();
@@ -11,7 +12,7 @@ export default function SupportSettings({ userId }) {
     const handleDeleteAccount = async () => {
         if (window.confirm("Are you sure you want to delete your account?")) {
             try {
-                await axios.delete(`${backendIP}/profiles/delete/${userId}`);
+                await api.delete(`/profiles/delete/${userId}`);
                 alert("Account deleted successfully.");
                 dispatch(logout());
             } catch (error) {

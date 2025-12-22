@@ -15,7 +15,8 @@ export const loginUser = createAsyncThunk(
                 token, 
                 id : decodedToken.id,
                 email : decodedToken.sub,
-                role : decodedToken.roles
+                role : decodedToken.roles,
+                exp: decodedToken.exp
             }
         } catch (err) {
             return rejectWithValue(err.response?.data || "Login failed");

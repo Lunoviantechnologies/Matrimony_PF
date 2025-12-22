@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../styleSheets/EditProfile.css";
 import { FaCamera, FaChevronRight, FaEdit, FaPlus } from "react-icons/fa";
-import axios from "axios";
 import backendIP from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import imageCompression from "browser-image-compression";
 import api from "../api/axiosInstance";
+import { toast } from "react-toastify";
 
 export default function EditProfile() {
   const { id, myProfile } = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(true);
-  const [profileData, setProfileData] = useState([]); // full profile object
+  const [profileData, setProfileData] = useState({});
   const [photo, setPhoto] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
 
@@ -67,7 +67,7 @@ export default function EditProfile() {
         state: profileData.state || "",
         sports: profileData.sports || "",
         aboutYourself: profileData.aboutYourself || "",
-        isChildrenLivingWithYou: profileData.isChildrenLivingWithYou ? "Yes" : "No" || "",
+        isChildrenLivingWithYou: profileData.isChildrenLivingWithYou ? "true" : "false" || "",
       },
       basics: {
         height: profileData.height || "",
@@ -133,11 +133,11 @@ export default function EditProfile() {
       setProfileData(updatedProfile);
       setOpenModal(null);
       setEditBuffer({});
-      alert("Saved successfully ✅");
+      toast.success("Save updated successfully");
 
     } catch (err) {
       console.error("Error saving section:", err);
-      alert("Save failed ❌");
+      toast.error("Failed to save changes");
     }
   };
 
@@ -178,15 +178,9 @@ export default function EditProfile() {
 
       // upload compressed file
       await uploadPhoto(compressedFile);
-
-      // revoke preview url after some time (cleanup)
-      setTimeout(() => {
-        try { URL.revokeObjectURL(previewUrl); } catch (e) { }
-      }, 30_000);
-
     } catch (err) {
       console.error("Compression/upload failed", err);
-      alert("Failed to compress or upload image.");
+      toast.error("Failed to compress or upload image");
     }
   };
 
@@ -216,30 +210,40 @@ export default function EditProfile() {
         (payload.fileName ? `/profile-photos/${payload.fileName}` : null);
 
       if (newUrlRaw) {
-        // Ensure cache-busting (either server sets unique filename or add timestamp)
-        const newUrl = `${newUrlRaw}${newUrlRaw.includes("?") ? "&" : "?"}t=${Date.now()}`;
-        setPhoto(newUrl);
+        const img = new Image();
+        img.src = newUrlRaw;
 
-        // also update profileData locally so UI shows the updated value
-        setProfileData((p) => ({ ...p, updatePhoto: newUrlRaw, photoUrl: newUrlRaw }));
-      } else {
-        // fallback: server didn't return a URL — keep preview (we already set it)
+        img.onload = () => {
+          setPhoto(newUrlRaw);
+          setProfileData(p => ({ ...p, updatePhoto: newUrlRaw }));
+        };
+
+        // img.onerror = () => {
+        //   toast.error("Image failed to load");
+        // };
+      }
+      else {
         console.warn("Upload success but no returned URL from server. Using preview until refresh.");
       }
 
-      // optional: refetch if you need other fields updated from backend
-      // await dispatch(fetchMyProfile(id));
-
-      alert("Photo updated successfully!");
+      toast.success("Photo uploaded successfully");
 
     } catch (err) {
       console.error("Photo upload failed:", err);
-      alert("Failed to upload photo");
+      toast.error("Photo upload failed");
     } finally {
       setUploadProgress(0);
     }
   };
   // console.log("updatePhoto : ", profileData.updatePhoto);
+
+  const getProfileImage = () => {
+    if (photo) return photo;
+
+    if (profileData?.updatePhoto) return profileData.updatePhoto;
+
+    return profileData?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+  };
 
   const Row = ({ label, value, onAction, actionText }) => (
     <div className="row">
@@ -268,11 +272,8 @@ export default function EditProfile() {
           <div className="photo-card">
             <div className="photo-box">
               <img
-                src={photo?.startsWith("blob:") ? photo : photo
-                  ? `${backendIP.replace("/api", "")}${photo}` : profileData.updatePhoto
-                    ? `${backendIP.replace("/api", "")}${profileData.updatePhoto}`
-                    : "/default-user.png"
-                }
+                key={photo}
+                src={getProfileImage()}
                 alt="Profile"
                 className="photo-preview"
               />
@@ -494,7 +495,7 @@ export default function EditProfile() {
               <input value={buffer.bodyType || ""} onChange={(e) => handleEditInputLocal("bodyType", e.target.value)} />
             </label>
             <label className="field"><div className="field-label">Complexion</div>
-              <input value={buffer.complexion || ""} onChange={(e) => handleEditInputLocal("complexion", e.target.value)} />
+              <input value={buffer.complexion || ""} onChange={(e) => handleEditInputLocal("complexion", e.target.value)} placeholder="Skin tone..."/>
             </label>
           </div>
         );
@@ -636,7 +637,7 @@ export default function EditProfile() {
             </label>
 
             <label className="field"><div className="field-label">Living with Childrens</div>
-              <input value={buffer.isChildrenLivingWithYou || ""} onChange={(e) => handleEditInputLocal("isChildrenLivingWithYou", e.target.value)} placeholder="If divorced or widow have childern with you type true or false..."/>
+              <input value={buffer.isChildrenLivingWithYou || ""} onChange={(e) => handleEditInputLocal("isChildrenLivingWithYou", e.target.value)} placeholder="If divorced or widow have childern with you type true or false..." />
             </label>
 
             <div className="field">
@@ -653,7 +654,7 @@ export default function EditProfile() {
         return (
           <div className="modal-form">
             <label className="field"><div className="field-label">Age Range</div>
-              <input value={buffer.partnerAgeRange || ""} onChange={(e) => handleEditInputLocal("partnerAgeRange", e.target.value)} />
+              <input value={buffer.partnerAgeRange || ""} onChange={(e) => handleEditInputLocal("partnerAgeRange", e.target.value)} placeholder="type like 18 - 25 etc..."/>
             </label>
 
             <label className="field"><div className="field-label">Religion</div>

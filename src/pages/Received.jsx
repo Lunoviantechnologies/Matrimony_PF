@@ -5,6 +5,7 @@ import backendIP from "../api/api";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
+import { toast } from "react-toastify";
 
 const Received = () => {
 
@@ -26,10 +27,11 @@ const Received = () => {
     try {
       const response = await api.post(`/friends/respond/${requestId}?accept=true`);
       console.log("Request accepted:", response.data);
-      alert("Request accepted successfully");
+      toast.success("Request accepted successfully");
       setReceivedRequests(receivedRequests.filter(req => req.requestId !== requestId));
     } catch (error) {
       console.error("Error accepting request:", error);
+      toast.error("Failed to accept request");
     }
   };
 
@@ -37,10 +39,11 @@ const Received = () => {
     try {
       const response = await api.post(`/friends/respond/${requestId}?accept=false`);
       console.log("Request rejected:", response.data);
-      alert("Request rejected successfully");
+      toast.success("Request rejected successfully");
       setReceivedRequests(receivedRequests.filter(req => req.requestId !== requestId));
     } catch (error) {
       console.error("Error rejecting request:", error);
+      toast.error("Failed to reject request");
     }
   };
 
@@ -59,7 +62,7 @@ const Received = () => {
 
       return {
         ...req,
-        image: profile?.updatePhoto ? `${backendIP.replace("/api", "")}/profile-photos/${profile.updatePhoto}` : "/default-user.png",
+        image: profile?.updatePhoto ? profile.updatePhoto : profile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png",
       };
     });
   }, [receivedRequests, profiles, id]);

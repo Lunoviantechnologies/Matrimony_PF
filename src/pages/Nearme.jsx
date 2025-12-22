@@ -30,11 +30,11 @@ const Nearme = () => {
     dispatch(fetchUserProfiles());
     dispatch(fetchMyProfile(id));
 
-    axios.get(`${backendIP}/friends/sent/${id}`)
+    api.get(`/friends/sent/${id}`)
       .then(res => setSentRequests(res.data))
       .catch(err => console.error(err));
 
-    axios.get(`${backendIP}/friends/received/${id}`)
+    api.get(`/friends/received/${id}`)
       .then(res => setReceivedRequests(res.data))
       .catch(err => console.error(err));
 
@@ -112,19 +112,6 @@ const Nearme = () => {
       });
   }, [profiles, filters, allHiddenIds, myProfile, id]);
 
-  const getImageUrl = (photo, gender) => {
-    if (!photo) {
-      return gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
-    }
-
-    if (photo.startsWith("blob:") || photo.startsWith("http")) {
-      return photo;
-    }
-
-    // filename from backend → /uploads/
-    return `${backendIP.replace("/api", "")}/profile-photos/${photo}`;
-  };
-
   return (
     <div className="profile-main-container">
       <h2 className="profile-title">Near Matches For You</h2>
@@ -139,7 +126,7 @@ const Nearme = () => {
               return (
                 <article className="profile-card" key={p.id}>
                   <div className="image-box">
-                    <img src={getImageUrl(p.updatePhoto, p.gender)}
+                    <img src={p.updatePhoto ? p.updatePhoto : p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
                       alt={`${p.firstName} ${p.lastName}`}
                       className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
                       onError={(e) => {

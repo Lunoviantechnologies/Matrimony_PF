@@ -14,7 +14,7 @@ const Accepted = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  console.log("User ID in Accepted component:", profiles);
   useEffect(() => {
     if (!id) return;
 
@@ -51,7 +51,7 @@ const Accepted = () => {
 
       return {
         ...req,
-        image: profile?.updatePhoto ? `${backendIP.replace("/api", "")}/profile-photos/${profile.updatePhoto}` : "/default-user.png",
+        image: profile?.updatePhoto ? profile.updatePhoto : profile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png",
       };
     });
   }, [acceptedRequests, profiles, id]);

@@ -146,19 +146,6 @@ const Dashboard = () => {
     }
   };
 
-  const getImageUrl = (photo, gender) => {
-    if (!photo) {
-      return gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
-    }
-
-    if (photo.startsWith("blob:") || photo.startsWith("http")) {
-      return photo;
-    }
-
-    // filename from backend → /uploads/
-    return `${backendIP.replace("/api", "")}/profile-photos/${photo}`;
-  };
-
   const receivedWithImages = useMemo(() => {
     if (!receivedRequests.length || !profiles.length) return [];
 
@@ -170,7 +157,7 @@ const Dashboard = () => {
 
       return {
         ...req,
-        image: profile?.updatePhoto ? `${backendIP.replace("/api", "")}/profile-photos/${profile.updatePhoto}` : "/default-user.png",
+        image: profile?.updatePhoto ? profile.updatePhoto : profile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png",
       };
     });
   }, [receivedRequests, profiles, id]);
@@ -187,7 +174,7 @@ const Dashboard = () => {
           {filteredProfiles.map((i) => (
             <div className="matchSection_map" key={i.id}>
               <img
-                src={getImageUrl(i.updatePhoto, i.gender)} alt={i.firstName}
+                src={i.updatePhoto ? i.updatePhoto : i.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"} alt={i.firstName}
                 style={{ objectFit: "cover", }}
                 className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
                 onError={(e) => {
@@ -325,7 +312,7 @@ const Dashboard = () => {
           )}
         </div>
 
-        {/* Recent Chat List */}
+        {/* Premium Members */}
         <div className="chatList">
           <h3 style={{ color: "#695019", marginBottom: 20 }}>
             <FaCrown /> Premium Members
@@ -334,7 +321,7 @@ const Dashboard = () => {
           {premiumFilteredProfiles.map((i) => (
             <div className="chatList_map" key={i.id}>
               <img
-                src={getImageUrl(i.updatePhoto, i.gender)}
+                src={i.updatePhoto ? i.updatePhoto : i.gender === "Female"  ? "/placeholder_girl.png" : "/placeholder_boy.png"}
                 alt={i.firstName}
                 className={`premium-img ${!myProfile?.premium ? "premiumblur-image" : ""}`}
                 style={{ width: 60, height: 60, borderRadius: 15, objectFit: "cover", marginRight: 15, }} />
