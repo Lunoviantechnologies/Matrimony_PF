@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo } from "react";
 import "../styleSheets/Dashboard.css";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import backendIP from "../api/api";
 import { useNavigate } from "react-router-dom";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import { FaCrown } from "react-icons/fa";
 import { RiSecurePaymentFill } from "react-icons/ri";
+import api from "../api/axiosInstance";
 
 const Dashboard = () => {
 
@@ -66,14 +66,23 @@ const Dashboard = () => {
     return endDate;
   };
 
+  const isPlanActive = (payment) => {
+    if (!payment?.createdAt || !payment?.planCode) return false;
+
+    const endDate = getPlanEndDate(payment.createdAt, payment.planCode);
+    if (!endDate) return false;
+
+    return new Date() <= new Date(endDate);
+  };
+
   useEffect(() => {
     const fetchAcceptedRequests = async () => {
       try {
         // 1) Requests YOU accepted (receiver = you)
-        const receivedAccepted = await axios.get(`${backendIP}/friends/accepted/received/${id}`);
+        const receivedAccepted = await api.get(`/friends/accepted/received/${id}`);
 
         // 2) Requests THEY accepted (sender = you)
-        const sentAccepted = await axios.get(`${backendIP}/friends/accepted/sent/${id}`);
+        const sentAccepted = await api.get(`/friends/accepted/sent/${id}`);
 
         // Combine both
         const merged = [...receivedAccepted.data, ...sentAccepted.data];
@@ -87,7 +96,7 @@ const Dashboard = () => {
 
     fetchAcceptedRequests();
 
-    axios.get(`${backendIP}/friends/received/${id}`).then((response) => {
+    api.get(`/friends/received/${id}`).then((response) => {
       console.log("Received requests:", response.data);
       setReceivedRequests(response.data);
     }).catch((error) => {
@@ -97,10 +106,10 @@ const Dashboard = () => {
     const fetchRejectedRequests = async () => {
       try {
         // 1) Requests YOU rejected (receiver = you)
-        const receivedRejected = await axios.get(`${backendIP}/friends/rejected/received/${id}`);
+        const receivedRejected = await api.get(`/friends/rejected/received/${id}`);
 
         // 2) Requests THEY rejected (sender = you)
-        const sentRejected = await axios.get(`${backendIP}/friends/rejected/sent/${id}`);
+        const sentRejected = await api.get(`/friends/rejected/sent/${id}`);
 
         // Combine both
         const merged = [...receivedRejected.data, ...sentRejected.data];
@@ -117,7 +126,7 @@ const Dashboard = () => {
 
   const handleAccept = async (requestId) => {
     try {
-      const response = await axios.post(`${backendIP}/friends/respond/${requestId}?accept=true`);
+      const response = await api.post(`/friends/respond/${requestId}?accept=true`);
       console.log("Request accepted:", response.data);
       alert("Request accepted successfully");
       setReceivedRequests(receivedRequests.filter(req => req.requestId !== requestId));
@@ -128,7 +137,7 @@ const Dashboard = () => {
 
   const handleReject = async (requestId) => {
     try {
-      const response = await axios.post(`${backendIP}/friends/respond/${requestId}?accept=false`);
+      const response = await api.post(`/friends/respond/${requestId}?accept=false`);
       console.log("Request rejected:", response.data);
       alert("Request rejected successfully");
       setReceivedRequests(receivedRequests.filter(req => req.requestId !== requestId));
@@ -182,7 +191,7 @@ const Dashboard = () => {
                 style={{ objectFit: "cover", }}
                 className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
                 onError={(e) => {
-                  e.target.src = p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+                  e.target.src = i.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
                 }}
                 draggable={false}
                 onContextMenu={(e) => e.preventDefault()}
@@ -270,26 +279,24 @@ const Dashboard = () => {
       <section style={{ display: "flex", gap: 32, flexWrap: "wrap" }}>
         {/* Plan Details */}
         <div className="planSection">
-          {/* <h3 style={{ color: "#695019" }}><RiSecurePaymentFill /> Plan Details</h3>
-          <img
-            src="https://img.icons8.com/emoji/96/gift-emoji.png"
-            alt="Plan"
-            style={{ margin: "20px auto" }}
-          />
-          <p style={{ fontWeight: "bold" }}>Plan Name: {userPayment.planCode}</p>
-          <p>Amount: {userPayment.currency} {userPayment.amount}</p>
-          <p>Paid Date:{" "}
-            {new Date(userPayment.createdAt).toLocaleDateString("en-IN", {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            })}</p>
-          <p>Validity: 6 Months</p> */}
-          {userPayment && (
+          <h3 style={{ color: "#695019", marginBottom: 15 }}>
+            <RiSecurePaymentFill /> My Subscription Plan
+          </h3>
+
+          {!userPayment || !isPlanActive(userPayment) ? (
+            <p style={{ color: "#999", fontStyle: "italic" }}>
+              No active subscription plan
+            </p>
+          ) : (
             <div className="planSection">
-              <h3 style={{ color: "#695019" }}> <RiSecurePaymentFill /> Plan Details </h3>
-              <p style={{ fontWeight: "bold" }}> Plan Name: {userPayment.planCode} </p>
-              <p> Amount: {userPayment.currency} {userPayment.amount} </p>
+              <p style={{ fontWeight: "bold" }}>
+                Plan Name: {userPayment.planCode}
+              </p>
+
+              <p>
+                Amount: {userPayment.currency} {userPayment.amount}
+              </p>
+
               <p>
                 Paid Date:{" "}
                 {new Date(userPayment.createdAt).toLocaleDateString("en-IN", {
@@ -299,7 +306,9 @@ const Dashboard = () => {
                 })}
               </p>
 
-              <p> Validity: {getPlanMonths(userPayment.planCode)} Months </p>
+              <p>
+                Validity: {getPlanMonths(userPayment.planCode)} Months
+              </p>
 
               <p>
                 Valid Till:{" "}

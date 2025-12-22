@@ -7,6 +7,7 @@ import backendIP from "../api/api";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import ViewProfileModal from "../components/ViewProfileModal";
 import { useOutletContext, useNavigate } from "react-router-dom";
+import api from "../api/axiosInstance";
 
 const Nearme = () => {
   const navigate = useNavigate();
@@ -39,8 +40,8 @@ const Nearme = () => {
 
     const fetchAcceptedRequests = async () => {
       try {
-        const receivedAccepted = await axios.get(`${backendIP}/friends/accepted/received/${id}`);
-        const sentAccepted = await axios.get(`${backendIP}/friends/accepted/sent/${id}`);
+        const receivedAccepted = await api.get(`/friends/accepted/received/${id}`);
+        const sentAccepted = await api.get(`/friends/accepted/sent/${id}`);
         setAcceptedList([...receivedAccepted.data, ...sentAccepted.data]);
       } catch (err) {
         console.error(err);
@@ -50,8 +51,8 @@ const Nearme = () => {
 
     const fetchRejectedRequests = async () => {
       try {
-        const receivedRejected = await axios.get(`${backendIP}/friends/rejected/received/${id}`);
-        const sentRejected = await axios.get(`${backendIP}/friends/rejected/sent/${id}`);
+        const receivedRejected = await api.get(`/friends/rejected/received/${id}`);
+        const sentRejected = await api.get(`/friends/rejected/sent/${id}`);
         setRejectedList([...receivedRejected.data, ...sentRejected.data]);
       } catch (err) {
         console.error(err);
@@ -69,7 +70,7 @@ const Nearme = () => {
   const allHiddenIds = [...sentIds, ...receivedIds, ...acceptedIds, ...rejectedIds];
 
   const handleSendRequest = (receiverId) => {
-    axios.post(`${backendIP}/friends/send/${id}/${receiverId}`)
+    api.post(`/friends/send/${id}/${receiverId}`)
       .then(() => {
         alert("Request sent successfully");
         setSentRequests(prev => [...prev, { senderId: id, receiverId }]);

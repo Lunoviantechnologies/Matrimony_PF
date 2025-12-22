@@ -3,6 +3,7 @@ import "../styleSheets/requestCSS/profileRequest.css";
 import axios from "axios";
 import backendIP from "../api/api";
 import { useSelector } from "react-redux";
+import api from "../api/axiosInstance";
 
 const Rejected = () => {
 
@@ -13,10 +14,10 @@ const Rejected = () => {
     const fetchRejectedRequests = async () => {
       try {
         // 1) Requests YOU rejected (receiver = you)
-        const receivedRejected = await axios.get(`${backendIP}/friends/rejected/received/${id}`);
+        const receivedRejected = await api.get(`/friends/rejected/received/${id}`);
 
         // 2) Requests THEY rejected (sender = you)
-        const sentRejected = await axios.get(`${backendIP}/friends/rejected/sent/${id}`);
+        const sentRejected = await api.get(`/friends/rejected/sent/${id}`);
 
         // Combine both
         const merged = [...receivedRejected.data, ...sentRejected.data];

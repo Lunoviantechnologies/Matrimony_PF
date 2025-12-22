@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "../styleSheets/requestCSS/profileRequest.css";
-import axios from "axios";
 import backendIP from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
+import api from "../api/axiosInstance";
 
 const SentRequests = () => {
 
@@ -13,7 +13,7 @@ const SentRequests = () => {
   const { profiles } = useSelector(state => state.profiles);
 
   useEffect(() => {
-    axios.get(`${backendIP}/friends/sent/${id}`).then((response) => {
+    api.get(`/friends/sent/${id}`).then((response) => {
       console.log("Sent requests:", response.data);
       setSentRequests(response.data);
     }).catch((error) => {
@@ -23,7 +23,7 @@ const SentRequests = () => {
 
   const handleCancelRequest = async (cancelRequestId) => {
     try {
-      const response = await axios.delete(`${backendIP}/friends/sent/delete/${cancelRequestId}`);
+      const response = await api.delete(`/friends/sent/delete/${cancelRequestId}`);
       console.log("Request cancelled:", response.data);
       setSentRequests(sentRequests.filter(req => req.requestId !== cancelRequestId));
       alert("Request cancelled successfully");

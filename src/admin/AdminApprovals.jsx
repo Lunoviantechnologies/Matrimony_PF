@@ -36,16 +36,13 @@ export default function AdminApprovals() {
 
   // Approve
   const handleActionApproved = async (userId) => {
-    // console.log("approving userId :", userId);
+    console.log("approving userId :", typeof userId);
     try {
-      // Optimistic UI: remove immediately
       setVisibleProfiles((prev) => prev.filter((u) => u.id !== userId));
 
-      // Call backend
       await axios.post(`${backendIP}/admin/profiles/approve/${userId}`);
 
       alert("User profile approved successfully!");
-      // Optional: refetch from backend to sync
       dispatch(fetchUserProfiles());
     } catch (error) {
       console.error("Approve error:", error);

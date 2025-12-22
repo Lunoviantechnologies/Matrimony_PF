@@ -7,6 +7,7 @@ import axios from "axios";
 import backendIP from "../api/api";
 import ViewProfileModal from "../components/ViewProfileModal";
 import { useOutletContext, useNavigate } from "react-router-dom";
+import api from "../api/axiosInstance";
 
 const NewMatches = () => {
   const dispatch = useDispatch();
@@ -29,19 +30,19 @@ const NewMatches = () => {
     dispatch(fetchUserProfiles());
     dispatch(fetchMyProfile(id));
 
-    axios.get(`${backendIP}/friends/sent/${id}`)
+    api.get(`/friends/sent/${id}`)
       .then(res => setSentRequests(res.data))
       .catch(err => console.error(err));
 
-    axios.get(`${backendIP}/friends/received/${id}`)
+    api.get(`/friends/received/${id}`)
       .then(res => setReceivedRequests(res.data))
       .catch(err => console.error(err));
 
     const fetchAccepted = async () => {
       try {
         const [receivedAccepted, sentAccepted] = await Promise.all([
-          axios.get(`${backendIP}/friends/accepted/received/${id}`),
-          axios.get(`${backendIP}/friends/accepted/sent/${id}`)
+          api.get(`/friends/accepted/received/${id}`),
+          api.get(`/friends/accepted/sent/${id}`)
         ]);
         setAcceptedList([...receivedAccepted.data, ...sentAccepted.data]);
       } catch (err) { console.error(err); }
@@ -51,8 +52,8 @@ const NewMatches = () => {
     const fetchRejected = async () => {
       try {
         const [receivedRejected, sentRejected] = await Promise.all([
-          axios.get(`${backendIP}/friends/rejected/received/${id}`),
-          axios.get(`${backendIP}/friends/rejected/sent/${id}`)
+          api.get(`/friends/rejected/received/${id}`),
+          api.get(`/friends/rejected/sent/${id}`)
         ]);
         setRejectedList([...receivedRejected.data, ...sentRejected.data]);
       } catch (err) { console.error(err); }
@@ -62,7 +63,7 @@ const NewMatches = () => {
 
   // Send friend request
   const handleSendRequest = (receiverId) => {
-    axios.post(`${backendIP}/friends/send/${id}/${receiverId}`)
+    api.post(`/friends/send/${id}/${receiverId}`)
       .then(() => {
         alert("Request sent successfully");
         setSentRequests(prev => [...prev, { senderId: id, receiverId }]);

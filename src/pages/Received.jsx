@@ -4,6 +4,7 @@ import axios from "axios";
 import backendIP from "../api/api";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
+import api from "../api/axiosInstance";
 
 const Received = () => {
 
@@ -13,7 +14,7 @@ const Received = () => {
   const [receivedRequests, setReceivedRequests] = useState([]);
 
   useEffect(() => {
-    axios.get(`${backendIP}/friends/received/${id}`).then((response) => {
+    api.get(`/friends/received/${id}`).then((response) => {
       console.log("Received requests:", response.data);
       setReceivedRequests(response.data);
     }).catch((error) => {
@@ -23,7 +24,7 @@ const Received = () => {
 
   const handleAccept = async (requestId) => {
     try {
-      const response = await axios.post(`${backendIP}/friends/respond/${requestId}?accept=true`);
+      const response = await api.post(`/friends/respond/${requestId}?accept=true`);
       console.log("Request accepted:", response.data);
       alert("Request accepted successfully");
       setReceivedRequests(receivedRequests.filter(req => req.requestId !== requestId));
@@ -34,7 +35,7 @@ const Received = () => {
 
   const handleReject = async (requestId) => {
     try {
-      const response = await axios.post(`${backendIP}/friends/respond/${requestId}?accept=false`);
+      const response = await api.post(`/friends/respond/${requestId}?accept=false`);
       console.log("Request rejected:", response.data);
       alert("Request rejected successfully");
       setReceivedRequests(receivedRequests.filter(req => req.requestId !== requestId));

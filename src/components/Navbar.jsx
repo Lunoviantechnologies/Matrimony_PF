@@ -128,7 +128,7 @@ const Navbar = () => {
                 )}
 
                 {/* 👤 USER NAVBAR */}
-                {isLoggedIn && role[0] === "PROFILE" && <UserNavbar />}
+                {isLoggedIn && role[0] === "USER" && <UserNavbar />}
 
                 {/* 🛠 ADMIN NAVBAR */}
                 {isLoggedIn && role[0] === "ADMIN" && <AdminNavbar />}

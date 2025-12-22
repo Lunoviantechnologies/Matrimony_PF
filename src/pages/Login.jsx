@@ -19,17 +19,20 @@ const Login = ({ show, onClose }) => {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        
+
         dispatch(loginUser(auth))
             .unwrap()
             .then((data) => {
                 onClose();
-                const userRole = data.role[0];
-                // console.log("Login successful:", data);
-                if (userRole === "ADMIN") {
+                const role = Array.isArray(data.role)
+                    ? data.role[0]?.toUpperCase() : typeof data.role === "string" ? data.role.toUpperCase() : "";
+
+                if (role === "ADMIN") {
                     navigate("/admin");
-                } else if (userRole === "PROFILE")  {
+                } else if (role === "USER") {
                     navigate("/dashboard");
+                } else {
+                    navigate("/"); // fallback
                 }
             })
             .catch(() => {

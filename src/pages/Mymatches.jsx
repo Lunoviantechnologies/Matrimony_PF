@@ -7,6 +7,7 @@ import backendIP from "../api/api";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import ViewProfileModal from "../components/ViewProfileModal";
 import { useOutletContext, useNavigate } from "react-router-dom";
+import api from "../api/axiosInstance";
 
 const MyMatches = () => {
   const navigate = useNavigate();
@@ -30,20 +31,20 @@ const MyMatches = () => {
     dispatch(fetchMyProfile(id));
 
     // 1️⃣ Sent Requests
-    axios.get(`${backendIP}/friends/sent/${id}`)
+    api.get(`/friends/sent/${id}`)
       .then(res => setSentRequests(res.data))
       .catch(err => console.error(err));
 
     // 2️⃣ Received Requests
-    axios.get(`${backendIP}/friends/received/${id}`)
+    api.get(`/friends/received/${id}`)
       .then(res => setReceivedRequests(res.data))
       .catch(err => console.error(err));
 
     // 3️⃣ Accepted Requests
     const fetchAcceptedRequests = async () => {
       try {
-        const receivedAccepted = await axios.get(`${backendIP}/friends/accepted/received/${id}`);
-        const sentAccepted = await axios.get(`${backendIP}/friends/accepted/sent/${id}`);
+        const receivedAccepted = await api.get(`/friends/accepted/received/${id}`);
+        const sentAccepted = await api.get(`/friends/accepted/sent/${id}`);
         setAcceptedList([...receivedAccepted.data, ...sentAccepted.data]);
       } catch (err) {
         console.error(err);
@@ -54,8 +55,8 @@ const MyMatches = () => {
     // 4️⃣ Rejected Requests
     const fetchRejectedRequests = async () => {
       try {
-        const receivedRejected = await axios.get(`${backendIP}/friends/rejected/received/${id}`);
-        const sentRejected = await axios.get(`${backendIP}/friends/rejected/sent/${id}`);
+        const receivedRejected = await api.get(`/friends/rejected/received/${id}`);
+        const sentRejected = await api.get(`/friends/rejected/sent/${id}`);
         setRejectedList([...receivedRejected.data, ...sentRejected.data]);
       } catch (err) {
         console.error(err);
@@ -65,7 +66,7 @@ const MyMatches = () => {
   }, [dispatch, id]);
 
   const handleSendRequest = (receiverId) => {
-    axios.post(`${backendIP}/friends/send/${id}/${receiverId}`)
+    api.post(`/friends/send/${id}/${receiverId}`)
       .then(() => {
         alert("Request sent successfully");
         setSentRequests(prev => [...prev, { senderId: id, receiverId }]);

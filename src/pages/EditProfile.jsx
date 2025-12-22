@@ -6,6 +6,7 @@ import backendIP from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import imageCompression from "browser-image-compression";
+import api from "../api/axiosInstance";
 
 export default function EditProfile() {
   const { id, myProfile } = useSelector(state => state.auth);
@@ -127,7 +128,7 @@ export default function EditProfile() {
         updatedProfile.partnerHobbies = updatedProfile.partnerHobbies.join(",");
       }
 
-      const res = await axios.put(`${backendIP}/admin/update/${id}`, updatedProfile);
+      const res = await api.put(`/admin/update/${id}`, updatedProfile);
 
       setProfileData(updatedProfile);
       setOpenModal(null);
@@ -198,7 +199,7 @@ export default function EditProfile() {
     try {
       setUploadProgress(0);
 
-      const res = await axios.put(`${backendIP}/admin/photo/${id}`, formData, {
+      const res = await api.put(`/admin/photo/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
         onUploadProgress: (progressEvent) => {
           if (!progressEvent.lengthComputable) return;

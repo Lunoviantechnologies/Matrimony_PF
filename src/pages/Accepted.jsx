@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "../styleSheets/requestCSS/profileRequest.css";
-import axios from "axios";
 import backendIP from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
+import api from "../api/axiosInstance";
 
 const Accepted = () => {
   const [acceptedRequests, setAcceptedRequests] = useState([]);
@@ -20,13 +20,9 @@ const Accepted = () => {
 
     const fetchAcceptedRequests = async () => {
       try {
-        const receivedAccepted = await axios.get(
-          `${backendIP}/friends/accepted/received/${id}`
-        );
+        const receivedAccepted = await api.get(`/friends/accepted/received/${id}`);
 
-        const sentAccepted = await axios.get(
-          `${backendIP}/friends/accepted/sent/${id}`
-        );
+        const sentAccepted = await api.get(`/friends/accepted/sent/${id}`);
 
         const merged = [...receivedAccepted.data, ...sentAccepted.data];
 
