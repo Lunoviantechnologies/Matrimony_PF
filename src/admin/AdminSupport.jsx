@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import backendIP from "../api/api";
+import api from "../api/axiosInstance";
+import { toast } from "react-toastify";
 
 export default function AdminSupport() {
   const [tickets, setTickets] = useState([]);
@@ -13,7 +15,7 @@ export default function AdminSupport() {
   const fetchTickets = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${backendIP}/tickets`);
+      const res = await api.get(`/tickets/all`);
       setTickets(res.data || []);
       console.log("Fetched tickets:", res.data);
       setLoading(false);
@@ -29,11 +31,11 @@ export default function AdminSupport() {
 
   const resolveTicket = async (ticketId) => {
     try {
-      await axios.delete( `${backendIP}/tickets/${ticketId}/resolve` );
+      await api.delete( `/tickets/${ticketId}/resolve` );
       fetchTickets();
-      alert("Ticket resolved successfully!");
+      toast.success("Ticket resolved successfully!");
     } catch (error) {
-      alert("Failed to resolve ticket!");
+      toast.error("Failed to resolve ticket!");
     }
   };
 
@@ -54,12 +56,12 @@ export default function AdminSupport() {
       <table className="table table-striped table-bordered">
         <thead>
           <tr>
-            <th>S.No</th>
-            <th>User</th>
-            <th>Issue Category</th>
-            <th>Description</th>
-            <th>Raised On</th>
-            <th>Action</th>
+            <th style={{ color: "white", backgroundColor: "#00695C" }}>S.No</th>
+            <th style={{ color: "white", backgroundColor: "#00695C" }}>User</th>
+            <th style={{ color: "white", backgroundColor: "#00695C" }}>Issue Category</th>
+            <th style={{ color: "white", backgroundColor: "#00695C" }}>Description</th>
+            <th style={{ color: "white", backgroundColor: "#00695C" }}>Raised On</th>
+            <th style={{ color: "white", backgroundColor: "#00695C" }}>Action</th>
           </tr>
         </thead>
 

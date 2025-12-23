@@ -15,14 +15,17 @@ const Dashboard = () => {
   const [acceptedRequests, setAcceptedRequests] = useState([]);
   const [receivedRequests, setReceivedRequests] = useState([]);
   const [rejectedRequests, setRejectedRequests] = useState([]);
-  const { id, myProfile } = useSelector(state => state.auth);
+  const { id, myProfile, role } = useSelector(state => state.auth);
   const { profiles } = useSelector(state => state.profiles);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchMyProfile(id));
-    dispatch(fetchUserProfiles());
-  }, [id, dispatch]);
+
+    if(role[0].toUpperCase() === "USER"){
+      dispatch(fetchUserProfiles());
+    };
+  }, [id, dispatch, role]);
   console.log("My Profile in Dashboard:", myProfile);
 
   const now = new Date();

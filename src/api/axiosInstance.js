@@ -1,5 +1,7 @@
 import axios from "axios";
 import backendIP from "./api";
+import { logout } from "../redux/slices/authSlice";
+import store from "../redux/store/store";
 
 const api = axios.create({
     baseURL: backendIP,
@@ -7,7 +9,8 @@ const api = axios.create({
 
 api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem("token");
+        // const token = localStorage.getItem("token");
+        const token = store.getState().auth.token;
         if (typeof token === "string" && token.trim()) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -15,6 +18,17 @@ api.interceptors.request.use(
         return config;
     },
     (error) => Promise.reject(error)
+);
+
+// 🚨 Handle expired / invalid token
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            store.dispatch(logout());
+        }
+        return Promise.reject(error);
+    }
 );
 
 export default api;

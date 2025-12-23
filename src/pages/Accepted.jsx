@@ -9,7 +9,7 @@ import api from "../api/axiosInstance";
 const Accepted = () => {
   const [acceptedRequests, setAcceptedRequests] = useState([]);
 
-  const { id } = useSelector(state => state.auth);
+  const { id, role } = useSelector(state => state.auth);
   const { profiles } = useSelector(state => state.profiles);
 
   const navigate = useNavigate();
@@ -37,8 +37,10 @@ const Accepted = () => {
   }, [id]);
 
   useEffect(() => {
-    dispatch(fetchUserProfiles());
-  }, [dispatch]);
+    if (role[0].toUpperCase() === "USER") {
+      dispatch(fetchUserProfiles());
+    };
+  }, [dispatch, role]);
 
   const acceptedWithImages = useMemo(() => {
     if (!acceptedRequests.length || !profiles.length) return [];
@@ -86,7 +88,7 @@ const Accepted = () => {
             <div className="btn-section">
               <button
                 className="accept"
-                onClick={() => navigate( `/dashboard/messages/${user.senderId === id ? user.receiverId : user.senderId}` )}
+                onClick={() => navigate(`/dashboard/messages/${user.senderId === id ? user.receiverId : user.senderId}`)}
               >
                 Message
               </button>

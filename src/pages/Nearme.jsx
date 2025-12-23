@@ -14,7 +14,7 @@ const Nearme = () => {
   const dispatch = useDispatch();
 
   const { profiles } = useSelector((state) => state.profiles);
-  const { id, myProfile } = useSelector((state) => state.auth);
+  const { id, myProfile, role } = useSelector((state) => state.auth);
   const { filters } = useOutletContext();
 
   const [sentRequests, setSentRequests] = useState([]);
@@ -27,7 +27,9 @@ const Nearme = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchUserProfiles());
+    if (role[0].toUpperCase() === "USER") {
+      dispatch(fetchUserProfiles());
+    };
     dispatch(fetchMyProfile(id));
 
     api.get(`/friends/sent/${id}`)
@@ -59,7 +61,7 @@ const Nearme = () => {
       }
     };
     fetchRejectedRequests();
-  }, [dispatch, id]);
+  }, [dispatch, id, role]);
 
   // ---- Combine all hidden IDs ----
   const sentIds = sentRequests.map(r => r.receiverId);

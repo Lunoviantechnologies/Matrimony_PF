@@ -14,20 +14,22 @@ const MoreMatches = () => {
   const dispatch = useDispatch();
 
   const { profiles } = useSelector((state) => state.profiles);
-  const { id, myProfile } = useSelector((state) => state.auth);
+  const { id, myProfile , role} = useSelector((state) => state.auth);
   const { filters } = useOutletContext();
 
   const [sentRequests, setSentRequests] = useState([]);
   const [receivedRequests, setReceivedRequests] = useState([]);
   const [acceptedList, setAcceptedList] = useState([]);
   const [rejectedList, setRejectedList] = useState([]);
-  
+
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [anchorRect, setAnchorRect] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchUserProfiles());
+    if (role[0].toUpperCase() === "USER") {
+      dispatch(fetchUserProfiles());
+    };
     dispatch(fetchMyProfile(id));
 
     // 1️⃣ Sent Requests
@@ -64,7 +66,7 @@ const MoreMatches = () => {
     };
     fetchRejectedRequests();
 
-  }, [dispatch, id]);
+  }, [dispatch, id, role]);
 
   const handleSendRequest = (receiverId) => {
     api.post(`/friends/send/${id}/${receiverId}`)

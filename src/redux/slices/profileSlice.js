@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchUserProfiles } from "../thunk/profileThunk";
+import { fetchUserProfiles, fetchAdminProfiles } from "../thunk/profileThunk";
 
 const initialState = {
     profiles: [],
@@ -7,25 +7,40 @@ const initialState = {
     error: null,
 };
 
-const profileSlice = createSlice( {
+const profileSlice = createSlice({
     name: "profile",
     initialState,
     reducers: {},
-    
-    extraReducers: ( builder ) => {
+
+    extraReducers: (builder) => {
         builder
-            .addCase( fetchUserProfiles.pending, ( state ) => {
+            // ADMIN
+            .addCase(fetchAdminProfiles.pending, (state) => {
                 state.loading = true;
                 state.error = null;
-            } )
-            .addCase( fetchUserProfiles.fulfilled, ( state, action ) => {
+            })
+            .addCase(fetchAdminProfiles.fulfilled, (state, action) => {
                 state.loading = false;
                 state.profiles = action.payload;
-            } )
-            .addCase( fetchUserProfiles.rejected, ( state, action ) => {
+            })
+            .addCase(fetchAdminProfiles.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
-            } );
+            })
+
+            // USER
+            .addCase(fetchUserProfiles.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchUserProfiles.fulfilled, (state, action) => {
+                state.loading = false;
+                state.profiles = action.payload;
+            })
+            .addCase(fetchUserProfiles.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            });
     },
 });
 

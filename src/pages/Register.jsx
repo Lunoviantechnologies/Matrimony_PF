@@ -6,6 +6,7 @@ import "../styleSheets/register.css";
 import axios from "axios";
 import backendIP from "../api/api";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 /* -------------------------------------------------------------
    INITIAL VALUES
@@ -201,12 +202,12 @@ const Register = () => {
     axios.post(`${backendIP}/profiles/register`, payload)
       .then((response) => {
         console.log("Server Response:", response.data);
-        alert("Registration Successful!");
+        toast.success("Registration successfull");
         navigate("/registration-success");
       })
       .catch((error) => {
         console.error("There was an error!", error.response ? error.response.data : error.message);
-        alert("Registration Failed. See console for details.");
+        toast.error("Registration failed");
       });
   };
 
@@ -215,9 +216,10 @@ const Register = () => {
       setLoading(true);
       await axios.post(`${backendIP}/auth/register/send-otp`, { email });
       setOtpSent(true);
-      alert("OTP sent to email");
+      toast.success("OTP sent to your email");
     } catch (err) {
-      alert("Failed to send OTP");
+      toast.error("Failed to send OTP");
+      console.log("error : ", err);
     } finally {
       setLoading(false);
     }
@@ -237,12 +239,12 @@ const Register = () => {
 
       if (res.data === "Email verified successfully") {
         setEmailVerified(true);
-        alert("Email verified successfully");
+        toast.success("Email verified successfully");
       } else {
-        alert("Invalid OTP");
+        toast.error("Invalid OTP");
       }
     } catch (err) {
-      alert("OTP verification failed");
+      toast.error("OTP verification failed");
     } finally {
       setLoading(false);
     }
@@ -520,9 +522,7 @@ const Register = () => {
                 className="form-input"
                 placeholder="Email Address"
                 disabled={emailVerified}
-                onChange={(e) => {
-                  setFieldValue("emailId", e.target.value);
-                }}
+                onChange={(e) => { setFieldValue("emailId", e.target.value); }}
               />
 
               {!emailVerified && (
@@ -532,7 +532,11 @@ const Register = () => {
                   disabled={!values.emailId || loading}
                   onClick={() => sendEmailOtp(values.emailId)}
                 >
-                  {otpSent ? "Resend OTP" : "Verify Email"}
+                  {
+                    loading ? (
+                      <span className="btn-loader" />
+                    ) : otpSent ? ("Resend OTP") : ("Verify Email")
+                  }
                 </button>
               )}
 

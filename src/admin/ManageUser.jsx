@@ -1,13 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "../stylesheets/ManageUsers.css";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchUserProfiles } from "../redux/thunk/profileThunk";
+import { fetchAdminProfiles } from "../redux/thunk/profileThunk";
 import axios from "axios";
 import backendIP from "../api/api";
+import { toast } from "react-toastify";
+import api from "../api/axiosInstance";
 
 export default function ManageUser({ pageSize = 10 }) {
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.auth);
+  const { token, role } = useSelector((state) => state.auth);
   const { profiles, loading } = useSelector((state) => state.profiles);
 
   const [search, setSearch] = useState("");
@@ -17,27 +19,25 @@ export default function ManageUser({ pageSize = 10 }) {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    dispatch(fetchUserProfiles());
-  }, [dispatch]);
-  console.log("token :", `Bearer ${token}`);
+    if (role[0].toUpperCase() === "USER") {
+      dispatch(fetchAdminProfiles());
+    };
+  }, [dispatch, role]);
+  console.log("profiles :", profiles);
 
   const getUserId = (u) => u?.userId || u?.id || u?.profileId;
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${backendIP}/admin/delete/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      alert("User deleted successfully");
+      await api.delete(`/admin/delete/${id}`);
 
-      dispatch(fetchUserProfiles());
+      toast.success("User deleted successfully");
+      dispatch(fetchAdminProfiles());
       setDetailUser(false);
       setConfirm({ open: false, user: null });
     } catch (error) {
       console.error("Delete failed:", error.response?.data || error.message);
-      alert("Delete failed.");
+      toast.error("Delete failed");
     }
   };
 
@@ -147,7 +147,7 @@ export default function ManageUser({ pageSize = 10 }) {
                 return (
                   <tr
                     key={getUserId(u) || index}
-                    className={u.profileStatus !== "active" ? "mu-row-muted" : ""}
+                    className={u.active !== true ? "mu-row-muted" : ""}
                   >
                     <td>
                       <div className="mu-avatar">{initials}</div>
@@ -168,17 +168,14 @@ export default function ManageUser({ pageSize = 10 }) {
                     <td>{u.city || "-"}</td>
 
                     <td>
-                      <span
-                        className={`mu-badge ${u.membership === "Premium" ? "premium" : ""
-                          }`}
-                      >
-                        {u.membership || "Free"}
+                      <span className={`mu-badge ${u.premium ? "premium" : "" }`}>
+                        {u.premium ? "Premium" : "Free"}
                       </span>
                     </td>
 
                     <td>
-                      <span className={`mu-status ${u.profileStatus || "active"}`}>
-                        {u.profileStatus || "active"}
+                      <span className={`mu-status ${u.active || "active"}`}>
+                        {u.active ? "Active" : "Inactive"}
                       </span>
                     </td>
 

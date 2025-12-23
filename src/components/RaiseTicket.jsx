@@ -33,13 +33,13 @@ const RaiseTicket = () => {
 
   // ✅ Backend Enum Mapping
   const categoryMap = {
-    "Profile Approval Issue": "ACCOUNT",
-    "Premium Membership": "PAYMENT",
-    "Login / Account Recovery": "LOGIN",
-    "Report Fake / Fraud Profile": "ACCOUNT",
-    "Payment Issue": "PAYMENT",
-    "Profile Privacy & Safety": "TECHNICAL",
-    "Matchmaking Assistance": "FEEDBACK",
+    "Profile Approval Issue": "Profile Approval Issue",
+    "Premium Membership": "Premium Membership",
+    "Login / Account Recovery": "Login / Account Recovery",
+    "Report Fake / Fraud Profile": "Report Fake / Fraud Profile",
+    "Payment Issue": "Payment Issue",
+    "Profile Privacy & Safety": "Profile Privacy & Safety",
+    "Matchmaking Assistance": "Matchmaking Assistance",
     "Other Queries": "OTHER"
   };
 

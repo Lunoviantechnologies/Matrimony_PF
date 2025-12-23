@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/slices/authSlice";
+import { toast } from "react-toastify";
 
 export default function useAuthExpiry() {
     const dispatch = useDispatch();
@@ -15,15 +16,14 @@ export default function useAuthExpiry() {
 
     useEffect(() => {
         if (!token || !exp) return;
-
         const expiryTime = exp * 1000 - Date.now();
-
         if (expiryTime <= 0) {
             dispatch(logout());
             return;
         }
 
         const timeoutId = setTimeout(() => {
+            toast.info("Session expired. Please login again.");
             dispatch(logout());
         }, expiryTime);
 

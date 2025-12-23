@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 
 const Received = () => {
 
-  const { id } = useSelector(state => state.auth);
+  const { id, role } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const { profiles } = useSelector(state => state.profiles);
   const [receivedRequests, setReceivedRequests] = useState([]);
@@ -48,8 +48,10 @@ const Received = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchUserProfiles());
-  }, [dispatch]);
+    if (role[0].toUpperCase() === "USER") {
+      dispatch(fetchUserProfiles());
+    };
+  }, [dispatch, role]);
 
   const receivedWithImages = useMemo(() => {
     if (!receivedRequests.length || !profiles.length) return [];

@@ -16,7 +16,7 @@ const ChatWindow = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { profiles } = useSelector((state) => state.profiles);
-  const { id: myId, token } = useSelector((state) => state.auth);
+  const { id: myId, token, role } = useSelector((state) => state.auth);
 
   const [acceptedList, setAcceptedList] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -36,8 +36,10 @@ const ChatWindow = () => {
   }, [messages]);
 
   useEffect(() => {
-    dispatch(fetchUserProfiles());
-  }, [dispatch]);
+    if (role[0].toUpperCase() === "USER") {
+      dispatch(fetchUserProfiles());
+    };
+  }, [dispatch, role]);
 
   // user online or offline
   useEffect(() => {

@@ -14,7 +14,7 @@ const NewMatches = () => {
   const navigate = useNavigate();
 
   const { profiles } = useSelector((state) => state.profiles);
-  const { id, myProfile } = useSelector((state) => state.auth);
+  const { id, myProfile, role } = useSelector((state) => state.auth);
   const { filters } = useOutletContext();
 
   const [sentRequests, setSentRequests] = useState([]);
@@ -27,7 +27,9 @@ const NewMatches = () => {
   const [anchorRect, setAnchorRect] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchUserProfiles());
+    if (role[0].toUpperCase() === "USER") {
+      dispatch(fetchUserProfiles());
+    };
     dispatch(fetchMyProfile(id));
 
     api.get(`/friends/sent/${id}`)
@@ -59,7 +61,7 @@ const NewMatches = () => {
       } catch (err) { console.error(err); }
     };
     fetchRejected();
-  }, [dispatch, id]);
+  }, [dispatch, id, role]);
 
   // Send friend request
   const handleSendRequest = (receiverId) => {

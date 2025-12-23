@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, useState } from "react";
 import "../styleSheets/AdminProfile.css";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserProfiles } from "../redux/thunk/profileThunk";
+import { fetchAdminProfiles } from "../redux/thunk/profileThunk";
 
 function timeAgo(iso) {
   const d = new Date(iso);
@@ -20,7 +20,8 @@ function timeAgo(iso) {
 
 export default function AdminProfile() {
   const dispatch = useDispatch();
-  const { profiles : users } = useSelector((state) => state.profiles);
+  const { role } = useSelector((state) => state.auth);
+  const { profiles: users } = useSelector((state) => state.profiles);
   const [loading, setLoading] = useState(false);
 
   // Pagination states
@@ -28,9 +29,11 @@ export default function AdminProfile() {
   const pageSize = 10; // 10 users per page
 
   useEffect(() => {
-      dispatch(fetchUserProfiles());
-    }, [dispatch]);
-    // console.log("profiles :", profiles);
+    if (role[0].toUpperCase() === "ADMIN") {
+      dispatch(fetchAdminProfiles());
+    };
+  }, [dispatch, role]);
+  // console.log("profiles :", profiles);
 
   const stats = useMemo(() => {
     const total = users.length;

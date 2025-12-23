@@ -23,7 +23,7 @@ const AdminNotification = ({ onNavigate }) => {
 
     console.log("📥 Fetching saved notifications...");
 
-    api.get(`/notifications/GetAll?userId=${myId}`)
+    api.get(`/admin/GetAll?userId=${myId}`)
       .then((res) => {
         console.log("📦 Initial notifications:", res.data);
 
@@ -57,7 +57,7 @@ const AdminNotification = ({ onNavigate }) => {
       webSocketFactory: () => socket,
       reconnectDelay: 5000,
       connectHeaders: {
-        Authorization : `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       },
 
       debug: (msg) => {
@@ -67,8 +67,7 @@ const AdminNotification = ({ onNavigate }) => {
       onConnect: () => {
         console.log("🟢 WS CONNECTED for user:", myId);
 
-        client.subscribe(
-          `/user/queue/notifications/admin`,
+        client.subscribe(`/user/queue/notifications/admin`,
           (message) => {
             console.log("📨 Live notification received:", message);
 
@@ -117,7 +116,7 @@ const AdminNotification = ({ onNavigate }) => {
   // ------------------------------------------------
   const markAsRead = async (id) => {
     try {
-      await api.post(`/notifications/mark-all-read?userId=${myId}`);
+      await api.post(`/admin/mark-all-read?userId=${myId}`);
 
       setNotifications((prev) =>
         prev.map((n) => (n.id === id ? { ...n, read: true } : n))

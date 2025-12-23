@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { TextField, Button, Card, CardContent, Typography, Alert, } from "@mui/material";
+import { TextField, Button, Card, CardContent, Typography, Alert, Box, IconButton, InputAdornment, } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "axios";
 import backendIp from "../api/api";
 
@@ -20,19 +21,14 @@ export default function ForgotPassword() {
     setError("");
   };
 
-  // 🔹 STEP 1: SEND OTP
+  // STEP 1
   const sendOtp = async (e) => {
     e.preventDefault();
     resetMessages();
     setLoading(true);
 
     try {
-      const res = await axios.post(
-        `${backendIp}/auth/forgot-password`,
-        { email }
-      );
-      console.log(res.data)
-
+      const res = await axios.post(`${backendIp}/auth/forgot-password`, { email });
       setSuccess(res.data.message || "OTP sent to your email");
       setStep(2);
     } catch (err) {
@@ -42,18 +38,14 @@ export default function ForgotPassword() {
     }
   };
 
-  // 🔹 STEP 2: VERIFY OTP
+  // STEP 2
   const verifyOtp = async (e) => {
     e.preventDefault();
     resetMessages();
     setLoading(true);
 
     try {
-      const res = await axios.post(
-        `${backendIp}/auth/verify-otp`,
-        { email, otp }
-      );
-
+      const res = await axios.post(`${backendIp}/auth/verify-otp`, { email, otp });
       setSuccess(res.data.message || "OTP verified");
       setStep(3);
     } catch (err) {
@@ -63,23 +55,20 @@ export default function ForgotPassword() {
     }
   };
 
-  // 🔹 STEP 3: RESET PASSWORD
+  // STEP 3
   const resetPassword = async (e) => {
     e.preventDefault();
     resetMessages();
     setLoading(true);
 
     try {
-      const res = await axios.post(
-        `${backendIp}/auth/reset-password`,
-        { email, newPassword, confirmPassword }
-      );
-
+      const res = await axios.post(`${backendIp}/auth/reset-password`, { email, newPassword, confirmPassword });
       setSuccess(res.data.message || "Password reset successful");
       setStep(1);
       setEmail("");
       setOtp("");
       setNewPassword("");
+      setConfirmPassword("");
     } catch (err) {
       setError(err.response?.data?.message || "Password reset failed");
     } finally {
@@ -88,19 +77,33 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
-      <Card sx={{ width: "100%", maxWidth: 450 }} className="shadow-lg">
-        <CardContent>
-          <Typography variant="h5" fontWeight="bold" gutterBottom>
+    <Box
+      sx={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", bgcolor: "#D9F5E4", px: 2, }}>
+      <Card sx={{ width: "100%", maxWidth: 420, boxShadow: 4, borderRadius: 2, }}>
+        <CardContent sx={{ p: { xs: 2.5, sm: 4 } }}>
+          <Typography variant="h5" fontWeight="bold" textAlign="center" gutterBottom>
             Forgot Password
           </Typography>
+          
+          <Typography variant="body2" sx={{ opacity: 0.6, mb: 2 }}>
+            Enter your email address to receive a one-time password (OTP) and continue
+            the password reset process.
+          </Typography>
 
-          {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
-          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+          {success && (
+            <Alert severity="success" sx={{ mb: 2 }}>
+              {success}
+            </Alert>
+          )}
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
 
-          {/* 🔹 STEP 1 */}
+          {/* STEP 1 */}
           {step === 1 && (
-            <form onSubmit={sendOtp}>
+            <Box component="form" onSubmit={sendOtp}>
               <TextField
                 label="Email Address"
                 fullWidth
@@ -115,16 +118,16 @@ export default function ForgotPassword() {
                 variant="contained"
                 type="submit"
                 disabled={loading}
-                sx={{ mt: 2 }}
+                sx={{ mt: 2, py: 1.2 }}
               >
                 {loading ? "Sending OTP..." : "Send OTP"}
               </Button>
-            </form>
+            </Box>
           )}
 
-          {/* 🔹 STEP 2 */}
+          {/* STEP 2 */}
           {step === 2 && (
-            <form onSubmit={verifyOtp}>
+            <Box component="form" onSubmit={verifyOtp}>
               <TextField
                 label="Enter OTP"
                 fullWidth
@@ -139,16 +142,16 @@ export default function ForgotPassword() {
                 variant="contained"
                 type="submit"
                 disabled={loading}
-                sx={{ mt: 2 }}
+                sx={{ mt: 2, py: 1.2 }}
               >
                 {loading ? "Verifying..." : "Verify OTP"}
               </Button>
-            </form>
+            </Box>
           )}
 
-          {/* 🔹 STEP 3 */}
+          {/* STEP 3 */}
           {step === 3 && (
-            <form onSubmit={resetPassword}>
+            <Box component="form" onSubmit={resetPassword}>
               <TextField
                 label="New Password"
                 type={showPassword ? "text" : "password"}
@@ -157,6 +160,18 @@ export default function ForgotPassword() {
                 margin="normal"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
 
               <TextField
@@ -169,27 +184,19 @@ export default function ForgotPassword() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
 
-              <span
-                onClick={() => setShowPassword(!showPassword)}
-                className="position-absolute top-50 end-0 translate-middle-y me-3"
-                style={{ cursor: "pointer", zIndex: 10 }}
-              >
-                <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
-              </span>
-
               <Button
                 fullWidth
                 variant="contained"
                 type="submit"
                 disabled={loading}
-                sx={{ mt: 2 }}
+                sx={{ mt: 2, py: 1.2 }}
               >
                 {loading ? "Resetting..." : "Reset Password"}
               </Button>
-            </form>
+            </Box>
           )}
         </CardContent>
       </Card>
-    </div>
+    </Box>
   );
-}
+};

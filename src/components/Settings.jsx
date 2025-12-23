@@ -33,7 +33,7 @@ export default function Settings() {
 
       <Tabs value={tab} onChange={(e, v) => setTab(v)} variant="scrollable">
         <Tab label="Privacy" />
-        <Tab label="Notifications" />
+        {/* <Tab label="Notifications" /> */}
         <Tab label="Subscription" />
         <Tab label="Security" />
         <Tab label="Support" />
@@ -41,18 +41,18 @@ export default function Settings() {
 
       <div style={{ marginTop: 20 }}>
         {tab === 0 && <PrivacySettings userId={id} />}
-        {tab === 1 && <NotificationSettings userId={id} />}
-        {tab === 2 && (
+        {/* {tab === 1 && <NotificationSettings userId={id} />} */}
+        {tab === 1 && (
           <SubscriptionSettings myProfile={myProfile} navigate={navigate} />
         )}
-        {tab === 3 && (
+        {tab === 2 && (
           <SecuritySettings
             securityPassword={securityPassword}
             setSecurityPassword={setSecurityPassword}
             userId={id}
           />
         )}
-        {tab === 4 && <SupportSettings userId={id} />}
+        {tab === 3 && <SupportSettings userId={id} />}
       </div>
     </div>
   );

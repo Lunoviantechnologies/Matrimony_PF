@@ -2,15 +2,16 @@ import React, { useState, useEffect } from "react";
 import "../styleSheets/ManageMatches.css";
 import { TbHeartHandshake } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserProfiles } from "../redux/thunk/profileThunk";
+import { fetchAdminProfiles } from "../redux/thunk/profileThunk";
 import axios from "axios";
 import backendIP from "../api/api";
+import api from "../api/axiosInstance";
 
 export default function ManageMatches() {
   const dispatch = useDispatch();
 
   const { profiles } = useSelector((state) => state.profiles);
-  const { id: myId } = useSelector((state) => state.auth);
+  const { id: myId, role } = useSelector((state) => state.auth);
 
   const [matches, setMatches] = useState([]);
   const [activeProfile, setActiveProfile] = useState(null);
@@ -23,7 +24,7 @@ export default function ManageMatches() {
   useEffect(() => {
     const fetchMatches = async () => {
       try {
-        const res = await axios.get(`${backendIP}/friends/all`);
+        const res = await api.get(`/friends/all`);
 
         const accepted = res.data.filter(
           (m) => m.status?.toUpperCase() === "ACCEPTED"
@@ -42,8 +43,10 @@ export default function ManageMatches() {
      Fetch all profiles
   ----------------------------------- */
   useEffect(() => {
-    dispatch(fetchUserProfiles());
-  }, [dispatch]);
+    if (role[0].toUpperCase() === "ADMIN") {
+      dispatch(fetchAdminProfiles());
+    };
+  }, [dispatch, role]);
 
   /* -----------------------------------
      Viewport for popover positioning
@@ -77,6 +80,7 @@ export default function ManageMatches() {
       };
     })
     .filter(Boolean);
+    // console.log("friendPairs : ", friendPairs);
 
   /* -----------------------------------
      Popover handlers
@@ -122,34 +126,18 @@ export default function ManageMatches() {
     };
   };
 
-  const getImageUrl = (photo, gender) => {
-    if (!photo) {
-      return gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
-    }
-
-    if (photo.startsWith("blob:") || photo.startsWith("http")) {
-      return photo;
-    }
-
-    // filename from backend → /uploads/
-    return `${backendIP.replace("/api", "")}/profile-photos/${photo}`;
-  };
-
-  /* -----------------------------------
-     Render
-  ----------------------------------- */
   return (
     <div className="mm-container">
       <h2 className="mm-title">Matched Profiles</h2>
 
       <div className="mm-list">
-        {friendPairs.map((m) => (
-          <div key={m.id} className="mm-pair-card">
+        {friendPairs.map((m, index) => (
+          <div key={index} className="mm-pair-card">
 
             {/* Left user */}
             <div className="mm-user">
               <img
-                src={getImageUrl(m.a.updatePhoto, m.a.gender)}
+                src={m.a.updatePhoto ? m.a.updatePhoto : m.a.gender === "Female" ? "placeholder_girl.png" : "placeholder_boy.png"}
                 alt={m.a.firstName}
                 className="mm-img"
                 onClick={(e) => openAt(m.a, e)}
@@ -177,7 +165,7 @@ export default function ManageMatches() {
                 <p>{m.b.city}</p>
               </div>
               <img
-                src={getImageUrl(m.b.updatePhoto, m.b.gender)}
+                src={m.b.updatePhoto ? m.b.updatePhoto : m.b.gender === "Female" ? "placeholder_girl.png" : "placeholder_boy.png"}
                 alt={m.b.firstName}
                 className="mm-img"
                 onClick={(e) => openAt(m.b, e)}

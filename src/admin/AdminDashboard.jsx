@@ -3,17 +3,21 @@ import { FaUsers, FaHeart, FaCheckCircle, FaRupeeSign, FaTimesCircle, FaHeadset,
 import axios from "axios";
 import "../stylesheets/adminDashboard.css";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserProfiles } from "../redux/thunk/profileThunk";
+import { fetchAdminProfiles } from "../redux/thunk/profileThunk";
+import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
-  // const [profiles, setProfiles] = useState([]);
+  const navigate = useNavigate();
+  const { role } = useSelector((state) => state.auth);
   const { profiles } = useSelector((state) => state.profiles);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchUserProfiles());
-  }, [dispatch]);
+    if (role[0].toUpperCase() === "ADMIN") {
+      dispatch(fetchAdminProfiles());
+    };
+  }, [dispatch, role]);
   console.log("profiles : ", profiles);
 
   const totalUsers = profiles.length;
@@ -41,6 +45,18 @@ const AdminDashboard = () => {
   }, 0);
   console.log("revenue : ", revenue);
   const matches = Math.floor(totalUsers * 0.25);
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "--";
+
+    return new Date(
+      dateStr.replace(/\.\d+/, "")
+    ).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+  };
 
   return (
     <div className="admin-container">
@@ -123,7 +139,7 @@ const AdminDashboard = () => {
                         ))
                         : " - "}
                     </td>
-                    <td>{new Date(p.createdAt).toLocaleDateString()}</td>
+                    <td>{formatDate(p.createdAt)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -134,8 +150,8 @@ const AdminDashboard = () => {
         <section className="quick-actions">
           <h2>Quick Actions</h2>
           <div className="actions">
-            <button className="action-btn"><FaCheckCircle /> Approvals</button>
-            <button className="action-btn"><FaHeadset /> Support</button>
+            <button className="action-btn" onClick={ () => navigate("/admin/aprovals")}><FaCheckCircle /> Approvals</button>
+            <button className="action-btn" onClick={ () => navigate("/admin/support")}><FaHeadset /> Support</button>
           </div>
         </section>
 

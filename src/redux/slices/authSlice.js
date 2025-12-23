@@ -8,7 +8,7 @@ const initialState = {
     email: localStorage.getItem("email") || null,
     role: localStorage.getItem("role") ? JSON.parse(localStorage.getItem("role")) : null,
     isLoggedIn: !!localStorage.getItem("token"),
-    // exp: localStorage.getItem("exp") ? JSON.parse(localStorage.getItem("exp")) : null,
+    exp: localStorage.getItem("exp") ? JSON.parse(localStorage.getItem("exp")) : null,
     loading: false,
     error: null,
 };
@@ -22,14 +22,14 @@ const authSlice = createSlice({
             state.token = null;
             state.email = null;
             state.role = null;
-            // state.exp = null;
+            state.exp = null;
             state.isLoggedIn = false;
 
             localStorage.removeItem("id");
             localStorage.removeItem("token");
             localStorage.removeItem("email");
             localStorage.removeItem("role");
-            // localStorage.removeItem("exp");
+            localStorage.removeItem("exp");
         }
     },
 
@@ -41,20 +41,20 @@ const authSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false;
-                const { id, token, email, role } = action.payload;
+                const { id, token, email, role, exp } = action.payload;
 
                 state.id = id;
                 state.token = token;
                 state.email = email;
                 state.role = role;
-                // state.exp = exp;
+                state.exp = Number(exp);
                 state.isLoggedIn = true;
 
                 localStorage.setItem("id", JSON.stringify(id));
                 localStorage.setItem("token", token);
                 localStorage.setItem("email", email);
                 localStorage.setItem("role", JSON.stringify(role));
-                // localStorage.setItem("exp", JSON.stringify(exp));
+                localStorage.setItem("exp", JSON.stringify(Number(exp)));
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;

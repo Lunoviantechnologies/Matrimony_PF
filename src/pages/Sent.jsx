@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 const SentRequests = () => {
 
   const [sentRequests, setSentRequests] = useState([]);
-  const { id } = useSelector(state => state.auth);
+  const { id, role } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const { profiles } = useSelector(state => state.profiles);
 
@@ -38,8 +38,10 @@ const SentRequests = () => {
   console.log("Filtered Sent Requests:", filteredSent);
 
   useEffect(() => {
-    dispatch(fetchUserProfiles());
-  }, [dispatch]);
+    if (role[0].toUpperCase() === "USER") {
+      dispatch(fetchUserProfiles());
+    };
+  }, [dispatch, role]);
 
   const sentWithImages = useMemo(() => {
     if (!filteredSent.length || !profiles.length) return [];

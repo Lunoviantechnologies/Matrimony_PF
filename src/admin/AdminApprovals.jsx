@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import backendIP from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserProfiles } from "../redux/thunk/profileThunk";
+import { fetchAdminProfiles } from "../redux/thunk/profileThunk";
+import api from "../api/axiosInstance";
+import { toast } from "react-toastify";
 
 export default function AdminApprovals() {
   const dispatch = useDispatch();
+  const { role } = useSelector( state => state.auth );
   const { profiles = [], loading } = useSelector((state) => state.profiles);
 
   const [page, setPage] = useState(1);
@@ -16,8 +19,10 @@ export default function AdminApprovals() {
 
   // Fetch profiles on mount
   useEffect(() => {
-    dispatch(fetchUserProfiles());
-  }, [dispatch]);
+    if (role[0].toUpperCase() === "ADMIN") {
+      dispatch(fetchAdminProfiles());
+    };
+  }, [dispatch, role]);
 
   // Filter pending profiles
   useEffect(() => {
@@ -40,14 +45,14 @@ export default function AdminApprovals() {
     try {
       setVisibleProfiles((prev) => prev.filter((u) => u.id !== userId));
 
-      await axios.post(`${backendIP}/admin/profiles/approve/${userId}`);
+      await api.post(`/admin/profiles/approve/${userId}`);
 
-      alert("User profile approved successfully!");
-      dispatch(fetchUserProfiles());
+      toast.success("User profile approved successfully!");
+      dispatch(fetchAdminProfiles());
     } catch (error) {
       console.error("Approve error:", error);
-      alert("Approval failed!");
-      dispatch(fetchUserProfiles());
+      toast.error("Approval failed!");
+      dispatch(fetchAdminProfiles());
     }
   };
 
@@ -56,14 +61,14 @@ export default function AdminApprovals() {
     try {
       setVisibleProfiles((prev) => prev.filter((u) => u.id !== userId));
 
-      await axios.post(`${backendIP}/admin/profiles/reject/${userId}`);
+      await api.post(`/admin/profiles/reject/${userId}`);
 
-      alert("User profile rejected successfully!");
-      dispatch(fetchUserProfiles());
+      toast.success("User profile rejected successfully!");
+      dispatch(fetchAdminProfiles());
     } catch (error) {
       console.error("Reject error:", error);
-      alert("Rejection failed!");
-      dispatch(fetchUserProfiles());
+      toast.error("Rejection failed!");
+      dispatch(fetchAdminProfiles());
     }
   };
 
@@ -74,10 +79,10 @@ export default function AdminApprovals() {
   const changePage = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) setPage(newPage);
   };
-console.log("statuss : ", visibleProfiles);
+  console.log("statuss : ", visibleProfiles);
   return (
     <div className="container mt-4">
-      <h2 className="fw-bold mb-3" style={{color : "#00695C"}}>Admin Approvals</h2>
+      <h2 className="fw-bold mb-3" style={{ color: "#00695C" }}>Admin Approvals</h2>
 
       <table className="table table-bordered table-striped">
         <thead>
