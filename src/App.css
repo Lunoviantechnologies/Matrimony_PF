@@ -3,6 +3,20 @@
     font-family: 'Verdana', 'sans-serif';
 }
 
+/* scrolling won't display */
+html,
+body {
+    overflow-y: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;
+}
+
+
 /* Navbar */
 
 .navBody {

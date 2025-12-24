@@ -1,7 +1,6 @@
-import React from "react";
-import { Card, CardContent, Typography, TextField, Button } from "@mui/material";
-import axios from "axios";
-import backendIP from "../../api/api";
+import React, { useState } from "react";
+import { Card, CardContent, Typography, TextField, Button, Box, Stack, IconButton, InputAdornment,} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import api from "../../api/axiosInstance";
 
 export default function SecuritySettings({
@@ -9,9 +8,12 @@ export default function SecuritySettings({
     setSecurityPassword,
     userId,
 }) {
+    const [showOldPassword, setShowOldPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
     const handleSubmit = () => {
         const { oldPassword, newPassword, confirmPassword } = securityPassword;
-        console.log("securityPassword", securityPassword);
 
         if (!oldPassword || !newPassword || !confirmPassword) {
             alert("All fields are required");
@@ -26,11 +28,12 @@ export default function SecuritySettings({
             return;
         }
 
-        api.put(`/auth/change-password/${userId}`, {
-            currentPassword: oldPassword,
-            newPassword,
-            confirmPassword,
-        })
+        api
+            .put(`/auth/change-password/${userId}`, {
+                currentPassword: oldPassword,
+                newPassword,
+                confirmPassword,
+            })
             .then(() => {
                 alert("Password changed successfully");
                 setSecurityPassword({
@@ -43,52 +46,109 @@ export default function SecuritySettings({
     };
 
     return (
-        <Card>
-            <CardContent>
-                <Typography variant="h6" fontWeight="600">
-                    Security Settings
-                </Typography>
+        <Box
+            sx={{
+                maxWidth: 480,
+                mx: "auto",
+                px: { xs: 2, sm: 3 },
+                py: 3,
+            }}
+        >
+            <Card>
+                <CardContent>
+                    <Typography variant="h6" fontWeight={600} gutterBottom>
+                        Security Settings
+                    </Typography>
 
-                <TextField
-                    type="text"
-                    label="Old Password"
-                    fullWidth
-                    margin="normal"
-                    value={securityPassword.oldPassword}
-                    onChange={e =>
-                        setSecurityPassword(p => ({ ...p, oldPassword: e.target.value }))
-                    }
-                />
+                    <Stack spacing={2}>
+                        {/* Old Password */}
+                        <TextField
+                            label="Old Password"
+                            type={showOldPassword ? "text" : "password"}
+                            fullWidth
+                            value={securityPassword.oldPassword}
+                            onChange={(e) =>
+                                setSecurityPassword((p) => ({
+                                    ...p,
+                                    oldPassword: e.target.value,
+                                }))
+                            }
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            onClick={() => setShowOldPassword((s) => !s)}
+                                            edge="end"
+                                        >
+                                            {showOldPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
 
-                <TextField
-                    type="text"
-                    label="New Password"
-                    fullWidth
-                    margin="normal"
-                    value={securityPassword.newPassword}
-                    onChange={e =>
-                        setSecurityPassword(p => ({ ...p, newPassword: e.target.value }))
-                    }
-                />
+                        {/* New Password */}
+                        <TextField
+                            label="New Password"
+                            type={showNewPassword ? "text" : "password"}
+                            fullWidth
+                            value={securityPassword.newPassword}
+                            onChange={(e) =>
+                                setSecurityPassword((p) => ({
+                                    ...p,
+                                    newPassword: e.target.value,
+                                }))
+                            }
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            onClick={() => setShowNewPassword((s) => !s)}
+                                            edge="end"
+                                        >
+                                            {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
 
-                <TextField
-                    type="text"
-                    label="Confirm Password"
-                    fullWidth
-                    margin="normal"
-                    value={securityPassword.confirmPassword}
-                    onChange={e =>
-                        setSecurityPassword(p => ({
-                            ...p,
-                            confirmPassword: e.target.value,
-                        }))
-                    }
-                />
+                        {/* Confirm Password */}
+                        <TextField
+                            label="Confirm Password"
+                            type={showConfirmPassword ? "text" : "password"}
+                            fullWidth
+                            value={securityPassword.confirmPassword}
+                            onChange={(e) =>
+                                setSecurityPassword((p) => ({
+                                    ...p,
+                                    confirmPassword: e.target.value,
+                                }))
+                            }
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            onClick={() => setShowConfirmPassword((s) => !s)}
+                                            edge="end"
+                                        >
+                                            {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
 
-                <Button variant="contained" sx={{ mt: 2 }} onClick={handleSubmit}>
-                    Update Password
-                </Button>
-            </CardContent>
-        </Card>
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            onClick={handleSubmit}
+                        >
+                            Update Password
+                        </Button>
+                    </Stack>
+                </CardContent>
+            </Card>
+        </Box>
     );
 };

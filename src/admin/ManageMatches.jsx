@@ -3,8 +3,6 @@ import "../styleSheets/ManageMatches.css";
 import { TbHeartHandshake } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAdminProfiles } from "../redux/thunk/profileThunk";
-import axios from "axios";
-import backendIP from "../api/api";
 import api from "../api/axiosInstance";
 
 export default function ManageMatches() {

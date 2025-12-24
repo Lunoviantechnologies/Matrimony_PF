@@ -1,16 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../styleSheets/contactUs.css";
-import {
-  FaPhoneAlt,
-  FaEnvelope,
-  FaMapMarkerAlt,
-  FaTwitter,
-  FaFacebookF,
-  FaLinkedinIn,
-  FaInstagram,
-} from "react-icons/fa";
+import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaTwitter, FaFacebookF, FaLinkedinIn, FaInstagram, } from "react-icons/fa";
 import backendIP from "../api/api";
+import { toast } from "react-toastify";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -29,47 +22,47 @@ const ContactUs = () => {
       [e.target.name]: e.target.value,
     });
   };
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setStatus("");
-  setError("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus("");
+    setError("");
 
-  const payload = {
-    name: formData.name,              // ✅ what backend expects
-    email: formData.email,
-    phone: formData.phone,
-    message: formData.message,        // ✅ what backend expects
+    const payload = {
+      name: formData.name,
+      email: formData.email,
+      phoneNumber: formData.phone,
+      message: formData.message,
 
-    // Also keep these if backend uses them in future
-    fullName: formData.name,
-    phoneNumber: formData.phone,
-    description: formData.message,
+      // Also keep these if backend uses them in future
+      // fullName: formData.name,
+      // phoneNumber: formData.phone,
+      // description: formData.message,
+    };
+
+    console.log("Sending payload:", payload);
+
+    try {
+      const res = await axios.post(`${backendIP}/contact/send`, payload,
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      console.log("Response:", res.data);
+      setStatus("✅ Message sent successfully");
+      toast.success("Message sent successfully");
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        message: "",
+      });
+
+    } catch (err) {
+      console.error("Error:", err.response?.data || err.message);
+      toast.error("Message sent failed");
+      setError(err.response?.data?.message || "Something went wrong");
+    }
   };
-
-  console.log("Sending payload:", payload);
-
-  try {
-    const res = await axios.post(
-      `${backendIP}/api/contact`,
-      payload,
-      { headers: { "Content-Type": "application/json" } }
-    );
-
-    console.log("Response:", res.data);
-    setStatus("✅ Message sent successfully");
-
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      message: "",
-    });
-
-  } catch (err) {
-    console.error("Error:", err.response?.data || err.message);
-    setError(err.response?.data?.message || "Something went wrong");
-  }
-};
 
 
   return (
@@ -114,7 +107,7 @@ const handleSubmit = async (e) => {
 
             <label>Phone Number</label>
             <input
-              type="tel"
+              type="number"
               name="phone"
               placeholder="Enter your phone number"
               value={formData.phone}

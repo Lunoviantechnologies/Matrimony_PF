@@ -609,7 +609,7 @@ export default function EditProfile() {
             </label>
 
             <label className="field"><div className="field-label">Date of Birth</div>
-              <input type="date" value={buffer.dateOfBirth || ""} onChange={(e) => handleEditInputLocal("dateOfBirth", e.target.value)} />
+              <input type="date" value={buffer.dateOfBirth || ""} disabled onChange={(e) => handleEditInputLocal("dateOfBirth", e.target.value)} />
             </label>
 
             <label className="field"><div className="field-label">Gender</div>

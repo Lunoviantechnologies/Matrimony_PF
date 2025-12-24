@@ -132,7 +132,7 @@
 
 /* online or offline */
 
-/* .active-status {
+.active-status {
     font-size: 12px;
     font-weight: 500;
 }
@@ -142,8 +142,8 @@
 }
 
 .active-status.offline {
-    color: #999;
-} */
+    color: #ff0000;
+}
 
 /* Messages */
 .chatwindow-messages {

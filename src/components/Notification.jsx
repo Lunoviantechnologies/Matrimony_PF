@@ -4,7 +4,6 @@ import { FaBell } from "react-icons/fa";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import backendIP from "../api/api";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import api from "../api/axiosInstance";
 
@@ -27,13 +26,13 @@ const Notification = ({ onNavigate }) => {
       .then((res) => {
         console.log("📦 Initial notifications:", res.data);
 
-        if (Array.isArray(res.data)) {
-          setNotifications(res.data);
-        } else if (res.data.content) {
-          setNotifications(res.data.content);
-        } else {
-          setNotifications([]);
-        }
+        const data = Array.isArray(res.data)
+          ? res.data : res.data?.content || [];
+
+        // 🔑 normalize read flag
+        const normalized = data.map((n) => ({ ...n, read: Boolean(n.read), }));
+
+        setNotifications(normalized);
       })
       .catch((err) => {
         console.error("❌ Failed loading notifications:", err);
@@ -57,28 +56,22 @@ const Notification = ({ onNavigate }) => {
       webSocketFactory: () => socket,
       reconnectDelay: 5000,
       connectHeaders: {
-        Authorization : `Bearer ${token}`
-      },
-
-      debug: (msg) => {
-        console.log("🔧 STOMP Debug:", msg);
+        Authorization: `Bearer ${token}`
       },
 
       onConnect: () => {
         console.log("🟢 WS CONNECTED for user:", myId);
 
-        client.subscribe(
-          `/user/queue/notifications/user`,
-          (message) => {
-            console.log("📨 Live notification received:", message);
+        client.subscribe(`/user/queue/notifications/user`, (message) => {
+          console.log("📨 Live notification received:", message);
 
-            const notif = JSON.parse(message.body);
+          const notif = JSON.parse(message.body);
 
-            setNotifications((prev) => {
-              const prevList = Array.isArray(prev) ? prev : [];
-              return [{ ...notif, read: false }, ...prevList];
-            });
-          }
+          setNotifications((prev) => [
+            { ...notif, read: false },
+            ...(Array.isArray(prev) ? prev : []),
+          ]);
+        }
         );
       },
 
@@ -117,7 +110,7 @@ const Notification = ({ onNavigate }) => {
   // ------------------------------------------------
   const markAsRead = async (id) => {
     try {
-      await api.post(`/notifications/mark-all-read?userId=${myId}`);
+      await api.post(`/notifications/read/${id}`);
 
       setNotifications((prev) =>
         prev.map((n) => (n.id === id ? { ...n, read: true } : n))
@@ -129,8 +122,23 @@ const Notification = ({ onNavigate }) => {
     }
   };
 
+  /* ------------------------------------------------
+    5. Mark ALL notifications read
+ ------------------------------------------------ */
+  const markAllAsRead = async () => {
+    try {
+      await api.post(`/notifications/mark-all-read?userId=${myId}`);
+
+      setNotifications((prev) =>
+        prev.map((n) => ({ ...n, read: true }))
+      );
+    } catch (err) {
+      console.error("❌ Failed marking all read:", err);
+    }
+  };
+
   // ------------------------------------------------
-  // 5. On Click of Notification
+  // 6. On Click of Notification
   // ------------------------------------------------
   const handleItemClick = (item) => {
     console.log("➡ Notification clicked:", item);
@@ -141,12 +149,12 @@ const Notification = ({ onNavigate }) => {
   };
 
   // ------------------------------------------------
-  // 6. Unread Count
+  // 7. Unread Count
   // ------------------------------------------------
   const unreadCount = notifications?.filter((n) => !n.read).length || 0;
 
   // ------------------------------------------------
-  // 7. Render
+  // 8. Render
   // ------------------------------------------------
   return (
     <div className="notif-container" ref={dropdownRef}>
@@ -157,6 +165,20 @@ const Notification = ({ onNavigate }) => {
 
       {open && (
         <div className="notif-dropdown">
+          {unreadCount > 0 && (
+            <div className="notif-actions">
+              <button
+                className="mark-all-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  markAllAsRead();
+                }}
+              >
+                Mark all as read
+              </button>
+            </div>
+          )}
+          
           {(!notifications || notifications.length === 0) && (
             <div className="notif-empty">No notifications</div>
           )}

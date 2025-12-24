@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, Typography, TextField, MenuItem, Switch, FormControlLabel, Button } from "@mui/material";
-import axios from "axios";
-import backendIP from "../../api/api";
+import { Card, CardContent, Typography, TextField, MenuItem, Switch, FormControlLabel, Button, Box, Stack,} from "@mui/material";
 import api from "../../api/axiosInstance";
 
 export default function PrivacySettings({ userId }) {
@@ -11,7 +9,6 @@ export default function PrivacySettings({ userId }) {
     const [saving, setSaving] = useState(false);
 
     useEffect(() => {
-        // Fetch current privacy settings
         const fetchPrivacySettings = async () => {
             try {
                 const response = await api.get(`/profiles/${userId}/privacy`);
@@ -32,7 +29,7 @@ export default function PrivacySettings({ userId }) {
         try {
             await api.put(`/profiles/${userId}/privacy`, {
                 profileVisibility,
-                hideProfilePhoto
+                hideProfilePhoto,
             });
             alert("Privacy settings saved successfully!");
         } catch (error) {
@@ -43,45 +40,67 @@ export default function PrivacySettings({ userId }) {
         }
     };
 
-    if (loading) return <Typography>Loading...</Typography>;
+    if (loading) {
+        return (
+            <Typography align="center" sx={{ mt: 4 }}>
+                Loading...
+            </Typography>
+        );
+    }
 
     return (
-        <Card>
-            <CardContent>
-                <Typography variant="h6">Privacy</Typography>
+        <Box
+            sx={{
+                maxWidth: 480,
+                mx: "auto",
+                px: { xs: 2, sm: 3 },
+                py: 3,
+            }}
+        >
+            <Card>
+                <CardContent>
+                    <Typography variant="h6" fontWeight={600} gutterBottom>
+                        Privacy Settings
+                    </Typography>
 
-                <TextField
-                    select
-                    fullWidth
-                    label="Profile Visibility"
-                    margin="normal"
-                    value={profileVisibility}
-                    onChange={(e) => setProfileVisibility(e.target.value)}
-                >
-                    <MenuItem value="Everyone">Everyone</MenuItem>
-                    <MenuItem value="Only Matches">Only Matches</MenuItem>
-                    <MenuItem value="Premium Members">Premium Members</MenuItem>
-                </TextField>
+                    <Stack spacing={2}>
+                        <TextField
+                            select
+                            fullWidth
+                            label="Profile Visibility"
+                            value={profileVisibility}
+                            onChange={(e) => setProfileVisibility(e.target.value)}
+                        >
+                            <MenuItem value="Everyone">Everyone</MenuItem>
+                            <MenuItem value="Only Matches">Only Matches</MenuItem>
+                            <MenuItem value="Premium Members">
+                                Premium Members
+                            </MenuItem>
+                        </TextField>
 
-                <FormControlLabel
-                    control={
-                        <Switch
-                            checked={hideProfilePhoto}
-                            onChange={(e) => setHideProfilePhoto(e.target.checked)}
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={hideProfilePhoto}
+                                    onChange={(e) =>
+                                        setHideProfilePhoto(e.target.checked)
+                                    }
+                                />
+                            }
+                            label="Hide Profile Photo"
                         />
-                    }
-                    label="Hide Profile Photo"
-                />
 
-                <Button
-                    variant="contained"
-                    sx={{ mt: 2 }}
-                    onClick={handleSave}
-                    disabled={saving}
-                >
-                    {saving ? "Saving..." : "Save"}
-                </Button>
-            </CardContent>
-        </Card>
+                        <Button
+                            variant="contained"
+                            fullWidth
+                            onClick={handleSave}
+                            disabled={saving}
+                        >
+                            {saving ? "Saving..." : "Save Changes"}
+                        </Button>
+                    </Stack>
+                </CardContent>
+            </Card>
+        </Box>
     );
 };

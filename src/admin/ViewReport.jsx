@@ -24,7 +24,7 @@ const ViewReport = () => {
         status: p.status,
         name: p.name || "",
         city: p.city || "N/A",
-        isActive: p.status === "SUCCESS",
+        isActive: p.status?.toUpperCase() === "PAID",
         createdAt: new Date(p.createdAt),
       }));
 

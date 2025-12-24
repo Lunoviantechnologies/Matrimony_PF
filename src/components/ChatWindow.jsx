@@ -43,20 +43,27 @@ const ChatWindow = () => {
 
   // user online or offline
   useEffect(() => {
-    if (!selectedUser) return;
+    if (!selectedUser || !myId) return;
 
     const otherUserId =
       Number(selectedUser.senderId) === Number(myId)
-        ? selectedUser.receiverId
-        : selectedUser.senderId;
+        ? Number(selectedUser.receiverId)
+        : Number(selectedUser.senderId);
 
-    api.get(`/chat/online/${otherUserId}`)
+    api.get("/chat/online")
       .then(res => {
-        setOnlineStatus(res.data.online);
+        const onlineUsers = (res.data || []).map(id => Number(id));
+
+        console.log("all online (normalized):", onlineUsers);
+        console.log("checking for:", otherUserId);
+
+        const isOnline = onlineUsers.includes(otherUserId);
+        setOnlineStatus(isOnline);
       })
       .catch(() => setOnlineStatus(false));
-  }, [selectedUser, myId]);
 
+  }, [selectedUser, myId]);
+  console.log("online : ", onlineStatus);
 
   /* FETCH ACCEPTED USERS */
   useEffect(() => {
@@ -348,12 +355,12 @@ const ChatWindow = () => {
                     ? selectedUser.receiverName
                     : selectedUser.senderName}
                 </h4>
-                {/* <span
+                <span
                   className={`active-status ${onlineStatus ? "online" : "offline"}`}
                 >
-                  {onlineStatus ? "Active now" : "Offline"}
-                </span> */}
-                <span className="active-status">Active now</span>
+                  {onlineStatus ? "Online" : "Offline"}
+                </span>
+                {/* <span className="active-status">Active now</span> */}
               </div>
             </div>
           </div>
