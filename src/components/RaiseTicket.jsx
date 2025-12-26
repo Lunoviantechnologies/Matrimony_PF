@@ -7,11 +7,11 @@ import { toast } from "react-toastify";
 import api from "../api/axiosInstance";
 
 const RaiseTicket = () => {
-  const { id } = useSelector(state => state.auth);
+  const { id, email } = useSelector(state => state.auth);
   const [form, setForm] = useState({
     category: "",
     name: "",
-    email: "",
+    email: email,
     phone: "",
     message: "",
     memberId: id,
@@ -21,7 +21,7 @@ const RaiseTicket = () => {
 
   // ✅ UI Categories (user friendly)
   const categories = [
-    "Profile Approval Issue",
+    "Profile Request Issue",
     "Premium Membership",
     "Login / Account Recovery",
     "Report Fake / Fraud Profile",
@@ -33,13 +33,13 @@ const RaiseTicket = () => {
 
   // ✅ Backend Enum Mapping
   const categoryMap = {
-    "Profile Approval Issue": "Profile Approval Issue",
-    "Premium Membership": "Premium Membership",
-    "Login / Account Recovery": "Login / Account Recovery",
-    "Report Fake / Fraud Profile": "Report Fake / Fraud Profile",
-    "Payment Issue": "Payment Issue",
-    "Profile Privacy & Safety": "Profile Privacy & Safety",
-    "Matchmaking Assistance": "Matchmaking Assistance",
+    "Profile Request Issue": "Profile_Request_Issue",
+    "Premium Membership": "Premium_Membership",
+    "Login / Account Recovery": "Login_Account_Recovery",
+    "Report Fake / Fraud Profile": "Report_Fraud_Profile",
+    "Payment Issue": "Payment_Issue",
+    "Profile Privacy & Safety": "Profile_Privacy_Safety",
+    "Matchmaking Assistance": "Matchmaking_Assistance",
     "Other Queries": "OTHER"
   };
 
@@ -129,6 +129,7 @@ const RaiseTicket = () => {
             name="email"
             placeholder="Enter your email"
             value={form.email}
+            disabled
             onChange={handleChange}
             required
           />

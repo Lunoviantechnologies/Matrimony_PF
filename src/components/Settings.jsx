@@ -3,7 +3,7 @@ import { Tabs, Tab, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import { useNavigate } from "react-router-dom";
-import NotificationSettings from "./settings/NotificationSettings";
+// import NotificationSettings from "./settings/NotificationSettings";
 import SubscriptionSettings from "./settings/SubscriptionSettings";
 import SupportSettings from "./settings/SupportSettings";
 import PrivacySettings from "./settings/privacySettings";

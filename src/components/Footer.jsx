@@ -75,7 +75,7 @@ const Footer = () => {
         </div>
 
         <div>
-          <h2 className="footer-heading">Saathjanam.com - Trusted by {formatMemberCount(profileCount)} Members</h2>
+          <h2 className="footer-heading">Saathjanam.com - Trusted by {formatMemberCount(profileCount + 10000)} Members</h2>
 
           <p className="footer-description">
             Saathjanam.com, one of India's leading matrimonial platforms, was

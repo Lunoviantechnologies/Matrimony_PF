@@ -35,7 +35,7 @@ const AboutUs = () => {
             {/* Header Section */}
             <header className="aboutus-header">
                 <h1 className="aboutus-title">Saathjanam.com</h1>
-                <p className="aboutus-subtitle">- <strong>Trusted by over {formatMemberCount(profileCount)} Members</strong></p>
+                <p className="aboutus-subtitle">- <strong>Trusted by over {formatMemberCount(profileCount + 10000)} Members</strong></p>
 
                 <div className="aboutus-links">
                     <Link to="#">India</Link> |

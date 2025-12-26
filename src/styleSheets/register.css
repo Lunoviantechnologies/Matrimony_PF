@@ -96,6 +96,11 @@ h2 {
   box-shadow: 0 0 0 4px rgba(24, 194, 180, 0.1);
 }
 
+.error-text{
+  color: red;
+  font-size: 12px;
+}
+
 .option-group {
   display: flex;
   flex-wrap: wrap;

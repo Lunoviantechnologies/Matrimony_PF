@@ -67,29 +67,34 @@ const validationSchemas = [
 
   // STEP 2
   Yup.object({
-    firstName: Yup.string().required("Required"),
-    lastName: Yup.string().required("Required"),
-    dobDay: Yup.string().required("Required"),
-    dobMonth: Yup.string().required("Required"),
-    dobYear: Yup.string().required("Required"),
+    firstName: Yup.string().required("First name is Required"),
+    lastName: Yup.string().required("Last name is Required"),
+    age: Yup.number().typeError("Age must be a number").required("Age is required")
+      .min(18, "Minimum age is 18").max(60, "Maximum age is 60"),
+    dobDay: Yup.number().typeError("Date must be a number").required("Date is required")
+      .min(1, "Minimum date is 1").max(31, "Maximum date is 31"),
+    dobMonth: Yup.number().typeError("Month must be a number").required("Month is required")
+      .min(1, "Minimum month is 1").max(12, "Maximum month is 12"),
+    dobYear: Yup.number().typeError("Year must be a number").required("Year is required"),
   }),
 
   // STEP 3
   Yup.object({
-    religion: Yup.string().required("Required"),
-    caste: Yup.string().required("Required"),
+    religion: Yup.string().required("Religion is required"),
+    caste: Yup.string().required("Caste is required"),
+    subCaste: Yup.string().required("Sub-Caste is required"),
   }),
 
   // STEP 4
   Yup.object({
-    country: Yup.string().required("Required"),
-    city: Yup.string().required("Required"),
+    country: Yup.string().required("Country is required"),
+    city: Yup.string().required("City is required"),
   }),
 
   // STEP 5
   Yup.object({
-    maritalStatus: Yup.string().required("Required"),
-    height: Yup.string().required("Required"),
+    maritalStatus: Yup.string().required("marital Status required"),
+    height: Yup.string().required("Height is required"),
   }),
 
   // STEP 6
@@ -107,10 +112,15 @@ const validationSchemas = [
 
   // STEP 8
   Yup.object({
-    emailId: Yup.string().email("Invalid emailId").required("Required"),
+    emailId: Yup.string().email("Invalid emailId").required("Email is Required"),
     mobileNumber: Yup.string()
       .matches(/^\d{10}$/, "Enter 10-digit mobile")
       .required("Required"),
+    createPassword: Yup.string().required("Password is required")
+      .min(8, "Password must be at least 8 characters")
+      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
+        "Password must contain uppercase, lowercase, number, and special character"
+      ),
   }),
 
   // STEP 9 (NO validation)
@@ -342,6 +352,7 @@ const Register = () => {
             <ErrorMessage name="lastName" component="div" className="error-text" />
 
             <Field className="form-input" name="age" placeholder="Enter your Age" />
+            <ErrorMessage name="age" component="div" className="error-text" />
 
             <label className="form-label">Date of Birth</label>
             <div className="dob-fields">
@@ -398,6 +409,7 @@ const Register = () => {
             <ErrorMessage name="caste" component="div" className="error-text" />
 
             <Field name="subCaste" className="form-input" placeholder="Sub-community *" />
+            <ErrorMessage name="subCaste" component="div" className="error-text" />
           </>
         );
 

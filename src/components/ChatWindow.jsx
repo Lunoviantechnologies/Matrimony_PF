@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect, use } from "react";
-import axios from "axios";
+import React, { useState, useRef, useEffect } from "react";
 import backendIP from "../api/api";
 import { FiSend, FiSearch } from "react-icons/fi";
 import { useParams, useNavigate } from "react-router-dom";
@@ -28,12 +27,24 @@ const ChatWindow = () => {
 
   const messagesEndRef = useRef(null);
   const stompClientRef = useRef(null);
+  const activeChatUserRef = useRef(null);
 
   useEffect(() => {
     if (messages.length > 0) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+      messagesEndRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
     }
   }, [messages]);
+
+  useEffect(() => {
+    activeChatUserRef.current = Number(userId);
+  }, [userId]);
+
+  useEffect(() => {
+    setMessages([]); // ✅ CLEAR OLD CHAT
+  }, [userId]);
 
   useEffect(() => {
     if (role[0].toUpperCase() === "USER") {
@@ -178,9 +189,12 @@ const ChatWindow = () => {
     }
 
     return () => {
-      console.log("🔌 Disconnecting WebSocket…");
-      stompClientRef.current?.deactivate();
+      if (stompClientRef.current) {
+        stompClientRef.current.deactivate();
+        stompClientRef.current = null;
+      }
     };
+
   }, [myId]);
 
   /* SEND MESSAGE */
@@ -230,20 +244,23 @@ const ChatWindow = () => {
   });
 
   const handleIncoming = (body) => {
-    console.log("🧪 Incoming WS payload:", body);
+    if (!body || !body.senderId || !body.receiverId) return;
 
-    if (!body || !body.senderId) {
-      console.warn("⚠️ Invalid WS payload:", body);
+    const sender = Number(body.senderId);
+    const receiver = Number(body.receiverId);
+    const me = Number(myId);
+    const activeUser = activeChatUserRef.current;
+
+    const isThisChat =
+      (sender === me && receiver === activeUser) ||
+      (sender === activeUser && receiver === me);
+
+    if (!isThisChat) {
+      // Message belongs to another chat → ignore in UI
       return;
     }
 
-    const chatUserId = Number(userId);
-    if (
-      Number(body.senderId) === chatUserId ||
-      Number(body.receiverId) === chatUserId
-    ) {
-      setMessages((prev) => [...prev, body]);
-    }
+    setMessages((prev) => [...prev, body]);
   };
 
   const getUserImageById = (id) => {
