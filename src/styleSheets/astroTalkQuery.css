@@ -1,0 +1,175 @@
+.astro-upgrade {
+    max-width: 420px;
+    margin: 40px auto;
+    padding: 28px 24px;
+    background: #fff7f9;
+    border: 1px solid #f2c6d3;
+    border-radius: 14px;
+    text-align: center;
+}
+
+.astro-upgrade h3 {
+    color: #8b1538;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.astro-upgrade p {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 18px;
+}
+
+.upgrade-btn {
+    background: #8b1538;
+    color: #fff;
+    padding: 10px 22px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.upgrade-btn:hover {
+    opacity: 0.9;
+}
+
+
+/* Container */
+.astro-container {
+    padding: 32px 16px;
+    text-align: center;
+}
+
+/* Title */
+.astro-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #8b1538;
+}
+
+/* Subtitle */
+.astro-subtitle {
+    margin: 8px 0 24px;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Grid */
+.astro-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    max-width: 510px;
+    margin: auto;
+    padding: 0 10px;
+}
+
+/* Card */
+.astro-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.astro-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Avatar */
+.astro-avatar {
+    width: 64px;
+    height: 64px;
+    margin: auto;
+    background: #8b1538;
+    color: #fff;
+    font-size: 26px;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Name */
+.astro-name {
+    margin: 12px 0 4px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+/* Info text */
+.astro-info {
+    font-size: 13px;
+    margin-top: 6px;
+    color: #555;
+}
+
+/* Rating */
+.astro-rating {
+    margin-top: 8px;
+    color: #f4b400;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* Price */
+.astro-price {
+    margin: 10px 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #222;
+}
+
+/* Number */
+.astro-number {
+    font-size: 13px;
+    color: #666;
+}
+
+/* -------- Responsive Breakpoints -------- */
+
+/* Tablets */
+@media (max-width: 768px) {
+    .astro-title {
+        font-size: 24px;
+    }
+
+    .astro-grid {
+        gap: 18px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .astro-container {
+        padding: 24px 12px;
+    }
+
+    .astro-title {
+        font-size: 22px;
+    }
+
+    .astro-subtitle {
+        font-size: 13px;
+    }
+
+    .astro-card {
+        padding: 18px;
+    }
+
+    .astro-avatar {
+        width: 56px;
+        height: 56px;
+        font-size: 22px;
+    }
+
+    .astro-name {
+        font-size: 16px;
+    }
+}

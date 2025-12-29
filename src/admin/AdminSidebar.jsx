@@ -1,5 +1,5 @@
 import React from "react";
-import { FaUsers, FaHeart, FaUserPlus, FaRupeeSign, FaChartLine, FaFileAlt, FaCheckCircle, FaHeadset } from "react-icons/fa";
+import { FaUsers, FaHeart, FaUserPlus, FaRupeeSign, FaChartLine, FaFileAlt, FaCheckCircle, FaHeadset, FaStar, FaMoneyCheckAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "../stylesheets/adminSidebar.css";
 
@@ -58,8 +58,8 @@ export default function AdminSidebar() {
                 <button onClick={handleReport}><FaFileAlt /><span>Reports</span></button>
                 <button onClick={handleaprovals}><FaCheckCircle /><span>Approvals</span></button>
                 <button onClick={handlesupport}><FaHeadset /><span>User Support</span></button>
-                <button onClick={handlePaymentDisplay}><FaHeadset /><span>Payment Display Data</span></button>
-                <button onClick={handleAstroTalk}><FaHeadset /><span>Astro Talk Info</span></button>
+                <button onClick={handlePaymentDisplay}><FaMoneyCheckAlt /><span>Payment Display</span></button>
+                <button onClick={handleAstroTalk}><FaStar /><span>Astrology Service</span></button>
             </nav>
         </aside>
     );

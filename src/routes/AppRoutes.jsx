@@ -42,6 +42,7 @@ import PaymentSuccess from "../successPages/PaymentSuccess";
 import PaymentFailed from "../successPages/paymentFailure";
 import PaymentDisplayData from "../admin/PaymentDisplayData";
 import AstroTalkInfo from "../admin/AstroTalkInfo";
+import AstroTalkQuery from "../pages/AstroTalkQuery";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -61,10 +62,6 @@ const AppRoutes = createBrowserRouter([
                 element: <ContactUs />
             },
             {
-                path: "/help",
-                element: <RaiseTicket />
-            },
-            {
                 path: "/register",
                 element: <Register />
             },
@@ -75,10 +72,6 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "registration-success",
                 element: <RegisterSuccessPage />
-            },
-            {
-                path: "premium",
-                element: <PremiumSubscription />
             },
         ],
     },
@@ -169,6 +162,18 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "notifications",
                 element: <Notification />
+            },
+            {
+                path: "help",
+                element: <RaiseTicket />
+            },
+            {
+                path: "premium",
+                element: <PremiumSubscription />
+            },
+            {
+                path: "astroTalkQuery",
+                element: <AstroTalkQuery />
             },
         ]
     },

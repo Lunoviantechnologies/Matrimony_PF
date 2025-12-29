@@ -33,8 +33,9 @@ const UserNavbar = () => {
 
     return (
         <>
-            <Link className="navLink" to="/help">Help</Link>
-            <Link className="navLink" to="/premium">Upgrade</Link>
+            <Link className="navLink" to="/dashboard/astroTalkQuery">Astro_Talk</Link>
+            <Link className="navLink" to="/dashboard/help">Help</Link>
+            <Link className="navLink" to="/dashboard/premium">Upgrade</Link>
             <Notification />
 
             <div className="dropdown">

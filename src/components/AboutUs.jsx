@@ -3,39 +3,15 @@ import { Link } from "react-router-dom";
 import "../styleSheets/AboutUs.css";
 import { GiChainedHeart, GiConfirmed } from "react-icons/gi";
 import { IoIosLock } from "react-icons/io";
-import axios from "axios";
-import backendIP from "../api/api";
 
 const AboutUs = () => {
-
-    const [profileCount, setProfileCount] = useState(0);
-
-    const formatMemberCount = (num) => {
-        if (!num) return "—";
-        if (num < 1000) return num.toString();
-        if (num < 100000) {
-            return `${(num / 1000).toFixed(1).replace(".0", "")}K+`;
-        }
-        if (num < 10000000) {
-            return `${(num / 100000).toFixed(1).replace(".0", "")}L+`;
-        }
-        return `${(num / 10000000).toFixed(1).replace(".0", "")}Cr+`;
-    };
-
-    useEffect(() => {
-        axios.get(`${backendIP}/profiles/count`).then(res => {
-            // console.log("count : ", res.data);
-            setProfileCount(res.data.count);
-        }).catch(() => setProfileCount(0));
-    }, []);
-    // console.log("count : ", profileCount);
 
     return (
         <div className="aboutus-container">
             {/* Header Section */}
             <header className="aboutus-header">
                 <h1 className="aboutus-title">Saathjanam.com</h1>
-                <p className="aboutus-subtitle">- <strong>Trusted by over {formatMemberCount(profileCount + 10000)} Members</strong></p>
+                <p className="aboutus-subtitle"><strong>Serving members worldwide</strong></p>
 
                 <div className="aboutus-links">
                     <Link to="#">India</Link> |
@@ -48,7 +24,7 @@ const AboutUs = () => {
 
             {/* Trust Bar Section */}
             <section className="trustbar-section">
-                <div className="trustbar-title">Trusted by Millions</div>
+                <div className="trustbar-title">A global matrimony community</div>
                 <div className="trustbar-features">
                     <div className="trustbar-item">
                         <span role="img" aria-label="Heart" className="trustbar-icon heart"><GiChainedHeart /></span>

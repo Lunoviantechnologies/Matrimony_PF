@@ -115,6 +115,12 @@ const Nearme = () => {
       });
   }, [profiles, filters, allHiddenIds, myProfile, id]);
 
+  const handleProfileCount = (userId) => {
+    api.post(`profiles/record/${userId}/${id}`).then(res => {
+      console.log("count res : ", res.data);
+    })
+  };
+
   return (
     <div className="profile-main-container">
       <h2 className="profile-title">Near Matches For You</h2>
@@ -157,6 +163,7 @@ const Nearme = () => {
                       <button
                         className="btn btn-view"
                         onClick={(e) => {
+                          handleProfileCount(p.id);
                           setSelectedProfile(p);
                           setAnchorRect(e.target.getBoundingClientRect());
                           setShowModal(true);
@@ -183,6 +190,7 @@ const Nearme = () => {
 
       {showModal && (
         <ViewProfileModal
+          premium={myProfile.premium}
           profile={selectedProfile}
           anchorRect={anchorRect}
           onClose={() => setShowModal(false)}

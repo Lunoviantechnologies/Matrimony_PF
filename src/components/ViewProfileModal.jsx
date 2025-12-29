@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import "../styleSheets/ViewProfileModal.css";
-import backendIP from "../api/api";
 
-export default function ViewProfileModal({ profile = {}, onClose = () => {}, anchorRect = null }) {
+export default function ViewProfileModal({ premium ,profile = {}, onClose = () => { }, anchorRect = null }) {
   useEffect(() => {
     const onKey = (e) => { if (e.key === "Escape") onClose(); };
     document.addEventListener("keydown", onKey);
@@ -35,11 +34,11 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {}, anc
     phone = "",
     email = "",
     id,
-    updatePhoto : image,
+    updatePhoto: image,
   } = profile;
 
-  const imgSrc = `${backendIP.replace("/api", "")}/profile-photos/${image}` || photos[0] || "/mnt/data/Screenshot 2025-11-21 110558.png";
-  // console.log("ViewProfileModal imgSrc:", imgSrc);
+  const imgSrc = image ? image : (gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png");
+  // console.log("ViewProfileModal imgSrc:", premium);
 
   const handleBackdrop = (e) => {
     if (e.target.classList && (e.target.classList.contains("vp-backdrop") || e.target.classList.contains("vp-pop-backdrop"))) {
@@ -70,14 +69,21 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {}, anc
       <div className="vp-pop-backdrop" onClick={handleBackdrop}>
         <div
           className="vp-popover vp-popover-expanded"
-          style={{ position: "fixed", left, top, width: popupW, maxHeight: popupH, zIndex: 2000,}}
+          style={{ position: "fixed", left, top, width: popupW, maxHeight: popupH, zIndex: 2000, }}
           onClick={(e) => e.stopPropagation()}
         >
           <button className="vp-close-small" onClick={onClose} aria-label="Close">✕</button>
 
           <div className="vp-pop-row">
             <div className="vp-passport-small">
-              <img src={imgSrc} alt={firstName} />
+              <img src={imgSrc} alt={firstName}
+                className={`profile-img ${!premium ? "blur-image" : ""}`}
+                onError={(e) => {
+                  e.target.src = gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+                }}
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+              />
             </div>
 
             <div className="vp-info-small vp-info-scroll">
@@ -106,7 +112,7 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {}, anc
                 <div className="vp-section-small">
                   <strong>Family:</strong>
                   <ul className="vp-list-small">
-                    {Object.entries(family).map(([k,v]) => (
+                    {Object.entries(family).map(([k, v]) => (
                       <li key={k}><strong>{k}:</strong> {String(v)}</li>
                     ))}
                   </ul>
@@ -140,7 +146,7 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {}, anc
             <div className="vp-main-image"><img src={imgSrc} alt={name} /></div>
             {photos && photos.length > 1 && (
               <div className="vp-photos-row">
-                {photos.slice(0,6).map((p, i) => <img key={i} src={p} alt={`${name}-${i}`} className="vp-thumb" />)}
+                {photos.slice(0, 6).map((p, i) => <img key={i} src={p} alt={`${name}-${i}`} className="vp-thumb" />)}
               </div>
             )}
           </div>
@@ -172,7 +178,7 @@ export default function ViewProfileModal({ profile = {}, onClose = () => {}, anc
               <div className="vp-section">
                 <h4>Family</h4>
                 <ul className="vp-list">
-                  {Object.entries(family).map(([k,v]) => <li key={k}><strong>{k}:</strong> {v}</li>)}
+                  {Object.entries(family).map(([k, v]) => <li key={k}><strong>{k}:</strong> {v}</li>)}
                 </ul>
               </div>
             )}

@@ -22,7 +22,7 @@ const Dashboard = () => {
   useEffect(() => {
     dispatch(fetchMyProfile(id));
 
-    if(role[0].toUpperCase() === "USER"){
+    if (role[0].toUpperCase() === "USER") {
       dispatch(fetchUserProfiles());
     };
   }, [id, dispatch, role]);
@@ -174,37 +174,48 @@ const Dashboard = () => {
         </h2>
 
         <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
-          {filteredProfiles.map((i) => (
-            <div className="matchSection_map" key={i.id}>
-              <img
-                src={i.updatePhoto ? i.updatePhoto : i.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"} alt={i.firstName}
-                style={{ objectFit: "cover", }}
-                className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
-                onError={(e) => {
-                  e.target.src = i.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
-                }}
-                draggable={false}
-                onContextMenu={(e) => e.preventDefault()}
-              />
-              {!myProfile?.premium && (
-                <div className="premium-overlay" onClick={() => navigate("/premium")}>
-                  🔒 Upgrade to Premium
-                </div>
-              )}
-              <div
-                style={{ position: "absolute", bottom: 15, left: 0, right: 0, textAlign: "center", color: "#fff", }}>
-                <div style={{ fontWeight: "bold", fontSize: 18 }}>{i.firstName}</div>
-                <div style={{ fontSize: 14 }}>{i.city} • {i.age} Years old</div>
+          {
+            filteredProfiles.length === 0 ? (
+              <div className="no-profiles">
+                <h4>No New Profiles Available</h4>
+                <p>
+                  Check back later or update your preferences to see more matches.
+                </p>
               </div>
-              {/* Online Indicator */}
-              <div
-                style={{
-                  position: "absolute", top: 10, right: 10, width: 14, height: 14, borderRadius: "50%", background: "#2ECC71",
-                  border: "2px solid #fff",
-                }}
-              ></div>
-            </div>
-          ))}
+            ) : (
+              filteredProfiles.map((i) => (
+                <div className="matchSection_map" key={i.id}>
+                  <img
+                    src={i.updatePhoto ? i.updatePhoto : i.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"} alt={i.firstName}
+                    style={{ objectFit: "cover", }}
+                    className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
+                    onError={(e) => {
+                      e.target.src = i.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+                    }}
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
+                  {!myProfile?.premium && (
+                    <div className="premium-overlay" onClick={() => navigate("/premium")}>
+                      🔒 Upgrade to Premium
+                    </div>
+                  )}
+                  <div
+                    style={{ position: "absolute", bottom: 15, left: 0, right: 0, textAlign: "center", color: "#fff", }}>
+                    <div style={{ fontWeight: "bold", fontSize: 18 }}>{i.firstName}</div>
+                    <div style={{ fontSize: 14 }}>{i.city} • {i.age} Years old</div>
+                  </div>
+                  {/* Online Indicator */}
+                  <div
+                    style={{
+                      position: "absolute", top: 10, right: 10, width: 14, height: 14, borderRadius: "50%", background: "#2ECC71",
+                      border: "2px solid #fff",
+                    }}
+                  ></div>
+                </div>
+              ))
+            )
+          }
         </div>
       </section>
 
@@ -324,7 +335,7 @@ const Dashboard = () => {
           {premiumFilteredProfiles.map((i) => (
             <div className="chatList_map" key={i.id}>
               <img
-                src={i.updatePhoto ? i.updatePhoto : i.gender === "Female"  ? "/placeholder_girl.png" : "/placeholder_boy.png"}
+                src={i.updatePhoto ? i.updatePhoto : i.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
                 alt={i.firstName}
                 className={`premium-img ${!myProfile?.premium ? "premiumblur-image" : ""}`}
                 style={{ width: 60, height: 60, borderRadius: 15, objectFit: "cover", marginRight: 15, }} />

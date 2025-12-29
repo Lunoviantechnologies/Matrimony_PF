@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "../styleSheets/Footer.css";
-import axios from "axios";
-import backendIP from "../api/api";
 
 const FOOTER_LINKS = [
   {
@@ -43,27 +41,6 @@ const FOOTER_LINKS = [
 
 const Footer = () => {
 
-  const [profileCount, setProfileCount] = useState(0);
-
-  const formatMemberCount = (num) => {
-    if (!num) return "—";
-    if (num < 1000) return num.toString();
-    if (num < 100000) {
-      return `${(num / 1000).toFixed(1).replace(".0", "")}K+`;
-    }
-    if (num < 10000000) {
-      return `${(num / 100000).toFixed(1).replace(".0", "")}L+`;
-    }
-    return `${(num / 10000000).toFixed(1).replace(".0", "")}Cr+`;
-  };
-
-  useEffect(() => {
-    axios.get(`${backendIP}/profiles/count`).then(res => {
-      // console.log("count : ", res.data);
-      setProfileCount(res.data.count);
-    }).catch(() => setProfileCount(0));
-  }, []);
-  // console.log("count : ", profileCount);
   const getSlug = (text) =>
     text.toLowerCase().replace(/ /g, "-").replace(/[&]/g, "");
 
@@ -75,7 +52,7 @@ const Footer = () => {
         </div>
 
         <div>
-          <h2 className="footer-heading">Saathjanam.com - Trusted by {formatMemberCount(profileCount + 10000)} Members</h2>
+          <h2 className="footer-heading">Saathjanam.com - Serving members worldwide</h2>
 
           <p className="footer-description">
             Saathjanam.com, one of India's leading matrimonial platforms, was

@@ -7,15 +7,11 @@ import { Provider } from 'react-redux';
 import store from './redux/store/store';
 import AppRoutes from './routes/AppRoutes';
 import { ToastContainer } from 'react-toastify';
-import ContactSupport from './components/settings/ContactSupport';
 
 createRoot(document.getElementById('root')).render(
     <Provider store={store}>
         <RouterProvider router={AppRoutes} />
 
-        {/* live contact support */}
-        <ContactSupport />
-        
         {/* ✅ Toast lives at ROOT */}
         <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover draggable />
     </Provider>

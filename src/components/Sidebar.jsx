@@ -71,15 +71,15 @@ const Sidebar = ({ filters, setFilters, onApply, onClear }) => {
         <div className="sidebar">
             <h5 className="sidebar-title text-center">Search Filters</h5>
 
-            {/* ✅ Apply Button */}
-            <button className="btn btn-primary w-100 mb-2" disabled={!hasFilters} onClick={onApply}>
-                Apply Filters
-            </button>
+            <div className="d-flex justify-content-evenly">
+                <button className="btn btn-primary w-100 mb-2" disabled={!hasFilters} onClick={onApply}>
+                    Apply Filters
+                </button>
 
-            {/* ✅ Clear Button */}
-            <button className="btn btn-outline-secondary w-100 mb-3" disabled={!hasFilters} onClick={onClear}>
-                Clear All
-            </button>
+                <button className="btn btn-outline-secondary w-100 mb-2" disabled={!hasFilters} onClick={onClear}>
+                    Clear All
+                </button>
+            </div>
 
             {sections.map((section) => (
                 <div key={section.category} className="filter-section">

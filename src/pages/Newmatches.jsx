@@ -126,6 +126,12 @@ const NewMatches = () => {
   }, [profiles, filters, allHiddenIds, myProfile, id]);
   console.log("filtered Profiles in Dashboard:", filteredProfiles);
 
+  const handleProfileCount = (userId) => {
+    api.post(`profiles/record/${userId}/${id}`).then(res => {
+      console.log("count res : ", res.data);
+    })
+  };
+
   return (
     <div className="profile-main-container">
       <h2 className="profile-title">New Matches For You</h2>
@@ -166,6 +172,7 @@ const NewMatches = () => {
                   <button
                     className="btn btn-view"
                     onClick={(e) => {
+                      handleProfileCount(p.id);
                       setSelectedProfile(p);
                       setAnchorRect(e.target.getBoundingClientRect());
                       setShowModal(true);
@@ -194,6 +201,7 @@ const NewMatches = () => {
 
       {showModal && (
         <ViewProfileModal
+          premium={myProfile.premium}
           profile={selectedProfile}
           anchorRect={anchorRect}
           onClose={() => setShowModal(false)}

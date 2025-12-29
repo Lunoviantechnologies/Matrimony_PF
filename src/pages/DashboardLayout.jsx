@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import SubNavbar from "../components/SubNavbar";
 import { Outlet } from "react-router-dom";
 import Footer from "../components/Footer";
+import ContactSupport from "../components/settings/ContactSupport";
 
 const DashboardLayout = () => {
     return (
@@ -21,6 +22,9 @@ const DashboardLayout = () => {
 
             {/* Footer */}
             <Footer />
+
+            {/* ✅ Live chat ONLY for user dashboard */}
+            <ContactSupport />
         </div>
     );
 };

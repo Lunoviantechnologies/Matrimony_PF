@@ -6,6 +6,35 @@
     padding: 20px;
 }
 
+.no-profiles {
+    width: 100%;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #777;
+    padding: 30px;
+}
+
+.no-profiles img {
+    width: 120px;
+    margin-bottom: 16px;
+    opacity: 0.9;
+}
+
+.no-profiles h4 {
+    font-size: 18px;
+    color: #695019;
+    margin-bottom: 6px;
+}
+
+.no-profiles p {
+    font-size: 14px;
+    max-width: 300px;
+}
+
 /* New Profile Matches Section */
 .profile-img {
     filter: brightness(80%);

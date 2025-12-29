@@ -22,6 +22,42 @@ const MONTHS = [
   "December 2024",
 ];
 
+const PROFILE_FIELDS = [
+  "firstName",
+  "lastName",
+  "gender",
+  "dateOfBirth",
+  "age",
+  "height",
+  "weight",
+  "city",
+  "state",
+  "country",
+  "religion",
+  "caste",
+  "education",
+  "occupation",
+  "companyName",
+  "annualIncome",
+  "aboutYourself",
+  "updatePhoto",
+  "maritalStatus",
+  "motherTongue",
+  "familyType",
+  "familyStatus",
+];
+
+const calculateProfileCompletion = (profile) => {
+  if (!profile) return 0;
+
+  const filled = PROFILE_FIELDS.filter((field) => {
+    const value = profile[field];
+    return value !== null && value !== undefined && value !== "";
+  });
+
+  return Math.round((filled.length / PROFILE_FIELDS.length) * 100);
+};
+
 const SAMPLE_DATA = {
   // each month maps to an array of objects for the line chart
   "September 2025": [
@@ -128,7 +164,8 @@ export default function ProfileView() {
   useEffect(() => {
     api.get(`/profiles/views/${id}`).then(res => {
       const count = res.data;
-      console.log("id count : ", count);
+      // console.log("id count : ", count);
+      setProfileView(count);
     })
   }, []);
 
@@ -163,23 +200,16 @@ export default function ProfileView() {
     setProfile((prev) => ({ ...prev, metrics: { ...prev.metrics, interests: acceptedRequests.length, }, }));
   }, [acceptedRequests]);
 
-  // when month is switched, we might update metrics or completion (sample)
   useEffect(() => {
-    // sample: slightly vary the metrics by month (for visual change)
-    const base = initialProfile.metrics;
-    const variation = selectedMonth.length % 7;
-    setProfile((p) => ({
-      ...p,
-      metrics: {
-        // likes: base.likes + variation * 3,
-        views: base.views + variation * 40,
-        interests: base.interests + variation,
-        clicks: base.clicks + variation * 6,
-      },
-      completion: Math.min(100, initialProfile.completion + variation),
+    if (!myProfile) return;
+
+    const completionPercent = calculateProfileCompletion(myProfile);
+
+    setProfile((prev) => ({
+      ...prev,
+      completion: completionPercent,
     }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedMonth]);
+  }, [myProfile]);
 
   function toggleDropdown() {
     setDropdownOpen((s) => !s);
@@ -368,7 +398,7 @@ export default function ProfileView() {
               <div className="pv-completion-labels">
                 <div className="pv-completion-title">Profile completion</div>
                 <div className="pv-completion-sub">
-                  Complete your profile to get more matches and views
+                  Complete your profile 100% to get more matches and views
                 </div>
               </div>
             </div>

@@ -119,11 +119,11 @@ const MoreMatches = () => {
       });
   }, [profiles, filters, allHiddenIds, myProfile, id]);
 
-  console.log("Filtered Profiles:", filteredProfiles);
+  // console.log("Filtered Profiles:", filteredProfiles);
 
   const handleProfileCount = (userId) => {
     api.post(`profiles/record/${id}/${userId}`).then( res => {
-      console.log("count res : ", res.data);
+      // console.log("count res : ", res.data);
     })
   };
 
@@ -190,6 +190,7 @@ const MoreMatches = () => {
 
       {showModal && (
         <ViewProfileModal
+          premium = {myProfile.premium}
           profile={selectedProfile}
           anchorRect={anchorRect}
           onClose={() => setShowModal(false)}
