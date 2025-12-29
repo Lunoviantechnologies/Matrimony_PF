@@ -5,11 +5,13 @@ import { logout } from "../../redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 import api from "../../api/axiosInstance";
 import { toast } from "react-toastify";
-import FAQ_user from "../FAQ_user";
+import FAQ_user from "./FAQ_user";
+// import ContactSupport from "./ContactSupport";
 
 export default function SupportSettings({ userId }) {
     const dispatch = useDispatch();
     const [openFaq, setOpenFaq] = useState(false);
+    // const [openContactSupport, setOpenContactSupport] = useState(false);
 
     const handleDeleteAccount = async () => {
         if (window.confirm("Are you sure you want to delete your account?")) {
@@ -36,9 +38,9 @@ export default function SupportSettings({ userId }) {
                         View FAQ
                     </Button>
 
-                    <Button fullWidth sx={{ mt: 1.5 }} variant="contained">
+                    {/* <Button fullWidth sx={{ mt: 1.5 }} variant="contained" onClick={() => setOpenContactSupport(true)}>
                         Contact Support
-                    </Button>
+                    </Button> */}
 
                     <Button fullWidth sx={{ mt: 2 }} variant="contained" color="error" onClick={handleDeleteAccount} >
                         Delete Account
@@ -62,9 +64,29 @@ export default function SupportSettings({ userId }) {
                 </IconButton>
 
                 <DialogContent dividers>
-                    <FAQ_user /> {/* 🔥 your existing component */}
+                    <FAQ_user />
                 </DialogContent>
             </Dialog>
+
+            {/* ✅ Contact Support POPUP */}
+            {/* <Dialog
+                open={openContactSupport}
+                onClose={() => setOpenContactSupport(false)}
+                fullWidth
+                maxWidth="md"
+            >
+                
+                <IconButton
+                    onClick={() => setOpenContactSupport(false)}
+                    sx={{ position: "absolute", right: 8, top: 8 }}
+                >
+                    <CloseIcon />
+                </IconButton>
+
+                <DialogContent dividers>
+                    <ContactSupport />
+                </DialogContent>
+            </Dialog> */}
         </Box>
     );
 }

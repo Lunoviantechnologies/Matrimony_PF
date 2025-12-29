@@ -75,7 +75,8 @@ const validationSchemas = [
       .min(1, "Minimum date is 1").max(31, "Maximum date is 31"),
     dobMonth: Yup.number().typeError("Month must be a number").required("Month is required")
       .min(1, "Minimum month is 1").max(12, "Maximum month is 12"),
-    dobYear: Yup.number().typeError("Year must be a number").required("Year is required"),
+    dobYear: Yup.number().typeError("Year must be a number").integer("Year must be an integer")
+      .min(1000, "Enter 4-digit year").max(9999, "Enter 4-digit year").required("Year is required"),
   }),
 
   // STEP 3
@@ -136,6 +137,20 @@ const Register = () => {
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Height calculations
+
+  const heights = [];
+
+  for (let cm = 122; cm <= 213; cm++) { // 4'0" to 7'0"
+    const feet = Math.floor(cm / 30.48);
+    const inches = Math.round((cm / 2.54) % 12);
+
+    heights.push({
+      label: `${feet} ft ${inches} in (${cm} cm)`,
+      value: cm
+    });
+  };
 
   /* -------------------------------------------------------------
      NEXT STEP HANDLER
@@ -376,24 +391,38 @@ const Register = () => {
 
             <Field as="select" name="religion" className="form-select">
               <option value="" disabled>Select your Religion</option>
-              <option value={"Christian"}>Christian</option>
-              <option value={"Hindu"}>Hindu</option>
-              <option value={"Muslim"}>Muslim</option>
-              <option value={"Sikh"}>Sikh</option>
+              <option value="Hindu">Hindu</option>
+              <option value="Muslim">Muslim</option>
+              <option value="Christian">Christian</option>
+              <option value="Sikh">Sikh</option>
+              <option value="Jain">Jain</option>
+              <option value="Buddhist">Buddhist</option>
+              <option value="Jewish">Jewish</option>
             </Field>
 
             <ErrorMessage name="religion" component="div" className="error-text" />
 
             <Field as="select" name="motherTongue" className="form-select">
               <option value="" disabled>Select your Mother Tongue</option>
-              <option value={"English"}>English</option>
-              <option value={"Hindi"}>Hindi</option>
-              <option value={"Kannada"}>Kannada</option>
-              <option value={"Malayali"}>Malayali</option>
-              <option value={"Marathi"}>Marathi</option>
-              <option value={"Punjabi"}>Punjabi</option>
-              <option value={"Tamil"}>Tamil</option>
-              <option value={"Telugu"}>Telugu</option>
+              {/* Major Indian Languages */}
+              <option value="Hindi">Hindi</option>
+              <option value="Bengali">Bengali</option>
+              <option value="Telugu">Telugu</option>
+              <option value="Marathi">Marathi</option>
+              <option value="Tamil">Tamil</option>
+              <option value="Urdu">Urdu</option>
+              <option value="Gujarati">Gujarati</option>
+              <option value="Kannada">Kannada</option>
+              <option value="Odia">Odia</option>
+              <option value="Malayalam">Malayalam</option>
+              <option value="Punjabi">Punjabi</option>
+              <option value="Assamese">Assamese</option>
+              <option value="Konkani">Konkani</option>
+              <option value="Sindhi">Sindhi</option>
+              <option value="Nepali">Nepali</option>
+              <option value="Kashmiri">Kashmiri</option>
+              <option value="Manipuri">Manipuri</option>
+              <option value="English">English</option>
             </Field>
 
             <ErrorMessage name="motherTongue" component="div" className="error-text" />
@@ -444,6 +473,7 @@ const Register = () => {
               <option value={""} disabled>Select your Marital Status</option>
               <option value={"Single"}>Single</option>
               <option value={"Divorced"}>Divorced</option>
+              <option value={"Separated"}>Separated</option>
               <option value={"Widowed"}>Widowed</option>
             </Field>
 
@@ -451,11 +481,11 @@ const Register = () => {
 
             <Field as="select" name="height" className="form-select">
               <option value={""} disabled>Select your Height</option>
-              <option value={"4 ft 5 in (134 cm)"}>4 ft 5 in (134 cm)</option>
-              <option value={"5 ft 0 in (152 cm)"}>5 ft 0 in (152 cm)</option>
-              <option value={"5 ft 5 in (165 cm)"}>5 ft 5 in (165 cm)</option>
-              <option value={"6 ft 0 in (183 cm)"}>6 ft 0 in (183 cm)</option>
-              <option value={"6 ft 5 in (196 cm)"}>6 ft 5 in (196 cm)</option>
+              {heights.map((h) => (
+                <option key={h.value} value={h.value}>
+                  {h.label}
+                </option>
+              ))}
             </Field>
           </>
         )
@@ -469,13 +499,25 @@ const Register = () => {
 
             <Field as="select" name="highestEducation" className="form-select">
               <option value={""} disabled>Select your higher Qualification</option>
-              <option value={"B.E / B.Tech"}>B.E / B.Tech</option>
-              <option value={"Degree"}>Degree</option>
-              <option value={"Intermediate"}>Intermediate</option>
-              <option value={"M.E / M.Tech"}>M.E / M.Tech</option>
-              <option value={"MBA"}>MBA</option>
-              <option value={"PhD"}>PhD</option>
-              <option value={"Tenth"}>Tenth</option>
+              <option value="Tenth">10th</option>
+              <option value="Twelfth">12th / Intermediate</option>
+              <option value="Diploma">Diploma</option>
+              <option value="B.A">B.A</option>
+              <option value="B.Sc">B.Sc</option>
+              <option value="B.Com">B.Com</option>
+              <option value="B.E / B.Tech">B.E / B.Tech</option>
+              <option value="MBBS">MBBS</option>
+              <option value="LLB">LLB</option>
+              <option value="M.A">M.A</option>
+              <option value="M.Sc">M.Sc</option>
+              <option value="M.Com">M.Com</option>
+              <option value="M.E / M.Tech">M.E / M.Tech</option>
+              <option value="MBA">MBA</option>
+              <option value="MCA">MCA</option>
+              <option value="CA">CA</option>
+              <option value="CS">CS</option>
+              <option value="ICWA">ICWA</option>
+              <option value="PhD">PhD</option>
             </Field>
 
             <Field name="collegeName" className="form-input" placeholder="College / University Name" />
@@ -492,11 +534,12 @@ const Register = () => {
 
             <Field as="select" name="sector" placeholder="Sector" className="form-select">
               <option value={""} disabled>Select your sector</option>
-              <option value={"Bussiness"}>Bussiness</option>
-              <option value={"Government"}>Government</option>
-              <option value={"Private"}>Private</option>
-              <option value={"Self Employeed"}>Self Employeed</option>
-              <option value={"Not Working"}>Not Working</option>
+              <option value="Government">Government / PSU</option>
+              <option value="Private">Private</option>
+              <option value="Business">Business</option>
+              <option value="Self-Employed">Self-Employed / Freelancer</option>
+              <option value="Defense">Defense / Armed Forces</option>
+              <option value="Not Working">Not Working</option>
             </Field>
 
             <Field name="occupation" className="form-input" placeholder="Your Profession" />

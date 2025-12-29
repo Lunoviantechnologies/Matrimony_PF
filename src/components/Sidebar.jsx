@@ -1,35 +1,31 @@
 import React, { useState } from "react";
 import "../styleSheets/sidebar.css";
 
-const Sidebar = ({ filters, setFilters }) => {
-    // const [filters, setFilters] = useState({
-    //     age: [],
-    //     religion: [],
-    //     caste: [],  
-    //     country: [],
-    //     education: [],
-    //     profession: [],
-    //     lifestyle: [],
-    // });
+const Sidebar = ({ filters, setFilters, onApply, onClear }) => {
+
+    const hasFilters = Object.values(filters).some(
+        (arr) => Array.isArray(arr) && arr.length > 0
+    );
 
     const handleCheckboxChange = (category, value) => {
         setFilters((prev) => {
-            const updated = prev[category].includes(value)  
+            const updated = prev[category].includes(value)
                 ? prev[category].filter((v) => v !== value)
                 : [...prev[category], value];
             return { ...prev, [category]: updated };
         });
     };
 
-    // const handleApplyFilters = () => {
-    //     console.log("Applied Filters:", filters);
-    // };
-
     const sections = [
         {
             title: "Age",
             category: "age",
             options: ["18-25", "26-30", "31-35", "36-40", "40+"],
+        },
+        {
+            title: "Marital Status",
+            category: "maritalStatus",
+            options: ["Single", "Divorced", "Separated", "Widowed"],
         },
         {
             title: "Religion",
@@ -75,9 +71,15 @@ const Sidebar = ({ filters, setFilters }) => {
         <div className="sidebar">
             <h5 className="sidebar-title text-center">Search Filters</h5>
 
-            {/* <button className="btn w-100 apply-btn" onClick={handleApplyFilters}>
+            {/* ✅ Apply Button */}
+            <button className="btn btn-primary w-100 mb-2" disabled={!hasFilters} onClick={onApply}>
                 Apply Filters
-            </button> */}
+            </button>
+
+            {/* ✅ Clear Button */}
+            <button className="btn btn-outline-secondary w-100 mb-3" disabled={!hasFilters} onClick={onClear}>
+                Clear All
+            </button>
 
             {sections.map((section) => (
                 <div key={section.category} className="filter-section">

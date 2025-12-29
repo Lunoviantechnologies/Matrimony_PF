@@ -171,10 +171,10 @@ const ContactUs = () => {
                 <FaFacebookF className="social-icon facebook" />
                 <a href="#">Facebook</a>
               </li>
-              <li>
+              {/* <li>
                 <FaLinkedinIn className="social-icon linkedin" />
                 <a href="#">LinkedIn</a>
-              </li>
+              </li> */}
               <li>
                 <FaInstagram className="social-icon instagram" />
                 <a href="#">Instagram</a>

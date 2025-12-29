@@ -40,6 +40,9 @@ import AdminApprovals from "../admin/AdminApprovals";
 import AdminSupport from "../admin/AdminSupport";
 import PaymentSuccess from "../successPages/PaymentSuccess";
 import PaymentFailed from "../successPages/paymentFailure";
+import PaymentDisplayData from "../admin/PaymentDisplayData";
+import AstroTalkInfo from "../admin/AstroTalkInfo";
+
 const AppRoutes = createBrowserRouter([
     {
         path: "/",
@@ -207,7 +210,15 @@ const AppRoutes = createBrowserRouter([
             },
             {
                 path: "support",
-                element: < AdminSupport />
+                element: <AdminSupport />
+            },
+            {
+                path: "paymentDisplay",
+                element: <PaymentDisplayData />
+            },
+            {
+                path: "astroTalk",
+                element: <AstroTalkInfo />
             },
         ]
     }

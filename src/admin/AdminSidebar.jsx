@@ -5,11 +5,11 @@ import "../stylesheets/adminSidebar.css";
 
 export default function AdminSidebar() {
     const navigate = useNavigate();
-    
+
     const handleReport = () => {
-        navigate('/admin/viewreport');        
+        navigate('/admin/viewreport');
     };
-  
+
     const handleAdminDashboard = () => {
         navigate('/admin');
     };
@@ -26,19 +26,28 @@ export default function AdminSidebar() {
         navigate('/admin/manageusers');
     };
 
-     const handlepayments = () => {
+    const handlepayments = () => {
         navigate('/admin/payments');
     };
-    
-     const handleaprovals=()=>{
-        navigate('/admin/aprovals')
-     };
-     const handlesupport=()=>{
-        navigate('/admin/support')
-     }
-   return (
+
+    const handleaprovals = () => {
+        navigate('/admin/aprovals');
+    };
+
+    const handlesupport = () => {
+        navigate('/admin/support');
+    };
+
+    const handlePaymentDisplay = () => {
+        navigate('/admin/paymentDisplay');
+    };
+
+    const handleAstroTalk = () => {
+        navigate('/admin/astroTalk');
+    };
+    return (
         <aside className="admin-sidebar">
-            <div className="sidebar-logo" onClick={ () => (navigate("/admin"))}>SaathJanam</div>
+            <div className="sidebar-logo" onClick={() => (navigate("/admin"))}>SaathJanam</div>
 
             <nav className="sidebar-nav">
                 <button onClick={handleAdminDashboard}><FaChartLine /><span>Dashboard</span></button>
@@ -49,6 +58,8 @@ export default function AdminSidebar() {
                 <button onClick={handleReport}><FaFileAlt /><span>Reports</span></button>
                 <button onClick={handleaprovals}><FaCheckCircle /><span>Approvals</span></button>
                 <button onClick={handlesupport}><FaHeadset /><span>User Support</span></button>
+                <button onClick={handlePaymentDisplay}><FaHeadset /><span>Payment Display Data</span></button>
+                <button onClick={handleAstroTalk}><FaHeadset /><span>Astro Talk Info</span></button>
             </nav>
         </aside>
     );

@@ -107,6 +107,7 @@ const MoreMatches = () => {
           return age >= min && age <= max;
         });
 
+        const matchMaritalStatus = !filters.maritalStatus.length || filters.maritalStatus.includes(p.maritalStatus || "");
         const matchReligion = !filters.religion.length || filters.religion.includes(p.religion || "");
         const matchCaste = !filters.caste.length || filters.caste.includes(p.subCaste || "");
         const matchCountry = !filters.country.length || filters.country.includes(p.country || "");
@@ -114,11 +115,17 @@ const MoreMatches = () => {
         const matchProfession = !filters.profession.length || filters.profession.includes(p.occupation || "");
         const matchLifestyle = !filters.lifestyle.length || (p.yourHobbies ? filters.lifestyle.some(f => p.yourHobbies.includes(f)) : false);
 
-        return matchAge && matchReligion && matchCaste && matchCountry && matchEducation && matchProfession && matchLifestyle;
+        return matchAge && matchMaritalStatus && matchReligion && matchCaste && matchCountry && matchEducation && matchProfession && matchLifestyle;
       });
   }, [profiles, filters, allHiddenIds, myProfile, id]);
 
   console.log("Filtered Profiles:", filteredProfiles);
+
+  const handleProfileCount = (userId) => {
+    api.post(`profiles/record/${id}/${userId}`).then( res => {
+      console.log("count res : ", res.data);
+    })
+  };
 
   return (
     <div className="profile-main-container">
@@ -158,6 +165,7 @@ const MoreMatches = () => {
                 <div className="btn-row">
                   <button className="btn btn-view"
                     onClick={(e) => {
+                      handleProfileCount(p.id);
                       setSelectedProfile(p);
                       setAnchorRect(e.target.getBoundingClientRect());
                       setShowModal(true);

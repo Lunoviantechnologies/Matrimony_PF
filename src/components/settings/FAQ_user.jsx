@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styleSheets/faq.css";
+import "../../styleSheets/FAQ.css";
 import { FaChevronDown, FaChevronUp, FaQuestionCircle, } from "react-icons/fa";
 
 const FAQ_user = () => {

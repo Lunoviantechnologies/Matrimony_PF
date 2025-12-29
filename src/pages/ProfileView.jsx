@@ -6,7 +6,8 @@ import { FaHeart, FaEye, FaHandshake, FaMousePointer } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import { useNavigate } from "react-router-dom";
-import backendIP from "../api/api";
+import api from "../api/axiosInstance";
+import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 
 const MONTHS = [
   "September 2025",
@@ -93,20 +94,18 @@ const SAMPLE_DATA = {
 };
 
 const initialProfile = {
-  name: "Bhavya Sri",
-  photoUrl: null, // default null -> use placeholder
-  completion: 90,
+  completion: 0,
   metrics: {
-    likes: 234,
-    views: 1234,
-    interests: 98,
-    clicks: 420,
+    // likes: 234,
+    views: 0,
+    interests: 0,
+    clicks: 0,
   },
 };
 
 export default function ProfileView() {
   const navigate = useNavigate();
-  const { id, myProfile } = useSelector(state => state.auth);
+  const { id, myProfile, role } = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
   const [selectedMonth, setSelectedMonth] = useState(MONTHS[0]);
@@ -115,8 +114,8 @@ export default function ProfileView() {
 
   // profile / modal state
   const [profile, setProfile] = useState(initialProfile);
-  const [editName, setEditName] = useState(profile.name);
-  const [uploadPreview, setUploadPreview] = useState(profile.photoUrl);
+  const [profileView, setProfileView] = useState(0);
+  const [acceptedRequests, setAcceptedRequests] = useState([]);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -126,6 +125,44 @@ export default function ProfileView() {
   }, [selectedMonth, id]);
   console.log("myProfile in ProfileView:", myProfile);
 
+  useEffect(() => {
+    api.get(`/profiles/views/${id}`).then(res => {
+      const count = res.data;
+      console.log("id count : ", count);
+    })
+  }, []);
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchAcceptedRequests = async () => {
+      try {
+        const receivedAccepted = await api.get(`/friends/accepted/received/${id}`);
+
+        const sentAccepted = await api.get(`/friends/accepted/sent/${id}`);
+
+        const merged = [...receivedAccepted.data, ...sentAccepted.data];
+
+        setAcceptedRequests(merged);
+        console.log("Accepted requests:", merged);
+      } catch (error) {
+        console.error("Error fetching accepted requests:", error);
+      }
+    };
+
+    fetchAcceptedRequests();
+  }, [id]);
+
+  useEffect(() => {
+    if (role[0].toUpperCase() === "USER") {
+      dispatch(fetchUserProfiles());
+    };
+  }, [dispatch, role]);
+
+  useEffect(() => {
+    setProfile((prev) => ({ ...prev, metrics: { ...prev.metrics, interests: acceptedRequests.length, }, }));
+  }, [acceptedRequests]);
+
   // when month is switched, we might update metrics or completion (sample)
   useEffect(() => {
     // sample: slightly vary the metrics by month (for visual change)
@@ -134,7 +171,7 @@ export default function ProfileView() {
     setProfile((p) => ({
       ...p,
       metrics: {
-        likes: base.likes + variation * 3,
+        // likes: base.likes + variation * 3,
         views: base.views + variation * 40,
         interests: base.interests + variation,
         clicks: base.clicks + variation * 6,
@@ -274,10 +311,10 @@ export default function ProfileView() {
                 <strong>{profile.metrics.views}</strong>
                 <span>Profile Views</span>
               </div>
-              <div className="pv-small-metric">
+              {/* <div className="pv-small-metric">
                 <strong>{profile.metrics.likes}</strong>
                 <span>Likes</span>
-              </div>
+              </div> */}
               <div className="pv-small-metric">
                 <strong>{profile.metrics.interests}</strong>
                 <span>Interests</span>
@@ -338,7 +375,7 @@ export default function ProfileView() {
           </div>
 
           <div className="pv-metrics-list">
-            <div className="pv-metric-row">
+            {/* <div className="pv-metric-row">
               <div className="pv-metric-icon likes">
                 <FaHeart />
               </div>
@@ -346,7 +383,7 @@ export default function ProfileView() {
                 <div className="pv-metric-title">Likes</div>
                 <div className="pv-metric-value">{profile.metrics.likes}</div>
               </div>
-            </div>
+            </div> */}
 
             <div className="pv-metric-row">
               <div className="pv-metric-icon views">

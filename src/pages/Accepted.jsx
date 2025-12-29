@@ -14,7 +14,7 @@ const Accepted = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log("User ID in Accepted component:", profiles);
+  // console.log("User ID in Accepted component:", profiles);
   useEffect(() => {
     if (!id) return;
 
