@@ -17,7 +17,7 @@ const AstroTalkQuery = () => {
         api.get("astro-number/All").then(res => {
             setAstroInfo(res.data);
             // console.log("Astro Info : ", res.data);
-        })
+        });
     }, []);
 
     useEffect(() => {
