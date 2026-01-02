@@ -1,14 +1,33 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import '../styleSheets/PremiumSubscription.css';
 import axios from 'axios';
 import backendIP from '../api/api';
 import { useSelector } from 'react-redux';
+import api from '../api/axiosInstance';
+import { MdCelebration } from "react-icons/md";
 
 function PremiumSubscription() {
 
   const navigate = useNavigate();
   const { id: myId } = useSelector(state => state.auth);
+  const [planDetails, setPlanDetails] = useState([]);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    api.get('plans').then(res => {
+      console.log("plans : ", res.data);
+      setPlanDetails(res.data);
+    })
+  }, []);
 
   // Load Razorpay checkout script once
   useEffect(() => {
@@ -109,35 +128,24 @@ function PremiumSubscription() {
 
   const handlePlanSelect = async (plan) => {
     try {
-      const planCodeMap = {
-        "gold-3months": "GOLD_3",
-        "gold-plus-3months": "GOLDPLUS_3",
-        "diamond-6months": "DIAMOND_6",
-        "diamond-plus-6months": "DIAMONDPLUS_6",
-        "platinum-plus-12months": "PLATINUM_12"
-      };
-
-      const backendPlanCode = planCodeMap[plan.id];
-      if (!backendPlanCode) {
-        alert("Invalid plan selected");
-        return;
-      }
 
       // ✅ CORRECT API + PAYLOAD
-      const res = await axios.post(`${backendIP}/payment/create-order`, {
+      console.log("plan code : ", plan.planCode);
+      const res = await api.post('/payment/create-order', {
         profileId: myId,
-        planCode: backendPlanCode
+        planCode: plan.planCode
       }
       );
 
       const { razorpayOrderId, razorpayKey, amountRupees, currency } = res.data;
+      console.log("response payment : ", res.data);
 
       const options = {
         key: razorpayKey,
         amount: amountRupees * 100, // convert to paise
         currency: currency,
         name: "SaathJanam Premium",
-        description: plan.name,
+        description: plan.planName,
         order_id: razorpayOrderId,
 
         handler: async function (response) {
@@ -151,8 +159,8 @@ function PremiumSubscription() {
           navigate("/payment-success", {
             state: {
               planId: plan.id,
-              planName: plan.name,
-              amount: plan.discountedPrice
+              planName: plan.planName,
+              amount: plan.priceRupees
             }
           });
         },
@@ -182,6 +190,64 @@ function PremiumSubscription() {
     }
   };
 
+  const isFestivalActive = (plan) => {
+    if (!plan.festivalStart || !plan.festivalEnd) return false;
+
+    const today = new Date();
+    const start = new Date(plan.festivalStart);
+    const end = new Date(plan.festivalEnd);
+
+    return today >= start && today <= end;
+  };
+
+  const isDiscountActive = (plan) => {
+    if (!plan.discountStart || !plan.discountEnd) return false;
+
+    const today = new Date();
+    const start = new Date(plan.discountStart);
+    const end = new Date(plan.discountEnd);
+
+    return today >= start && today <= end;
+  };
+
+  const calculateDiscountedPrice = (basePrice, plan) => {
+    if (!isDiscountActive(plan)) return basePrice;
+
+    if (plan.discountType === "PERCENTAGE") {
+      return Math.round(
+        basePrice - (basePrice * plan.discountValue) / 100
+      );
+    }
+
+    if (plan.discountType === "FLAT") {
+      return Math.max(basePrice - plan.discountValue, 0);
+    }
+
+    return basePrice;
+  };
+
+  const getFestivalCountdown = (plan) => {
+    if (!isFestivalActive(plan)) return null;
+
+    const end = new Date(plan.festivalEnd);
+    const diff = end - currentTime;
+
+    if (diff <= 0) return "Festival ended";
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    return `${hours}h ${minutes}m ${seconds}s`;
+  };
+
+  const platinumPlan = planDetails.find(
+    (plan) => plan.planCode === "PLATINUM"
+  );
+
+  const platinumFestivalActive = platinumPlan && isFestivalActive(platinumPlan);
+  const platinumCountdown = platinumFestivalActive && getFestivalCountdown(platinumPlan);
+
   return (
     <div>
       {/* <Outlet /> */}
@@ -191,8 +257,23 @@ function PremiumSubscription() {
         </header>
 
         <div className="banner-section">
-          <h1>Upgrade now & Get upto 66% discount!</h1>
-          <p>Save upto 66%. Expires in 07h: 48m: 27s</p>
+          <h1>
+            Upgrade now & Get upto{" "} {platinumPlan?.discountValue || 0}% discount!
+          </h1>
+
+          {platinumFestivalActive ? (
+            <p>
+              Save upto {platinumPlan.discountValue}%.
+              {platinumCountdown && (
+                <> Expires in {platinumCountdown}</>
+              )}
+            </p>
+          ) : (
+            <p>
+              Save upto {platinumPlan?.discountValue || 0}% on Premium plans
+            </p>
+          )}
+
           <div className="banner-actions">
             <span>Personalised Plans Help</span>
             <span>Do This Later</span>
@@ -201,32 +282,82 @@ function PremiumSubscription() {
 
         <div className="plans-section">
           <div className="plans-container-compact">
-            {plans.map((plan) => (
-              <div key={plan.id} className="plan-card-compact">
-                {plan.badge && <div className="plan-badge-compact">{plan.badge}</div>}
-                <div className="plan-header-compact">
-                  <h3>{plan.name}</h3>
-                  <div className="discount-badge-compact">{plan.discount}</div>
+            {planDetails.map((plan) => {
+
+              const festivalActive = isFestivalActive(plan);
+              const discountActive = isDiscountActive(plan);
+
+              const basePrice = festivalActive
+                ? plan.festivalPrice
+                : plan.priceRupees;
+
+              const discountedPrice = calculateDiscountedPrice(basePrice, plan);
+              const perMonth = (discountedPrice / plan.durationMonths).toFixed(2);
+
+              const countdown = getFestivalCountdown(plan);
+
+              return (
+                <div key={plan.planCode} className="plan-card-compact">
+
+                  {/* HEADER */}
+                  <div className="plan-header-compact">
+                    <h3>{plan.planName}</h3>
+
+                    {discountActive && (
+                      <div className="discount-badge-compact">
+                        {plan.discountType === "PERCENTAGE"
+                          ? `${plan.discountValue}% OFF`
+                          : `₹${plan.discountValue} OFF`}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* FESTIVAL LABEL */}
+                  {festivalActive && (
+                    <div className="festival-center-compact">
+                      <div className="festival-label-compact">
+                        <MdCelebration /> Festival Price
+                      </div>
+
+                      {countdown && (
+                        <div className="festival-timer-compact">
+                          ⏱ Ends in {countdown}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* PRICE SECTION */}
+                  <div className="price-section-compact">
+
+                    <div className="original-price-compact">
+                      ₹{basePrice}
+                    </div>
+
+                    <div className="discounted-price-compact">
+                      ₹{discountedPrice}
+                    </div>
+
+                    <div className="per-month-compact">
+                      ₹{perMonth}/month
+                    </div>
+
+                  </div>
+
+                  <button
+                    className="continue-btn-compact"
+                    onClick={() => handlePlanSelect(plan)}
+                  >
+                    Continue
+                  </button>
+
+                  <div className="auto-renewal-compact">
+                    Auto-renews on expiry
+                  </div>
+
                 </div>
-                <div className="price-section-compact">
-                  <div className="original-price-compact">{plan.originalPrice}</div>
-                  <div className="discounted-price-compact">{plan.discountedPrice}</div>
-                  <div className="per-month-compact">{plan.perMonth}</div>
-                </div>
-                <button
-                  className="continue-btn-compact"
-                  onClick={() => handlePlanSelect(plan)}
-                >
-                  Continue
-                </button>
-                <div className="features-compact">
-                  {plan.features.map((feature, index) => (
-                    <div key={index} className="feature-item-compact">✔ {feature}</div>
-                  ))}
-                </div>
-                <div className="auto-renewal-compact">Auto-renews on expiry</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

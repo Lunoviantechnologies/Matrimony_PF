@@ -1,47 +1,30 @@
 import React, { useEffect, useState } from "react";
 import "../styleSheets/astro.css";
 import { FaEdit, FaToggleOn, FaToggleOff, FaPlus } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import api from "../api/axiosInstance";
+import AstroAdd from "./AstroAdd";
 
 const AstroTalkInfo = () => {
     const [astros, setAstros] = useState([]);
-    const navigate = useNavigate("");
+    const [editingAstro, setEditingAstro] = useState(null);
+    const [showAddModal, setShowAddModal] = useState(false);
 
     useEffect(() => {
-        api.get("astro-number/All").then(res => { setAstros(res.data); });
-
-        setAstros([
-            {
-                id: 1,
-                name: "Pandit Ramesh Sharma",
-                expertise: "Marriage, Kundli Matching",
-                experience: 15,
-                phone: "9876543210",
-                price: 20,
-                status: true,
-            },
-            {
-                id: 2,
-                name: "Astro Meena Joshi",
-                expertise: "Love & Relationship",
-                experience: 12,
-                phone: "9123456789",
-                price: 15,
-                status: false,
-            },
-        ]);
+        api.get("astro-number/admin/All").then(res => {
+            setAstros(res.data);
+            console.log("astro info : ", res.data);
+        });
     }, []);
 
-    const toggleStatus = (id) => {
-        setAstros((prev) =>
-            prev.map((astro) =>
-                astro.id === id ? { ...astro, status: !astro.status } : astro
-            )
-        );
+    const refreshAstros = () => {
+        api.get("astro-number/admin/All").then(res => {
+            setAstros(res.data);
+        });
+    };
 
-        // 🔹 Later call API here
-        // axios.patch(`${backendIP}/admin/astrologers/${id}/status`)
+    const handleEditAstro = (astro) => {
+        setEditingAstro(astro);
+        setShowAddModal(true);
     };
 
     return (
@@ -52,7 +35,7 @@ const AstroTalkInfo = () => {
                 {/* ✅ Navigate instead of modal */}
                 <button
                     className="add-btn"
-                    onClick={() => navigate("/admin/addastro")}
+                    onClick={() => setShowAddModal(true)}
                 >
                     <FaPlus /> Add Astrologer
                 </button>
@@ -62,11 +45,10 @@ const AstroTalkInfo = () => {
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Expertise</th>
                         <th>Experience</th>
                         <th>Phone</th>
+                        <th>Languge</th>
                         <th>Price/min</th>
-                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -74,30 +56,35 @@ const AstroTalkInfo = () => {
                     {astros.map((astro) => (
                         <tr key={astro.id}>
                             <td>{astro.name}</td>
-                            <td>{astro.expertise}</td>
                             <td>{astro.experience} yrs</td>
-                            <td>{astro.phone}</td>
+                            <td>{astro.astroNumber}</td>
+                            <td>{astro.languages}</td>
                             <td>₹{astro.price}</td>
-                            <td>
-                                <span className={astro.status ? "active" : "inactive"}>
-                                    {astro.status ? "Online" : "Offline"}
-                                </span>
-                            </td>
                             <td className="actions">
-                                <button className="icon-btn">
+                                <button className="icon-btn" onClick={() => handleEditAstro(astro)}>
                                     <FaEdit />
-                                </button>
-                                <button
-                                    className="icon-btn"
-                                    onClick={() => toggleStatus(astro.id)}
-                                >
-                                    {astro.status ? <FaToggleOn /> : <FaToggleOff />}
                                 </button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+
+            {/* ✅ POPUP MODAL */}
+            {showAddModal && (
+                <AstroAdd
+                    astro={editingAstro}   // 👈 null = ADD, object = EDIT
+                    onClose={() => {
+                        setShowAddModal(false);
+                        setEditingAstro(null);
+                    }}
+                    onSuccess={() => {
+                        refreshAstros();
+                        setShowAddModal(false);
+                        setEditingAstro(null);
+                    }}
+                />
+            )}
         </div>
     );
 };

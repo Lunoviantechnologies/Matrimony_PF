@@ -1,16 +1,15 @@
-import React, { useState } from "react";
-import axios from "axios";
-import backendIP from "../api/api";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import api from "../api/axiosInstance";
+import { toast } from "react-toastify";
 
-const AstroAdd = ({ onClose, onSuccess }) => {
-    const navigate = useNavigate();
+const AstroAdd = ({ astro, onClose, onSuccess }) => {
+
+    const isEdit = Boolean(astro);
 
     const [form, setForm] = useState({
         name: "",
-        expertise: "",
         experience: "",
-        phone: "",
+        astroNumber: "",
         price: "",
         languages: "",
     });
@@ -18,10 +17,23 @@ const AstroAdd = ({ onClose, onSuccess }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
+    // ✅ Prefill form in EDIT mode
+    useEffect(() => {
+        if (astro) {
+            setForm({
+                name: astro.name || "",
+                experience: astro.experience || "",
+                astroNumber: astro.astroNumber?.toString() || "",
+                price: astro.price || "",
+                languages: astro.languages || "",
+            });
+        }
+    }, [astro]);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        if (name === "phone" && !/^\d{0,10}$/.test(value)) return;
+        if (name === "astroNumber" && !/^\d{0,10}$/.test(value)) return;
         if ((name === "experience" || name === "price") && value < 0) return;
 
         setForm({ ...form, [name]: value });
@@ -31,7 +43,7 @@ const AstroAdd = ({ onClose, onSuccess }) => {
         e.preventDefault();
         setError("");
 
-        if (form.phone.length !== 10) {
+        if (form.astroNumber.length !== 10) {
             setError("Phone number must be 10 digits");
             return;
         }
@@ -39,26 +51,26 @@ const AstroAdd = ({ onClose, onSuccess }) => {
         try {
             setLoading(true);
 
-            await axios.post(
-                `${backendIP}/admin/astrologers`,
-                {
-                    ...form,
-                    experience: Number(form.experience),
-                    price: Number(form.price),
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    },
-                }
-            );
+            const payload = {
+                ...form,
+                experience: Number(form.experience),
+                price: Number(form.price),
+            };
+
+            if (isEdit) {
+                // ✅ UPDATE (PUT)
+                await api.put(`astro-number/update/${astro.id}`, payload);
+                toast.success("Astro info updated successfully");
+            } else {
+                // ✅ ADD (POST)
+                await api.post("astro-number/add", payload);
+                toast.success("Astro info added successfully");
+            }
 
             onSuccess && onSuccess();
-
-            // ✅ Navigate to Astro Talk page
-            navigate("/admin/astroTalk");
         } catch (err) {
-            setError("Failed to add astrologer. Please try again.");
+            console.error(err);
+            setError("Failed to save astrologer. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -67,7 +79,7 @@ const AstroAdd = ({ onClose, onSuccess }) => {
     return (
         <div className="astro-modal">
             <form className="astro-form" onSubmit={handleSubmit}>
-                <h3>Add New Astrologer</h3>
+                <h3>{isEdit ? "Edit Astrologer" : "Add New Astrologer"}</h3>
 
                 {error && <p className="error-text">{error}</p>}
 
@@ -75,14 +87,6 @@ const AstroAdd = ({ onClose, onSuccess }) => {
                     name="name"
                     placeholder="Astrologer Name"
                     value={form.name}
-                    onChange={handleChange}
-                    required
-                />
-
-                <input
-                    name="expertise"
-                    placeholder="Expertise (Marriage, Kundli, etc.)"
-                    value={form.expertise}
                     onChange={handleChange}
                     required
                 />
@@ -105,9 +109,10 @@ const AstroAdd = ({ onClose, onSuccess }) => {
                 />
 
                 <input
-                    name="phone"
+                    type="text"
+                    name="astroNumber"
                     placeholder="Phone Number"
-                    value={form.phone}
+                    value={form.astroNumber}
                     onChange={handleChange}
                     required
                 />
@@ -123,13 +128,13 @@ const AstroAdd = ({ onClose, onSuccess }) => {
 
                 <div className="form-actions">
                     <button type="submit" className="save-btn" disabled={loading}>
-                        {loading ? "Saving..." : "Save"}
+                        {loading ? "Saving..." : isEdit ? "Update" : "Save"}
                     </button>
 
                     <button
                         type="button"
                         className="cancel-btn"
-                        onClick={() => navigate("/admin/astroTalk")}
+                        onClick={onClose}
                         disabled={loading}
                     >
                         Cancel

@@ -125,6 +125,7 @@ const PaymentDisplayData = () => {
                             <label className="form-label">Plan Code</label>
                             <input
                                 className="form-control form-control-sm"
+                                placeholder="example GOLD_3"
                                 name="planCode"
                                 value={formData.planCode}
                                 onChange={handleChange}

@@ -163,11 +163,12 @@ export default function ProfileView() {
 
   useEffect(() => {
     api.get(`/profiles/views/${id}`).then(res => {
-      const count = res.data;
-      // console.log("id count : ", count);
-      setProfileView(count);
+      const text = res.data;
+      const number = Number(text.match(/\d+/)?.[0] || 0);
+      console.log("id count : ", number);
+      setProfileView(number);
     })
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (!id) return;
@@ -338,7 +339,7 @@ export default function ProfileView() {
             </p>
             <div className="pv-profile-footer">
               <div className="pv-small-metric">
-                <strong>{profile.metrics.views}</strong>
+                <strong>{profileView}</strong>
                 <span>Profile Views</span>
               </div>
               {/* <div className="pv-small-metric">
@@ -405,23 +406,13 @@ export default function ProfileView() {
           </div>
 
           <div className="pv-metrics-list">
-            {/* <div className="pv-metric-row">
-              <div className="pv-metric-icon likes">
-                <FaHeart />
-              </div>
-              <div className="pv-metric-meta">
-                <div className="pv-metric-title">Likes</div>
-                <div className="pv-metric-value">{profile.metrics.likes}</div>
-              </div>
-            </div> */}
-
             <div className="pv-metric-row">
               <div className="pv-metric-icon views">
                 <FaEye />
               </div>
               <div className="pv-metric-meta">
                 <div className="pv-metric-title">Views</div>
-                <div className="pv-metric-value">{profile.metrics.views}</div>
+                <div className="pv-metric-value">{profileView}</div>
               </div>
             </div>
 
@@ -434,16 +425,6 @@ export default function ProfileView() {
                 <div className="pv-metric-value">
                   {profile.metrics.interests}
                 </div>
-              </div>
-            </div>
-
-            <div className="pv-metric-row">
-              <div className="pv-metric-icon clicks">
-                <FaMousePointer />
-              </div>
-              <div className="pv-metric-meta">
-                <div className="pv-metric-title">Clicks</div>
-                <div className="pv-metric-value">{profile.metrics.clicks}</div>
               </div>
             </div>
           </div>
