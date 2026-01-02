@@ -6,10 +6,83 @@
   <link rel="icon" type="image/png" href="/saathjanam_logo.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SaathJanam</title>
+
+  <style>
+    body {
+      margin: 0;
+      background-color: #fff;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Fullscreen center */
+    .app-loader {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    /* Spinner container */
+    .logo-spinner {
+      position: relative;
+      width: clamp(90px, 20vw, 120px);
+      height: clamp(90px, 20vw, 120px);
+    }
+
+    /* Spinner ring */
+    .logo-spinner::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: clamp(3px, 0.5vw, 4px) solid #eee;
+      border-top-color: #e91e63;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    /* Logo */
+    .logo-spinner img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(45px, 10vw, 65px);
+      height: clamp(45px, 10vw, 65px);
+      object-fit: contain;
+      background: #fff;
+      border-radius: 50%;
+      padding: clamp(4px, 1vw, 6px);
+    }
+
+    /* App name */
+    .app-name {
+      font-size: clamp(16px, 4vw, 20px);
+      font-weight: 600;
+      color: #333;
+      letter-spacing: 0.5px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <div id="root"></div>
+  <div id="root">
+    <!-- Pre React Loader -->
+    <div class="app-loader">
+      <div class="logo-spinner">
+        <img src="/saathjanam_logo.png" alt="SaathJanam Logo" />
+      </div>
+      <div class="app-name">SaathJanam</div>
+    </div>
+  </div>
+
   <script type="module" src="/src/main.jsx"></script>
 </body>
 
