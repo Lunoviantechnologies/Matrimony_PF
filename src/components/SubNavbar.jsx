@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { FiGrid, FiUser, FiEdit, FiInbox, FiHeart, FiSettings, FiMessageSquare } from "react-icons/fi";
+import { FiGrid, FiUser, FiEdit, FiInbox, FiHeart, FiMessageSquare } from "react-icons/fi";
+import { MdPersonSearch } from "react-icons/md";
 
 const SubNavbar = () => {
     return (
@@ -18,14 +19,14 @@ const SubNavbar = () => {
                 <NavLink className="subnav_link" to="requests">
                     <FiInbox size={18} /> Requests
                 </NavLink>
+                <NavLink className="subnav_link" to="search">
+                    <MdPersonSearch size={18} /> Search
+                </NavLink>
                 <NavLink className="subnav_link" to="matches">
                     <FiHeart size={18} /> Matches
                 </NavLink>
                 <NavLink className="subnav_link" to="messages/:userId">
                     <FiMessageSquare size={18} /> Messages
-                </NavLink>
-                <NavLink className="subnav_link" to="settings">
-                    <FiSettings size={18} /> Settings
                 </NavLink>
             </div>
         </div>

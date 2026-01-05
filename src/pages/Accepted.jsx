@@ -5,16 +5,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
+import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 
 const Accepted = () => {
   const [acceptedRequests, setAcceptedRequests] = useState([]);
 
-  const { id, role } = useSelector(state => state.auth);
+  const { id, role, myProfile } = useSelector(state => state.auth);
   const { profiles } = useSelector(state => state.profiles);
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // console.log("User ID in Accepted component:", profiles);
+
+  useEffect( () => {
+    dispatch(fetchMyProfile(id));
+  }, [id]);
+
   useEffect(() => {
     if (!id) return;
 
@@ -67,7 +72,10 @@ const Accepted = () => {
           <div className="received-card" key={user.requestId}>
             <div className="left-section">
               <div className="img-box">
-                <img src={user.image} alt="profile" className="profile-img"
+                <img src={user.image} alt="profile"
+                  className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
                   onError={(e) => {
                     e.target.src = "/default-user.png";
                   }}

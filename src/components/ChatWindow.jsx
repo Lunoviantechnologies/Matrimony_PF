@@ -9,6 +9,7 @@ import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
+import { TfiMenuAlt } from "react-icons/tfi";
 
 const ChatWindow = () => {
   const { userId } = useParams();
@@ -28,6 +29,20 @@ const ChatWindow = () => {
   const messagesEndRef = useRef(null);
   const stompClientRef = useRef(null);
   const activeChatUserRef = useRef(null);
+
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     if (messages.length > 0) {
@@ -61,16 +76,15 @@ const ChatWindow = () => {
         ? Number(selectedUser.receiverId)
         : Number(selectedUser.senderId);
 
-    api.get("/chat/online")
-      .then(res => {
-        const onlineUsers = (res.data || []).map(id => Number(id));
+    api.get("/chat/online").then(res => {
+      const onlineUsers = (res.data || []).map(id => Number(id));
 
-        console.log("all online (normalized):", onlineUsers);
-        console.log("checking for:", otherUserId);
+      console.log("all online (normalized):", onlineUsers);
+      console.log("checking for:", otherUserId);
 
-        const isOnline = onlineUsers.includes(otherUserId);
-        setOnlineStatus(isOnline);
-      })
+      const isOnline = onlineUsers.includes(otherUserId);
+      setOnlineStatus(isOnline);
+    })
       .catch(() => setOnlineStatus(false));
 
   }, [selectedUser, myId]);
@@ -321,11 +335,6 @@ const ChatWindow = () => {
                     navigate(`/dashboard/messages/${otherId}`)
                   }
                 >
-                  {/* <img
-                    src={img}
-                    alt={name}
-                    className="chatlist-avatar"
-                  /> */}
                   <img
                     src={getUserImageById(otherId)}
                     alt={name}
@@ -350,13 +359,6 @@ const ChatWindow = () => {
         {selectedUser ? (
           <div className="chatwindow-header">
             <div className="chatwindow-user">
-              {/* <img
-                src={
-                  Number(selectedUser.senderId) === Number(myId) ? selectedUser.receiverImage : selectedUser.senderImage
-                }
-                alt=""
-                className="chatwindow-avatar"
-              /> */}
               <img
                 src={getUserImageById(
                   Number(selectedUser.senderId) === Number(myId) ? selectedUser.receiverId : selectedUser.senderId
@@ -379,6 +381,22 @@ const ChatWindow = () => {
                 </span>
                 {/* <span className="active-status">Active now</span> */}
               </div>
+            </div>
+
+            <div className="chatwindow-menu" ref={menuRef}>
+              <TfiMenuAlt
+                size={25}
+                className="menu-icon"
+                onClick={() => setOpen(!open)}
+              />
+
+              {open && (
+                <div className="chat-dropdown">
+                  <div className="dropdown-item">Clear Chat</div>
+                  <div className="dropdown-item">Block User</div>
+                  <div className="dropdown-item danger">Report</div>
+                </div>
+              )}
             </div>
           </div>
         ) : (

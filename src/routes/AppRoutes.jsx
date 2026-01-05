@@ -43,6 +43,7 @@ import PaymentFailed from "../successPages/paymentFailure";
 import PaymentDisplayData from "../admin/PaymentDisplayData";
 import AstroTalkInfo from "../admin/AstroTalkInfo";
 import AstroTalkQuery from "../pages/AstroTalkQuery";
+import SearchFilters from "../components/SearchFilters";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -154,6 +155,10 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "requests",
                 element: <Requests />
+            },
+            {
+                path: "search",
+                element: <SearchFilters />
             },
             {
                 path: "settings",

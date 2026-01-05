@@ -44,7 +44,7 @@
     font-family: 'Lucida Handwriting', cursive;
     font-size: clamp(2.5rem, 5vw, 4.5rem);
     font-weight: 700;
-    color: #081c15;
+    color: rgb(139,69,19);
     margin: 0;
 }
 
