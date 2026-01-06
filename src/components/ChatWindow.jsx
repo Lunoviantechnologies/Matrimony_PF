@@ -12,6 +12,10 @@ import api from "../api/axiosInstance";
 import { TfiMenuAlt } from "react-icons/tfi";
 
 const ChatWindow = () => {
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+
   const { userId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -25,6 +29,7 @@ const ChatWindow = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isPremium, setIsPremium] = useState(false);
   const [onlineStatus, setOnlineStatus] = useState(false);
+  const [isBlocked, setIsBlocked] = useState(false);
 
   const messagesEndRef = useRef(null);
   const stompClientRef = useRef(null);
@@ -32,6 +37,9 @@ const ChatWindow = () => {
 
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
+  const chatScrollRef = useRef(null);
+  const isInitialLoadRef = useRef(true);
+  const prevScrollHeightRef = useRef(0);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -45,21 +53,20 @@ const ChatWindow = () => {
   }, []);
 
   useEffect(() => {
-    if (messages.length > 0) {
-      messagesEndRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
-    }
-  }, [messages]);
-
-  useEffect(() => {
     activeChatUserRef.current = Number(userId);
   }, [userId]);
 
+  // reset pagination
   useEffect(() => {
-    setMessages([]); // ✅ CLEAR OLD CHAT
-  }, [userId]);
+    if (!myId || !userId) return;
+
+    setMessages([]);
+    setPage(0);
+    setHasMore(true);
+    isInitialLoadRef.current = true;
+
+    loadMessages(0, true);
+  }, [userId, myId]);
 
   useEffect(() => {
     if (role[0].toUpperCase() === "USER") {
@@ -126,17 +133,50 @@ const ChatWindow = () => {
     fetchAcceptedRequests();
   }, [myId, userId, navigate]);
 
-  /* LOAD CHAT HISTORY */
-  useEffect(() => {
-    if (!myId) return;
-    if (!userId || isNaN(Number(userId))) return;
+  /* LOAD CHAT HISTORY with pagination */
+  // useEffect(() => {
+  //   if (!myId) return;
+  //   if (!userId || isNaN(Number(userId))) return;
 
-    api.get(`/chat/conversation/${myId}/${Number(userId)}`)
-      .then((res) => {
-        setMessages(res.data.content || []);
-      })
-      .catch((err) => console.error("Error loading messages:", err));
-  }, [myId, userId]);
+  //   api.get(`/chat/conversation/${myId}/${Number(userId)}`)
+  //     .then((res) => {
+  //       setMessages(res.data.content || []);
+  //     })
+  //     .catch((err) => console.error("Error loading messages:", err));
+  // }, [myId, userId]);
+  const loadMessages = async (pageNo, reset = false) => {
+    if (loadingHistory || (!hasMore && !reset)) return;
+
+    const container = chatScrollRef.current;
+
+    // 🔒 Save scroll height before adding older messages
+    if (!reset && container) {
+      prevScrollHeightRef.current = container.scrollHeight;
+    }
+
+    setLoadingHistory(true);
+
+    try {
+      const res = await api.get(
+        `/chat/conversation/${myId}/${Number(userId)}?page=${pageNo}&size=20`
+      );
+
+      // 🔁 Backend gives DESC → convert to ASC
+      const newMessages = (res.data.content || []).reverse(); // ✅ ASC order
+
+      setHasMore(!res.data.last);
+      setPage(pageNo);
+
+      // 🔼 Prepend old messages OR reset chat
+      setMessages(prev =>
+        reset ? newMessages : [...newMessages, ...prev]
+      );
+    } catch (err) {
+      console.error("❌ Failed to load chat history", err);
+    } finally {
+      setLoadingHistory(false);
+    }
+  };
 
   /* CHECK PREMIUM */
   useEffect(() => {
@@ -211,8 +251,40 @@ const ChatWindow = () => {
 
   }, [myId]);
 
+  useEffect(() => {
+    const container = chatScrollRef.current;
+    if (!container) return;
+
+    if (isInitialLoadRef.current) {
+      // First load → jump to bottom
+      container.scrollTop = container.scrollHeight;
+      isInitialLoadRef.current = false;
+    } else {
+      // Preserve position when older messages load
+      const newScrollHeight = container.scrollHeight;
+      container.scrollTop =
+        newScrollHeight - prevScrollHeightRef.current;
+    }
+  }, [messages]);
+
+  // scroll for older chat
+  useEffect(() => {
+    const container = chatScrollRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      if (container.scrollTop === 0 && hasMore && !loadingHistory) {
+        loadMessages(page + 1);
+      }
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [page, hasMore, loadingHistory]);
+
   /* SEND MESSAGE */
   const handleSend = () => {
+    if (isBlocked) return;
     if (!message.trim() || !selectedUser) return;
 
     const receiverId =
@@ -258,23 +330,21 @@ const ChatWindow = () => {
   });
 
   const handleIncoming = (body) => {
-    if (!body || !body.senderId || !body.receiverId) return;
+    if (!body || isBlocked) return;
 
-    const sender = Number(body.senderId);
-    const receiver = Number(body.receiverId);
-    const me = Number(myId);
-    const activeUser = activeChatUserRef.current;
+    setMessages(prev => [...prev, body]);
 
-    const isThisChat =
-      (sender === me && receiver === activeUser) ||
-      (sender === activeUser && receiver === me);
+    const container = chatScrollRef.current;
+    if (!container) return;
 
-    if (!isThisChat) {
-      // Message belongs to another chat → ignore in UI
-      return;
+    const isNearBottom =
+      container.scrollHeight - container.scrollTop - container.clientHeight < 80;
+
+    if (isNearBottom) {
+      setTimeout(() => {
+        container.scrollTop = container.scrollHeight;
+      }, 50);
     }
-
-    setMessages((prev) => [...prev, body]);
   };
 
   const getUserImageById = (id) => {
@@ -286,6 +356,49 @@ const ChatWindow = () => {
       return "/default-avatar.png";
     }
     return user.updatePhoto ? user.updatePhoto : user.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+  };
+
+  const handleClearChat = () => {
+    if (!selectedUser || !myId) return;
+
+    const receiverId =
+      Number(selectedUser.senderId) === Number(myId)
+        ? selectedUser.receiverId
+        : selectedUser.senderId;
+
+    api.post(`/chat/clear/${myId}/${receiverId}`)
+      .then(res => {
+        console.log("Chat cleared:", res.data);
+        setMessages([]); // optional: clear UI instantly
+        setOpen(false);
+      })
+      .catch(err => {
+        console.error("Error clearing chat:", err);
+      });
+  };
+
+  const handleBlockChat = async () => {
+    if (!selectedUser) return;
+
+    const receiverId =
+      Number(selectedUser.senderId) === Number(myId)
+        ? selectedUser.receiverId
+        : selectedUser.senderId;
+
+    try {
+      await api.post(`/block/user/${myId}/${receiverId}`);
+
+      setIsBlocked(true);
+      setOpen(false);
+
+      // Optional UX actions
+      setMessages([]);
+      alert("User blocked successfully");
+
+    } catch (err) {
+      console.error("Error blocking user:", err);
+      alert("Failed to block user");
+    }
   };
 
   return (
@@ -392,8 +505,8 @@ const ChatWindow = () => {
 
               {open && (
                 <div className="chat-dropdown">
-                  <div className="dropdown-item">Clear Chat</div>
-                  <div className="dropdown-item">Block User</div>
+                  <div className="dropdown-item" onClick={handleClearChat}>Clear Chat</div>
+                  <div className="dropdown-item" onClick={handleBlockChat}>Block User</div>
                   <div className="dropdown-item danger">Report</div>
                 </div>
               )}
@@ -403,7 +516,13 @@ const ChatWindow = () => {
           <div className="select-user">Select a user to start chatting</div>
         )}
 
-        <div className="chatwindow-messages">
+        <div className="chatwindow-messages" ref={chatScrollRef}>
+          {loadingHistory && (
+            <div className="chat-loader">
+              <div className="spinner" />
+            </div>
+          )}
+
           {messages.map((msg, idx) => (
             <div
               key={idx}
@@ -413,7 +532,9 @@ const ChatWindow = () => {
                 }`}
             >
               <div className={!isPremium && Number(msg.senderId) !== Number(myId) ? "blur-message" : ""}>
-                {!isPremium && Number(msg.senderId) !== Number(myId) ? "Premium message" : msg.message}
+                {!isPremium && Number(msg.senderId) !== Number(myId)
+                  ? "Premium message"
+                  : msg.message}
               </div>
 
               <div className="chat-time">
@@ -424,11 +545,14 @@ const ChatWindow = () => {
               </div>
             </div>
           ))}
-          <div ref={messagesEndRef} />
         </div>
 
         <div className="chatwindow-input">
-          {isPremium ? (
+          {isBlocked ? (
+            <div className="blocked-warning">
+              You have blocked this user
+            </div>
+          ) : isPremium ? (
             <div className="chat-input-box">
               <input
                 type="text"

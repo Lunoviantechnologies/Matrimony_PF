@@ -228,6 +228,27 @@
     filter: blur(0);
 }
 
+.chat-loader {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid #ddd;
+    border-top: 3px solid #e91e63;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .chat-bubble {
     margin-bottom: 10px;
     max-width: 60%;
