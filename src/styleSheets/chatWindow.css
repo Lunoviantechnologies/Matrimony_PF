@@ -282,6 +282,7 @@
     display: flex;
     flex-shrink: 0;
     align-items: center;
+    justify-content: center; 
     padding: 10px;
     border-top: 1px solid #ddd;
     background: #fff;
@@ -327,4 +328,44 @@
     text-align: center;
     color: red;
     padding: 5px 0;
+}
+
+/* BLOCKED WARNING (RESPONSIVE) */
+.blocked-warning {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 12px 16px;
+    margin: 8px 12px;
+
+    background-color: #fff3cd;
+    color: #856404;
+
+    border: 1px solid #ffeeba;
+    border-radius: 10px;
+
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+
+    max-width: 100%;
+    word-break: break-word;
+}
+
+/* Mobile (≤ 480px) */
+@media (max-width: 480px) {
+    .blocked-warning {
+        font-size: 13px;
+        padding: 10px 12px;
+        margin: 6px 8px;
+    }
+}
+
+/* Tablet (≤ 768px) */
+@media (max-width: 768px) {
+    .blocked-warning {
+        font-size: 13.5px;
+        padding: 10px 14px;
+    }
 }

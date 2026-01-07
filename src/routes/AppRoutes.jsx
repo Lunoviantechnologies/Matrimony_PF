@@ -34,13 +34,13 @@ import ManageMatches from "../admin/ManageMatches";
 import HomeRedirect from "../pages/HomeRedirect";
 import AdminPayments from "../admin/AdminPayments";
 import AdminApprovals from "../admin/AdminApprovals";
-import AdminSupport from "../admin/AdminSupport";
 import PaymentSuccess from "../successPages/PaymentSuccess";
 import PaymentFailed from "../successPages/paymentFailure";
 import PaymentDisplayData from "../admin/PaymentDisplayData";
 import AstroTalkInfo from "../admin/AstroTalkInfo";
 import AstroTalkQuery from "../pages/AstroTalkQuery";
 import SearchFilters from "../components/SearchFilters";
+import AdminHelp from "../admin/AdminHelp";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -216,8 +216,8 @@ const AppRoutes = createBrowserRouter([
                 element: <AdminProfiles />
             },
             {
-                path: "support",
-                element: <AdminSupport />
+                path: "help",
+                element: <AdminHelp />
             },
             {
                 path: "paymentDisplay",

@@ -10,6 +10,7 @@ import { Client } from "@stomp/stompjs";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
 import { TfiMenuAlt } from "react-icons/tfi";
+import { toast } from "react-toastify";
 
 const ChatWindow = () => {
   const [page, setPage] = useState(0);
@@ -29,7 +30,8 @@ const ChatWindow = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isPremium, setIsPremium] = useState(false);
   const [onlineStatus, setOnlineStatus] = useState(false);
-  const [isBlocked, setIsBlocked] = useState(false);
+  const [blockedByMe, setBlockedByMe] = useState(false);
+  const [blockedByOther, setBlockedByOther] = useState(false);
 
   const messagesEndRef = useRef(null);
   const stompClientRef = useRef(null);
@@ -97,6 +99,28 @@ const ChatWindow = () => {
   }, [selectedUser, myId]);
   console.log("online : ", onlineStatus);
 
+  // Blocked user
+  useEffect(() => {
+    if (!selectedUser || !myId) return;
+
+    const otherUserId =
+      Number(selectedUser.senderId) === Number(myId)
+        ? selectedUser.receiverId
+        : selectedUser.senderId;
+
+    api.get(`/block/status/${myId}/${otherUserId}`)
+      .then(res => {
+        const { blocked, iBlocked } = res.data || {};
+
+        setBlockedByMe(blocked && iBlocked);
+        setBlockedByOther(blocked && !iBlocked);
+      })
+      .catch(() => {
+        setBlockedByMe(false);
+        setBlockedByOther(false);
+      });
+  }, [selectedUser, myId]);
+
   /* FETCH ACCEPTED USERS */
   useEffect(() => {
     if (!myId) return;
@@ -134,16 +158,6 @@ const ChatWindow = () => {
   }, [myId, userId, navigate]);
 
   /* LOAD CHAT HISTORY with pagination */
-  // useEffect(() => {
-  //   if (!myId) return;
-  //   if (!userId || isNaN(Number(userId))) return;
-
-  //   api.get(`/chat/conversation/${myId}/${Number(userId)}`)
-  //     .then((res) => {
-  //       setMessages(res.data.content || []);
-  //     })
-  //     .catch((err) => console.error("Error loading messages:", err));
-  // }, [myId, userId]);
   const loadMessages = async (pageNo, reset = false) => {
     if (loadingHistory || (!hasMore && !reset)) return;
 
@@ -282,9 +296,32 @@ const ChatWindow = () => {
     return () => container.removeEventListener("scroll", handleScroll);
   }, [page, hasMore, loadingHistory]);
 
+  // Seen chat
+  useEffect(() => {
+    if (!selectedUser || !myId || !stompClientRef.current?.connected) return;
+
+    const otherUserId =
+      Number(selectedUser.senderId) === Number(myId)
+        ? selectedUser.receiverId
+        : selectedUser.senderId;
+
+    // 🔔 Notify backend messages are seen
+    stompClientRef.current.publish({
+      destination: `/app/chat/seen/${otherUserId}`,
+      body: JSON.stringify({
+        senderId: otherUserId,
+        receiverId: myId,
+      }),
+    });
+
+    // 🔁 Update backend DB
+    api.post(`/chat/seen/${otherUserId}/${myId}`);
+
+  }, [selectedUser, myId]);
+
   /* SEND MESSAGE */
   const handleSend = () => {
-    if (isBlocked) return;
+    if (blockedByMe || blockedByOther) return;
     if (!message.trim() || !selectedUser) return;
 
     const receiverId =
@@ -330,7 +367,7 @@ const ChatWindow = () => {
   });
 
   const handleIncoming = (body) => {
-    if (!body || isBlocked) return;
+    if (!body) return;
 
     setMessages(prev => [...prev, body]);
 
@@ -388,16 +425,38 @@ const ChatWindow = () => {
     try {
       await api.post(`/block/user/${myId}/${receiverId}`);
 
-      setIsBlocked(true);
+      // ✅ IMMEDIATE UI UPDATE
+      setBlockedByMe(true);
+      setBlockedByOther(false);
+
       setOpen(false);
-
-      // Optional UX actions
-      setMessages([]);
-      alert("User blocked successfully");
-
+      toast.success("User blocked successfully");
     } catch (err) {
       console.error("Error blocking user:", err);
-      alert("Failed to block user");
+      toast.error("Failed to block user");
+    }
+  };
+
+  const handleUnblockChat = async () => {
+    if (!selectedUser) return;
+
+    const receiverId =
+      Number(selectedUser.senderId) === Number(myId)
+        ? selectedUser.receiverId
+        : selectedUser.senderId;
+
+    try {
+      await api.post(`/block/unblock/${myId}/${receiverId}`);
+
+      // ✅ IMMEDIATE UI UPDATE
+      setBlockedByMe(false);
+      setBlockedByOther(false);
+
+      setOpen(false);
+      toast.success("User unblocked successfully");
+    } catch (err) {
+      console.error("Error unblocking user:", err);
+      toast.error("Failed to unblock user");
     }
   };
 
@@ -505,8 +564,21 @@ const ChatWindow = () => {
 
               {open && (
                 <div className="chat-dropdown">
-                  <div className="dropdown-item" onClick={handleClearChat}>Clear Chat</div>
-                  <div className="dropdown-item" onClick={handleBlockChat}>Block User</div>
+                  <div className="dropdown-item" onClick={handleClearChat}>
+                    Clear Chat
+                  </div>
+
+                  {!blockedByMe && !blockedByOther && (
+                    <div className="dropdown-item" onClick={handleBlockChat}>
+                      Block User
+                    </div>
+                  )}
+                  {blockedByMe && (
+                    <div className="dropdown-item" onClick={handleUnblockChat}>
+                      Unblock User
+                    </div>
+                  )}
+
                   <div className="dropdown-item danger">Report</div>
                 </div>
               )}
@@ -548,10 +620,10 @@ const ChatWindow = () => {
         </div>
 
         <div className="chatwindow-input">
-          {isBlocked ? (
-            <div className="blocked-warning">
-              You have blocked this user
-            </div>
+          {blockedByMe ? (
+            <div className="blocked-warning">You have blocked this user</div>
+          ) : blockedByOther ? (
+            <div className="blocked-warning">You are blocked by this user</div>
           ) : isPremium ? (
             <div className="chat-input-box">
               <input
