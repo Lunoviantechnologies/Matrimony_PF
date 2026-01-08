@@ -277,12 +277,23 @@
     text-align: right;
 }
 
+.seen-status {
+    font-size: 11px;
+    margin-left: 6px;
+}
+.seen-status.sent {
+    color: #9e9e9e;
+}
+.seen-status.seen {
+    color: #4fc3f7;
+}
+
 /* Input box */
 .chatwindow-input {
     display: flex;
     flex-shrink: 0;
     align-items: center;
-    justify-content: center; 
+    justify-content: center;
     padding: 10px;
     border-top: 1px solid #ddd;
     background: #fff;
