@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../styleSheets/raiseTicket.css";
-import backendIP from "../api/api";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import api from "../api/axiosInstance";
 
 const RaiseTicket = () => {
   const { id, email } = useSelector(state => state.auth);
+
   const [form, setForm] = useState({
     category: "",
     name: "",
@@ -17,9 +16,9 @@ const RaiseTicket = () => {
     memberId: id,
   });
 
+  const [attachments, setAttachments] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // ✅ UI Categories (user friendly)
   const categories = [
     "Profile Request Issue",
     "Premium Membership",
@@ -31,7 +30,6 @@ const RaiseTicket = () => {
     "Other Queries"
   ];
 
-  // ✅ Backend Enum Mapping
   const categoryMap = {
     "Profile Request Issue": "Profile_Request_Issue",
     "Premium Membership": "Premium_Membership",
@@ -47,45 +45,55 @@ const RaiseTicket = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleFileChange = (e) => {
+    setAttachments(Array.from(e.target.files));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    // ✅ Convert UI selection to backend Enum
-    const payload = {
-      issueCategory: categoryMap[form.category] || "OTHER",
-      name: form.name,
-      email: form.email,
-      phoneNumber: form.phone,
-      description: form.message,
-      memberId: form.memberId
-    };
-
-    console.log("Sending fixed payload:", payload);
-
     try {
-      await api.post(`/tickets`, payload, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+      if (form.category === "Payment Issue") {
+        const formData = new FormData();
+        formData.append("issueCategory", "Payment_Issue");
+        formData.append("name", form.name);
+        formData.append("email", form.email);
+        formData.append("phoneNumber", form.phone);
+        formData.append("description", form.message);
+        formData.append("memberId", form.memberId);
+
+        attachments.forEach(file =>
+          formData.append("attachments", file)
+        );
+
+        await api.post("/tickets", formData);
+      } else {
+        await api.post("/tickets", {
+          issueCategory: categoryMap[form.category] || "OTHER",
+          name: form.name,
+          email: form.email,
+          phoneNumber: form.phone,
+          description: form.message,
+          memberId: form.memberId
+        });
       }
-      );
 
       toast.success("Ticket raised successfully");
 
-      // ✅ Reset form after success
       setForm({
         category: "",
         name: "",
-        email: "",
+        email: email,
         phone: "",
         message: "",
-        memberId: "",
+        memberId: id,
       });
+      setAttachments([]);
 
-    } catch (error) {
-      console.log("Backend error:", error.response?.data);
-      toast.error("Ticket raised Failed");
+    } catch (err) {
+      console.error(err);
+      toast.error("Ticket raise failed");
     } finally {
       setLoading(false);
     }
@@ -100,6 +108,7 @@ const RaiseTicket = () => {
         </p>
 
         <form onSubmit={handleSubmit}>
+
           <label>Issue Category *</label>
           <select
             name="category"
@@ -108,7 +117,7 @@ const RaiseTicket = () => {
             required
           >
             <option value="">Select an issue</option>
-            {categories.map((cat) => (
+            {categories.map(cat => (
               <option key={cat} value={cat}>{cat}</option>
             ))}
           </select>
@@ -117,55 +126,57 @@ const RaiseTicket = () => {
           <input
             type="text"
             name="name"
-            placeholder="Enter full name"
             value={form.name}
             onChange={handleChange}
             required
           />
 
           <label>Registered Email *</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter your email"
-            value={form.email}
-            disabled
-            onChange={handleChange}
-            required
-          />
+          <input type="email" value={form.email} disabled />
 
           <label>Phone Number *</label>
           <input
             type="text"
             name="phone"
-            placeholder="Enter your phone number"
             value={form.phone}
             onChange={handleChange}
             required
           />
 
-          <label>SaathJanam Member ID (Optional)</label>
-          <input
-            type="text"
-            name="memberId"
-            disabled
-            placeholder="Example: SJ123456"
-            value={form.memberId}
-            onChange={handleChange}
-          />
+          <label>SaathJanam Member ID</label>
+          <input type="text" value={form.memberId} disabled />
 
           <label>Describe the Issue *</label>
           <textarea
             name="message"
-            placeholder="Tell us what went wrong..."
             value={form.message}
             onChange={handleChange}
             required
           />
 
+          {/* ✅ PHOTO UPLOAD COMPONENT (ACTUALLY ADDED) */}
+          <div className="upload-section">
+            <label>
+              Upload Payment Proof (Screenshots / Photos)
+            </label>
+
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              disabled={form.category !== "Payment Issue"}
+              onChange={handleFileChange}
+            />
+
+            <small>
+              Enabled only when <b>Payment Issue</b> is selected
+            </small>
+          </div>
+
           <button type="submit" className="ticket-btn" disabled={loading}>
             {loading ? "Submitting..." : "Submit Ticket"}
           </button>
+
         </form>
       </div>
     </div>

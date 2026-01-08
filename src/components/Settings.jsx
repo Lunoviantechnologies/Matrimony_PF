@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Tabs, Tab, Typography } from "@mui/material";
+import { Typography, Button, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import { useNavigate } from "react-router-dom";
-// import NotificationSettings from "./settings/NotificationSettings";
+
 import SubscriptionSettings from "./settings/SubscriptionSettings";
 import SupportSettings from "./settings/SupportSettings";
 import PrivacySettings from "./settings/privacySettings";
@@ -12,7 +12,7 @@ import SecuritySettings from "./settings/securitySettings";
 export default function Settings() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { id, myProfile } = useSelector(state => state.auth);
+  const { id, myProfile } = useSelector((state) => state.auth);
 
   const [tab, setTab] = useState(0);
   const [securityPassword, setSecurityPassword] = useState({
@@ -22,8 +22,17 @@ export default function Settings() {
   });
 
   useEffect(() => {
-    dispatch(fetchMyProfile(id));
+    if (id) {
+      dispatch(fetchMyProfile(id));
+    }
   }, [id, dispatch]);
+
+  const tabs = [
+    { label: "Privacy", index: 0 },
+    { label: "Subscription", index: 1 },
+    { label: "Security", index: 2 },
+    { label: "Support", index: 3 },
+  ];
 
   return (
     <div style={{ padding: 10 }}>
@@ -31,20 +40,50 @@ export default function Settings() {
         Settings
       </Typography>
 
-      <Tabs value={tab} onChange={(e, v) => setTab(v)} variant="scrollable">
-        <Tab label="Privacy" />
-        {/* <Tab label="Notifications" /> */}
-        <Tab label="Subscription" />
-        <Tab label="Security" />
-        <Tab label="Support" />
-      </Tabs>
+      {/* 🔹 BUTTON TABS */}
+      <Box
+        sx={{
+          display: "flex",
+          gap: 2,
+          flexWrap: "wrap",
+          mb: 3,
+        }}
+      >
+        {tabs.map((t) => (
+          <Button
+            key={t.index}
+            onClick={() => setTab(t.index)}
+            variant={tab === t.index ? "contained" : "outlined"}
+            sx={{
+              textTransform: "none",
+              fontWeight: 600,
+              borderRadius: "12px",
+              px: 3,
+              py: 1,
+              backgroundColor: tab === t.index ? "#0a6817ff" : "transparent",
+              color: tab === t.index ? "#efeaeaff" : "#089226ff",
+              borderColor: "#0a6817ff",
+              "&:hover": {
+                backgroundColor:
+                  tab === t.index
+                    ? "#089226ff"
+                    : "rgba(25, 118, 210, 0.08)",
+              },
+            }}
+          >
+            {t.label}
+          </Button>
+        ))}
+      </Box>
 
-      <div style={{ marginTop: 20 }}>
+      {/* 🔹 CONTENT */}
+      <div>
         {tab === 0 && <PrivacySettings userId={id} />}
-        {/* {tab === 1 && <NotificationSettings userId={id} />} */}
+
         {tab === 1 && (
           <SubscriptionSettings myProfile={myProfile} navigate={navigate} />
         )}
+
         {tab === 2 && (
           <SecuritySettings
             securityPassword={securityPassword}
@@ -52,8 +91,9 @@ export default function Settings() {
             userId={id}
           />
         )}
+
         {tab === 3 && <SupportSettings userId={id} />}
       </div>
     </div>
   );
-};
+}

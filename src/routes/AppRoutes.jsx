@@ -38,6 +38,7 @@ import HomeRedirect from "../pages/HomeRedirect";
 import AdminPayments from "../admin/AdminPayments";
 import AdminApprovals from "../admin/AdminApprovals";
 import AdminSupport from "../admin/AdminSupport";
+import AdminHelp from "../admin/AdminHelp";
 import PaymentSuccess from "../successPages/PaymentSuccess";
 import PaymentFailed from "../successPages/paymentFailure";
 import PaymentDisplayData from "../admin/PaymentDisplayData";
@@ -201,6 +202,7 @@ const AppRoutes = createBrowserRouter([
                 path: "aprovals",
                 element: <AdminApprovals />
             },
+             
             {
                 path: "manageusers",
                 element: <ManageUser />
@@ -214,7 +216,7 @@ const AppRoutes = createBrowserRouter([
                 element: <AdminProfiles />
             },
             {
-                path: "support",
+                path: "adminsupport",
                 element: <AdminSupport />
             },
             {
@@ -225,7 +227,12 @@ const AppRoutes = createBrowserRouter([
                 path: "astroTalk",
                 element: <AstroTalkInfo />
             },
+             {
+                path: "adminhelp",
+                element: <AdminHelp />
+            },
         ]
+       
     }
 ]);
 

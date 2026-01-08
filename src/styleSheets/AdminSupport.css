@@ -1,0 +1,111 @@
+/* Page background */
+.admin-support-page {
+  min-height: 100vh;
+  background: #e6f8ee;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Main container */
+.admin-support-container {
+  background: #d1fae5;
+  padding: 24px;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 760px;
+}
+
+/* Header */
+.admin-support-header {
+  margin-bottom: 24px;
+  padding-left: 180px;
+}
+
+.admin-support-header h2 {
+  margin: 0;
+  font-weight: 700;
+  color: #065f46;
+}
+
+.admin-support-header p {
+  margin-top: 6px;
+  color: #047857;
+  font-size: 14px;
+}
+
+/* Form */
+.admin-support-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Form group */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #065f46;
+}
+
+/* Inputs */
+.form-group input,
+.form-group select,
+.form-group textarea {
+  border: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 14px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #34d399;
+}
+
+/* Button */
+.admin-support-form button {
+  margin-top: 10px;
+  align-self: flex-end;
+  background: #059669;
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-support-form button:hover {
+  background: #047857;
+}
+
+.admin-support-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ✅ MOBILE RESPONSIVE */
+@media (max-width: 600px) {
+  .admin-support-container {
+    padding: 18px;
+  }
+
+  .admin-support-header h2 {
+    font-size: 20px;
+  }
+
+  .admin-support-form button {
+    width: 100%;
+    align-self: stretch;
+  }
+}

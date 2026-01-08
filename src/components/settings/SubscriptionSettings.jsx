@@ -22,7 +22,6 @@ export default function SubscriptionSettings({ myProfile, navigate }) {
         return endDate;
     };
 
-    /* -------------------- PAYMENT STATUS LOGIC -------------------- */
     const getPaymentStatus = (payment, validTill) => {
         const status = payment.status?.toUpperCase();
         if (status === "FAILED") return "FAILED";
@@ -38,17 +37,16 @@ export default function SubscriptionSettings({ myProfile, navigate }) {
             case "ACTIVE":
                 return { label: "Active", color: "success" };
             case "EXPIRED":
-                return { label: "Expired", color: "warning" };
+                return { label: "Expired", color: "secondary" };
             case "FAILED":
-                return { label: "Failed", color: "error" };
+                return { label: "Failed", color: "danger" };
             case "PENDING":
-                return { label: "Pending", color: "info" };
+                return { label: "Pending", color: "warning" };
             default:
                 return { label: "Unknown", color: "default" };
         }
     };
 
-    /* -------------------- CURRENT ACTIVE PLAN -------------------- */
     const currentPlan = sortedPayments.find((payment) => {
         if (payment.status?.toUpperCase() !== "PAID") return false;
         const validTill = getPlanEndDate(payment.createdAt, payment.planCode);

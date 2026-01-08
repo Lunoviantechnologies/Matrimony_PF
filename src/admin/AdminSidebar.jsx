@@ -34,8 +34,8 @@ export default function AdminSidebar() {
         navigate('/admin/aprovals');
     };
 
-    const handlesupport = () => {
-        navigate('/admin/support');
+    const handleAdminHelp = () => {
+        navigate('/admin/adminhelp');
     };
 
     const handlePaymentDisplay = () => {
@@ -44,6 +44,9 @@ export default function AdminSidebar() {
 
     const handleAstroTalk = () => {
         navigate('/admin/astroTalk');
+    };
+      const handleAdminSupport = () => {
+        navigate('/admin/adminsupport');
     };
     return (
         <aside className="admin-sidebar">
@@ -57,9 +60,10 @@ export default function AdminSidebar() {
                 <button onClick={handlepayments}><FaRupeeSign /><span>Payments</span></button>
                 <button onClick={handleReport}><FaFileAlt /><span>Reports</span></button>
                 <button onClick={handleaprovals}><FaCheckCircle /><span>Approvals</span></button>
-                <button onClick={handlesupport}><FaHeadset /><span>User Support</span></button>
+                <button onClick={handleAdminHelp}><FaHeadset /><span>User Support</span></button>
                 <button onClick={handlePaymentDisplay}><FaMoneyCheckAlt /><span>Payment Display</span></button>
                 <button onClick={handleAstroTalk}><FaStar /><span>Astrology Service</span></button>
+                <button onClick={handleAdminSupport}><FaStar /><span>Admin Support</span></button>
             </nav>
         </aside>
     );
