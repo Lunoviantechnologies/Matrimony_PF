@@ -2,13 +2,29 @@ import { createSlice } from "@reduxjs/toolkit";
 import { loginUser } from "../thunk/loginThunk";
 import { fetchMyProfile } from "../thunk/myProfileThunk";
 
+const isTokenExpired = (exp) => {
+    if (!exp) return true;
+    return exp * 1000 < Date.now();
+};
+
+const storedToken = localStorage.getItem("token");
+const storedExp = localStorage.getItem("exp") ? JSON.parse(localStorage.getItem("exp")) : null;
+const expired = storedToken && isTokenExpired(storedExp);
+if (expired) {
+    localStorage.removeItem("id");
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    localStorage.removeItem("role");
+    localStorage.removeItem("exp");
+};
+
 const initialState = {
-    id: localStorage.getItem("id") ? JSON.parse(localStorage.getItem("id")) : null,
-    token: localStorage.getItem("token") || null,
-    email: localStorage.getItem("email") || null,
-    role: localStorage.getItem("role") ? JSON.parse(localStorage.getItem("role")) : null,
-    isLoggedIn: !!localStorage.getItem("token"),
-    exp: localStorage.getItem("exp") ? JSON.parse(localStorage.getItem("exp")) : null,
+    id: expired ? null : JSON.parse(localStorage.getItem("id")),
+    token: expired ? null : storedToken,
+    email: expired ? null : localStorage.getItem("email"),
+    role: expired ? null : JSON.parse(localStorage.getItem("role")),
+    exp: expired ? null : storedExp,
+    isLoggedIn: !expired && !!storedToken,
     loading: false,
     error: null,
 };

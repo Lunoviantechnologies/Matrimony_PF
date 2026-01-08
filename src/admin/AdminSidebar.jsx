@@ -34,8 +34,8 @@ export default function AdminSidebar() {
         navigate('/admin/aprovals');
     };
 
-    const handleAdminHelp = () => {
-        navigate('/admin/adminhelp');
+    const handlesupport = () => {
+        navigate('/admin/user_tickets');
     };
 
     const handlePaymentDisplay = () => {

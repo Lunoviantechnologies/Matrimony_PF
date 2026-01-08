@@ -243,7 +243,7 @@
     text-align: center;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    background: linear-gradient(135deg, rgb(188, 165, 17),#5731b6);
+    background: #3b0d11;
     color: white;
 }
 
@@ -263,6 +263,7 @@
 }
 
 .vip-section-compact h2 {
+    color: white;
     margin: 0 0 20px 0;
     font-size: 20px;
     font-weight: bold;

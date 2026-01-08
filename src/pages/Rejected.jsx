@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "../styleSheets/requestCSS/profileRequest.css";
-import axios from "axios";
-import backendIP from "../api/api";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import api from "../api/axiosInstance";
+import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 
 const Rejected = () => {
 
   const [rejectedRequests, setRejectedRequests] = useState([]);
-  const { id } = useSelector(state => state.auth);
+  const { id, myProfile } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect( () => {
+    dispatch(fetchMyProfile(id));
+  }, [id])
 
   useEffect(() => {
     const fetchRejectedRequests = async () => {
@@ -43,7 +47,11 @@ const Rejected = () => {
 
               <div className="left-section">
                 <div className="img-box">
-                  <img src={user.image} alt="profile" className="profile-img" />
+                  <img src={user.image} alt="profile"
+                    className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
                 </div>
 
                 <div className="text-section">

@@ -189,10 +189,10 @@ export default function ViewProfileModal({ premium ,profile = {}, onClose = () =
               {/* <div><strong>Profile ID:</strong> {id || "—"}</div> */}
             </div>
 
-            <div className="vp-actions">
+            {/* <div className="vp-actions">
               <button className="connect-btn" onClick={() => alert("Send Request (mock)")}>Send Request</button>
               <button className="connect-btn secondary" onClick={() => alert("Message (mock)")}>Message</button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -1,18 +1,21 @@
 import React, { useEffect, useMemo, useState } from "react";
-import "../styleSheets/requestCSS/profileRequest.css"
-import axios from "axios";
-import backendIP from "../api/api";
+import "../styleSheets/requestCSS/profileRequest.css";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
 import { toast } from "react-toastify";
+import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 
 const Received = () => {
 
-  const { id, role } = useSelector(state => state.auth);
+  const { id, role, myProfile } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const { profiles } = useSelector(state => state.profiles);
   const [receivedRequests, setReceivedRequests] = useState([]);
+
+  useEffect ( () => {
+    dispatch(fetchMyProfile(id));
+  }, [id]);
 
   useEffect(() => {
     api.get(`/friends/received/${id}`).then((response) => {
@@ -79,7 +82,11 @@ const Received = () => {
             <div className="received-card" key={user.requestId}>
               <div className="left-section">
                 <div className="img-box">
-                  <img src={user.image} alt="profile" className="profile-img" />
+                  <img src={user.image} alt="profile"
+                    className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
                 </div>
 
                 <div className="text-section">

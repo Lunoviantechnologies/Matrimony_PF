@@ -33,7 +33,7 @@ const UserNavbar = () => {
 
     return (
         <>
-            <Link className="navLink" to="/dashboard/astroTalkQuery">Astro_Talk</Link>
+            <Link className="navLink" to="/dashboard/astroTalkQuery">Astrology</Link>
             <Link className="navLink" to="/dashboard/help">Help</Link>
             <Link className="navLink" to="/dashboard/premium">Upgrade</Link>
             <Notification />

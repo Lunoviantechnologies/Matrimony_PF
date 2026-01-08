@@ -1,18 +1,11 @@
-import React, { useState } from "react";
-import axios from "axios";
-import backendIP from "../api/api";
+import React, { useEffect, useState } from "react";
+import api from "../api/axiosInstance";
 import { toast } from "react-toastify";
 // import "../styleSheets/AdminSupport.css";
 import "../styleSheets/AdminSupport.css"
 
-export default function AdminSupport() {
-  const [form, setForm] = useState({
-    reportedBy: "Admin",
-    title: "",
-    severity: "MEDIUM",
-    description: "",
-  });
-
+export default function Admin_UserTickets() {
+  const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
