@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../api/axiosInstance";
-import { toast } from "react-toastify";
+import { toast } from "react-toastify"; 
 
 export default function Admin_UserTickets() {
   const [tickets, setTickets] = useState([]);

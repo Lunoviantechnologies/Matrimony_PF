@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "../styleSheets/raiseTicket.css";
-import backendIP from "../api/api";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import api from "../api/axiosInstance";

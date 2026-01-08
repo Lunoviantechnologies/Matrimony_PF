@@ -3,7 +3,6 @@ import { Tabs, Tab, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import { useNavigate } from "react-router-dom";
-// import NotificationSettings from "./settings/NotificationSettings";
 import SubscriptionSettings from "./settings/SubscriptionSettings";
 import SupportSettings from "./settings/SupportSettings";
 import PrivacySettings from "./settings/privacySettings";
@@ -33,7 +32,6 @@ export default function Settings() {
 
       <Tabs value={tab} onChange={(e, v) => setTab(v)} variant="scrollable">
         <Tab label="Privacy" />
-        {/* <Tab label="Notifications" /> */}
         <Tab label="Subscription" />
         <Tab label="Security" />
         <Tab label="Support" />
@@ -41,7 +39,6 @@ export default function Settings() {
 
       <div style={{ marginTop: 20 }}>
         {tab === 0 && <PrivacySettings userId={id} />}
-        {/* {tab === 1 && <NotificationSettings userId={id} />} */}
         {tab === 1 && (
           <SubscriptionSettings myProfile={myProfile} navigate={navigate} />
         )}

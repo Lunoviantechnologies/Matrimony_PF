@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import backendIP from "../api/api";
+import React, { useEffect, useState } from "react"; 
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAdminProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
