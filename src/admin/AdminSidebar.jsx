@@ -35,7 +35,7 @@ export default function AdminSidebar() {
     };
 
     const handlesupport = () => {
-        navigate('/admin/support');
+        navigate('/admin/user_tickets');
     };
 
     const handlePaymentDisplay = () => {

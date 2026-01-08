@@ -40,7 +40,7 @@ import PaymentDisplayData from "../admin/PaymentDisplayData";
 import AstroTalkInfo from "../admin/AstroTalkInfo";
 import AstroTalkQuery from "../pages/AstroTalkQuery";
 import SearchFilters from "../components/SearchFilters";
-import AdminHelp from "../admin/AdminHelp";
+import Admin_UserTickets from "../admin/Admin_UserTickets";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -216,8 +216,8 @@ const AppRoutes = createBrowserRouter([
                 element: <AdminProfiles />
             },
             {
-                path: "help",
-                element: <AdminHelp />
+                path: "user_tickets",
+                element: <Admin_UserTickets />
             },
             {
                 path: "paymentDisplay",
