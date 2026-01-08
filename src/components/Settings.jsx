@@ -40,34 +40,17 @@ export default function Settings() {
       </Typography>
 
       {/* 🔹 BUTTON TABS */}
-      <Box
-        sx={{
-          display: "flex",
-          gap: 2,
-          flexWrap: "wrap",
-          mb: 3,
-        }}
-      >
+      <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: 3, }}>
         {tabs.map((t) => (
           <Button
             key={t.index}
             onClick={() => setTab(t.index)}
             variant={tab === t.index ? "contained" : "outlined"}
             sx={{
-              textTransform: "none",
-              fontWeight: 600,
-              borderRadius: "12px",
-              px: 3,
-              py: 1,
+              textTransform: "none", fontWeight: 600, borderRadius: "12px", px: 3, py: 1,
               backgroundColor: tab === t.index ? "#0a6817ff" : "transparent",
-              color: tab === t.index ? "#efeaeaff" : "#089226ff",
-              borderColor: "#0a6817ff",
-              "&:hover": {
-                backgroundColor:
-                  tab === t.index
-                    ? "#089226ff"
-                    : "rgba(25, 118, 210, 0.08)",
-              },
+              color: tab === t.index ? "#efeaeaff" : "#089226ff", borderColor: "#0a6817ff",
+              "&:hover": { backgroundColor: tab === t.index ? "#089226ff" : "rgba(25, 118, 210, 0.08)", },
             }}
           >
             {t.label}

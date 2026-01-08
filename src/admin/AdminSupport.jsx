@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
-import backendIP from "../api/api";
 import { toast } from "react-toastify";
 import "../styleSheets/AdminSupport.css"
 import api from "../api/axiosInstance";
