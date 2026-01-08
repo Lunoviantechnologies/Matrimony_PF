@@ -14,8 +14,8 @@ const Home = () => {
 
             <div className="homeBanner container">  
                 <div className="bannerText">
-                    <img src="/saathjanam_logo.png" alt="saathjanam_logo" height={'200px'} />
-                    <h1>SaathJanam</h1>
+                    <img src="/vivahjeevan_logo.png" alt="saathjanam_logo" height={'200px'} />
+                    <h1>Vivahjeevan</h1>
                     <h4>Bond for Seven Lifetimes...</h4>
                 </div>
 

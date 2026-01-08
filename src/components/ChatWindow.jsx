@@ -465,8 +465,8 @@ const ChatWindow = () => {
       {/* LEFT PANEL */}
       <div className="chatlist-container">
         <div className="chatlist-header d-flex justify-content-center align-items-center">
-          <img src="/saathjanam_logo.png" alt="" height="50" />
-          <h3>SaathJanam</h3>
+          <img src="/vivahjeevan_logo.png" alt="" height="50" />
+          <h3>Vivahjeevan</h3>
         </div>
 
         <div className="search-container">
