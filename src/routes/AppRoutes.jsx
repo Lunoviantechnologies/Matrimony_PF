@@ -41,6 +41,7 @@ import AstroTalkInfo from "../admin/AstroTalkInfo";
 import AstroTalkQuery from "../pages/AstroTalkQuery";
 import SearchFilters from "../components/SearchFilters";
 import Admin_UserTickets from "../admin/Admin_UserTickets";
+import AdminSupport from "../admin/AdminSupport";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -229,8 +230,8 @@ const AppRoutes = createBrowserRouter([
                 element: <AstroTalkInfo />
             },
              {
-                path: "adminhelp",
-                element: <AdminHelp />
+                path: "admin_support",
+                element: <AdminSupport />
             },
         ]
        

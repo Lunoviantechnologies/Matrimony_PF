@@ -46,7 +46,7 @@ export default function AdminSidebar() {
         navigate('/admin/astroTalk');
     };
       const handleAdminSupport = () => {
-        navigate('/admin/adminsupport');
+        navigate('/admin/admin_support');
     };
     return (
         <aside className="admin-sidebar">
