@@ -45,7 +45,7 @@
 .subscription-header {
     background: white;
     padding: 12px 30px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(217, 32, 32, 0.1);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -59,7 +59,7 @@
 
 /* Banner Section */
 .banner-section {
-    background: linear-gradient(135deg, #e91e63, #9c27b0);
+    background: linear-gradient(135deg, rgb(15,61,46));
     color: white;
     padding: 25px 30px;
     text-align: center;
@@ -69,18 +69,21 @@
     margin: 0 0 10px 0;
     font-size: 24px;
     font-weight: bold;
+    color:rgb(252, 252, 252) ;
 }
 
 .banner-section p {
     margin: 0 0 15px 0;
     font-size: 14px;
     opacity: 0.9;
+     color:rgb(252, 252, 252) ;
 }
 
 .banner-actions {
     display: flex;
     justify-content: center;
     gap: 20px;
+     color:rgb(252, 252, 252);
 }
 
 .banner-actions span {
@@ -245,14 +248,16 @@
 }
 
 .vip-badge-compact {
-    background: #ffd700;
-    color: #333;
+    background: rgb(90,15,27);
+    color: #fefcfc;
+    cursor: pointer;
     padding: 8px 18px;
     border-radius: 20px;
     font-weight: bold;
     display: inline-block;
     margin-bottom: 15px;
     font-size: 14px;
+     transition: all 0.3s;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -282,8 +287,8 @@
 }
 
 .consultation-btn-compact {
-    background: #ffd700;
-    color: #333;
+    background: rgb(90,15,27);
+    color: #ffffff;
     padding: 12px 25px;
     border: none;
     border-radius: 8px;
@@ -296,7 +301,8 @@
 }
 
 .consultation-btn-compact:hover {
-    background: #ffed4a;
+    background: rgb(90,15,27);
+    color: white;
     transform: translateY(-2px);
 }
 

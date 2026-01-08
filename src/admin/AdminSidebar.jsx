@@ -45,6 +45,9 @@ export default function AdminSidebar() {
     const handleAstroTalk = () => {
         navigate('/admin/astroTalk');
     };
+      const handleAdminSupport = () => {
+        navigate('/admin/adminsupport');
+    };
     return (
         <aside className="admin-sidebar">
             <div className="sidebar-logo" onClick={() => (navigate("/admin"))}>SaathJanam</div>
@@ -60,6 +63,7 @@ export default function AdminSidebar() {
                 <button onClick={handleUserTicket}><FaHeadset /><span>User Support</span></button>
                 <button onClick={handlePaymentDisplay}><FaMoneyCheckAlt /><span>Payment Display</span></button>
                 <button onClick={handleAstroTalk}><FaStar /><span>Astrology Service</span></button>
+                <button onClick={handleAdminSupport}><FaStar /><span>Admin Support</span></button>
             </nav>
         </aside>
     );

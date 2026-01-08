@@ -203,6 +203,7 @@ const AppRoutes = createBrowserRouter([
                 path: "aprovals",
                 element: <AdminApprovals />
             },
+             
             {
                 path: "manageusers",
                 element: <ManageUser />
@@ -227,7 +228,12 @@ const AppRoutes = createBrowserRouter([
                 path: "astroTalk",
                 element: <AstroTalkInfo />
             },
+             {
+                path: "adminhelp",
+                element: <AdminHelp />
+            },
         ]
+       
     }
 ]);
 

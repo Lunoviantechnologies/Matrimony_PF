@@ -66,18 +66,43 @@ const validationSchemas = [
   }),
 
   // STEP 2
-  Yup.object({
-    firstName: Yup.string().required("First name is Required"),
-    lastName: Yup.string().required("Last name is Required"),
-    age: Yup.number().typeError("Age must be a number").required("Age is required")
-      .min(18, "Minimum age is 18").max(60, "Maximum age is 60"),
-    dobDay: Yup.number().typeError("Date must be a number").required("Date is required")
-      .min(1, "Minimum date is 1").max(31, "Maximum date is 31"),
-    dobMonth: Yup.number().typeError("Month must be a number").required("Month is required")
-      .min(1, "Minimum month is 1").max(12, "Maximum month is 12"),
-    dobYear: Yup.number().typeError("Year must be a number").integer("Year must be an integer")
-      .min(1000, "Enter 4-digit year").max(9999, "Enter 4-digit year").required("Year is required"),
-  }),
+Yup.object({
+  firstName: Yup.string().required("First name is Required"),
+  lastName: Yup.string().required("Last name is Required"),
+
+  // 👇 AGE: required ONLY if DOB is NOT fully provided
+  age: Yup.number()
+    .typeError("Age must be a number")
+    .when(["dobDay", "dobMonth", "dobYear"], {
+      is: (day, month, year) => !day || !month || !year,
+      then: (schema) =>
+        schema
+          .required("Age is required")
+          .min(18, "Minimum age is 18")
+          .max(60, "Maximum age is 60"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+
+  dobDay: Yup.number()
+    .typeError("Date must be a number")
+    .min(1, "Minimum date is 1")
+    .max(31, "Maximum date is 31")
+    .nullable(),
+
+  dobMonth: Yup.number()
+    .typeError("Month must be a number")
+    .min(1, "Minimum month is 1")
+    .max(12, "Maximum month is 12")
+    .nullable(),
+
+  dobYear: Yup.number()
+    .typeError("Year must be a number")
+    .integer("Year must be an integer")
+    .min(1900, "Enter valid year")
+    .max(new Date().getFullYear(), "Year cannot be in future")
+    .nullable(),
+}),
+
 
   // STEP 3
   Yup.object({
@@ -127,6 +152,24 @@ const validationSchemas = [
   // STEP 9 (NO validation)
   Yup.object({}),
 ];
+const calculateAge = (day, month, year) => {
+  if (!day || !month || !year) return "";
+
+  const dob = new Date(year, month - 1, day);
+  const today = new Date();
+
+  if (isNaN(dob.getTime())) return "";
+
+  let age = today.getFullYear() - dob.getFullYear();
+  const m = today.getMonth() - dob.getMonth();
+
+  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+    age--;
+  }
+
+  return age >= 0 ? age : "";
+};
+
 
 const Register = () => {
   const [step, setStep] = useState(1);
@@ -354,33 +397,119 @@ const Register = () => {
         );
 
       /* ---------------------- STEP 2 ----------------------- */
-      case 2:
-        return (
-          <>
-            <div className="step-icon"><FaUser /></div>
-            <h2>Tell us about you</h2>
+     case 2:
+  return (
+    <>
+      <div className="step-icon"><FaUser /></div>
+      <h2>Tell us about you</h2>
 
-            <Field className="form-input" name="firstName" placeholder="First Name" />
-            <ErrorMessage name="firstName" component="div" className="error-text" />
+      {/* First Name */}
+      <Field
+        className="form-input"
+        name="firstName"
+        placeholder="First Name"
+      />
+      <ErrorMessage name="firstName" component="div" className="error-text" />
 
-            <Field className="form-input" name="lastName" placeholder="Last Name" />
-            <ErrorMessage name="lastName" component="div" className="error-text" />
+      {/* Last Name */}
+      <Field
+        className="form-input"
+        name="lastName"
+        placeholder="Last Name"
+      />
+      <ErrorMessage name="lastName" component="div" className="error-text" />
 
-            <Field className="form-input" name="age" placeholder="Enter your Age" />
-            <ErrorMessage name="age" component="div" className="error-text" />
+      {/* AGE (AUTO-CALCULATED) */}
+      <Field
+        className="form-input"
+        name="age"
+        placeholder="Age (Auto-calculated)"
+        disabled={values.dobDay && values.dobMonth && values.dobYear}
+      />
+      <ErrorMessage name="age" component="div" className="error-text" />
 
-            <label className="form-label">Date of Birth</label>
-            <div className="dob-fields">
-              <Field name="dobDay" placeholder="DD" className="form-input dobInput" />
-              <Field name="dobMonth" placeholder="MM" className="form-input dobInput" />
-              <Field name="dobYear" placeholder="YYYY" className="form-input dobInput" />
-            </div>
+      {/* DATE OF BIRTH */}
+      <label className="form-label">Date of Birth</label>
+      <div className="dob-fields">
+        <Field
+          name="dobDay"
+          placeholder="DD"
+          className="form-input dobInput"
+          onChange={(e) => {
+            const day = e.target.value;
+            setFieldValue("dobDay", day);
 
-            <ErrorMessage name="dobDay" component="div" className="error-text" />
-            <ErrorMessage name="dobMonth" component="div" className="error-text" />
-            <ErrorMessage name="dobYear" component="div" className="error-text" />
-          </>
-        );
+            if (day && values.dobMonth && values.dobYear) {
+              const dob = new Date(values.dobYear, values.dobMonth - 1, day);
+              const today = new Date();
+
+              let age = today.getFullYear() - dob.getFullYear();
+              const m = today.getMonth() - dob.getMonth();
+
+              if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                age--;
+              }
+
+              setFieldValue("age", age);
+            }
+          }}
+        />
+
+        <Field
+          name="dobMonth"
+          placeholder="MM"
+          className="form-input dobInput"
+          onChange={(e) => {
+            const month = e.target.value;
+            setFieldValue("dobMonth", month);
+
+            if (values.dobDay && month && values.dobYear) {
+              const dob = new Date(values.dobYear, month - 1, values.dobDay);
+              const today = new Date();
+
+              let age = today.getFullYear() - dob.getFullYear();
+              const m = today.getMonth() - dob.getMonth();
+
+              if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                age--;
+              }
+
+              setFieldValue("age", age);
+            }
+          }}
+        />
+
+        <Field
+          name="dobYear"
+          placeholder="YYYY"
+          className="form-input dobInput"
+          onChange={(e) => {
+            const year = e.target.value;
+            setFieldValue("dobYear", year);
+
+            if (values.dobDay && values.dobMonth && year) {
+              const dob = new Date(year, values.dobMonth - 1, values.dobDay);
+              const today = new Date();
+
+              let age = today.getFullYear() - dob.getFullYear();
+              const m = today.getMonth() - dob.getMonth();
+
+              if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                age--;
+              }
+
+              setFieldValue("age", age);
+            }
+          }}
+        />
+      </div>
+
+      <ErrorMessage name="dobDay" component="div" className="error-text" />
+      <ErrorMessage name="dobMonth" component="div" className="error-text" />
+      <ErrorMessage name="dobYear" component="div" className="error-text" />
+    </>
+  );
+
 
       /* ---------------------- STEP 3 ----------------------- */
       case 3:
