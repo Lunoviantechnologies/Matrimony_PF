@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { FaUsers, FaHeart, FaCheckCircle, FaRupeeSign, FaTimesCircle, FaHeadset, } from "react-icons/fa";
-import axios from "axios";
 import "../stylesheets/adminDashboard.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAdminProfiles } from "../redux/thunk/profileThunk";
@@ -67,7 +66,7 @@ const AdminDashboard = () => {
             <p>Overview and management tools</p>
           </div>
           <img
-            src="saathjanam_logo.png"
+            src="vivahjeevan_logo.png"
             alt="Admin Avatar"
             className="admin-avatar"
           />
@@ -151,7 +150,7 @@ const AdminDashboard = () => {
           <h2>Quick Actions</h2>
           <div className="actions">
             <button className="action-btn" onClick={ () => navigate("/admin/aprovals")}><FaCheckCircle /> Approvals</button>
-            <button className="action-btn" onClick={ () => navigate("/admin/support")}><FaHeadset /> Support</button>
+            <button className="action-btn" onClick={ () => navigate("/admin/admin_support")}><FaHeadset /> Support</button>
           </div>
         </section>
 

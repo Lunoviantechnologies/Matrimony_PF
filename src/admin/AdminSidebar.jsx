@@ -1,5 +1,5 @@
 import React from "react";
-import { FaUsers, FaHeart, FaUserPlus, FaRupeeSign, FaChartLine, FaFileAlt, FaCheckCircle, FaHeadset, FaStar, FaMoneyCheckAlt } from "react-icons/fa";
+import { FaHeart, FaUserPlus, FaRupeeSign, FaChartLine, FaFileAlt, FaCheckCircle, FaHeadset, FaStar, FaMoneyCheckAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "../stylesheets/adminSidebar.css";
 
@@ -34,8 +34,8 @@ export default function AdminSidebar() {
         navigate('/admin/aprovals');
     };
 
-    const handlesupport = () => {
-        navigate('/admin/support');
+    const handleUserTicket = () => {
+        navigate('/admin/user_tickets');
     };
 
     const handlePaymentDisplay = () => {
@@ -44,6 +44,9 @@ export default function AdminSidebar() {
 
     const handleAstroTalk = () => {
         navigate('/admin/astroTalk');
+    };
+      const handleAdminSupport = () => {
+        navigate('/admin/admin_support');
     };
     return (
         <aside className="admin-sidebar">
@@ -57,9 +60,10 @@ export default function AdminSidebar() {
                 <button onClick={handlepayments}><FaRupeeSign /><span>Payments</span></button>
                 <button onClick={handleReport}><FaFileAlt /><span>Reports</span></button>
                 <button onClick={handleaprovals}><FaCheckCircle /><span>Approvals</span></button>
-                <button onClick={handlesupport}><FaHeadset /><span>User Support</span></button>
+                <button onClick={handleUserTicket}><FaHeadset /><span>User Support</span></button>
                 <button onClick={handlePaymentDisplay}><FaMoneyCheckAlt /><span>Payment Display</span></button>
                 <button onClick={handleAstroTalk}><FaStar /><span>Astrology Service</span></button>
+                <button onClick={handleAdminSupport}><FaStar /><span>Admin Support</span></button>
             </nav>
         </aside>
     );

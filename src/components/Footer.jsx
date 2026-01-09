@@ -48,7 +48,7 @@ const Footer = () => {
     <footer className="footer">
       <div className="d-flex justify-content-start">
         <div>
-          <img src="/saathjanam_logo.png" alt="saathjanam_logo" height={'100px'} />
+          <img src="/vivahjeevan_logo.png" alt="saathjanam_logo" height={'100px'} />
         </div>
 
         <div>

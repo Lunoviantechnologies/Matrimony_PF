@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { setSearchFilterText } from "../redux/slices/searchFilterSlice";
+import SearchProfiles from "./SearchProfiles";
 
 const SearchFilters = () => {
 
@@ -12,8 +13,14 @@ const SearchFilters = () => {
     };
 
     return (
-        <div className="d-flex align-items-center h-100">
-            <input type="search" className="searchfilter" placeholder="Enter your filters..."  onChange={handleSearch}/>  
+        <div style={{ height: '100vh' }}>
+            <div className="d-flex align-items-center justify-content-center">
+                <input type="search" className="searchfilter" placeholder="Enter your filters..." onChange={handleSearch} />
+            </div>
+
+            <div>
+                <SearchProfiles />
+            </div>
         </div>
     );
 };

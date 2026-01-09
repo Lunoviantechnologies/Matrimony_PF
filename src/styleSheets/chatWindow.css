@@ -22,8 +22,9 @@
 }
 
 .chatlist-header h3 {
+    font-family: 'Lucida Handwriting', cursive;
     margin: 0;
-    color: #0078ff;
+    color: rgb(211, 175, 55);
     font-weight: bold;
 }
 
@@ -106,11 +107,48 @@
     border-bottom: 1px solid #eee;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .chatwindow-user {
     display: flex;
     align-items: center;
+}
+
+.chatwindow-menu {
+    position: relative;
+    cursor: pointer;
+}
+
+.menu-icon {
+    color: #555;
+}
+
+.chat-dropdown {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    width: 160px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    overflow: hidden;
+}
+
+.dropdown-item {
+    padding: 10px 14px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+    background: #f5f5f5;
+}
+
+.dropdown-item.danger {
+    color: #e53935;
 }
 
 .chatwindow-avatar {
@@ -190,6 +228,27 @@
     filter: blur(0);
 }
 
+.chat-loader {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid #ddd;
+    border-top: 3px solid #e91e63;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .chat-bubble {
     margin-bottom: 10px;
     max-width: 60%;
@@ -218,11 +277,23 @@
     text-align: right;
 }
 
+.seen-status {
+    font-size: 11px;
+    margin-left: 6px;
+}
+.seen-status.sent {
+    color: #9e9e9e;
+}
+.seen-status.seen {
+    color: #4fc3f7;
+}
+
 /* Input box */
 .chatwindow-input {
     display: flex;
     flex-shrink: 0;
     align-items: center;
+    justify-content: center;
     padding: 10px;
     border-top: 1px solid #ddd;
     background: #fff;
@@ -268,4 +339,44 @@
     text-align: center;
     color: red;
     padding: 5px 0;
+}
+
+/* BLOCKED WARNING (RESPONSIVE) */
+.blocked-warning {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 12px 16px;
+    margin: 8px 12px;
+
+    background-color: #fff3cd;
+    color: #856404;
+
+    border: 1px solid #ffeeba;
+    border-radius: 10px;
+
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+
+    max-width: 100%;
+    word-break: break-word;
+}
+
+/* Mobile (≤ 480px) */
+@media (max-width: 480px) {
+    .blocked-warning {
+        font-size: 13px;
+        padding: 10px 12px;
+        margin: 6px 8px;
+    }
+}
+
+/* Tablet (≤ 768px) */
+@media (max-width: 768px) {
+    .blocked-warning {
+        font-size: 13.5px;
+        padding: 10px 14px;
+    }
 }

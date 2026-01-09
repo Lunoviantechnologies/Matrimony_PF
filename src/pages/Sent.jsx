@@ -5,13 +5,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
 import { toast } from "react-toastify";
+import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 
 const SentRequests = () => {
 
   const [sentRequests, setSentRequests] = useState([]);
-  const { id, role } = useSelector(state => state.auth);
+  const { id, role, myProfile } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const { profiles } = useSelector(state => state.profiles);
+
+  useEffect( () => {
+    dispatch(fetchMyProfile(id));
+  }, [id]);
 
   useEffect(() => {
     api.get(`/friends/sent/${id}`).then((response) => {
@@ -69,7 +74,11 @@ const SentRequests = () => {
 
               <div className="left-section">
                 <div className="img-box">
-                  <img src={user.image} alt="profile" className="profile-img" />
+                  <img src={user.image} alt="profile"
+                    className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
                 </div>
 
                 <div className="text-section">

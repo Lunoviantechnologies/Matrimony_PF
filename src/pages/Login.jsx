@@ -5,14 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../redux/thunk/loginThunk";
 
 const Login = ({ show, onClose }) => {
-    if (!show) return null;
-
+    
     const navigate = useNavigate();
     const [auth, setAuth] = useState({ emailId: "", createPassword: "" });
     const [showPassword, setShowPassword] = useState(false);
-
+    
     const dispatch = useDispatch();
     const { loading, error, role, isLoggedIn } = useSelector(state => state.auth);
+    if (!show) return null;
 
     const handleRegister = () => onClose();
     const handleForget = () => onClose();

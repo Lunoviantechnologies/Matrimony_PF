@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import backendIP from "../api/api";
 import api from "../api/axiosInstance";
 
 export default function AdminPayments() {

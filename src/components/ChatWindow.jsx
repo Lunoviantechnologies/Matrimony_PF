@@ -9,8 +9,14 @@ import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
+import { TfiMenuAlt } from "react-icons/tfi";
+import { toast } from "react-toastify";
 
 const ChatWindow = () => {
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+
   const { userId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -24,27 +30,45 @@ const ChatWindow = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isPremium, setIsPremium] = useState(false);
   const [onlineStatus, setOnlineStatus] = useState(false);
+  const [blockedByMe, setBlockedByMe] = useState(false);
+  const [blockedByOther, setBlockedByOther] = useState(false);
 
   const messagesEndRef = useRef(null);
   const stompClientRef = useRef(null);
   const activeChatUserRef = useRef(null);
 
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef(null);
+  const chatScrollRef = useRef(null);
+  const isInitialLoadRef = useRef(true);
+  const prevScrollHeightRef = useRef(0);
+
+  // Close dropdown on outside click
   useEffect(() => {
-    if (messages.length > 0) {
-      messagesEndRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
-    }
-  }, [messages]);
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     activeChatUserRef.current = Number(userId);
   }, [userId]);
 
+  // reset pagination
   useEffect(() => {
-    setMessages([]); // ✅ CLEAR OLD CHAT
-  }, [userId]);
+    if (!myId || !userId) return;
+
+    setMessages([]);
+    setPage(0);
+    setHasMore(true);
+    isInitialLoadRef.current = true;
+
+    loadMessages(0, true);
+  }, [userId, myId]);
 
   useEffect(() => {
     if (role[0].toUpperCase() === "USER") {
@@ -61,20 +85,41 @@ const ChatWindow = () => {
         ? Number(selectedUser.receiverId)
         : Number(selectedUser.senderId);
 
-    api.get("/chat/online")
-      .then(res => {
-        const onlineUsers = (res.data || []).map(id => Number(id));
+    api.get("/chat/online").then(res => {
+      const onlineUsers = (res.data || []).map(id => Number(id));
 
-        console.log("all online (normalized):", onlineUsers);
-        console.log("checking for:", otherUserId);
+      console.log("all online (normalized):", onlineUsers);
+      console.log("checking for:", otherUserId);
 
-        const isOnline = onlineUsers.includes(otherUserId);
-        setOnlineStatus(isOnline);
-      })
+      const isOnline = onlineUsers.includes(otherUserId);
+      setOnlineStatus(isOnline);
+    })
       .catch(() => setOnlineStatus(false));
 
   }, [selectedUser, myId]);
   console.log("online : ", onlineStatus);
+
+  // Blocked user
+  useEffect(() => {
+    if (!selectedUser || !myId) return;
+
+    const otherUserId =
+      Number(selectedUser.senderId) === Number(myId)
+        ? selectedUser.receiverId
+        : selectedUser.senderId;
+
+    api.get(`/block/status/${myId}/${otherUserId}`)
+      .then(res => {
+        const { blocked, iBlocked } = res.data || {};
+
+        setBlockedByMe(blocked && iBlocked);
+        setBlockedByOther(blocked && !iBlocked);
+      })
+      .catch(() => {
+        setBlockedByMe(false);
+        setBlockedByOther(false);
+      });
+  }, [selectedUser, myId]);
 
   /* FETCH ACCEPTED USERS */
   useEffect(() => {
@@ -112,17 +157,36 @@ const ChatWindow = () => {
     fetchAcceptedRequests();
   }, [myId, userId, navigate]);
 
-  /* LOAD CHAT HISTORY */
-  useEffect(() => {
-    if (!myId) return;
-    if (!userId || isNaN(Number(userId))) return;
+  /* LOAD CHAT HISTORY with pagination */
+  const loadMessages = async (pageNo, reset = false) => {
+    if (loadingHistory || (!hasMore && !reset)) return;
 
-    api.get(`/chat/conversation/${myId}/${Number(userId)}`)
-      .then((res) => {
-        setMessages(res.data.content || []);
-      })
-      .catch((err) => console.error("Error loading messages:", err));
-  }, [myId, userId]);
+    const container = chatScrollRef.current;
+
+    // 🔒 Save scroll height before adding older messages
+    if (!reset && container) {
+      prevScrollHeightRef.current = container.scrollHeight;
+    }
+
+    setLoadingHistory(true);
+
+    try {
+      const res = await api.get(`/chat/conversation/${myId}/${Number(userId)}?page=${pageNo}&size=20`);
+      console.log("chat data : ", res);
+      // 🔁 Backend gives DESC → convert to ASC
+      const newMessages = (res.data.content || []).reverse(); // ✅ ASC order
+
+      setHasMore(!res.data.last);
+      setPage(pageNo);
+
+      // 🔼 Prepend old messages OR reset chat
+      setMessages(prev => reset ? newMessages : [...newMessages, ...prev]);
+    } catch (err) {
+      console.error("❌ Failed to load chat history", err);
+    } finally {
+      setLoadingHistory(false);
+    }
+  };
 
   /* CHECK PREMIUM */
   useEffect(() => {
@@ -158,16 +222,18 @@ const ChatWindow = () => {
           console.log("🟢 STOMP Connected as:", myId);
 
           // SUBSCRIBE HERE (IMPORTANT)
-          const subscription = client.subscribe(
-            "/user/queue/messages",
-            (msg) => {
-              console.log("📩 Live message received:", msg.body);
-              handleIncoming(JSON.parse(msg.body));
-            },
+          const subscription = client.subscribe("/user/queue/messages", (msg) => {
+            // console.log("📩 Live message received:", msg.body);
+            handleIncoming(JSON.parse(msg.body));
+          },
             { id: "chat-sub" }
           );
 
-          console.log("📡 Subscribed to /user/queue/messages:", subscription);
+          client.subscribe("/user/queue/seen", (msg) => {
+            const seenByUserId = Number(msg.body);
+            handleSeenUpdate(seenByUserId);
+          });
+          // console.log("📡 Subscribed to /user/queue/messages:", subscription);
         },
 
         onStompError: (frame) => {
@@ -197,8 +263,78 @@ const ChatWindow = () => {
 
   }, [myId]);
 
+  useEffect(() => {
+    const container = chatScrollRef.current;
+    if (!container || messages.length === 0) return;
+
+    if (isInitialLoadRef.current) {
+      // 🔽 First load → jump to bottom
+      container.scrollTop = container.scrollHeight;
+      isInitialLoadRef.current = false;
+
+      // ✅ THIS is the important line
+      if (isAtBottom()) {
+        markMessagesAsSeen();
+      }
+    } else {
+      // 🔼 Preserve position when older messages load
+      const newScrollHeight = container.scrollHeight;
+      container.scrollTop =
+        newScrollHeight - prevScrollHeightRef.current;
+    }
+  }, [messages]);
+
+  // scroll for older chat
+  useEffect(() => {
+    const container = chatScrollRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      if (container.scrollTop === 0 && hasMore && !loadingHistory) {
+        loadMessages(page + 1);
+      }
+
+      if (isAtBottom()) {
+        markMessagesAsSeen();
+      }
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [page, hasMore, loadingHistory]);
+
+  // mark seen
+  const markMessagesAsSeen = () => {
+    if (!myId || !userId || messages.length === 0) return;
+    const unseenFromOther = messages.some(
+      m =>
+        Number(m.senderId) === Number(userId) &&
+        Number(m.receiverId) === Number(myId) &&
+        !m.seen
+    );
+    if (!unseenFromOther) return;
+
+    api.post(`/chat/seen/${userId}/${myId}`)
+      .then(() => {
+        // ✅ update local state immediately
+        setMessages(prev => prev.map(m =>
+          Number(m.senderId) === Number(userId) ? { ...m, seen: true } : m));
+      })
+      .catch(() => { });
+  };
+
+  const isAtBottom = () => {
+    const container = chatScrollRef.current;
+    if (!container) return false;
+
+    return (
+      container.scrollHeight - container.scrollTop - container.clientHeight < 20
+    );
+  };
+
   /* SEND MESSAGE */
   const handleSend = () => {
+    if (blockedByMe || blockedByOther) return;
     if (!message.trim() || !selectedUser) return;
 
     const receiverId =
@@ -211,11 +347,12 @@ const ChatWindow = () => {
       receiverId,
       message,
       timestamp: new Date().toISOString(),
+      seen: false
     };
-
     console.log("📤 Sending message:", msgBody);
 
-    setMessages((prev) => [...prev, msgBody]);
+    const tempId = Date.now();
+    setMessages(prev => [...prev, { ...msgBody, tempId }]);
     setMessage("");
 
     if (stompClientRef.current?.connected) {
@@ -224,10 +361,7 @@ const ChatWindow = () => {
         body: JSON.stringify(msgBody),
       });
 
-      console.log(
-        `🚀 Published to /app/chat.send/${receiverId}`,
-        JSON.stringify(msgBody)
-      );
+      console.log(`🚀 Published to /app/chat.send/${receiverId}`, JSON.stringify(msgBody));
     } else {
       console.error("❌ Cannot send — STOMP is NOT connected");
     }
@@ -244,23 +378,55 @@ const ChatWindow = () => {
   });
 
   const handleIncoming = (body) => {
-    if (!body || !body.senderId || !body.receiverId) return;
+    if (!body) return;
 
-    const sender = Number(body.senderId);
-    const receiver = Number(body.receiverId);
-    const me = Number(myId);
-    const activeUser = activeChatUserRef.current;
+    const activeChatUserId = activeChatUserRef.current;
 
-    const isThisChat =
-      (sender === me && receiver === activeUser) ||
-      (sender === activeUser && receiver === me);
+    // ✅ ONLY accept messages for the currently open chat
+    const isForCurrentChat =
+      (Number(body.senderId) === Number(activeChatUserId) &&
+        Number(body.receiverId) === Number(myId)) ||
+      (Number(body.senderId) === Number(myId) &&
+        Number(body.receiverId) === Number(activeChatUserId));
 
-    if (!isThisChat) {
-      // Message belongs to another chat → ignore in UI
+    if (!isForCurrentChat) {
+      console.log("🚫 Message ignored (not active chat):", body);
       return;
     }
 
-    setMessages((prev) => [...prev, body]);
+    setMessages(prev => {
+      const exists = prev.some( m => m.tempId && m.senderId === body.senderId && m.message === body.message );
+
+      if (exists) {
+        return prev.map(m => m.tempId && m.senderId === body.senderId && m.message === body.message ? body : m );
+      }
+      return [...prev, body];
+    });
+
+    const container = chatScrollRef.current;
+    if (!container) return;
+
+    const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 80;
+
+    if (isNearBottom) {
+      setTimeout(() => {
+        container.scrollTop = container.scrollHeight;
+
+        // ✅ Mark seen only if this chat is open
+        api.post(`/chat/seen/${body.senderId}/${myId}`).catch(() => { });
+      }, 50);
+    }
+  };
+
+  const handleSeenUpdate = (seenByUserId) => {
+    setMessages(prev =>
+      prev.map(m =>
+        Number(m.senderId) === Number(myId) &&
+          Number(m.receiverId) === Number(seenByUserId)
+          ? { ...m, seen: true }
+          : m
+      )
+    );
   };
 
   const getUserImageById = (id) => {
@@ -274,13 +440,78 @@ const ChatWindow = () => {
     return user.updatePhoto ? user.updatePhoto : user.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
   };
 
+  const handleClearChat = () => {
+    if (!selectedUser || !myId) return;
+
+    const receiverId =
+      Number(selectedUser.senderId) === Number(myId)
+        ? selectedUser.receiverId
+        : selectedUser.senderId;
+
+    api.post(`/chat/clear/${myId}/${receiverId}`)
+      .then(res => {
+        console.log("Chat cleared:", res.data);
+        setMessages([]); // optional: clear UI instantly
+        setOpen(false);
+      })
+      .catch(err => {
+        console.error("Error clearing chat:", err);
+      });
+  };
+
+  const handleBlockChat = async () => {
+    if (!selectedUser) return;
+
+    const receiverId =
+      Number(selectedUser.senderId) === Number(myId)
+        ? selectedUser.receiverId
+        : selectedUser.senderId;
+
+    try {
+      await api.post(`/block/user/${myId}/${receiverId}`);
+
+      // ✅ IMMEDIATE UI UPDATE
+      setBlockedByMe(true);
+      setBlockedByOther(false);
+
+      setOpen(false);
+      toast.success("User blocked successfully");
+    } catch (err) {
+      console.error("Error blocking user:", err);
+      toast.error("Failed to block user");
+    }
+  };
+
+  const handleUnblockChat = async () => {
+    if (!selectedUser) return;
+
+    const receiverId =
+      Number(selectedUser.senderId) === Number(myId)
+        ? selectedUser.receiverId
+        : selectedUser.senderId;
+
+    try {
+      await api.post(`/block/unblock/${myId}/${receiverId}`);
+
+      // ✅ IMMEDIATE UI UPDATE
+      setBlockedByMe(false);
+      setBlockedByOther(false);
+
+      setOpen(false);
+      toast.success("User unblocked successfully");
+    } catch (err) {
+      console.error("Error unblocking user:", err);
+      toast.error("Failed to unblock user");
+    }
+  };
+
   return (
     <div className="chatpage-container">
       {/* LEFT PANEL */}
       <div className="chatlist-container">
         <div className="chatlist-header d-flex justify-content-center align-items-center">
-          <img src="/saathjanam_logo.png" alt="" height="50" />
-          <h3>SaathJanam</h3>
+          <img src="/vivahjeevan_logo.png" alt="" height="50" />
+          <h3>Vivahjeevan</h3>
         </div>
 
         <div className="search-container">
@@ -321,11 +552,6 @@ const ChatWindow = () => {
                     navigate(`/dashboard/messages/${otherId}`)
                   }
                 >
-                  {/* <img
-                    src={img}
-                    alt={name}
-                    className="chatlist-avatar"
-                  /> */}
                   <img
                     src={getUserImageById(otherId)}
                     alt={name}
@@ -350,13 +576,6 @@ const ChatWindow = () => {
         {selectedUser ? (
           <div className="chatwindow-header">
             <div className="chatwindow-user">
-              {/* <img
-                src={
-                  Number(selectedUser.senderId) === Number(myId) ? selectedUser.receiverImage : selectedUser.senderImage
-                }
-                alt=""
-                className="chatwindow-avatar"
-              /> */}
               <img
                 src={getUserImageById(
                   Number(selectedUser.senderId) === Number(myId) ? selectedUser.receiverId : selectedUser.senderId
@@ -380,12 +599,47 @@ const ChatWindow = () => {
                 {/* <span className="active-status">Active now</span> */}
               </div>
             </div>
+
+            <div className="chatwindow-menu" ref={menuRef}>
+              <TfiMenuAlt
+                size={25}
+                className="menu-icon"
+                onClick={() => setOpen(!open)}
+              />
+
+              {open && (
+                <div className="chat-dropdown">
+                  <div className="dropdown-item" onClick={handleClearChat}>
+                    Clear Chat
+                  </div>
+
+                  {!blockedByMe && !blockedByOther && (
+                    <div className="dropdown-item" onClick={handleBlockChat}>
+                      Block User
+                    </div>
+                  )}
+                  {blockedByMe && (
+                    <div className="dropdown-item" onClick={handleUnblockChat}>
+                      Unblock User
+                    </div>
+                  )}
+
+                  <div className="dropdown-item danger">Report</div>
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <div className="select-user">Select a user to start chatting</div>
         )}
 
-        <div className="chatwindow-messages">
+        <div className="chatwindow-messages" ref={chatScrollRef}>
+          {loadingHistory && (
+            <div className="chat-loader">
+              <div className="spinner" />
+            </div>
+          )}
+
           {messages.map((msg, idx) => (
             <div
               key={idx}
@@ -395,7 +649,9 @@ const ChatWindow = () => {
                 }`}
             >
               <div className={!isPremium && Number(msg.senderId) !== Number(myId) ? "blur-message" : ""}>
-                {!isPremium && Number(msg.senderId) !== Number(myId) ? "Premium message" : msg.message}
+                {!isPremium && Number(msg.senderId) !== Number(myId)
+                  ? "Premium message"
+                  : msg.message}
               </div>
 
               <div className="chat-time">
@@ -403,14 +659,23 @@ const ChatWindow = () => {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
+
+                {Number(msg.senderId) === Number(myId) && (
+                  <span className={`seen-status ${msg.seen ? "seen" : "sent"}`}>
+                    {msg.seen ? " ✔✔" : " ✔"}
+                  </span>
+                )}
               </div>
             </div>
           ))}
-          <div ref={messagesEndRef} />
         </div>
 
         <div className="chatwindow-input">
-          {isPremium ? (
+          {blockedByMe ? (
+            <div className="blocked-warning">You have blocked this user</div>
+          ) : blockedByOther ? (
+            <div className="blocked-warning">You are blocked by this user</div>
+          ) : isPremium ? (
             <div className="chat-input-box">
               <input
                 type="text"

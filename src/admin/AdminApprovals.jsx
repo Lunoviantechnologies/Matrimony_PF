@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import backendIP from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAdminProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
@@ -8,7 +6,7 @@ import { toast } from "react-toastify";
 
 export default function AdminApprovals() {
   const dispatch = useDispatch();
-  const { role } = useSelector( state => state.auth );
+  const { role } = useSelector(state => state.auth);
   const { profiles = [], loading } = useSelector((state) => state.profiles);
 
   const [page, setPage] = useState(1);
@@ -148,4 +146,4 @@ export default function AdminApprovals() {
       </div>
     </div>
   );
-}
+};

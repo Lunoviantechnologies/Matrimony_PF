@@ -38,10 +38,6 @@ export default function SupportSettings({ userId }) {
                         View FAQ
                     </Button>
 
-                    {/* <Button fullWidth sx={{ mt: 1.5 }} variant="contained" onClick={() => setOpenContactSupport(true)}>
-                        Contact Support
-                    </Button> */}
-
                     <Button fullWidth sx={{ mt: 2 }} variant="contained" color="error" onClick={handleDeleteAccount} >
                         Delete Account
                     </Button>
@@ -67,26 +63,6 @@ export default function SupportSettings({ userId }) {
                     <FAQ_user />
                 </DialogContent>
             </Dialog>
-
-            {/* ✅ Contact Support POPUP */}
-            {/* <Dialog
-                open={openContactSupport}
-                onClose={() => setOpenContactSupport(false)}
-                fullWidth
-                maxWidth="md"
-            >
-                
-                <IconButton
-                    onClick={() => setOpenContactSupport(false)}
-                    sx={{ position: "absolute", right: 8, top: 8 }}
-                >
-                    <CloseIcon />
-                </IconButton>
-
-                <DialogContent dividers>
-                    <ContactSupport />
-                </DialogContent>
-            </Dialog> */}
         </Box>
     );
 }

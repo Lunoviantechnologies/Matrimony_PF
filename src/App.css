@@ -99,7 +99,7 @@ body::-webkit-scrollbar {
 .subnav_link {
     text-decoration: none;
     color: #025423;
-    font-weight: 500;
+    font-weight: 600;
     padding-bottom: 4px;
     border-bottom: 2px solid transparent;
     transition: all 0.3s ease;
