@@ -52,9 +52,10 @@
 }
 
 .logo {
-    font-size: 22px;
+    font-family: 'Lucida Handwriting', cursive;
+    font-size: 30px;
     font-weight: bold;
-    color: #e91e63;
+    color: rgb(139,69,19);
 }
 
 /* Banner Section */
@@ -193,7 +194,7 @@
 .continue-btn-compact {
     width: 100%;
     padding: 10px;
-    background: #e91e63;
+    background: rgb(15,61,46);
     color: white;
     border: none;
     border-radius: 6px;
@@ -207,7 +208,7 @@
 }
 
 .continue-btn-compact:hover {
-    background: #c2185b;
+    background: rgb(20, 78, 58);
 }
 
 .features-compact {

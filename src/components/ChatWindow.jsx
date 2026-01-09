@@ -11,6 +11,7 @@ import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
 import { TfiMenuAlt } from "react-icons/tfi";
 import { toast } from "react-toastify";
+import ReportUserModal from "./ReportUserModal";
 
 const ChatWindow = () => {
   const [page, setPage] = useState(0);
@@ -32,6 +33,9 @@ const ChatWindow = () => {
   const [onlineStatus, setOnlineStatus] = useState(false);
   const [blockedByMe, setBlockedByMe] = useState(false);
   const [blockedByOther, setBlockedByOther] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportCategory, setReportCategory] = useState("");
 
   const messagesEndRef = useRef(null);
   const stompClientRef = useRef(null);
@@ -395,10 +399,10 @@ const ChatWindow = () => {
     }
 
     setMessages(prev => {
-      const exists = prev.some( m => m.tempId && m.senderId === body.senderId && m.message === body.message );
+      const exists = prev.some(m => m.tempId && m.senderId === body.senderId && m.message === body.message);
 
       if (exists) {
-        return prev.map(m => m.tempId && m.senderId === body.senderId && m.message === body.message ? body : m );
+        return prev.map(m => m.tempId && m.senderId === body.senderId && m.message === body.message ? body : m);
       }
       return [...prev, body];
     });
@@ -502,6 +506,40 @@ const ChatWindow = () => {
     } catch (err) {
       console.error("Error unblocking user:", err);
       toast.error("Failed to unblock user");
+    }
+  };
+
+  const handleReportUser = async () => {
+    if (!reportCategory) {
+      toast.error("Please select a category");
+      return;
+    }
+
+    if (!reportReason.trim()) {
+      toast.error("Please enter reason");
+      return;
+    }
+
+    const reportedUserId =
+      Number(selectedUser.senderId) === Number(myId)
+        ? selectedUser.receiverId
+        : selectedUser.senderId;
+
+    try {
+      await api.post("/report/user", {
+        reporterId: myId,
+        reportedUserId,
+        reason: reportCategory,
+        description: reportReason
+      });
+
+      toast.success("User reported successfully");
+
+      setReportReason("");
+      setReportCategory("");
+      setShowReportModal(false);
+    } catch (err) {
+      toast.error("Failed to report user");
     }
   };
 
@@ -624,7 +662,12 @@ const ChatWindow = () => {
                     </div>
                   )}
 
-                  <div className="dropdown-item danger">Report</div>
+                  <div
+                    className="dropdown-item danger"
+                    onClick={() => { setShowReportModal(true); setOpen(false); }}
+                  >
+                    Report
+                  </div>
                 </div>
               )}
             </div>
@@ -696,6 +739,21 @@ const ChatWindow = () => {
           )}
         </div>
       </div>
+
+      <ReportUserModal
+        show={showReportModal}
+        onClose={() => {
+          setShowReportModal(false);
+          setReportReason("");
+          setReportCategory("");
+        }}
+        reason={reportReason}
+        setReason={setReportReason}
+        category={reportCategory}
+        setCategory={setReportCategory}
+        onSubmit={handleReportUser}
+      />
+
     </div>
   );
 };
