@@ -42,6 +42,8 @@ import AstroTalkQuery from "../pages/AstroTalkQuery";
 import SearchFilters from "../components/SearchFilters";
 import Admin_UserTickets from "../admin/Admin_UserTickets";
 import AdminSupport from "../admin/AdminSupport";
+import TermsConditions from "../components/privacyInfo/TermsCondition";
+import PrivacyPolicy from "../components/privacyInfo/PrivacyPolicy";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -71,6 +73,14 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "registration-success",
                 element: <RegisterSuccessPage />
+            },
+            {
+                path: "terms&conditions",
+                element: <TermsConditions />
+            },
+            {
+                path: "privacy_policy",
+                element: <PrivacyPolicy />
             },
         ],
     },

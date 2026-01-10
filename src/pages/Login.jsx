@@ -5,11 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../redux/thunk/loginThunk";
 
 const Login = ({ show, onClose }) => {
-    
+
     const navigate = useNavigate();
     const [auth, setAuth] = useState({ emailId: "", createPassword: "" });
     const [showPassword, setShowPassword] = useState(false);
-    
+
     const dispatch = useDispatch();
     const { loading, error, role, isLoggedIn } = useSelector(state => state.auth);
     if (!show) return null;
@@ -69,7 +69,10 @@ const Login = ({ show, onClose }) => {
                     </div>
 
                     <div className="form-content">
-                        <h2>LOGIN</h2>
+                        <div className="login-header">
+                            <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" />
+                            <h2>LOGIN</h2>
+                        </div>
 
                         <form>
                             {/* EMAIL */}
@@ -136,6 +139,16 @@ const Login = ({ show, onClose }) => {
                                 <Link to="register" onClick={handleRegister} className="signupa">
                                     {" "}SignUp for Free
                                 </Link>
+                            </span>
+                        </div>
+
+                        <div className="policy-links">
+                            <span onClick={() => { onClose(); navigate("/terms&conditions"); }}>
+                                Terms & Conditions
+                            </span>
+                            <span>|</span>
+                            <span onClick={() => { onClose(); navigate("/privacy_policy"); }}>
+                                Privacy Policy
                             </span>
                         </div>
 

@@ -20,7 +20,7 @@ const Navbar = () => {
 
     return (
         <nav className="navBody sticky-top container w-75 d-flex justify-content-between align-items-center">
-            <img src="/vivahjeevan_logo.png" height="50" onClick={handleDashboard} />
+            <img src="/vivahjeevan_logo.png" height="70" width="70" onClick={handleDashboard} />
 
             <div className="d-flex gap-4 align-items-center">
 
@@ -32,11 +32,11 @@ const Navbar = () => {
                         <Link className="navLink" to="/contactUs">Contact Us</Link>
 
                         {/* ✅ LOGIN BUTTON */}
-                        <button
-                            className="navLogin"
-                            onClick={() => setShowLogin(true)}
-                        >
+                        <button className="navLogin" onClick={() => setShowLogin(true)} >
                             Login
+                        </button>
+                        <button className="navLogin" onClick={() => navigate('/register')} >
+                            Sign Up
                         </button>
                     </>
                 )}

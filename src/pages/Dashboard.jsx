@@ -196,7 +196,7 @@ const Dashboard = () => {
                     onContextMenu={(e) => e.preventDefault()}
                   />
                   {!myProfile?.premium && (
-                    <div className="premium-overlay" onClick={() => navigate("/premium")}>
+                    <div className="premium-overlay" onClick={() => navigate("/dashboard/premium")}>
                       🔒 Upgrade to Premium
                     </div>
                   )}
