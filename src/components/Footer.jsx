@@ -8,7 +8,7 @@ const FOOTER_LINKS = [
       "Member Login",
       "Sign Up",
       "Partner Search",
-      "How to Use Saathjanam.com",
+      "How to Use Vivahjeevan.com",
       "Customer Support",
       "Site Map",
     ],
@@ -17,7 +17,7 @@ const FOOTER_LINKS = [
     title: "Company",
     links: [
       "About Us",
-      "Saathjanam Blog",
+      "Vivahjeevan Blog",
       "Careers",
       "Awards & Recognition",
       "Contact Us",
@@ -30,10 +30,10 @@ const FOOTER_LINKS = [
   {
     title: "More",
     links: [
-      "VIP Saathjanam",
-      "Select Saathjanam",
+      "VIP Vivahjeevan",
+      "Select Vivahjeevan",
       "Success Stories",
-      "Saathjanam Centres",
+      "Vivahjeevan Centres",
       "Elite Matrimony",
     ],
   },
@@ -52,13 +52,13 @@ const Footer = () => {
         </div>
 
         <div>
-          <h2 className="footer-heading">Saathjanam.com - Serving members worldwide</h2>
+          <h2 className="footer-heading">Vivahjeevan.com - Serving members worldwide</h2>
 
           <p className="footer-description">
-            Saathjanam.com, one of India's leading matrimonial platforms, was
+            Viviahjeevan.com, one of India's leading matrimonial platforms, was
             founded with a simple objective — to help people find happiness. By
             redefining how Indian brides and grooms meet for marriage,
-            Saathjanam.com continues to connect millions of people worldwide.
+            Viviahjeevan.com continues to connect millions of people worldwide.
           </p>
         </div>
       </div>
@@ -81,7 +81,7 @@ const Footer = () => {
       </div>
 
       <div className="footer-copyright">
-        &copy; {new Date().getFullYear()} Saathjanam.com. All Rights Reserved.
+        &copy; {new Date().getFullYear()} Vivahjeevan.com. All Rights Reserved.
       </div>
     </footer>
   );

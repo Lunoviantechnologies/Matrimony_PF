@@ -144,7 +144,7 @@ function PremiumSubscription() {
         key: razorpayKey,
         amount: amountRupees * 100, // convert to paise
         currency: currency,
-        name: "SaathJanam Premium",
+        name: "Vivahjeevan Premium",
         description: plan.planName,
         order_id: razorpayOrderId,
 
@@ -253,7 +253,8 @@ function PremiumSubscription() {
       {/* <Outlet /> */}
       <div className="premium-subscription-container">
         <header className="subscription-header">
-          <div className="logo">SaathJanam</div>
+          <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" className='v-logo'/>
+          <div className="logo">Vivahjeevan</div>
         </header>
 
         <div className="banner-section">
@@ -362,7 +363,7 @@ function PremiumSubscription() {
         </div>
 
         <div className="vip-section-compact">
-          <div className="vip-badge-compact">VIP SAATHJANAM</div>
+          <div className="vip-badge-compact">VIP Vivahjeevan</div>
           <h2>No.1 Matchmaking Service for the Elite</h2>
           <div className="vip-features-compact">
             <div className="vip-feature-compact">5x Success + 100% Privacy</div>

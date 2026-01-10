@@ -867,3 +867,17 @@
         font-size: 14px;
     }
 }
+
+.subscription-header {
+  display: flex;
+  align-items: center;     /* vertical center */
+  gap: 10px;               /* space between logo and text */
+}
+
+.v-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+
