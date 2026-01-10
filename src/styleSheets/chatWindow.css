@@ -277,12 +277,25 @@
     text-align: right;
 }
 
+.seen-status {
+    font-size: 11px;
+    margin-left: 6px;
+}
+
+.seen-status.sent {
+    color: #9e9e9e;
+}
+
+.seen-status.seen {
+    color: #4fc3f7;
+}
+
 /* Input box */
 .chatwindow-input {
     display: flex;
     flex-shrink: 0;
     align-items: center;
-    justify-content: center; 
+    justify-content: center;
     padding: 10px;
     border-top: 1px solid #ddd;
     background: #fff;
@@ -367,5 +380,133 @@
     .blocked-warning {
         font-size: 13.5px;
         padding: 10px 14px;
+    }
+}
+
+/* report modal */
+.modal-backdrop-custom {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 15px;
+}
+
+.report-modal {
+    background: #fff;
+    width: 100%;
+    max-width: 380px;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: scaleIn 0.2s ease;
+}
+
+.report-modal h3 {
+    margin-bottom: 12px;
+    font-size: 18px;
+    text-align: center;
+}
+
+.report-select {
+    width: 100%;
+    padding: 9px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    font-size: 14px;
+    background: #fff;
+}
+
+.report-modal textarea {
+    width: 100%;
+    height: 100px;
+    resize: none;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 14px;
+}
+
+.report-modal textarea:focus {
+    border-color: #e53935;
+}
+
+.char-count {
+    text-align: right;
+    font-size: 12px;
+    color: #888;
+    margin-top: 4px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.cancel-btn,
+.submit-btn {
+    height: 40px;
+    min-width: 110px;
+    padding: 0 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+/* Cancel button */
+.cancel-btn {
+    background: #898b8d !important;
+    border: 1px solid #d0d7de;
+    color: #f9f5f5 !important;
+}
+
+/* Submit button */
+.submit-btn {
+    background: #e53935;
+    border: 1px solid #e53935;
+    color: white;
+}
+
+.submit-btn:hover {
+    background: #d32f2f;
+}
+
+/* 📱 Mobile responsive */
+@media (max-width: 480px) {
+    .report-modal {
+        padding: 16px;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+    }
+
+    .modal-actions button {
+        width: 100%;
+    }
+}
+
+/* smooth animation */
+@keyframes scaleIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
     }
 }

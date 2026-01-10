@@ -52,7 +52,7 @@ function PremiumSubscription() {
       features: [
         'Send unlimited Messages',
         'View 50 Contact Numbers',
-        '5 SaathJanam Live passes',
+        '5 Vivahjeevan Live passes',
         'Standout from Profiles',
         'Matches contact directly'
       ],
@@ -68,7 +68,7 @@ function PremiumSubscription() {
       features: [
         'Send unlimited Messages',
         'View 75 Contact Numbers',
-        '6 SaathJanam Live passes',
+        '6 Vivahjeevan Live passes',
         'Standout from Profiles',
         'Matches contact directly'
       ],
@@ -84,7 +84,7 @@ function PremiumSubscription() {
       features: [
         'Send unlimited Messages',
         'View 100 Contact Numbers',
-        '8 SaathJanam Live passes',
+        '8 Vivahjeevan Live passes',
         'Standout from Profiles',
         'Matches contact directly'
       ],
@@ -101,7 +101,7 @@ function PremiumSubscription() {
       features: [
         'Send unlimited Messages',
         'View 100 Contacts (Unlimited)',
-        '9 SaathJanam Live passes',
+        '9 Vivahjeevan Live passes',
         'Standout from Profiles',
         'Matches contact directly'
       ],
@@ -118,7 +118,7 @@ function PremiumSubscription() {
       features: [
         'Send unlimited Messages',
         'View 200 Contacts (Unlimited)',
-        '15 SaathJanam Live passes',
+        '15 Vivahjeevan Live passes',
         'Standout from Profiles',
         'Matches contact directly'
       ],
@@ -241,9 +241,8 @@ function PremiumSubscription() {
     return `${hours}h ${minutes}m ${seconds}s`;
   };
 
-  const platinumPlan = planDetails.find(
-    (plan) => plan.planCode === "PLATINUM"
-  );
+  const platinumPlan = planDetails.length
+    ? planDetails.find(plan => plan.planCode.includes("PLATINUM")) : null;
 
   const platinumFestivalActive = platinumPlan && isFestivalActive(platinumPlan);
   const platinumCountdown = platinumFestivalActive && getFestivalCountdown(platinumPlan);
@@ -253,26 +252,34 @@ function PremiumSubscription() {
       {/* <Outlet /> */}
       <div className="premium-subscription-container">
         <header className="subscription-header">
+<<<<<<< HEAD
           <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" className='v-logo'/>
           <div className="logo">Vivahjeevan</div>
+=======
+          <div className="logo">
+            <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" width={'50px'} />
+            Vivahjeevan
+          </div>
+>>>>>>> 8daf26a0cf14f507857f169e5f71e9e32f70e0d0
         </header>
 
         <div className="banner-section">
           <h1>
-            Upgrade now & Get upto{" "} {platinumPlan?.discountValue || 0}% discount!
+            Upgrade now & Get upto{" "}
+            {platinumPlan ? `${platinumPlan.discountValue}%` : "..."} discount!
           </h1>
 
-          {platinumFestivalActive ? (
-            <p>
-              Save upto {platinumPlan.discountValue}%.
-              {platinumCountdown && (
-                <> Expires in {platinumCountdown}</>
-              )}
-            </p>
+          {platinumPlan ? (
+            platinumFestivalActive ? (
+              <p>
+                Save upto {platinumPlan.discountValue}%.
+                {platinumCountdown && <> Expires in {platinumCountdown}</>}
+              </p>
+            ) : (
+              <p>Save upto {platinumPlan.discountValue}% on Premium plans</p>
+            )
           ) : (
-            <p>
-              Save upto {platinumPlan?.discountValue || 0}% on Premium plans
-            </p>
+            <p>Loading offers...</p>
           )}
 
           <div className="banner-actions">
@@ -391,7 +398,7 @@ function PremiumSubscription() {
           </div>
 
           <div className="faq-item-compact">
-            <h3>How can I be safe on SaathJanam.com?</h3>
+            <h3>How can I be safe on Vivahjeevan.com?</h3>
             <p>We go to great lengths to make sure you get the best possible experience here. Every single profile is screened.</p>
           </div>
         </div>

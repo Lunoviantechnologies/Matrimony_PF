@@ -48,17 +48,24 @@ const Footer = () => {
     <footer className="footer">
       <div className="d-flex justify-content-start">
         <div>
-          <img src="/vivahjeevan_logo.png" alt="saathjanam_logo" height={'100px'} />
+          <img src="/vivahjeevan_logo.png" alt="Vivahjeevan_logo" height={'100px'} />
         </div>
 
         <div>
           <h2 className="footer-heading">Vivahjeevan.com - Serving members worldwide</h2>
 
           <p className="footer-description">
+<<<<<<< HEAD
             Viviahjeevan.com, one of India's leading matrimonial platforms, was
             founded with a simple objective — to help people find happiness. By
             redefining how Indian brides and grooms meet for marriage,
             Viviahjeevan.com continues to connect millions of people worldwide.
+=======
+            Vivahjeevan.com, one of India's leading matrimonial platforms, was
+            founded with a simple objective — to help people find happiness. By
+            redefining how Indian brides and grooms meet for marriage,
+            Vivahjeevan.com continues to connect millions of people worldwide.
+>>>>>>> 8daf26a0cf14f507857f169e5f71e9e32f70e0d0
           </p>
         </div>
       </div>

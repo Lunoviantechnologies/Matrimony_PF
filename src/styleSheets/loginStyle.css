@@ -31,12 +31,15 @@
     z-index: 20;
     width: 90%;
     max-width: 700px;
+    min-height: 420px;
+    max-height: 90vh;
     background: linear-gradient(to right, #fdfdfd, #c8d3cc);
     border-radius: 20px;
-    overflow: hidden;
+    overflow-y: auto;
     opacity: 0;
     transform: translate(-50%, -70%);
     transition: all 0.3s ease;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
 }
 
 .form-popup.show {
@@ -52,17 +55,40 @@
     color: #666;
     cursor: pointer;
     font-size: 24px;
+    z-index: 50;
+}
+
+/* Header alignment */
+.login-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.login-header img {
+    height: 80px;
+    margin-bottom: 5px;
+}
+
+.login-header h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    text-align: center;
+    color: #081c15;
 }
 
 /* Form box */
 .form-box {
     display: flex;
     flex-direction: row;
+    height: 100%;
 }
 
+/* Left panel */
 .form-details {
     width: 50%;
-    /* color: #fffdff; */
     background: url("/loginwall.jpg") center/cover no-repeat;
     display: flex;
     flex-direction: column;
@@ -87,22 +113,19 @@
     paint-order: stroke fill;
 }
 
+/* Right panel */
 .form-content {
     width: 50%;
     padding: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.form-content h2 {
-    color: #081c15;
-    font-weight: 900;
-    text-align: center;
-    text-shadow: 2px 2px 4px #faf8fa;
-    margin-bottom: 25px;
-}
-
+/* Input fields */
 .input-field {
     position: relative;
-    margin-top: 10px;
+    margin-top: 12px;
     box-shadow: 0px 0px 14px -7px #ffffff;
 }
 
@@ -136,9 +159,10 @@
     color: #013c19;
 }
 
+/* Links */
 .forgot-pass-link {
     display: inline-block;
-    margin-top: 5px;
+    margin-top: 6px;
     color: #013c19;
     font-size: 0.8rem;
     text-decoration: none;
@@ -148,10 +172,36 @@
     text-decoration: underline;
 }
 
+/* Button */
+button[type="submit"] {
+    width: 100%;
+    border: none;
+    outline: none;
+    color: #fff;
+    padding: 12px;
+    margin-top: 18px;
+    border-radius: 40px;
+    font-size: 1rem;
+    background-color: #081c15;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0px 0px 14px -7px #ffffff;
+}
+
+button[type="submit"]:hover {
+    opacity: 0.9;
+}
+
+button[type="submit"]:active {
+    transform: scale(0.96);
+}
+
+/* Signup */
 .signup-link {
     color: #013c19;
     font-size: 0.7rem;
     text-align: center;
+    margin-top: 12px;
 }
 
 .signup-link a {
@@ -159,54 +209,32 @@
     text-decoration: none;
 }
 
-.signupa-link:hover {
-    text-decoration: underline !important;
+.signup-link a:hover {
+    text-decoration: underline;
 }
 
-button[type="submit"] {
-    width: 100%;
-    border: white;
-    outline: none;
-    color: #fff;
-    padding: 12px;
-    margin-top: 15px;
-    border-radius: 40px;
-    font-size: 1rem;
-    background-size: 200% auto;
-    box-shadow: 0px 0px 14px -7px #ffffff;
-    /* background-image: linear-gradient(45deg, #9bcfb0 0%, #71b98e 51%, #7af5ab 100%); */
-    background-color: #081c15;
+/* Policy */
+.policy-links {
+    margin-top: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    color: #013c19;
+    flex-wrap: wrap;
+    text-align: center;
+}
 
+.policy-links span {
     cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    transition: 0.5s;
 }
 
-button[type="submit"]:hover {
-    background-position: right center;
+.policy-links span:hover {
+    text-decoration: underline;
 }
 
-.button[type="submit"]:active {
-    transform: scale(0.95);
-}
-
-@media (max-width: 760px) {
-    .form-box {
-        flex-direction: column;
-    }
-
-    .form-details {
-        display: none;
-    }
-
-    .form-content {
-        width: 100%;
-    }
-}
-
-/* FULL SCREEN LOADING OVERLAY */
+/* Loading overlay */
 .loading-overlay {
     position: fixed;
     top: 0;
@@ -220,8 +248,40 @@ button[type="submit"]:hover {
     z-index: 3000;
 }
 
-/* Disable login button styling */
+/* Disabled */
 button[disabled] {
     opacity: 0.7;
     cursor: not-allowed;
+}
+
+/* Mobile */
+@media (max-width: 760px) {
+    .form-box {
+        flex-direction: column;
+    }
+
+    .form-details {
+        display: none;
+    }
+
+    .form-content {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 25px 20px;
+    }
+
+    .login-header img {
+        height: 55px;
+    }
+
+    .login-header h2 {
+        font-size: 1.4rem;
+    }
+}
+
+/* Very small */
+@media (max-width: 420px) {
+    .form-popup {
+        border-radius: 15px;
+    }
 }

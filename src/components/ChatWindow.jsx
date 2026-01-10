@@ -11,6 +11,7 @@ import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
 import { TfiMenuAlt } from "react-icons/tfi";
 import { toast } from "react-toastify";
+import ReportUserModal from "./ReportUserModal";
 
 const ChatWindow = () => {
   const [page, setPage] = useState(0);
@@ -32,6 +33,9 @@ const ChatWindow = () => {
   const [onlineStatus, setOnlineStatus] = useState(false);
   const [blockedByMe, setBlockedByMe] = useState(false);
   const [blockedByOther, setBlockedByOther] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportCategory, setReportCategory] = useState("");
 
   const messagesEndRef = useRef(null);
   const stompClientRef = useRef(null);
@@ -171,10 +175,8 @@ const ChatWindow = () => {
     setLoadingHistory(true);
 
     try {
-      const res = await api.get(
-        `/chat/conversation/${myId}/${Number(userId)}?page=${pageNo}&size=20`
-      );
-
+      const res = await api.get(`/chat/conversation/${myId}/${Number(userId)}?page=${pageNo}&size=20`);
+      console.log("chat data : ", res);
       // 🔁 Backend gives DESC → convert to ASC
       const newMessages = (res.data.content || []).reverse(); // ✅ ASC order
 
@@ -182,9 +184,7 @@ const ChatWindow = () => {
       setPage(pageNo);
 
       // 🔼 Prepend old messages OR reset chat
-      setMessages(prev =>
-        reset ? newMessages : [...newMessages, ...prev]
-      );
+      setMessages(prev => reset ? newMessages : [...newMessages, ...prev]);
     } catch (err) {
       console.error("❌ Failed to load chat history", err);
     } finally {
@@ -226,16 +226,18 @@ const ChatWindow = () => {
           console.log("🟢 STOMP Connected as:", myId);
 
           // SUBSCRIBE HERE (IMPORTANT)
-          const subscription = client.subscribe(
-            "/user/queue/messages",
-            (msg) => {
-              console.log("📩 Live message received:", msg.body);
-              handleIncoming(JSON.parse(msg.body));
-            },
+          const subscription = client.subscribe("/user/queue/messages", (msg) => {
+            // console.log("📩 Live message received:", msg.body);
+            handleIncoming(JSON.parse(msg.body));
+          },
             { id: "chat-sub" }
           );
 
-          console.log("📡 Subscribed to /user/queue/messages:", subscription);
+          client.subscribe("/user/queue/seen", (msg) => {
+            const seenByUserId = Number(msg.body);
+            handleSeenUpdate(seenByUserId);
+          });
+          // console.log("📡 Subscribed to /user/queue/messages:", subscription);
         },
 
         onStompError: (frame) => {
@@ -267,14 +269,19 @@ const ChatWindow = () => {
 
   useEffect(() => {
     const container = chatScrollRef.current;
-    if (!container) return;
+    if (!container || messages.length === 0) return;
 
     if (isInitialLoadRef.current) {
-      // First load → jump to bottom
+      // 🔽 First load → jump to bottom
       container.scrollTop = container.scrollHeight;
       isInitialLoadRef.current = false;
+
+      // ✅ THIS is the important line
+      if (isAtBottom()) {
+        markMessagesAsSeen();
+      }
     } else {
-      // Preserve position when older messages load
+      // 🔼 Preserve position when older messages load
       const newScrollHeight = container.scrollHeight;
       container.scrollTop =
         newScrollHeight - prevScrollHeightRef.current;
@@ -290,34 +297,44 @@ const ChatWindow = () => {
       if (container.scrollTop === 0 && hasMore && !loadingHistory) {
         loadMessages(page + 1);
       }
+
+      if (isAtBottom()) {
+        markMessagesAsSeen();
+      }
     };
 
     container.addEventListener("scroll", handleScroll);
     return () => container.removeEventListener("scroll", handleScroll);
   }, [page, hasMore, loadingHistory]);
 
-  // Seen chat
-  useEffect(() => {
-    if (!selectedUser || !myId || !stompClientRef.current?.connected) return;
+  // mark seen
+  const markMessagesAsSeen = () => {
+    if (!myId || !userId || messages.length === 0) return;
+    const unseenFromOther = messages.some(
+      m =>
+        Number(m.senderId) === Number(userId) &&
+        Number(m.receiverId) === Number(myId) &&
+        !m.seen
+    );
+    if (!unseenFromOther) return;
 
-    const otherUserId =
-      Number(selectedUser.senderId) === Number(myId)
-        ? selectedUser.receiverId
-        : selectedUser.senderId;
+    api.post(`/chat/seen/${userId}/${myId}`)
+      .then(() => {
+        // ✅ update local state immediately
+        setMessages(prev => prev.map(m =>
+          Number(m.senderId) === Number(userId) ? { ...m, seen: true } : m));
+      })
+      .catch(() => { });
+  };
 
-    // 🔔 Notify backend messages are seen
-    stompClientRef.current.publish({
-      destination: `/app/chat/seen/${otherUserId}`,
-      body: JSON.stringify({
-        senderId: otherUserId,
-        receiverId: myId,
-      }),
-    });
+  const isAtBottom = () => {
+    const container = chatScrollRef.current;
+    if (!container) return false;
 
-    // 🔁 Update backend DB
-    api.post(`/chat/seen/${otherUserId}/${myId}`);
-
-  }, [selectedUser, myId]);
+    return (
+      container.scrollHeight - container.scrollTop - container.clientHeight < 20
+    );
+  };
 
   /* SEND MESSAGE */
   const handleSend = () => {
@@ -334,11 +351,12 @@ const ChatWindow = () => {
       receiverId,
       message,
       timestamp: new Date().toISOString(),
+      seen: false
     };
-
     console.log("📤 Sending message:", msgBody);
 
-    setMessages((prev) => [...prev, msgBody]);
+    const tempId = Date.now();
+    setMessages(prev => [...prev, { ...msgBody, tempId }]);
     setMessage("");
 
     if (stompClientRef.current?.connected) {
@@ -347,10 +365,7 @@ const ChatWindow = () => {
         body: JSON.stringify(msgBody),
       });
 
-      console.log(
-        `🚀 Published to /app/chat.send/${receiverId}`,
-        JSON.stringify(msgBody)
-      );
+      console.log(`🚀 Published to /app/chat.send/${receiverId}`, JSON.stringify(msgBody));
     } else {
       console.error("❌ Cannot send — STOMP is NOT connected");
     }
@@ -369,19 +384,53 @@ const ChatWindow = () => {
   const handleIncoming = (body) => {
     if (!body) return;
 
-    setMessages(prev => [...prev, body]);
+    const activeChatUserId = activeChatUserRef.current;
+
+    // ✅ ONLY accept messages for the currently open chat
+    const isForCurrentChat =
+      (Number(body.senderId) === Number(activeChatUserId) &&
+        Number(body.receiverId) === Number(myId)) ||
+      (Number(body.senderId) === Number(myId) &&
+        Number(body.receiverId) === Number(activeChatUserId));
+
+    if (!isForCurrentChat) {
+      console.log("🚫 Message ignored (not active chat):", body);
+      return;
+    }
+
+    setMessages(prev => {
+      const exists = prev.some(m => m.tempId && m.senderId === body.senderId && m.message === body.message);
+
+      if (exists) {
+        return prev.map(m => m.tempId && m.senderId === body.senderId && m.message === body.message ? body : m);
+      }
+      return [...prev, body];
+    });
 
     const container = chatScrollRef.current;
     if (!container) return;
 
-    const isNearBottom =
-      container.scrollHeight - container.scrollTop - container.clientHeight < 80;
+    const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 80;
 
     if (isNearBottom) {
       setTimeout(() => {
         container.scrollTop = container.scrollHeight;
+
+        // ✅ Mark seen only if this chat is open
+        api.post(`/chat/seen/${body.senderId}/${myId}`).catch(() => { });
       }, 50);
     }
+  };
+
+  const handleSeenUpdate = (seenByUserId) => {
+    setMessages(prev =>
+      prev.map(m =>
+        Number(m.senderId) === Number(myId) &&
+          Number(m.receiverId) === Number(seenByUserId)
+          ? { ...m, seen: true }
+          : m
+      )
+    );
   };
 
   const getUserImageById = (id) => {
@@ -457,6 +506,40 @@ const ChatWindow = () => {
     } catch (err) {
       console.error("Error unblocking user:", err);
       toast.error("Failed to unblock user");
+    }
+  };
+
+  const handleReportUser = async () => {
+    if (!reportCategory) {
+      toast.error("Please select a category");
+      return;
+    }
+
+    if (!reportReason.trim()) {
+      toast.error("Please enter reason");
+      return;
+    }
+
+    const reportedUserId =
+      Number(selectedUser.senderId) === Number(myId)
+        ? selectedUser.receiverId
+        : selectedUser.senderId;
+
+    try {
+      await api.post("/report/user", {
+        reporterId: myId,
+        reportedUserId,
+        reason: reportCategory,
+        description: reportReason
+      });
+
+      toast.success("User reported successfully");
+
+      setReportReason("");
+      setReportCategory("");
+      setShowReportModal(false);
+    } catch (err) {
+      toast.error("Failed to report user");
     }
   };
 
@@ -579,7 +662,12 @@ const ChatWindow = () => {
                     </div>
                   )}
 
-                  <div className="dropdown-item danger">Report</div>
+                  <div
+                    className="dropdown-item danger"
+                    onClick={() => { setShowReportModal(true); setOpen(false); }}
+                  >
+                    Report
+                  </div>
                 </div>
               )}
             </div>
@@ -614,6 +702,12 @@ const ChatWindow = () => {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
+
+                {Number(msg.senderId) === Number(myId) && (
+                  <span className={`seen-status ${msg.seen ? "seen" : "sent"}`}>
+                    {msg.seen ? " ✔✔" : " ✔"}
+                  </span>
+                )}
               </div>
             </div>
           ))}
@@ -645,6 +739,21 @@ const ChatWindow = () => {
           )}
         </div>
       </div>
+
+      <ReportUserModal
+        show={showReportModal}
+        onClose={() => {
+          setShowReportModal(false);
+          setReportReason("");
+          setReportCategory("");
+        }}
+        reason={reportReason}
+        setReason={setReportReason}
+        category={reportCategory}
+        setCategory={setReportCategory}
+        onSubmit={handleReportUser}
+      />
+
     </div>
   );
 };

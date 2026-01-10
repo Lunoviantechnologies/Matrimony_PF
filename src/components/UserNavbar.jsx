@@ -1,17 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import backendIP from "../api/api";
 import Notification from "./Notification";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
+import api from "../api/axiosInstance";
 
 const UserNavbar = () => {
 
     const { myProfile } = useSelector(state => state.auth);
     const { id, role } = useSelector(state => state.auth);
+    const [festivalPlan, setFestivalPlan] = useState(null);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -25,6 +26,21 @@ const UserNavbar = () => {
     }, [id, role]);
     // console.log("myProfile in UserNavbar :", myProfile);
 
+    useEffect(() => {
+        api.get("plans").then(res => {
+            const platinum = res.data.find(p => p.planCode.includes("PLATINUM"));
+            setFestivalPlan(platinum);
+        });
+    }, []);
+
+    const isFestivalActive = (plan) => {
+        if (!plan?.festivalStart || !plan?.festivalEnd) return false;
+
+        const today = new Date();
+        return today >= new Date(plan.festivalStart) &&
+            today <= new Date(plan.festivalEnd);
+    };
+
     const handleLogout = () => {
         dispatch(logout());
         alert("Logged out successfully!");
@@ -35,7 +51,15 @@ const UserNavbar = () => {
         <>
             <Link className="navLink" to="/dashboard/astroTalkQuery">Astrology</Link>
             <Link className="navLink" to="/dashboard/help">Help</Link>
-            <Link className="navLink" to="/dashboard/premium">Upgrade</Link>
+            <Link className="navLink upgrade-marquee glow-border" to="/dashboard/premium">
+                <div className="marquee-track">
+                    <span className="festival-glow">Festival {festivalPlan?.discountValue}% OFF</span>
+                    <span>Upgrade</span>
+                    <span className="festival-glow">Festival {festivalPlan?.discountValue}% OFF</span>
+                    <span>Upgrade</span>
+                </div>
+            </Link>
+
             <Notification />
 
             <div className="dropdown">
