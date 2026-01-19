@@ -252,15 +252,8 @@ function PremiumSubscription() {
       {/* <Outlet /> */}
       <div className="premium-subscription-container">
         <header className="subscription-header">
-<<<<<<< HEAD
           <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" className='v-logo'/>
           <div className="logo">Vivahjeevan</div>
-=======
-          <div className="logo">
-            <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" width={'50px'} />
-            Vivahjeevan
-          </div>
->>>>>>> 8daf26a0cf14f507857f169e5f71e9e32f70e0d0
         </header>
 
         <div className="banner-section">

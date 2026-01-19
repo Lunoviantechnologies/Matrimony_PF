@@ -53,7 +53,7 @@
 
 .logo {
     font-family: 'Lucida Handwriting', cursive;
-    font-size: 30px;
+    font-size: 40px;
     font-weight: bold;
     color: rgb(139, 69, 19);
 }
@@ -972,8 +972,8 @@
 
 .subscription-header {
   display: flex;
-  align-items: center;     /* vertical center */
-  gap: 10px;               /* space between logo and text */
+  align-items: center;
+  gap: 5px; 
 }
 
 .v-logo {

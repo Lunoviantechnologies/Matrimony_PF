@@ -77,17 +77,10 @@ const Footer = () => {
           </h2>
 
           <p className="footer-description">
-<<<<<<< HEAD
             Viviahjeevan.com, one of India's leading matrimonial platforms, was
             founded with a simple objective — to help people find happiness. By
             redefining how Indian brides and grooms meet for marriage,
             Viviahjeevan.com continues to connect millions of people worldwide.
-=======
-            Vivahjeevan.com, one of India's leading matrimonial platforms, was
-            founded with a simple objective — to help people find happiness.
-            By redefining how Indian brides and grooms meet for marriage,
-            Vivahjeevan.com continues to connect millions of people worldwide.
->>>>>>> 8daf26a0cf14f507857f169e5f71e9e32f70e0d0
           </p>
         </div>
       </div>
