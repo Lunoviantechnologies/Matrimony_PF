@@ -60,7 +60,7 @@ const ViewReport = () => {
     <div className="viewreport-container">
       <div className="banner">
         <div className="overlay">
-          <h1>SaathJanam Matrimony Report - 2025</h1>
+          <h1>Vivahjeevan Matrimony Report - 2025</h1>
           <p>Bringing hearts together through love and trust </p>
         </div>
       </div>
@@ -142,8 +142,8 @@ const ViewReport = () => {
         <h2>Get in Touch</h2>
         <p>Have questions or suggestions? Reach us anytime!</p>
         <div className="social-links">
-          <a href="mailto:support@saathjanam.com">
-            <FaEnvelope /> support@saathjanam.com
+          <a href="mailto:support@Vivahjeevan.com">
+            <FaEnvelope /> support@Vivahjeevan.com
           </a>
           <a href="#"><FaTwitter /> Twitter</a>
           <a href="#"><FaFacebookF /> Facebook</a>
