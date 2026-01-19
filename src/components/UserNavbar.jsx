@@ -40,6 +40,7 @@ const UserNavbar = () => {
         return today >= new Date(plan.festivalStart) &&
             today <= new Date(plan.festivalEnd);
     };
+    const festivalActive = festivalPlan && isFestivalActive(festivalPlan);
 
     const handleLogout = () => {
         dispatch(logout());
@@ -51,14 +52,23 @@ const UserNavbar = () => {
         <>
             <Link className="navLink" to="/dashboard/astroTalkQuery">Astrology</Link>
             <Link className="navLink" to="/dashboard/help">Help</Link>
-            <Link className="navLink upgrade-marquee glow-border" to="/dashboard/premium">
-                <div className="marquee-track">
-                    <span className="festival-glow">Festival {festivalPlan?.discountValue}% OFF</span>
-                    <span>Upgrade</span>
-                    <span className="festival-glow">Festival {festivalPlan?.discountValue}% OFF</span>
-                    <span>Upgrade</span>
-                </div>
-            </Link>
+            {festivalActive && (
+                <Link className="navLink upgrade-marquee glow-border" to="/dashboard/premium">
+                    <div className="marquee-track">
+                        <span className="festival-glow">
+                            Festival {festivalPlan.discountValue}% OFF
+                        </span>
+                        <span>Upgrade</span>
+                        <span className="festival-glow">
+                            Festival {festivalPlan.discountValue}% OFF
+                        </span>
+                        <span>Upgrade</span>
+                    </div>
+                </Link>
+            )}
+            {!festivalActive && (
+                <Link className="navLink" to="/dashboard/premium">Upgrade</Link>
+            )}
 
             <Notification />
 

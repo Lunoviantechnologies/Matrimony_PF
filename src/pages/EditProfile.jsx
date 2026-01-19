@@ -73,7 +73,8 @@ export default function EditProfile() {
         height: profileData.height || "",
         weight: profileData.weight || "",
         bodyType: profileData.bodyType || "",
-        complexion: profileData.complexion || ""
+        complexion: profileData.complexion || "",
+        habbits: profileData.habbits || "",
       },
       educationCareer: {
         highestEducation: profileData.highestEducation || "",
@@ -102,12 +103,18 @@ export default function EditProfile() {
         ascendant: profileData.ascendant || "",
         basicPlanetaryPosition: profileData.basicPlanetaryPosition || ""
       },
+      hobbies: {
+        hobbies: Array.isArray(profileData.hobbies) ? profileData.hobbies : (profileData.hobbies?.split?.(",") || []),
+      },
+      spiritualPath: {
+        spiritualPath: profileData.spiritualPath || "",
+      },
       partnerPrefs: {
         ageRange: profileData.partnerAgeRange || "",
         religion: profileData.partnerReligion || "",
         education: profileData.partnerEducation || "",
         work: profileData.partnerWork || "",
-        hobbies: Array.isArray(profileData.partnerHobbies) ? profileData.partnerHobbies : (profileData.partnerHobbies?.split?.(",") || [])
+        partnerHobbies: Array.isArray(profileData.partnerHobbies) ? profileData.partnerHobbies : (profileData.partnerHobbies?.split?.(",") || [])
       }
     };
 
@@ -315,6 +322,7 @@ export default function EditProfile() {
               <Row label="Weight" value={profileData.weight} />
               <Row label="Body Type" value={profileData.bodyType} />
               <Row label="Complexion" value={profileData.complexion} />
+              <Row label="Habbits" value={profileData.habbits} />
             </div>
           </div>
 
@@ -405,10 +413,20 @@ export default function EditProfile() {
           <div className="boxed">
             <div className="box-header red">
               Hobbies
-              <button className="edit-inline" onClick={() => openSectionModal("personal")}><FaEdit /> Edit</button>
+              <button className="edit-inline" onClick={() => openSectionModal("hobbies")}><FaEdit /> Edit</button>
             </div>
             <div className="box-body underlined-block">
               <Row label="Your Hobbies" value={(profileData.hobbies && profileData.hobbies.split?.(",")) || profileData.hobbies} />
+            </div>
+          </div>
+
+          <div className="boxed">
+            <div className="box-header red">
+              Spiritual Path
+              <button className="edit-inline" onClick={() => openSectionModal("spiritualPath")}><FaEdit /> Edit</button>
+            </div>
+            <div className="box-body underlined-block">
+              <Row label="Your spiritual Path" value={profileData.spiritualPath} />
             </div>
           </div>
 
@@ -464,6 +482,8 @@ export default function EditProfile() {
       educationCareer: "Education & Career",
       family: "Family Details",
       astro: "Astro / Religious",
+      hobbies: "Hobbies",
+      spiritualPath: "Spiritual Path",
       partnerPrefs: "Partner Preferences",
     };
     return titles[key] || "Details";
@@ -495,8 +515,15 @@ export default function EditProfile() {
               <input value={buffer.bodyType || ""} onChange={(e) => handleEditInputLocal("bodyType", e.target.value)} />
             </label>
             <label className="field"><div className="field-label">Complexion</div>
-              <input value={buffer.complexion || ""} onChange={(e) => handleEditInputLocal("complexion", e.target.value)} placeholder="Skin tone..."/>
+              <input value={buffer.complexion || ""} onChange={(e) => handleEditInputLocal("complexion", e.target.value)} placeholder="Skin tone..." />
             </label>
+            <select name="habbits" id="habbits" className="field" value={buffer.habbits || ""} onChange={(e) => handleEditInputLocal("habbits", e.target.value)}>
+              <option value="">Select Habbits</option>
+              <option value="Smoking">Smoking</option>
+              <option value="Drinking">Drinking</option>
+              <option value="Both">Both</option>
+              <option value="None">None</option>
+            </select>
           </div>
         );
 
@@ -593,15 +620,15 @@ export default function EditProfile() {
         return (
           <div className="modal-form">
             <label className="field"><div className="field-label">Full Name</div>
-              <input value={buffer.fullName || `${buffer.firstName || ""} ${buffer.lastName || ""}`} onChange={(e) => handleEditInputLocal("fullName", e.target.value)} />
+              <input disabled value={buffer.fullName || `${buffer.firstName || ""} ${buffer.lastName || ""}`} onChange={(e) => handleEditInputLocal("fullName", e.target.value)} />
             </label>
 
             <label className="field"><div className="field-label">First Name</div>
-              <input value={buffer.firstName || ""} onChange={(e) => handleEditInputLocal("firstName", e.target.value)} />
+              <input value={buffer.firstName || ""} onChange={(e) => handleEditInputLocal("firstName", e.target.value)} disabled/>
             </label>
 
             <label className="field"><div className="field-label">Last Name</div>
-              <input value={buffer.lastName || ""} onChange={(e) => handleEditInputLocal("lastName", e.target.value)} />
+              <input value={buffer.lastName || ""} onChange={(e) => handleEditInputLocal("lastName", e.target.value)} disabled/>
             </label>
 
             <label className="field"><div className="field-label">Mobile Number</div>
@@ -639,14 +666,26 @@ export default function EditProfile() {
             <label className="field"><div className="field-label">Living with Childrens</div>
               <input value={buffer.isChildrenLivingWithYou || ""} onChange={(e) => handleEditInputLocal("isChildrenLivingWithYou", e.target.value)} placeholder="If divorced or widow have childern with you type true or false..." />
             </label>
+          </div>
+        );
 
-            <div className="field">
+      case "hobbies":
+        return (
+          <div className="field">
               <div className="field-label">Hobbies</div>
               {(buffer.hobbies || []).map((h, i) => (
                 <input key={i} className="hobby-input" value={h} onChange={(e) => updateHobbyInBuffer("hobbies", i, e.target.value)} placeholder={`Hobby ${i + 1}`} />
               ))}
               <button type="button" className="add-hobby-btn" onClick={() => addHobbyToBuffer("hobbies")}><FaPlus /> Add Hobby</button>
             </div>
+        );
+
+      case "spiritualPath":
+        return (
+          <div className="modal-form">
+            <label className="field"><div className="field-label">Spiritual Path</div>
+              <input value={buffer.spiritualPath || ""} onChange={(e) => handleEditInputLocal("spiritualPath", e.target.value)} />
+            </label>
           </div>
         );
 
@@ -654,7 +693,7 @@ export default function EditProfile() {
         return (
           <div className="modal-form">
             <label className="field"><div className="field-label">Age Range</div>
-              <input value={buffer.partnerAgeRange || ""} onChange={(e) => handleEditInputLocal("partnerAgeRange", e.target.value)} placeholder="type like 18 - 25 etc..."/>
+              <input value={buffer.partnerAgeRange || ""} onChange={(e) => handleEditInputLocal("partnerAgeRange", e.target.value)} placeholder="type like 18 - 25 etc..." />
             </label>
 
             <label className="field"><div className="field-label">Religion</div>

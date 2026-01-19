@@ -44,6 +44,10 @@ import Admin_UserTickets from "../admin/Admin_UserTickets";
 import AdminSupport from "../admin/AdminSupport";
 import TermsConditions from "../components/privacyInfo/TermsCondition";
 import PrivacyPolicy from "../components/privacyInfo/PrivacyPolicy";
+import RefundPolicy from "../components/privacyInfo/RefundPolicy";
+import Disclaimer from "../components/privacyInfo/Disclaimer";
+import CommunityGuidelines from "../components/privacyInfo/CommunityGuidelines";
+import ChatReport from "../admin/ChatReport";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -82,6 +86,18 @@ const AppRoutes = createBrowserRouter([
                 path: "privacy_policy",
                 element: <PrivacyPolicy />
             },
+            {
+                path: "/refund-policy",
+                element: <RefundPolicy />
+            },
+            {
+                path: "/disclaimer",
+                element: <Disclaimer />
+            },
+            {
+                path: "/community-guidelines",
+                element: <CommunityGuidelines />
+            }
         ],
     },
     {
@@ -214,7 +230,7 @@ const AppRoutes = createBrowserRouter([
                 path: "aprovals",
                 element: <AdminApprovals />
             },
-             
+
             {
                 path: "manageusers",
                 element: <ManageUser />
@@ -239,12 +255,16 @@ const AppRoutes = createBrowserRouter([
                 path: "astroTalk",
                 element: <AstroTalkInfo />
             },
-             {
+            {
                 path: "admin_support",
                 element: <AdminSupport />
             },
+            {
+                path: "admin_chat_report",
+                element: <ChatReport />
+            },
         ]
-       
+
     }
 ]);
 

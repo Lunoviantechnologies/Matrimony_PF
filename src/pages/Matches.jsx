@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import MatchesSort from "./MatchesSort";
 
 const EMPTY_FILTERS = {
     age: [],
@@ -17,6 +18,7 @@ const Matches = () => {
 
     const [filtersDraft, setFiltersDraft] = useState(EMPTY_FILTERS);
     const [filters, setFilters] = useState(EMPTY_FILTERS);
+    const [sortBy, setSortBy] = useState("relevance");
 
     const handleApplyFilters = () => {
         setFilters(filtersDraft);
@@ -25,6 +27,7 @@ const Matches = () => {
     const handleClearFilters = () => {
         setFiltersDraft(EMPTY_FILTERS);
         setFilters(EMPTY_FILTERS);
+        setSortBy("relevance");
     };
 
     return (
@@ -56,9 +59,13 @@ const Matches = () => {
                             </NavLink>
                         </div>
 
+                        <div className="sort_div d-flex justify-content-end w-100 mb-3x">
+                            <MatchesSort sortBy={sortBy} setSortBy={setSortBy} />
+                        </div>
+
                         {/* Nested Route Content */}
                         <div className="w-100 ps-5">
-                            <Outlet context={{ filters }} />
+                            <Outlet context={{ filters, sortBy }} />
                         </div>
                     </div>
                 </div>

@@ -261,7 +261,7 @@ function PremiumSubscription() {
         <div className="banner-section">
           <h1>
             Upgrade now & Get upto{" "}
-            {platinumPlan ? `${platinumPlan.discountValue}%` : "..."} discount!
+            {platinumPlan ? `${platinumPlan.discountValue}%` : "No active offers"} discount!
           </h1>
 
           {platinumPlan ? (
@@ -285,82 +285,86 @@ function PremiumSubscription() {
 
         <div className="plans-section">
           <div className="plans-container-compact">
-            {planDetails.map((plan) => {
 
-              const festivalActive = isFestivalActive(plan);
-              const discountActive = isDiscountActive(plan);
+            {planDetails.length === 0 ? (
+              <div className="no-plans-message">
+                No plans available right now.
+              </div>
+            ) : (
+              planDetails.map((plan) => {
+                const festivalActive = isFestivalActive(plan);
+                const discountActive = isDiscountActive(plan);
+                const basePrice = festivalActive ? plan.festivalPrice : plan.priceRupees;
+                const discountedPrice = calculateDiscountedPrice(basePrice, plan);
+                const perMonth = (discountedPrice / plan.durationMonths).toFixed(2);
+                const countdown = getFestivalCountdown(plan);
 
-              const basePrice = festivalActive
-                ? plan.festivalPrice
-                : plan.priceRupees;
+                return (
+                  <div key={plan.planCode} className="plan-card-compact">
 
-              const discountedPrice = calculateDiscountedPrice(basePrice, plan);
-              const perMonth = (discountedPrice / plan.durationMonths).toFixed(2);
+                    {/* HEADER */}
+                    <div className="plan-header-compact">
+                      <h3>{plan.planName}</h3>
 
-              const countdown = getFestivalCountdown(plan);
-
-              return (
-                <div key={plan.planCode} className="plan-card-compact">
-
-                  {/* HEADER */}
-                  <div className="plan-header-compact">
-                    <h3>{plan.planName}</h3>
-
-                    {discountActive && (
-                      <div className="discount-badge-compact">
-                        {plan.discountType === "PERCENTAGE"
-                          ? `${plan.discountValue}% OFF`
-                          : `₹${plan.discountValue} OFF`}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* FESTIVAL LABEL */}
-                  {festivalActive && (
-                    <div className="festival-center-compact">
-                      <div className="festival-label-compact">
-                        <MdCelebration /> Festival Price
-                      </div>
-
-                      {countdown && (
-                        <div className="festival-timer-compact">
-                          ⏱ Ends in {countdown}
+                      {discountActive && (
+                        <div className="discount-badge-compact">
+                          {plan.discountType === "PERCENTAGE"
+                            ? `${plan.discountValue}% OFF`
+                            : `₹${plan.discountValue} OFF`}
                         </div>
                       )}
                     </div>
-                  )}
 
-                  {/* PRICE SECTION */}
-                  <div className="price-section-compact">
+                    {/* FESTIVAL LABEL */}
+                    {festivalActive && (
+                      <div className="festival-center-compact">
+                        <div className="festival-label-compact">
+                          <MdCelebration /> Festival Price
+                        </div>
 
-                    <div className="original-price-compact">
-                      ₹{basePrice}
+                        {countdown && (
+                          <div className="festival-timer-compact">
+                            ⏱ Ends in {countdown}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* PRICE SECTION */}
+                    <div className="price-section-compact">
+                      <div className="validity-month-compact">
+                        {plan.durationMonths} Months
+                      </div>
+                      <div className="original-price-compact">
+                        ₹{basePrice}
+                      </div>
+
+                      <div className="discounted-price-compact">
+                        ₹{discountedPrice}
+                      </div>
+
+                      <div className="per-month-compact">
+                        ₹{perMonth}/month
+                      </div>
+
                     </div>
 
-                    <div className="discounted-price-compact">
-                      ₹{discountedPrice}
-                    </div>
+                    <button
+                      className="continue-btn-compact"
+                      onClick={() => handlePlanSelect(plan)}
+                    >
+                      Continue
+                    </button>
 
-                    <div className="per-month-compact">
-                      ₹{perMonth}/month
+                    <div className="auto-renewal-compact">
+                      Auto-renews on expiry
                     </div>
 
                   </div>
+                );
+              })
+            )}
 
-                  <button
-                    className="continue-btn-compact"
-                    onClick={() => handlePlanSelect(plan)}
-                  >
-                    Continue
-                  </button>
-
-                  <div className="auto-renewal-compact">
-                    Auto-renews on expiry
-                  </div>
-
-                </div>
-              );
-            })}
           </div>
         </div>
 
