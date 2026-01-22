@@ -22,7 +22,6 @@ const initialValues = {
   dateOfBirth: "",
   age: "",
   religion: "",
-  // caste: "",
   subCaste: "",
   subCasteOther: "",
   gothra: "",
@@ -69,51 +68,50 @@ const validationSchemas = [
   }),
 
   // STEP 2
-Yup.object({
-  firstName: Yup.string().required("First name is Required"),
-  lastName: Yup.string().required("Last name is Required"),
+  Yup.object({
+    firstName: Yup.string().required("First name is Required"),
+    lastName: Yup.string().required("Last name is Required"),
 
-  // 👇 AGE: required ONLY if DOB is NOT fully provided
-  age: Yup.number()
-    .typeError("Age must be a number")
-    .when(["dobDay", "dobMonth", "dobYear"], {
-      is: (day, month, year) => !day || !month || !year,
-      then: (schema) =>
-        schema
-          .required("Age is required")
-          .min(18, "Minimum age is 18")
-          .max(60, "Maximum age is 60"),
-      otherwise: (schema) => schema.notRequired(),
-    }),
+    // 👇 AGE: required ONLY if DOB is NOT fully provided
+    age: Yup.number()
+      .typeError("Age must be a number")
+      .when(["dobDay", "dobMonth", "dobYear"], {
+        is: (day, month, year) => !day || !month || !year,
+        then: (schema) =>
+          schema
+            .required("Age is required")
+            .min(18, "Minimum age is 18")
+            .max(60, "Maximum age is 60"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
 
-  dobDay: Yup.number()
-    .typeError("Date must be a number")
-    .min(1, "Minimum date is 1")
-    .max(31, "Maximum date is 31")
-    .nullable(),
+    dobDay: Yup.number()
+      .typeError("Date must be a number")
+      .min(1, "Minimum date is 1")
+      .max(31, "Maximum date is 31")
+      .nullable(),
 
-  dobMonth: Yup.number()
-    .typeError("Month must be a number")
-    .min(1, "Minimum month is 1")
-    .max(12, "Maximum month is 12")
-    .nullable(),
+    dobMonth: Yup.number()
+      .typeError("Month must be a number")
+      .min(1, "Minimum month is 1")
+      .max(12, "Maximum month is 12")
+      .nullable(),
 
-  dobYear: Yup.number()
-    .typeError("Year must be a number")
-    .integer("Year must be an integer")
-    .min(1900, "Enter valid year")
-    .max(new Date().getFullYear(), "Year cannot be in future")
-    .nullable(),
-}),
+    dobYear: Yup.number()
+      .typeError("Year must be a number")
+      .integer("Year must be an integer")
+      .min(1900, "Enter valid year")
+      .max(new Date().getFullYear(), "Year cannot be in future")
+      .nullable(),
+  }),
 
 
   // STEP 3
-Yup.object({
-  religion: Yup.string().required("Religion is required"),
-  // caste: Yup.string().required("Caste is required"),
-  subCaste: Yup.string().required("Sub-Community is required"),
-  gothra: Yup.string().required("Gothra is required"),
-}),
+  Yup.object({
+    religion: Yup.string().required("Religion is required"),
+    subCaste: Yup.string().required("Sub-Community is required"),
+    gothra: Yup.string().required("Gothra is required"),
+  }),
 
 
   // STEP 4
@@ -200,45 +198,45 @@ const subCommunityList = [
 
 /* ---------------- GOTHRA LIST ---------------- */
 const gothraList = [
-  "Aatharvas","Agasthi","Ahabhunasa","Airan","Alampayana","Angiras",
-  "Arrishinimi","Athreyasya / Athreyasa","Atri","Attarishi","Aukshanas",
-  "Aushanas","Babrahvya","Badarayana","Baijvayas","Bansal","Bashan",
-  "Bhandal","Bharadwaj","Bhargava / Bhargav","Bhasyan","Bhrigu",
-  "Bindal","Birthare","Bodhaaynas","Chandratri","Chikithasa",
-  "Chyavanasa","Daksa","Dalabhya","Darbhas","Devrata","Dhananjaya",
-  "Dhanvantri","Dhara Gautam","Dharan","Dharanas","Dixit",
-  "Duttatreyas","Galiva","Ganganas","Gangyanas","Gardhmukh Sandilya",
-  "Garg","Garga / Gargya","Gargya Sainasa","Gautam / Gouthama",
-  "Ghrit Kaushika","Gowri Veetham","Goyal","Goyan",
-  "Haritasya / Harithasa / Haritha","Jaiminiyas","Jamadagni",
-  "Jatukarna","Jindal","Kaakavas","Kabi","Kalabouddasa",
-  "Kalpangeerasa","Kamakayana Vishwamitra","Kamsa","Kanav","Kansal",
-  "Kanva","Kapi","Kapila Baradwaj","Kapinjal","Kapishthalas",
-  "Kaplish","Kashish","Kashyapa / Kaashyapa","Katyayan / Katyan",
-  "Kaundinya / Koundanya / Kaundilya","Kaunsa","Kaushal",
-  "Kaushika / Kaushik / Kausikasa","Keshoryas",
-  "Koushika Visvamitrasa","Krishnatrey","Kucchal","Kusa",
-  "Kutsa / Kutsas / Kutsasa","Laakshmanas","Laugakshi","Lavania",
-  "Lodwan","Lohit","Lokaakhyas","Lomasha","Madelia","Madhukul",
-  "Maitraya","Manava","Mandavya","Mangal","Marica","Markendeya",
-  "Maudlas","Maunas","Mihir","Mittal","Moudgalya","Mouna Bhargava",
-  "Munish","Mythravaruna","Naagal","Nagasya","Naidrupa Kashyapa",
-  "Narayanas","Nithyandala","Paaniyas","Pachori","Paing",
-  "Parashar / Parashara","Parthivasa","Paulastya","Poothamanasa",
-  "Pourugutsa","Prachinas","Raghuvanshi","Rajoria","Rathitar",
-  "Rohinya","Rohita","Sakalya","Sakhyanasa","Salankayanasa",
-  "Sankash","Sankha-Pingala-Kausta","Sankrut","Sankyanasa",
-  "Savanaka","Savarana / Sabarna / Savarna / Sraborno","Shaalaksha",
-  "Shadamarshana / Shatamarshanam","Shakhanas","Shalavatsa",
-  "Shandilya / Sandilyasa","Sharkaras","Sharkvas","Shaunak",
-  "Shravanesya","Shrimukh Shandilya","Shukla Atreyas","Sigidha",
-  "Singhal","Sri Vatsa / Vatsa / Vats / Vacchas",
-  "Srungi Bharadwajasa","Suparnasa","Swathantra Kapisa","Tayal",
-  "Tharakayanam","Thingal","Titwal","Tushar","Udbahu","Udhalaka",
-  "Uditha Gautham","Udithya","Upamanyu Vasishtasa","Upamanyu",
-  "Upathya","Vadoola / Vadulasa","Vainya","Vardheyasa","Vashishtha",
-  "Veethahavya","Vishnordhageerasa","Vishnu Vridhha","Vishwamitra",
-  "Yaska","Don’t know"
+  "Aatharvas", "Agasthi", "Ahabhunasa", "Airan", "Alampayana", "Angiras",
+  "Arrishinimi", "Athreyasya / Athreyasa", "Atri", "Attarishi", "Aukshanas",
+  "Aushanas", "Babrahvya", "Badarayana", "Baijvayas", "Bansal", "Bashan",
+  "Bhandal", "Bharadwaj", "Bhargava / Bhargav", "Bhasyan", "Bhrigu",
+  "Bindal", "Birthare", "Bodhaaynas", "Chandratri", "Chikithasa",
+  "Chyavanasa", "Daksa", "Dalabhya", "Darbhas", "Devrata", "Dhananjaya",
+  "Dhanvantri", "Dhara Gautam", "Dharan", "Dharanas", "Dixit",
+  "Duttatreyas", "Galiva", "Ganganas", "Gangyanas", "Gardhmukh Sandilya",
+  "Garg", "Garga / Gargya", "Gargya Sainasa", "Gautam / Gouthama",
+  "Ghrit Kaushika", "Gowri Veetham", "Goyal", "Goyan",
+  "Haritasya / Harithasa / Haritha", "Jaiminiyas", "Jamadagni",
+  "Jatukarna", "Jindal", "Kaakavas", "Kabi", "Kalabouddasa",
+  "Kalpangeerasa", "Kamakayana Vishwamitra", "Kamsa", "Kanav", "Kansal",
+  "Kanva", "Kapi", "Kapila Baradwaj", "Kapinjal", "Kapishthalas",
+  "Kaplish", "Kashish", "Kashyapa / Kaashyapa", "Katyayan / Katyan",
+  "Kaundinya / Koundanya / Kaundilya", "Kaunsa", "Kaushal",
+  "Kaushika / Kaushik / Kausikasa", "Keshoryas",
+  "Koushika Visvamitrasa", "Krishnatrey", "Kucchal", "Kusa",
+  "Kutsa / Kutsas / Kutsasa", "Laakshmanas", "Laugakshi", "Lavania",
+  "Lodwan", "Lohit", "Lokaakhyas", "Lomasha", "Madelia", "Madhukul",
+  "Maitraya", "Manava", "Mandavya", "Mangal", "Marica", "Markendeya",
+  "Maudlas", "Maunas", "Mihir", "Mittal", "Moudgalya", "Mouna Bhargava",
+  "Munish", "Mythravaruna", "Naagal", "Nagasya", "Naidrupa Kashyapa",
+  "Narayanas", "Nithyandala", "Paaniyas", "Pachori", "Paing",
+  "Parashar / Parashara", "Parthivasa", "Paulastya", "Poothamanasa",
+  "Pourugutsa", "Prachinas", "Raghuvanshi", "Rajoria", "Rathitar",
+  "Rohinya", "Rohita", "Sakalya", "Sakhyanasa", "Salankayanasa",
+  "Sankash", "Sankha-Pingala-Kausta", "Sankrut", "Sankyanasa",
+  "Savanaka", "Savarana / Sabarna / Savarna / Sraborno", "Shaalaksha",
+  "Shadamarshana / Shatamarshanam", "Shakhanas", "Shalavatsa",
+  "Shandilya / Sandilyasa", "Sharkaras", "Sharkvas", "Shaunak",
+  "Shravanesya", "Shrimukh Shandilya", "Shukla Atreyas", "Sigidha",
+  "Singhal", "Sri Vatsa / Vatsa / Vats / Vacchas",
+  "Srungi Bharadwajasa", "Suparnasa", "Swathantra Kapisa", "Tayal",
+  "Tharakayanam", "Thingal", "Titwal", "Tushar", "Udbahu", "Udhalaka",
+  "Uditha Gautham", "Udithya", "Upamanyu Vasishtasa", "Upamanyu",
+  "Upathya", "Vadoola / Vadulasa", "Vainya", "Vardheyasa", "Vashishtha",
+  "Veethahavya", "Vishnordhageerasa", "Vishnu Vridhha", "Vishwamitra",
+  "Yaska", "Don’t know"
 ];
 
 
@@ -316,7 +314,6 @@ const Register = () => {
       age: values.age ? Number(values.age) : null,
       dateOfBirth: dateOfBirthStr || null,
       religion: values.religion || null,
-      // caste: values.caste || null,
       subCaste: values.subCaste || null,
       motherTongue: values.motherTongue || null,
       country: values.country || null,
@@ -469,219 +466,223 @@ const Register = () => {
         );
 
       /* ---------------------- STEP 2 ----------------------- */
-     case 2:
-  return (
-    <>
-      <div className="step-icon"><FaUser /></div>
-      <h2>Tell us about you</h2>
+      case 2:
+        return (
+          <>
+            <div className="step-icon"><FaUser /></div>
+            <h2>Tell us about you</h2>
 
-      {/* First Name */}
-      <Field
-        className="form-input"
-        name="firstName"
-        placeholder="First Name"
-      />
-      <ErrorMessage name="firstName" component="div" className="error-text" />
+            {/* First Name */}
+            <Field
+              className="form-input"
+              name="firstName"
+              placeholder="First Name"
+            />
+            <ErrorMessage name="firstName" component="div" className="error-text" />
 
-      {/* Last Name */}
-      <Field
-        className="form-input"
-        name="lastName"
-        placeholder="Last Name"
-      />
-      <ErrorMessage name="lastName" component="div" className="error-text" />
+            {/* Last Name */}
+            <Field
+              className="form-input"
+              name="lastName"
+              placeholder="Last Name"
+            />
+            <ErrorMessage name="lastName" component="div" className="error-text" />
 
-      {/* AGE (AUTO-CALCULATED) */}
-      <Field
-        className="form-input"
-        name="age"
-        placeholder="Age (Auto-calculated)"
-        disabled={values.dobDay && values.dobMonth && values.dobYear}
-      />
-      <ErrorMessage name="age" component="div" className="error-text" />
+            {/* AGE (AUTO-CALCULATED) */}
+            <Field
+              className="form-input"
+              name="age"
+              placeholder="Age (Auto-calculated)"
+              disabled={values.dobDay && values.dobMonth && values.dobYear}
+            />
+            <ErrorMessage name="age" component="div" className="error-text" />
 
-      {/* DATE OF BIRTH */}
-      <label className="form-label">Date of Birth</label>
-      <div className="dob-fields">
-        <Field
-          name="dobDay"
-          placeholder="DD"
-          className="form-input dobInput"
-          onChange={(e) => {
-            const day = e.target.value;
-            setFieldValue("dobDay", day);
+            {/* DATE OF BIRTH */}
+            <label className="form-label">Date of Birth</label>
+            <div className="dob-fields">
+              <Field
+                name="dobDay"
+                placeholder="DD"
+                className="form-input dobInput"
+                onChange={(e) => {
+                  const day = e.target.value;
+                  setFieldValue("dobDay", day);
 
-            if (day && values.dobMonth && values.dobYear) {
-              const dob = new Date(values.dobYear, values.dobMonth - 1, day);
-              const today = new Date();
+                  if (day && values.dobMonth && values.dobYear) {
+                    const dob = new Date(values.dobYear, values.dobMonth - 1, day);
+                    const today = new Date();
 
-              let age = today.getFullYear() - dob.getFullYear();
-              const m = today.getMonth() - dob.getMonth();
+                    let age = today.getFullYear() - dob.getFullYear();
+                    const m = today.getMonth() - dob.getMonth();
 
-              if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-                age--;
-              }
+                    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                      age--;
+                    }
 
-              setFieldValue("age", age);
-            }
-          }}
-        />
+                    setFieldValue("age", age);
+                  }
+                }}
+              />
 
-        <Field
-          name="dobMonth"
-          placeholder="MM"
-          className="form-input dobInput"
-          onChange={(e) => {
-            const month = e.target.value;
-            setFieldValue("dobMonth", month);
+              <Field
+                name="dobMonth"
+                placeholder="MM"
+                className="form-input dobInput"
+                onChange={(e) => {
+                  const month = e.target.value;
+                  setFieldValue("dobMonth", month);
 
-            if (values.dobDay && month && values.dobYear) {
-              const dob = new Date(values.dobYear, month - 1, values.dobDay);
-              const today = new Date();
+                  if (values.dobDay && month && values.dobYear) {
+                    const dob = new Date(values.dobYear, month - 1, values.dobDay);
+                    const today = new Date();
 
-              let age = today.getFullYear() - dob.getFullYear();
-              const m = today.getMonth() - dob.getMonth();
+                    let age = today.getFullYear() - dob.getFullYear();
+                    const m = today.getMonth() - dob.getMonth();
 
-              if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-                age--;
-              }
+                    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                      age--;
+                    }
 
-              setFieldValue("age", age);
-            }
-          }}
-        />
+                    setFieldValue("age", age);
+                  }
+                }}
+              />
 
-        <Field
-          name="dobYear"
-          placeholder="YYYY"
-          className="form-input dobInput"
-          onChange={(e) => {
-            const year = e.target.value;
-            setFieldValue("dobYear", year);
+              <Field
+                name="dobYear"
+                placeholder="YYYY"
+                className="form-input dobInput"
+                onChange={(e) => {
+                  const year = e.target.value;
+                  setFieldValue("dobYear", year);
 
-            if (values.dobDay && values.dobMonth && year) {
-              const dob = new Date(year, values.dobMonth - 1, values.dobDay);
-              const today = new Date();
+                  if (values.dobDay && values.dobMonth && year) {
+                    const dob = new Date(year, values.dobMonth - 1, values.dobDay);
+                    const today = new Date();
 
-              let age = today.getFullYear() - dob.getFullYear();
-              const m = today.getMonth() - dob.getMonth();
+                    let age = today.getFullYear() - dob.getFullYear();
+                    const m = today.getMonth() - dob.getMonth();
 
-              if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-                age--;
-              }
+                    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                      age--;
+                    }
 
-              setFieldValue("age", age);
-            }
-          }}
-        />
-      </div>
+                    setFieldValue("age", age);
+                  }
+                }}
+              />
+            </div>
 
-      <ErrorMessage name="dobDay" component="div" className="error-text" />
-      <ErrorMessage name="dobMonth" component="div" className="error-text" />
-      <ErrorMessage name="dobYear" component="div" className="error-text" />
-    </>
-  );
+            <ErrorMessage name="dobDay" component="div" className="error-text" />
+            <ErrorMessage name="dobMonth" component="div" className="error-text" />
+            <ErrorMessage name="dobYear" component="div" className="error-text" />
+          </>
+        );
 
 
       /* ---------------------- STEP 3 ----------------------- */
-  case 3:
-  return (
-    <>
-      <div className="step-icon"><FaBookOpen /></div>
-      <h2>Religion & Community</h2>
+      case 3:
+        return (
+          <>
+            <div className="step-icon"><FaBookOpen /></div>
+            <h2>Religion & Community</h2>
 
-      {/* Religion */}
-      <Field as="select" name="religion" className="form-select">
-        <option value="" disabled>Select Religion</option>
-        <option value="Hindu">Hindu</option>
-        <option value="Muslim">Muslim</option>
-        <option value="Christian">Christian</option>
-        <option value="Sikh">Sikh</option>
-        <option value="Jain">Jain</option>
-        <option value="Buddhist">Buddhist</option>
-      </Field>
-      <ErrorMessage name="religion" component="div" className="error-text" />
+            {/* Religion */}
+            <Field as="select" name="religion" className="form-select">
+              <option value="" disabled>Select Religion</option>
+              <option value="Hindu">Hindu</option>
+              <option value="Muslim">Muslim</option>
+              <option value="Christian">Christian</option>
+              <option value="Sikh">Sikh</option>
+              <option value="Jain">Jain</option>
+              <option value="Buddhist">Buddhist</option>
+            </Field>
+            <ErrorMessage name="religion" component="div" className="error-text" />
 
-      {/* Mother Tongue */}
-      <Field as="select" name="motherTongue" className="form-select">
-        <option value="" disabled>Select Mother Tongue</option>
-        <option value="Telugu">Telugu</option>
-        <option value="Hindi">Hindi</option>
-        <option value="Tamil">Tamil</option>
-        <option value="Kannada">Kannada</option>
-        <option value="English">English</option>
-      </Field>
+            {/* Mother Tongue */}
+            <Field as="select" name="motherTongue" className="form-select">
+              <option value="" disabled>Select your Mother Tongue</option>
+              {/* Major Indian Languages */}
+              <option value="Hindi">Hindi</option>
+              <option value="Bengali">Bengali</option>
+              <option value="Telugu">Telugu</option>
+              <option value="Marathi">Marathi</option>
+              <option value="Tamil">Tamil</option>
+              <option value="Urdu">Urdu</option>
+              <option value="Gujarati">Gujarati</option>
+              <option value="Kannada">Kannada</option>
+              <option value="Odia">Odia</option>
+              <option value="Malayalam">Malayalam</option>
+              <option value="Punjabi">Punjabi</option>
+              <option value="Assamese">Assamese</option>
+              <option value="Konkani">Konkani</option>
+              <option value="Sindhi">Sindhi</option>
+              <option value="Nepali">Nepali</option>
+              <option value="Kashmiri">Kashmiri</option>
+              <option value="Manipuri">Manipuri</option>
+              <option value="English">English</option>
+            </Field>
 
-      {/* Caste */}
-      {/* <Field as="select" name="caste" className="form-select">
-        <option value="" disabled>Select Caste</option>
-        <option value="BC">BC</option>
-        <option value="OC">OC</option>
-        <option value="SC & ST">SC & ST</option>
-        <option value="OBC">OBC</option>
-      </Field>
-      <ErrorMessage name="caste" component="div" className="error-text" /> */}
+            {/* ---------------- SUB COMMUNITY ---------------- */}
+            <Field
+              as="select"
+              name="subCaste"
+              className="form-select"
+              onChange={(e) => {
+                setFieldValue("subCaste", e.target.value);
+                if (e.target.value !== "Others") {
+                  setFieldValue("subCasteOther", "");
+                }
+              }}
+            >
+              <option value="" disabled>Select Sub-Community</option>
+              {subCommunityList.map((sc) => (
+                <option key={sc} value={sc}>{sc}</option>
+              ))}
+              <option value="Others">Others</option>
+            </Field>
+            <ErrorMessage name="subCaste" component="div" className="error-text" />
 
-      {/* ---------------- SUB COMMUNITY ---------------- */}
-      <Field
-        as="select"
-        name="subCaste"
-        className="form-select"
-        onChange={(e) => {
-          setFieldValue("subCaste", e.target.value);
-          if (e.target.value !== "Others") {
-            setFieldValue("subCasteOther", "");
-          }
-        }}
-      >
-        <option value="" disabled>Select Sub-Community</option>
-        {subCommunityList.map((sc) => (
-          <option key={sc} value={sc}>{sc}</option>
-        ))}
-        <option value="Others">Others</option>
-      </Field>
-      <ErrorMessage name="subCaste" component="div" className="error-text" />
+            {/* Sub Community Other */}
+            {values.subCaste === "Others" && (
+              <Field
+                name="subCasteOther"
+                className="form-input"
+                placeholder="Enter Sub-Community"
+              />
+            )}
 
-      {/* Sub Community Other */}
-      {values.subCaste === "Others" && (
-        <Field
-          name="subCasteOther"
-          className="form-input"
-          placeholder="Enter Sub-Community"
-        />
-      )}
+            {/* ---------------- GOTHRA ---------------- */}
+            <Field
+              as="select"
+              name="gothra"
+              className="form-select"
+              onChange={(e) => {
+                setFieldValue("gothra", e.target.value);
+                if (e.target.value !== "Others" && e.target.value !== "Dont know") {
+                  setFieldValue("gothraOther", "");
+                }
+              }}
+            >
+              <option value="" disabled>Select Gothra</option>
+              {gothraList.map((g) => (
+                <option key={g} value={g}>{g}</option>
+              ))}
+              <option value="Others">Others</option>
+              <option value="Dont know">Dont know</option>
+            </Field>
+            <ErrorMessage name="gothra" component="div" className="error-text" />
 
-      {/* ---------------- GOTHRA ---------------- */}
-      <Field
-        as="select"
-        name="gothra"
-        className="form-select"
-        onChange={(e) => {
-          setFieldValue("gothra", e.target.value);
-          if (e.target.value !== "Others" && e.target.value !== "Dont know") {
-            setFieldValue("gothraOther", "");
-          }
-        }}
-      >
-        <option value="" disabled>Select Gothra</option>
-        {gothraList.map((g) => (
-          <option key={g} value={g}>{g}</option>
-        ))}
-        <option value="Others">Others</option>
-        <option value="Dont know">Dont know</option>
-      </Field>
-      <ErrorMessage name="gothra" component="div" className="error-text" />
-
-      {/* Gothra Other */}
-      {(values.gothra === "Others" || values.gothra === "Dont know") && (
-        <Field
-          name="gothraOther"
-          className="form-input"
-          placeholder="Enter Gothra"
-        />
-      )}
-    </>
-  );
+            {/* Gothra Other */}
+            {(values.gothra === "Others" || values.gothra === "Dont know") && (
+              <Field
+                name="gothraOther"
+                className="form-input"
+                placeholder="Enter Gothra"
+              />
+            )}
+          </>
+        );
 
 
       /* ---------------------- STEP 4 ----------------------- */
