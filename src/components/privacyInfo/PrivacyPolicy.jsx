@@ -5,75 +5,69 @@ const PrivacyPolicy = () => {
     return (
         <div className="privacy-root">
             <div className="privacy-content">
-                <h1 className="privacy-title">Privacy Policy</h1>
-                <p className="privacy-updated">Last updated: Jan 2026</p>
+                <h1 className="privacy-title">PRIVACY POLICY – VIVAH JEEVAN</h1>
+                <p className="privacy-updated">Last Updated: Jan 2026</p>
+
+                <div className="privacy-section">
+                    <p>
+                        Vivah Jeevan respects user privacy but prioritizes platform safety and legal compliance.
+                    </p>
+                </div>
 
                 <div className="privacy-section">
                     <h3>1. Information We Collect</h3>
+                    <ul>
+                        <li>Name, age, gender</li>
+                        <li>Photos, marital details</li>
+                        <li>Contact information</li>
+                        <li>Horoscope and preferences</li>
+                        <li>Device and usage data</li>
+                    </ul>
+                </div>
+
+                <div className="privacy-section">
+                    <h3>2. Data Usage</h3>
+                    <p>We use data to:</p>
+                    <ul>
+                        <li>Provide matchmaking services</li>
+                        <li>Improve app performance</li>
+                        <li>Prevent fraud and misuse</li>
+                        <li>Comply with legal obligations</li>
+                    </ul>
+                </div>
+
+                <div className="privacy-section">
+                    <h3>3. Data Sharing</h3>
+                    <ul>
+                        <li>If required by law or court order</li>
+                        <li>To prevent fraud or illegal activity</li>
+                        <li>With government or law enforcement agencies</li>
+                    </ul>
+                </div>
+
+                <div className="privacy-section">
+                    <h3>4. Data Storage</h3>
                     <p>
-                        We collect account details (name, email, phone), profile information, device data, and usage analytics to
-                        provide and improve our services.
+                        Data may be stored on cloud servers inside or outside India.
+                        We use reasonable security measures but cannot guarantee 100% security.
                     </p>
                 </div>
 
                 <div className="privacy-section">
-                    <h3>2. How We Use Your Data</h3>
-                    <p>
-                        To operate the app, personalize matches, communicate updates, and ensure safety. We do not sell your data.
-                    </p>
+                    <h3>5. User Responsibility</h3>
+                    <ul>
+                        <li>Do not share sensitive data unnecessarily.</li>
+                        <li>Do not upload others’ photos without consent.</li>
+                    </ul>
                 </div>
 
                 <div className="privacy-section">
-                    <h3>3. Sharing</h3>
+                    <h3>6. Account Deletion</h3>
                     <p>
-                        We may share data with trusted vendors for hosting, analytics, and notifications. We do not share your
-                        personal contact details with other members without consent.
+                        Users may request account deletion. Backup data may be retained for legal and compliance purposes.
                     </p>
                 </div>
 
-                <div className="privacy-section">
-                    <h3>4. Security</h3>
-                    <p>
-                        We use reasonable safeguards, but no method is 100% secure. Protect your account credentials.
-                    </p>
-                </div>
-
-                <div className="privacy-section">
-                    <h3>5. Your Choices</h3>
-                    <p>
-                        You can update or delete your profile. You may opt-out of marketing communications. Some data may be retained
-                        as required by law or for legitimate interests.
-                    </p>
-                </div>
-
-                <div className="privacy-section">
-                    <h3>6. Cookies & Tracking</h3>
-                    <p>
-                        We may use cookies or similar technologies for analytics and session management.
-                    </p>
-                </div>
-
-                <div className="privacy-section">
-                    <h3>7. Children</h3>
-                    <p>
-                        The service is not intended for minors. Do not register if you are under the legal age.
-                    </p>
-                </div>
-
-                <div className="privacy-section">
-                    <h3>8. Changes</h3>
-                    <p>
-                        We may update this policy. Continued use after changes means you accept the updates.
-                    </p>
-                </div>
-
-                <div className="privacy-section">
-                    <h3>9. Contact</h3>
-                    <p>
-                        For questions, contact{" "}
-                        <a href="mailto:support@vivahjeevan.com">support@vivahjeevan.com</a>.
-                    </p>
-                </div>
             </div>
         </div>
     );

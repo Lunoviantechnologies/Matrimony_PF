@@ -2,12 +2,12 @@ import React, { useEffect, useState, useMemo } from "react";
 import "../styleSheets/profileCard.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
-import axios from "axios";
-import backendIP from "../api/api";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import ViewProfileModal from "../components/ViewProfileModal";
 import { useOutletContext, useNavigate } from "react-router-dom";
 import api from "../api/axiosInstance";
+import { FaCrown, FaUser } from "react-icons/fa";
+import { MatchCalculation } from "../utils/MatchCalculation";
 
 const MyMatches = () => {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const MyMatches = () => {
 
   const { profiles } = useSelector((state) => state.profiles);
   const { id, myProfile, role } = useSelector((state) => state.auth);
-  const { filters } = useOutletContext();
+  const { filters, sortBy } = useOutletContext();
 
   const [sentRequests, setSentRequests] = useState([]);
   const [receivedRequests, setReceivedRequests] = useState([]);
@@ -92,6 +92,19 @@ const MyMatches = () => {
     return Math.floor(ageDifMs / (365.25 * 24 * 60 * 60 * 1000));
   };
 
+  const matchWithOther = (selected, otherValue, profileValue) => {
+    if (!selected.length) return true;
+
+    if (selected.includes("Other")) {
+      return (
+        selected.includes(profileValue) ||
+        profileValue?.toLowerCase() === otherValue?.toLowerCase()
+      );
+    }
+
+    return selected.includes(profileValue);
+  };
+
   // ---- Filter profiles ----
   const filteredProfiles = useMemo(() => {
     return profiles
@@ -108,17 +121,51 @@ const MyMatches = () => {
 
           const matchprofileFor = !filters.profileFor.length || filters.profileFor.includes(p.profileFor || "");
         const matchMaritalStatus = !filters.maritalStatus.length || filters.maritalStatus.includes(p.maritalStatus || "");
-        const matchReligion = !filters.religion.length || filters.religion.includes(p.religion || "");
-        const matchCaste = !filters.caste.length || filters.caste.includes(p.subCaste || "");
-        const matchCountry = !filters.country.length || filters.country.includes(p.country || "");
-        const matchEducation = !filters.education.length || filters.education.includes(p.highestEducation || "");
-        const matchProfession = !filters.profession.length || filters.profession.includes(p.occupation || "");
+        const matchReligion = matchWithOther(filters.religion, filters.otherValues?.religion, p.religion);
+        const matchCaste = matchWithOther(filters.caste, filters.otherValues?.caste, p.subCaste);
+        const matchCountry = matchWithOther(filters.country, filters.otherValues?.country, p.country);
+        const matchProfession = matchWithOther(filters.profession, filters.otherValues?.profession, p.occupation);
+        const matchEducation = matchWithOther(filters.education, filters.otherValues?.education, p.highestEducation);
         const matchLifestyle = !filters.lifestyle.length || (p.yourHobbies ? filters.lifestyle.some(f => p.yourHobbies.includes(f)) : false);
         const matchhabbits = !filters.habbits.length || filters.habbits.includes(p.habbits || "");
 
-        return matchprofileFor && matchAge && matchMaritalStatus && matchReligion && matchCaste && matchCountry && matchEducation && matchProfession && matchLifestyle && matchhabbits;
+        const passedFilters =
+          matchAge && matchMaritalStatus && matchReligion &&
+          matchCaste && matchCountry && matchEducation &&
+          matchProfession && matchLifestyle && matchprofileFor && matchhabbits;
+
+        if (!passedFilters) return false;
+
+        // ✅ MATCH % FILTER
+        const matchPercent = MatchCalculation(myProfile, p);
+        return matchPercent >= 70;
       });
   }, [profiles, filters, allHiddenIds, myProfile, id]);
+
+  const sortedProfiles = useMemo(() => {
+    let list = [...filteredProfiles];
+
+    switch (sortBy) {
+
+      case "relevance":
+        return list.sort((a, b) => calculateMatch(myProfile, b) - calculateMatch(myProfile, a));
+
+      case "newest":
+        return list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      case "active":
+        return list.sort((a, b) => new Date(b.lastActiveAt) - new Date(a.lastActiveAt));
+
+      case "premium":
+        return list.sort((a, b) => b.premium - a.premium);
+
+      case "free":
+        return list.sort((a, b) => a.premium - b.premium);
+
+      default:
+        return list;
+    }
+  }, [filteredProfiles, sortBy]);
 
   const handleProfileCount = (userId) => {
     api.post(`profiles/record/${userId}/${id}`).then(res => {
@@ -131,7 +178,7 @@ const MyMatches = () => {
       <h2 className="profile-title">Top Matches For You</h2>
 
       <div className="profile-cards-wrapper">
-        {filteredProfiles.map((p) => {
+        {sortedProfiles.map((p) => {
           const isSent = sentIds.includes(p.id);
           return (
             <article className="profile-card" key={p.id}>
@@ -146,11 +193,23 @@ const MyMatches = () => {
                   onContextMenu={(e) => e.preventDefault()}
                 />
 
+                <div className="premium-badge">
+                  {p.premium ? (
+                    <span className="premium-icon"> <FaCrown /> </span>
+                  ) : (
+                    <span className="free-icon"> <FaUser /> free</span>
+                  )}
+                </div>
+
                 {!myProfile?.premium && (
                   <div className="premium-overlay" onClick={() => navigate("/dashboard/premium")}>
                     🔒 Upgrade to Premium
                   </div>
                 )}
+
+                <div className="match-circle">
+                  {MatchCalculation(myProfile, p)}%
+                </div>
               </div>
 
               <div className="profile-details">
@@ -166,7 +225,7 @@ const MyMatches = () => {
                     onClick={(e) => {
                       handleProfileCount(p.id);
                       setSelectedProfile(p);
-                      setAnchorRect(e.target.getBoundingClientRect());
+                      // setAnchorRect(e.target.getBoundingClientRect());
                       setShowModal(true);
                     }}
                   >

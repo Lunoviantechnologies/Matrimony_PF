@@ -147,7 +147,7 @@ const ContactUs = () => {
 
           <div className="detail-item">
             <FaEnvelope className="icon" />
-            <span>support@saathjanam.com</span>
+            <span>support@vivahjeevan.com</span>
           </div>
 
           <div className="detail-item">
@@ -161,7 +161,7 @@ const ContactUs = () => {
             <ul className="social-list">
               <li>
                 <FaEnvelope className="social-icon email" />
-                <a href="mailto:support@saathjanam.com">support@saathjanam.com</a>
+                <a href="mailto:support@vivahjeevan.com">support@vivahjeevan.com</a>
               </li>
               <li>
                 <FaTwitter className="social-icon twitter" />
@@ -171,10 +171,6 @@ const ContactUs = () => {
                 <FaFacebookF className="social-icon facebook" />
                 <a href="#">Facebook</a>
               </li>
-              {/* <li>
-                <FaLinkedinIn className="social-icon linkedin" />
-                <a href="#">LinkedIn</a>
-              </li> */}
               <li>
                 <FaInstagram className="social-icon instagram" />
                 <a href="#">Instagram</a>

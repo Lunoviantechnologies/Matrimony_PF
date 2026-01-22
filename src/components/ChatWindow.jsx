@@ -36,6 +36,7 @@ const ChatWindow = () => {
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportReason, setReportReason] = useState("");
   const [reportCategory, setReportCategory] = useState("");
+  const [isReported, setIsReported] = useState(false);
 
   const messagesEndRef = useRef(null);
   const stompClientRef = useRef(null);
@@ -101,7 +102,7 @@ const ChatWindow = () => {
       .catch(() => setOnlineStatus(false));
 
   }, [selectedUser, myId]);
-  console.log("online : ", onlineStatus);
+  // console.log("online : ", onlineStatus);
 
   // Blocked user
   useEffect(() => {
@@ -176,7 +177,7 @@ const ChatWindow = () => {
 
     try {
       const res = await api.get(`/chat/conversation/${myId}/${Number(userId)}?page=${pageNo}&size=20`);
-      console.log("chat data : ", res);
+      // console.log("chat data : ", res);
       // 🔁 Backend gives DESC → convert to ASC
       const newMessages = (res.data.content || []).reverse(); // ✅ ASC order
 
@@ -434,12 +435,12 @@ const ChatWindow = () => {
   };
 
   const getUserImageById = (id) => {
-    if (!profiles || profiles.length === 0) return "/default-avatar.png";
+    if (!profiles || profiles.length === 0) return "/placeholder_boy.png";
 
     const user = profiles.find((p) => Number(p.id) === Number(id));
 
     if (!user || !user.updatePhoto) {
-      return "/default-avatar.png";
+      return "/placeholder_boy.png";
     }
     return user.updatePhoto ? user.updatePhoto : user.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
   };
@@ -526,7 +527,7 @@ const ChatWindow = () => {
         : selectedUser.senderId;
 
     try {
-      await api.post("/report/user", {
+      const repoRes = await api.post(`/reports/user/${reportedUserId}?reporterId=${myId}&reason=${reportCategory}`, {
         reporterId: myId,
         reportedUserId,
         reason: reportCategory,
@@ -534,12 +535,15 @@ const ChatWindow = () => {
       });
 
       toast.success("User reported successfully");
-
+      console.log("report data: ", reportCategory, reportReason, reportedUserId);
+      console.log("report res: ", repoRes);
+      setIsReported(true);
       setReportReason("");
       setReportCategory("");
       setShowReportModal(false);
     } catch (err) {
-      toast.error("Failed to report user");
+      console.error("Error reporting user:", err);
+      toast.error("Failed to report user", err);
     }
   };
 
@@ -594,7 +598,7 @@ const ChatWindow = () => {
                     src={getUserImageById(otherId)}
                     alt={name}
                     className="chatlist-avatar"
-                    onError={(e) => (e.target.src = "/default-avatar.png")}
+                    onError={(e) => (e.target.src = "/placeholder_boy.png")}
                   />
                   <div>
                     <h4>{name}</h4>
@@ -620,7 +624,7 @@ const ChatWindow = () => {
                 )}
                 alt="User"
                 className="chatwindow-avatar"
-                onError={(e) => (e.target.src = "/default-avatar.png")}
+                onError={(e) => (e.target.src = "/placeholder_boy.png")}
               />
 
               <div>
@@ -714,7 +718,11 @@ const ChatWindow = () => {
         </div>
 
         <div className="chatwindow-input">
-          {blockedByMe ? (
+          {isReported ? (
+            <div className="blocked-warning">
+              This account is reported
+            </div>
+          ) : blockedByMe ? (
             <div className="blocked-warning">You have blocked this user</div>
           ) : blockedByOther ? (
             <div className="blocked-warning">You are blocked by this user</div>
@@ -738,6 +746,7 @@ const ChatWindow = () => {
             </div>
           )}
         </div>
+
       </div>
 
       <ReportUserModal

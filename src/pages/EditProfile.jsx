@@ -62,6 +62,8 @@ export default function EditProfile() {
         gender: profileData.gender || "",
         motherTongue: profileData.motherTongue || "",
         maritalStatus: profileData.maritalStatus || "",
+        religion: profileData.religion || "",
+        subCaste: profileData.subCaste || "",
         location: profileData.location || "",
         about: profileData.about || "",
         state: profileData.state || "",
@@ -73,12 +75,14 @@ export default function EditProfile() {
         height: profileData.height || "",
         weight: profileData.weight || "",
         bodyType: profileData.bodyType || "",
-        complexion: profileData.complexion || ""
+        complexion: profileData.complexion || "",
+        habbits: profileData.habbits || "",
+        vegiterian: profileData.vegiterian || "",
       },
       educationCareer: {
         highestEducation: profileData.highestEducation || "",
         collegeName: profileData.collegeName || "",
-        // employedIn: profileData.employedIn || "",
+        experience: profileData.experience || "",
         sector: profileData.sector || "",
         occupation: profileData.occupation || "",
         companyName: profileData.companyName || "",
@@ -100,14 +104,21 @@ export default function EditProfile() {
         nakshatra: profileData.nakshatra || "",
         dosham: profileData.dosham || "",
         ascendant: profileData.ascendant || "",
-        basicPlanetaryPosition: profileData.basicPlanetaryPosition || ""
+        basicPlanetaryPosition: profileData.basicPlanetaryPosition || "",
+        gothram: profileData.gothram || ""
+      },
+      hobbies: {
+        hobbies: Array.isArray(profileData.hobbies) ? profileData.hobbies : (profileData.hobbies?.split?.(",") || []),
+      },
+      spiritualPath: {
+        spiritualPath: profileData.spiritualPath || "",
       },
       partnerPrefs: {
         ageRange: profileData.partnerAgeRange || "",
         religion: profileData.partnerReligion || "",
         education: profileData.partnerEducation || "",
         work: profileData.partnerWork || "",
-        hobbies: Array.isArray(profileData.partnerHobbies) ? profileData.partnerHobbies : (profileData.partnerHobbies?.split?.(",") || [])
+        partnerHobbies: Array.isArray(profileData.partnerHobbies) ? profileData.partnerHobbies : (profileData.partnerHobbies?.split?.(",") || [])
       }
     };
 
@@ -315,6 +326,8 @@ export default function EditProfile() {
               <Row label="Weight" value={profileData.weight} />
               <Row label="Body Type" value={profileData.bodyType} />
               <Row label="Complexion" value={profileData.complexion} />
+              <Row label="Habbits" value={profileData.habbits} />
+              <Row label="Food Preference" value={profileData.vegiterian} />
             </div>
           </div>
 
@@ -329,6 +342,7 @@ export default function EditProfile() {
               <Row label="Dosham" value={profileData.dosham} />
               <Row label="Ascendant" value={profileData.ascendant} />
               <Row label="Basic planetary position" value={profileData.basicPlanetaryPosition} />
+              <Row label="Gothram" value={profileData.gothram} />
             </div>
           </div>
 
@@ -367,10 +381,10 @@ export default function EditProfile() {
               </div>
 
               <div className="right-col underlined-block">
-                <Row label="Highest Education" value={profileData.highestEducation} />
+                <Row label="Religion" value={profileData.religion} />
+                <Row label="Sub Caste" value={profileData.subCaste} />
                 <Row label="Occupation" value={profileData.occupation} />
                 <Row label="Company" value={profileData.companyName} />
-                <Row label="Experience" value={profileData.experience} />
                 <Row label="Sector" value={profileData.sector} />
                 <Row label="Sports " value={profileData.sports} />
                 <Row label="Living with Childrens" value={profileData.isChildrenLivingWithYou ? "Yes" : "No"} />
@@ -388,8 +402,8 @@ export default function EditProfile() {
               <div className="left-col underlined-block">
                 <Row label="Highest Education" value={profileData.highestEducation} />
                 <Row label="College Name" value={profileData.collegeName} />
-                {/* <Row label="Employed In" value={profileData.employedIn} /> */}
                 <Row label="Sector" value={profileData.sector} />
+                <Row label="Working Experience" value={profileData.experience} />
               </div>
               <div className="right-col underlined-block">
                 <Row label="Occupation" value={profileData.occupation} />
@@ -405,10 +419,20 @@ export default function EditProfile() {
           <div className="boxed">
             <div className="box-header red">
               Hobbies
-              <button className="edit-inline" onClick={() => openSectionModal("personal")}><FaEdit /> Edit</button>
+              <button className="edit-inline" onClick={() => openSectionModal("hobbies")}><FaEdit /> Edit</button>
             </div>
             <div className="box-body underlined-block">
               <Row label="Your Hobbies" value={(profileData.hobbies && profileData.hobbies.split?.(",")) || profileData.hobbies} />
+            </div>
+          </div>
+
+          <div className="boxed">
+            <div className="box-header red">
+              Spiritual Path
+              <button className="edit-inline" onClick={() => openSectionModal("spiritualPath")}><FaEdit /> Edit</button>
+            </div>
+            <div className="box-body underlined-block">
+              <Row label="Your spiritual Path" value={profileData.spiritualPath} />
             </div>
           </div>
 
@@ -464,6 +488,8 @@ export default function EditProfile() {
       educationCareer: "Education & Career",
       family: "Family Details",
       astro: "Astro / Religious",
+      hobbies: "Hobbies",
+      spiritualPath: "Spiritual Path",
       partnerPrefs: "Partner Preferences",
     };
     return titles[key] || "Details";
@@ -495,8 +521,22 @@ export default function EditProfile() {
               <input value={buffer.bodyType || ""} onChange={(e) => handleEditInputLocal("bodyType", e.target.value)} />
             </label>
             <label className="field"><div className="field-label">Complexion</div>
-              <input value={buffer.complexion || ""} onChange={(e) => handleEditInputLocal("complexion", e.target.value)} placeholder="Skin tone..."/>
+              <input value={buffer.complexion || ""} onChange={(e) => handleEditInputLocal("complexion", e.target.value)} placeholder="Skin tone..." />
             </label>
+            <select name="habbits" id="habbits" className="field" value={buffer.habbits || ""} onChange={(e) => handleEditInputLocal("habbits", e.target.value)}>
+              <option value="">Select Habbits</option>
+              <option value="Smoking">Smoking</option>
+              <option value="Drinking">Drinking</option>
+              <option value="Both">Both</option>
+              <option value="None">None</option>
+            </select>
+            <select name="vegiterian" id="vegiterian" className="field" value={buffer.vegiterian || ""} onChange={(e) => handleEditInputLocal("vegiterian", e.target.value)}>
+              <option value="">Select Food Preference</option>
+              <option value="Vegiterian">Vegiterian</option>
+              <option value="Non-Vegiterian">Non-Vegiterian</option>
+              <option value="Occasionally Non-Vegiterian">Occasionally Non-Vegiterian</option>
+              <option value="Eggetarian">Eggetarian</option>
+            </select>
           </div>
         );
 
@@ -534,9 +574,9 @@ export default function EditProfile() {
               <input value={buffer.collegeName || ""} onChange={(e) => handleEditInputLocal("collegeName", e.target.value)} />
             </label>
 
-            {/* <label className="field"><div className="field-label">Employed In</div>
-              <input value={buffer.employedIn || ""} onChange={(e) => handleEditInputLocal("employedIn", e.target.value)} />
-            </label> */}
+            <label className="field"><div className="field-label">Working experience</div>
+              <input value={buffer.experience || ""} onChange={(e) => handleEditInputLocal("experience", e.target.value)} />
+            </label>
 
             <label className="field"><div className="field-label">Sector</div>
               <input value={buffer.sector || ""} onChange={(e) => handleEditInputLocal("sector", e.target.value)} />
@@ -586,6 +626,9 @@ export default function EditProfile() {
             <label className="field"><div className="field-label">Basic planetary position</div>
               <textarea rows="3" value={buffer.basicPlanetaryPosition || ""} onChange={(e) => handleEditInputLocal("basicPlanetaryPosition", e.target.value)} />
             </label>
+            <label className="field"><div className="field-label">Gothram</div>
+              <input value={buffer.gothram || ""} onChange={(e) => handleEditInputLocal("gothram", e.target.value)} />
+            </label>
           </div>
         );
 
@@ -593,15 +636,15 @@ export default function EditProfile() {
         return (
           <div className="modal-form">
             <label className="field"><div className="field-label">Full Name</div>
-              <input value={buffer.fullName || `${buffer.firstName || ""} ${buffer.lastName || ""}`} onChange={(e) => handleEditInputLocal("fullName", e.target.value)} />
+              <input disabled value={buffer.fullName || `${buffer.firstName || ""} ${buffer.lastName || ""}`} onChange={(e) => handleEditInputLocal("fullName", e.target.value)} />
             </label>
 
             <label className="field"><div className="field-label">First Name</div>
-              <input value={buffer.firstName || ""} onChange={(e) => handleEditInputLocal("firstName", e.target.value)} />
+              <input value={buffer.firstName || ""} onChange={(e) => handleEditInputLocal("firstName", e.target.value)} disabled />
             </label>
 
             <label className="field"><div className="field-label">Last Name</div>
-              <input value={buffer.lastName || ""} onChange={(e) => handleEditInputLocal("lastName", e.target.value)} />
+              <input value={buffer.lastName || ""} onChange={(e) => handleEditInputLocal("lastName", e.target.value)} disabled />
             </label>
 
             <label className="field"><div className="field-label">Mobile Number</div>
@@ -618,6 +661,14 @@ export default function EditProfile() {
 
             <label className="field"><div className="field-label">Mother Tongue</div>
               <input value={buffer.motherTongue || ""} onChange={(e) => handleEditInputLocal("motherTongue", e.target.value)} />
+            </label>
+
+            <label className="field"><div className="field-label">Religion</div>
+              <input value={buffer.religion || ""} onChange={(e) => handleEditInputLocal("religion", e.target.value)} />
+            </label>
+
+            <label className="field"><div className="field-label">Sub Caste</div>
+              <input value={buffer.subCaste || ""} onChange={(e) => handleEditInputLocal("subCaste", e.target.value)} />
             </label>
 
             <label className="field"><div className="field-label">Location</div>
@@ -639,14 +690,26 @@ export default function EditProfile() {
             <label className="field"><div className="field-label">Living with Childrens</div>
               <input value={buffer.isChildrenLivingWithYou || ""} onChange={(e) => handleEditInputLocal("isChildrenLivingWithYou", e.target.value)} placeholder="If divorced or widow have childern with you type true or false..." />
             </label>
+          </div>
+        );
 
-            <div className="field">
-              <div className="field-label">Hobbies</div>
-              {(buffer.hobbies || []).map((h, i) => (
-                <input key={i} className="hobby-input" value={h} onChange={(e) => updateHobbyInBuffer("hobbies", i, e.target.value)} placeholder={`Hobby ${i + 1}`} />
-              ))}
-              <button type="button" className="add-hobby-btn" onClick={() => addHobbyToBuffer("hobbies")}><FaPlus /> Add Hobby</button>
-            </div>
+      case "hobbies":
+        return (
+          <div className="field">
+            <div className="field-label">Hobbies</div>
+            {(buffer.hobbies || []).map((h, i) => (
+              <input key={i} className="hobby-input" value={h} onChange={(e) => updateHobbyInBuffer("hobbies", i, e.target.value)} placeholder={`Hobby ${i + 1}`} />
+            ))}
+            <button type="button" className="add-hobby-btn" onClick={() => addHobbyToBuffer("hobbies")}><FaPlus /> Add Hobby</button>
+          </div>
+        );
+
+      case "spiritualPath":
+        return (
+          <div className="modal-form">
+            <label className="field"><div className="field-label">Spiritual Path</div>
+              <input value={buffer.spiritualPath || ""} onChange={(e) => handleEditInputLocal("spiritualPath", e.target.value)} />
+            </label>
           </div>
         );
 
@@ -654,7 +717,7 @@ export default function EditProfile() {
         return (
           <div className="modal-form">
             <label className="field"><div className="field-label">Age Range</div>
-              <input value={buffer.partnerAgeRange || ""} onChange={(e) => handleEditInputLocal("partnerAgeRange", e.target.value)} placeholder="type like 18 - 25 etc..."/>
+              <input value={buffer.partnerAgeRange || ""} onChange={(e) => handleEditInputLocal("partnerAgeRange", e.target.value)} placeholder="type like 18 - 25 etc..." />
             </label>
 
             <label className="field"><div className="field-label">Religion</div>

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 import "../styleSheets/Footer.css";
 
 const FOOTER_LINKS = [
@@ -25,7 +26,13 @@ const FOOTER_LINKS = [
   },
   {
     title: "Privacy & You",
-    links: ["Terms of Use", "Privacy Policy", "Be Safe Online", "Report Misuse"],
+    links: [
+      "Terms & Conditions",
+      "Privacy Policy",
+      "Refund Policy",
+      "Disclaimer",
+      "Community Guidelines",
+    ],
   },
   {
     title: "More",
@@ -39,6 +46,18 @@ const FOOTER_LINKS = [
   },
 ];
 
+const ROUTE_MAP = {
+  "Sign Up" : "/register",
+  "Customer Support" : "/contactus",
+  "About Us" : "/aboutus",
+  "Contact Us" : "/contactus",
+  "Terms & Conditions": "/terms&conditions",
+  "Privacy Policy": "/privacy_policy",
+  "Refund Policy": "/refund-policy",
+  "Disclaimer": "/disclaimer",
+  "Community Guidelines": "/community-guidelines",
+};
+
 const Footer = () => {
 
   const getSlug = (text) =>
@@ -46,22 +65,22 @@ const Footer = () => {
 
   return (
     <footer className="footer">
+
       <div className="d-flex justify-content-start">
         <div>
-          <img src="/vivahjeevan_logo.png" alt="Vivahjeevan_logo" height={'100px'} />
+          <img src="/vivahjeevan_logo.png" alt="Vivahjeevan_logo" height={"100px"} />
         </div>
 
         <div>
-          <h2 className="footer-heading">Vivahjeevan.com - Serving members worldwide</h2>
+          <h2 className="footer-heading">
+            Vivahjeevan.com - Serving members worldwide
+          </h2>
+
           <p className="footer-description">
             Viviahjeevan.com, one of India's leading matrimonial platforms, was
             founded with a simple objective — to help people find happiness. By
             redefining how Indian brides and grooms meet for marriage,
             Viviahjeevan.com continues to connect millions of people worldwide.
-            Vivahjeevan.com, one of India's leading matrimonial platforms, was
-            founded with a simple objective — to help people find happiness. By
-            redefining how Indian brides and grooms meet for marriage,
-            Vivahjeevan.com continues to connect millions of people worldwide.
           </p>
         </div>
       </div>
@@ -70,14 +89,19 @@ const Footer = () => {
         {FOOTER_LINKS.map((column) => (
           <div key={column.title} className="footer-column">
             <h3 className="footer-column-title">{column.title}</h3>
+
             <ul className="footer-list">
-              {column.links.map((link) => (
-                <li key={link}>
-                  <a href={`/${getSlug(link)}`} className="footer-link">
-                    {link}
-                  </a>
-                </li>
-              ))}
+              {column.links.map((link) => {
+                const route = ROUTE_MAP[link] || `/${getSlug(link)}`;
+
+                return (
+                  <li key={link}>
+                    <Link to={route} className="footer-link">
+                      {link}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))}
@@ -86,6 +110,7 @@ const Footer = () => {
       <div className="footer-copyright">
         &copy; {new Date().getFullYear()} Vivahjeevan.com. All Rights Reserved.
       </div>
+
     </footer>
   );
 };

@@ -53,14 +53,52 @@
 
 .logo {
     font-family: 'Lucida Handwriting', cursive;
-    font-size: 30px;
+    font-size: 40px;
     font-weight: bold;
-    color: rgb(139,69,19);
+    color: rgb(139, 69, 19);
 }
 
 /* Banner Section */
 .banner-section {
-    background: linear-gradient(135deg, rgb(15,61,46));
+    position: relative;
+    overflow: hidden;
+}
+
+/* Top Left Border */
+.banner-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 140px;
+    height: 140px;
+    background: url("/vipborder1.png") no-repeat;
+    background-size: contain;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Bottom Right Border */
+.banner-section::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 140px;
+    height: 140px;
+    background: url("/vipborder2.png") no-repeat;
+    background-size: contain;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.banner-section * {
+    position: relative;
+    z-index: 1;
+}
+
+.banner-section {
+    background: linear-gradient(135deg, rgb(15, 61, 46));
     color: white;
     padding: 25px 30px;
     text-align: center;
@@ -70,21 +108,21 @@
     margin: 0 0 10px 0;
     font-size: 24px;
     font-weight: bold;
-    color:rgb(252, 252, 252) ;
+    color: rgb(252, 252, 252);
 }
 
 .banner-section p {
     margin: 0 0 15px 0;
     font-size: 14px;
     opacity: 0.9;
-     color:rgb(252, 252, 252) ;
+    color: rgb(252, 252, 252);
 }
 
 .banner-actions {
     display: flex;
     justify-content: center;
     gap: 20px;
-     color:rgb(252, 252, 252);
+    color: rgb(252, 252, 252);
 }
 
 .banner-actions span {
@@ -94,7 +132,23 @@
     font-size: 13px;
 }
 
+@media (max-width: 768px) {
+
+    .banner-section::before,
+    .banner-section::after {
+        width: 120px;
+        height: 120px;
+    }
+}
+
 /* Compact Plans Section - All 5 in one line */
+.no-plans-message {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+    color: #888;
+}
+
 .plans-section {
     padding: 30px 20px;
     background: #f8f9fa;
@@ -175,13 +229,20 @@
 }
 
 .plan-header-compact h3 {
-    margin: 0 0 6px;
-    color: #222;
-    font-size: 16px;
-    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: #333;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
 }
 
-/* Discount badge */
+.validity-month-compact {
+    margin: 0 0 8px 0;
+    color: #333;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+}
 
 .discount-badge-compact {
     background: #2e7d32;
@@ -228,11 +289,9 @@
 
 .continue-btn-compact {
     width: 100%;
-    height: 46px;
-
+    padding: 10px;
     background: rgb(15, 61, 46);
-    color: #ffffff;
-
+    color: white;
     border: none;
     border-radius: 10px;
 
@@ -309,18 +368,48 @@
 
 /* Compact VIP Section */
 .vip-section-compact {
-    background: white;
+    position: relative;
     margin: 30px 20px;
-    padding: 30px;
+    padding: 50px 40px;
     text-align: center;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    background: #3b0d11;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #3b0d11, #5a0f1b);
     color: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* Top Left Corner */
+.vip-section-compact::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 200px;
+    background: url("/vipborder1.png") no-repeat;
+    background-size: contain;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Bottom Right Corner */
+.vip-section-compact::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: url("/vipborder2.png") no-repeat;
+    background-size: contain;
+    pointer-events: none;
+    z-index: 0;
 }
 
 .vip-badge-compact {
-    background: rgb(90,15,27);
+    background: rgb(218, 165, 32);
     color: #fefcfc;
     cursor: pointer;
     padding: 8px 18px;
@@ -329,7 +418,7 @@
     display: inline-block;
     margin-bottom: 15px;
     font-size: 14px;
-     transition: all 0.3s;
+    transition: all 0.3s;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -339,6 +428,15 @@
     margin: 0 0 20px 0;
     font-size: 20px;
     font-weight: bold;
+}
+
+@media (max-width: 768px) {
+
+    .vip-section-compact::before,
+    .vip-section-compact::after {
+        width: 200px;
+        height: 200px;
+    }
 }
 
 .vip-features-compact {
@@ -359,7 +457,7 @@
 }
 
 .consultation-btn-compact {
-    background: rgb(90,15,27);
+    background: rgb(218, 165, 32);
     color: #ffffff;
     padding: 12px 25px;
     border: none;
@@ -373,7 +471,7 @@
 }
 
 .consultation-btn-compact:hover {
-    background: rgb(90,15,27);
+    background: rgb(90, 15, 27);
     color: white;
     transform: translateY(-2px);
 }
@@ -942,8 +1040,8 @@
 
 .subscription-header {
   display: flex;
-  align-items: center;     /* vertical center */
-  gap: 10px;               /* space between logo and text */
+  align-items: center;
+  gap: 5px; 
 }
 
 .v-logo {

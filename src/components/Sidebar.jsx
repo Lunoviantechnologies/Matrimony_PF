@@ -51,7 +51,7 @@ const Sidebar = ({ filters, setFilters, onApply, onClear }) => {
         {
             title: "Education",
             category: "education",
-            options: ["B.Tech", "M.Tech", "MBA", "B.Sc", "M.Sc", "PhD"],
+            options: ["B.Tech", "M.Tech", "MBA", "B.Sc", "M.Sc", "PhD", "Other"],
         },
         {
             title: "Profession",
@@ -78,6 +78,16 @@ const Sidebar = ({ filters, setFilters, onApply, onClear }) => {
         },
     ];
 
+    const handleOtherChange = (category, value) => {
+        setFilters(prev => ({
+            ...prev,
+            otherValues: {
+                ...prev.otherValues,
+                [category]: value
+            }
+        }));
+    };
+
     return (
         <div className="sidebar">
             <h5 className="sidebar-title text-center">Search Filters</h5>
@@ -96,19 +106,35 @@ const Sidebar = ({ filters, setFilters, onApply, onClear }) => {
                 <div key={section.category} className="filter-section">
                     <h6>{section.title}</h6>
                     {section.options.map((item) => (
-                        <div key={item} className="form-check">
-                            <input
-                                className="form-check-input"
-                                type="checkbox"
-                                id={`${section.category}-${item}`}
-                                checked={filters[section.category].includes(item)}
-                                onChange={() =>
-                                    handleCheckboxChange(section.category, item)
-                                }
-                            />
-                            <label className="form-check-label" htmlFor={`${section.category}-${item}`}>
-                                {item}
-                            </label>
+                        <div key={item} className="mb-2">
+                            <div className="form-check d-flex align-items-center">
+                                <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    id={`${section.category}-${item}`}
+                                    checked={filters[section.category].includes(item)}
+                                    onChange={() =>
+                                        handleCheckboxChange(section.category, item)
+                                    }
+                                />
+                                <label className="form-check-label ms-1" htmlFor={`${section.category}-${item}`}>
+                                    {item}
+                                </label>
+                            </div>
+
+                            {item === "Other" && filters[section.category].includes("Other") && (
+                                <div className="mt-1">
+                                    <input
+                                        type="text"
+                                        className="form-control other-input"
+                                        placeholder={`Enter ${section.title}`}
+                                        value={filters.otherValues?.[section.category] || ""}
+                                        onChange={(e) =>
+                                            handleOtherChange(section.category, e.target.value)
+                                        }
+                                    />
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>
