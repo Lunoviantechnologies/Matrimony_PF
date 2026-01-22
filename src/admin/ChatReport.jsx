@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../api/axiosInstance";
 import ChatReportModal from "./ChatReportModal";
+import { toast } from "react-toastify";
 
 const ChatReport = () => {
 
@@ -12,25 +13,24 @@ const ChatReport = () => {
     }, []);
 
     const fetchReports = () => {
-        api.get("/reports/GetAll")
+        api.get("/admin/reports/GetAll")
             .then(res => setChatReport(res.data))
             .catch(err => console.error(err));
     };
 
-    const handleStatusUpdate = async (id, status) => {
+    const handleApprove = async (id) => {
         try {
-            await api.put(`/reports/updateStatus/${id}`, { status });
+            await api.delete(`/admin/delete-profile/${id}`, {status: "APPROVED"});
 
             setChatReport(prev =>
                 prev.map(r =>
-                    r.id === id ? { ...r, status } : r
+                    r.id === id ? { ...r, status: "APPROVED" } : r
                 )
             );
-
-            alert(`Report ${status}`);
+            toast.success(`Report approved`);
         } catch (error) {
             console.error(error);
-            alert("Update failed");
+            toast.error("Approval failed");
         }
     };
 
@@ -99,7 +99,7 @@ const ChatReport = () => {
                                     <button
                                         className="btn btn-sm btn-outline-success me-2"
                                         disabled={item.status !== "PENDING"}
-                                        onClick={() => handleStatusUpdate(item.id, "APPROVED")}
+                                        onClick={() => handleApprove(item.id)}
                                     >
                                         Approve
                                     </button>
@@ -107,7 +107,7 @@ const ChatReport = () => {
                                     <button
                                         className="btn btn-sm btn-danger"
                                         disabled={item.status !== "PENDING"}
-                                        onClick={() => handleStatusUpdate(item.id, "REJECTED")}
+                                        onClick={() => handleReject(item.id)}
                                     >
                                         Reject
                                     </button>

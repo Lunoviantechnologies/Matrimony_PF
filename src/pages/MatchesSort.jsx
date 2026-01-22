@@ -11,6 +11,8 @@ const MatchesSort = ({ sortBy, setSortBy }) => {
             <option value="relevance">Relevance</option>
             <option value="newest">Newest First</option>
             <option value="active">Recently Active</option>
+            <option value="premium">Premium</option>
+            <option value="free">Free</option>
         </select>
     );
 };

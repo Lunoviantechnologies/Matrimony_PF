@@ -177,7 +177,7 @@ const ChatWindow = () => {
 
     try {
       const res = await api.get(`/chat/conversation/${myId}/${Number(userId)}?page=${pageNo}&size=20`);
-      console.log("chat data : ", res);
+      // console.log("chat data : ", res);
       // 🔁 Backend gives DESC → convert to ASC
       const newMessages = (res.data.content || []).reverse(); // ✅ ASC order
 

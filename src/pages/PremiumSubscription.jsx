@@ -149,20 +149,26 @@ function PremiumSubscription() {
         order_id: razorpayOrderId,
 
         handler: async function (response) {
+          const festivalActive = isFestivalActive(plan);
+          const finalAmount = calculateDiscountedPrice(
+            festivalActive ? plan.festivalPrice : plan.priceRupees,
+            plan
+          );
+
+          navigate("/payment-success", {
+            state: {
+              planId: plan.planCode,
+              planName: plan.planName,
+              amount: finalAmount
+            }
+          });
+
           await axios.post(`${backendIP}/payment/verify`, {
             razorpay_order_id: response.razorpay_order_id,
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_signature: response.razorpay_signature
           }
           );
-
-          navigate("/payment-success", {
-            state: {
-              planId: plan.id,
-              planName: plan.planName,
-              amount: plan.priceRupees
-            }
-          });
         },
 
         theme: { color: "#e91e63" }
@@ -252,7 +258,7 @@ function PremiumSubscription() {
       {/* <Outlet /> */}
       <div className="premium-subscription-container">
         <header className="subscription-header">
-          <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" className='v-logo'/>
+          <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" className='v-logo' />
           <div className="logo">Vivahjeevan</div>
         </header>
 
