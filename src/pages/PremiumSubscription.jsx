@@ -246,21 +246,72 @@ function PremiumSubscription() {
 
   const platinumFestivalActive = platinumPlan && isFestivalActive(platinumPlan);
   const platinumCountdown = platinumFestivalActive && getFestivalCountdown(platinumPlan);
+  const planMetaMap = {
+  BASIC: {
+    contacts: "0",
+    chat: "Limited",
+    astro: "No",
+    rm: "No",
+    benefit: "Profile creation, browse profiles"
+  },
+  GOLD: {
+    contacts: "30",
+    chat: "Yes",
+    astro: "No",
+    rm: "No",
+    benefit: "Full profile view, standard visibility"
+  },
+  GOLD_PLUS: {
+    contacts: "60",
+    chat: "Yes",
+    astro: "No",
+    rm: "No",
+    benefit: "Advanced search, higher visibility"
+  },
+  DIAMOND: {
+    contacts: "80",
+    chat: "Yes",
+    astro: "Basic (Auto)",
+    rm: "No",
+    benefit: "Profile boost, priority listing"
+  },
+  DIAMOND_PLUS: {
+    contacts: "150",
+    chat: "Yes",
+    astro: "Assisted",
+    rm: "Yes",
+    benefit: "Manual profile review"
+  },
+  PLATINUM: {
+    contacts: "300",
+    chat: "Yes",
+    astro: "Advanced (1:1)",
+    rm: "Yes",
+    benefit: "Senior RM, top visibility"
+  }
+};
+
+const getPlanMeta = (planCode = "") => {
+  if (planCode.includes("PLATINUM")) return planMetaMap.PLATINUM;
+  if (planCode.includes("DIAMOND_PLUS")) return planMetaMap.DIAMOND_PLUS;
+  if (planCode.includes("DIAMOND")) return planMetaMap.DIAMOND;
+  if (planCode.includes("GOLD_PLUS")) return planMetaMap.GOLD_PLUS;
+  if (planCode.includes("GOLD")) return planMetaMap.GOLD;
+  return planMetaMap.BASIC;
+};
+
 
   return (
     <div>
       {/* <Outlet /> */}
       <div className="premium-subscription-container">
         <header className="subscription-header">
-<<<<<<< HEAD
           <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" className='v-logo'/>
           <div className="logo">Vivahjeevan</div>
-=======
           <div className="logo">
             <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" width={'50px'} />
             Vivahjeevan
           </div>
->>>>>>> 8daf26a0cf14f507857f169e5f71e9e32f70e0d0
         </header>
 
         <div className="banner-section">
@@ -358,6 +409,39 @@ function PremiumSubscription() {
                   >
                     Continue
                   </button>
+                                              {(() => {
+                          const meta = getPlanMeta(plan.planCode);
+                          return (
+                            <div className="plan-below-continue">
+
+                              <div className="plan-info-line">
+                                📞 <strong>Contacts:</strong> {meta.contacts} / month
+                              </div>
+
+                              <div className="plan-info-line">
+                                💬 <strong>Chat:</strong> {meta.chat}
+                              </div>
+
+                              <div className="plan-info-line">
+                                🔮 <strong>Astro Support:</strong> {meta.astro}
+                              </div>
+
+                              <div className="plan-info-line">
+                                🤝 <strong>Relationship Manager:</strong> {meta.rm}
+                              </div>
+
+                              <div className="plan-benefit-text">
+                                ⭐ {meta.benefit}
+                              </div>
+
+                              <div className="plan-warning-text">
+                                ⚠️ Contacts once viewed cannot be reversed or refunded
+                              </div>
+
+                            </div>
+                          );
+                        })()}
+                              
 
                   <div className="auto-renewal-compact">
                     Auto-renews on expiry

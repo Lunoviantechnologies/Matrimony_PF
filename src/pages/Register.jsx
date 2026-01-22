@@ -22,8 +22,11 @@ const initialValues = {
   dateOfBirth: "",
   age: "",
   religion: "",
-  caste: "",
+  // caste: "",
   subCaste: "",
+  subCasteOther: "",
+  gothra: "",
+  gothraOther: "",
   motherTongue: "",
   country: "",
   city: "",
@@ -105,11 +108,13 @@ Yup.object({
 
 
   // STEP 3
-  Yup.object({
-    religion: Yup.string().required("Religion is required"),
-    caste: Yup.string().required("Caste is required"),
-    subCaste: Yup.string().required("Sub-Caste is required"),
-  }),
+Yup.object({
+  religion: Yup.string().required("Religion is required"),
+  // caste: Yup.string().required("Caste is required"),
+  subCaste: Yup.string().required("Sub-Community is required"),
+  gothra: Yup.string().required("Gothra is required"),
+}),
+
 
   // STEP 4
   Yup.object({
@@ -169,6 +174,73 @@ const calculateAge = (day, month, year) => {
 
   return age >= 0 ? age : "";
 };
+/* ---------------- SUB COMMUNITY LIST ---------------- */
+const subCommunityList = [
+  "Ayodhi",
+  "Bhoomanchi Reddy",
+  "Chowdary",
+  "Desuru",
+  "Gandla",
+  "Ganjam",
+  "Gone Kapu",
+  "Gudati",
+  "Kapu",
+  "Motati",
+  "Palle",
+  "Palnati",
+  "Panta",
+  "Pedakanti",
+  "Poknati",
+  "Reddiyar",
+  "Sajjana",
+  "Vanni",
+  "Velanati",
+  "Others"
+];
+
+/* ---------------- GOTHRA LIST ---------------- */
+const gothraList = [
+  "Aatharvas","Agasthi","Ahabhunasa","Airan","Alampayana","Angiras",
+  "Arrishinimi","Athreyasya / Athreyasa","Atri","Attarishi","Aukshanas",
+  "Aushanas","Babrahvya","Badarayana","Baijvayas","Bansal","Bashan",
+  "Bhandal","Bharadwaj","Bhargava / Bhargav","Bhasyan","Bhrigu",
+  "Bindal","Birthare","Bodhaaynas","Chandratri","Chikithasa",
+  "Chyavanasa","Daksa","Dalabhya","Darbhas","Devrata","Dhananjaya",
+  "Dhanvantri","Dhara Gautam","Dharan","Dharanas","Dixit",
+  "Duttatreyas","Galiva","Ganganas","Gangyanas","Gardhmukh Sandilya",
+  "Garg","Garga / Gargya","Gargya Sainasa","Gautam / Gouthama",
+  "Ghrit Kaushika","Gowri Veetham","Goyal","Goyan",
+  "Haritasya / Harithasa / Haritha","Jaiminiyas","Jamadagni",
+  "Jatukarna","Jindal","Kaakavas","Kabi","Kalabouddasa",
+  "Kalpangeerasa","Kamakayana Vishwamitra","Kamsa","Kanav","Kansal",
+  "Kanva","Kapi","Kapila Baradwaj","Kapinjal","Kapishthalas",
+  "Kaplish","Kashish","Kashyapa / Kaashyapa","Katyayan / Katyan",
+  "Kaundinya / Koundanya / Kaundilya","Kaunsa","Kaushal",
+  "Kaushika / Kaushik / Kausikasa","Keshoryas",
+  "Koushika Visvamitrasa","Krishnatrey","Kucchal","Kusa",
+  "Kutsa / Kutsas / Kutsasa","Laakshmanas","Laugakshi","Lavania",
+  "Lodwan","Lohit","Lokaakhyas","Lomasha","Madelia","Madhukul",
+  "Maitraya","Manava","Mandavya","Mangal","Marica","Markendeya",
+  "Maudlas","Maunas","Mihir","Mittal","Moudgalya","Mouna Bhargava",
+  "Munish","Mythravaruna","Naagal","Nagasya","Naidrupa Kashyapa",
+  "Narayanas","Nithyandala","Paaniyas","Pachori","Paing",
+  "Parashar / Parashara","Parthivasa","Paulastya","Poothamanasa",
+  "Pourugutsa","Prachinas","Raghuvanshi","Rajoria","Rathitar",
+  "Rohinya","Rohita","Sakalya","Sakhyanasa","Salankayanasa",
+  "Sankash","Sankha-Pingala-Kausta","Sankrut","Sankyanasa",
+  "Savanaka","Savarana / Sabarna / Savarna / Sraborno","Shaalaksha",
+  "Shadamarshana / Shatamarshanam","Shakhanas","Shalavatsa",
+  "Shandilya / Sandilyasa","Sharkaras","Sharkvas","Shaunak",
+  "Shravanesya","Shrimukh Shandilya","Shukla Atreyas","Sigidha",
+  "Singhal","Sri Vatsa / Vatsa / Vats / Vacchas",
+  "Srungi Bharadwajasa","Suparnasa","Swathantra Kapisa","Tayal",
+  "Tharakayanam","Thingal","Titwal","Tushar","Udbahu","Udhalaka",
+  "Uditha Gautham","Udithya","Upamanyu Vasishtasa","Upamanyu",
+  "Upathya","Vadoola / Vadulasa","Vainya","Vardheyasa","Vashishtha",
+  "Veethahavya","Vishnordhageerasa","Vishnu Vridhha","Vishwamitra",
+  "Yaska","Don’t know"
+];
+
 
 
 const Register = () => {
@@ -244,7 +316,7 @@ const Register = () => {
       age: values.age ? Number(values.age) : null,
       dateOfBirth: dateOfBirthStr || null,
       religion: values.religion || null,
-      caste: values.caste || null,
+      // caste: values.caste || null,
       subCaste: values.subCaste || null,
       motherTongue: values.motherTongue || null,
       country: values.country || null,
@@ -512,64 +584,105 @@ const Register = () => {
 
 
       /* ---------------------- STEP 3 ----------------------- */
-      case 3:
-        return (
-          <>
-            <div className="step-icon"><FaBookOpen /></div>
-            <h2>Religion & Community</h2>
+  case 3:
+  return (
+    <>
+      <div className="step-icon"><FaBookOpen /></div>
+      <h2>Religion & Community</h2>
 
-            <Field as="select" name="religion" className="form-select">
-              <option value="" disabled>Select your Religion</option>
-              <option value="Hindu">Hindu</option>
-              <option value="Muslim">Muslim</option>
-              <option value="Christian">Christian</option>
-              <option value="Sikh">Sikh</option>
-              <option value="Jain">Jain</option>
-              <option value="Buddhist">Buddhist</option>
-              <option value="Jewish">Jewish</option>
-            </Field>
+      {/* Religion */}
+      <Field as="select" name="religion" className="form-select">
+        <option value="" disabled>Select Religion</option>
+        <option value="Hindu">Hindu</option>
+        <option value="Muslim">Muslim</option>
+        <option value="Christian">Christian</option>
+        <option value="Sikh">Sikh</option>
+        <option value="Jain">Jain</option>
+        <option value="Buddhist">Buddhist</option>
+      </Field>
+      <ErrorMessage name="religion" component="div" className="error-text" />
 
-            <ErrorMessage name="religion" component="div" className="error-text" />
+      {/* Mother Tongue */}
+      <Field as="select" name="motherTongue" className="form-select">
+        <option value="" disabled>Select Mother Tongue</option>
+        <option value="Telugu">Telugu</option>
+        <option value="Hindi">Hindi</option>
+        <option value="Tamil">Tamil</option>
+        <option value="Kannada">Kannada</option>
+        <option value="English">English</option>
+      </Field>
 
-            <Field as="select" name="motherTongue" className="form-select">
-              <option value="" disabled>Select your Mother Tongue</option>
-              {/* Major Indian Languages */}
-              <option value="Hindi">Hindi</option>
-              <option value="Bengali">Bengali</option>
-              <option value="Telugu">Telugu</option>
-              <option value="Marathi">Marathi</option>
-              <option value="Tamil">Tamil</option>
-              <option value="Urdu">Urdu</option>
-              <option value="Gujarati">Gujarati</option>
-              <option value="Kannada">Kannada</option>
-              <option value="Odia">Odia</option>
-              <option value="Malayalam">Malayalam</option>
-              <option value="Punjabi">Punjabi</option>
-              <option value="Assamese">Assamese</option>
-              <option value="Konkani">Konkani</option>
-              <option value="Sindhi">Sindhi</option>
-              <option value="Nepali">Nepali</option>
-              <option value="Kashmiri">Kashmiri</option>
-              <option value="Manipuri">Manipuri</option>
-              <option value="English">English</option>
-            </Field>
+      {/* Caste */}
+      {/* <Field as="select" name="caste" className="form-select">
+        <option value="" disabled>Select Caste</option>
+        <option value="BC">BC</option>
+        <option value="OC">OC</option>
+        <option value="SC & ST">SC & ST</option>
+        <option value="OBC">OBC</option>
+      </Field>
+      <ErrorMessage name="caste" component="div" className="error-text" /> */}
 
-            <ErrorMessage name="motherTongue" component="div" className="error-text" />
+      {/* ---------------- SUB COMMUNITY ---------------- */}
+      <Field
+        as="select"
+        name="subCaste"
+        className="form-select"
+        onChange={(e) => {
+          setFieldValue("subCaste", e.target.value);
+          if (e.target.value !== "Others") {
+            setFieldValue("subCasteOther", "");
+          }
+        }}
+      >
+        <option value="" disabled>Select Sub-Community</option>
+        {subCommunityList.map((sc) => (
+          <option key={sc} value={sc}>{sc}</option>
+        ))}
+        <option value="Others">Others</option>
+      </Field>
+      <ErrorMessage name="subCaste" component="div" className="error-text" />
 
-            <Field as="select" name="caste" className="form-select">
-              <option value="" disabled>Select your Caste</option>
-              <option value={"BC"}>BC</option>
-              <option value={"OC"}>OC</option>
-              <option value={"SC & ST"}>SC & ST</option>
-              <option value={"OBC"}>OBC</option>
-            </Field>
+      {/* Sub Community Other */}
+      {values.subCaste === "Others" && (
+        <Field
+          name="subCasteOther"
+          className="form-input"
+          placeholder="Enter Sub-Community"
+        />
+      )}
 
-            <ErrorMessage name="caste" component="div" className="error-text" />
+      {/* ---------------- GOTHRA ---------------- */}
+      <Field
+        as="select"
+        name="gothra"
+        className="form-select"
+        onChange={(e) => {
+          setFieldValue("gothra", e.target.value);
+          if (e.target.value !== "Others" && e.target.value !== "Dont know") {
+            setFieldValue("gothraOther", "");
+          }
+        }}
+      >
+        <option value="" disabled>Select Gothra</option>
+        {gothraList.map((g) => (
+          <option key={g} value={g}>{g}</option>
+        ))}
+        <option value="Others">Others</option>
+        <option value="Dont know">Dont know</option>
+      </Field>
+      <ErrorMessage name="gothra" component="div" className="error-text" />
 
-            <Field name="subCaste" className="form-input" placeholder="Sub-community *" />
-            <ErrorMessage name="subCaste" component="div" className="error-text" />
-          </>
-        );
+      {/* Gothra Other */}
+      {(values.gothra === "Others" || values.gothra === "Dont know") && (
+        <Field
+          name="gothraOther"
+          className="form-input"
+          placeholder="Enter Gothra"
+        />
+      )}
+    </>
+  );
+
 
       /* ---------------------- STEP 4 ----------------------- */
       case 4:

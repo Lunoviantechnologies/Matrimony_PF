@@ -113,6 +113,7 @@ const NewMatches = () => {
           return age >= min && age <= max;
         });
 
+           const matchprofileFor = !filters.profileFor.length || filters.profileFor.includes(p.profileFor || "");
         const matchMaritalStatus = !filters.maritalStatus.length || filters.maritalStatus.includes(p.maritalStatus || "");
         const matchReligion = !filters.religion.length || filters.religion.includes(p.religion || "");
         const matchCaste = !filters.caste.length || filters.caste.includes(p.subCaste || "");
@@ -120,8 +121,9 @@ const NewMatches = () => {
         const matchEducation = !filters.education.length || filters.education.includes(p.highestEducation || "");
         const matchProfession = !filters.profession.length || filters.profession.includes(p.occupation || "");
         const matchLifestyle = !filters.lifestyle.length || (p.yourHobbies ? filters.lifestyle.some(f => p.yourHobbies.includes(f)) : false);
+        const matchhabbits = !filters.habbits.length || filters.habbits.includes(p.habbits || "");
 
-        return matchAge && matchMaritalStatus && matchReligion && matchCaste && matchCountry && matchEducation && matchProfession && matchLifestyle;
+        return matchprofileFor && matchAge && matchMaritalStatus && matchReligion && matchCaste && matchCountry && matchEducation && matchProfession && matchLifestyle && matchhabbits;
       });
   }, [profiles, filters, allHiddenIds, myProfile, id]);
   console.log("filtered Profiles in Dashboard:", filteredProfiles);

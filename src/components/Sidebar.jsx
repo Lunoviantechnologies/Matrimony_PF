@@ -18,6 +18,12 @@ const Sidebar = ({ filters, setFilters, onApply, onClear }) => {
 
     const sections = [
         {
+            title:"CreatedBy",
+            category:"profileFor",
+            options:["myself", "My Son","My Daughter","My Brother","My Sister","My Friend","My Relative"]
+
+        },
+        {
             title: "Age",
             category: "age",
             options: ["18-25", "26-30", "31-35", "36-40", "40+"],
@@ -63,7 +69,12 @@ const Sidebar = ({ filters, setFilters, onApply, onClear }) => {
         {
             title: "Lifestyle",
             category: "lifestyle",
-            options: ["Vegetarian", "Non-Vegetarian", "Occasionally Non-Veg"],
+            options: ["Vegetarian", "Non-Vegetarian", "Occasionally Non-Veg","Eggtarian"],
+        },
+         {
+            title: "Habbits",
+            category: "habbits",
+            options: ["Smoking","Drinking","Both","None"],
         },
     ];
 

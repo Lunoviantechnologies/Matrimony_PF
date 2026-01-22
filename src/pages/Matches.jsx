@@ -3,6 +3,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 
 const EMPTY_FILTERS = {
+    profileFor:[],
     age: [],
     maritalStatus: [],
     religion: [],
@@ -11,6 +12,7 @@ const EMPTY_FILTERS = {
     education: [],
     profession: [],
     lifestyle: [],
+     habbits: [],
 };
 
 const Matches = () => {
