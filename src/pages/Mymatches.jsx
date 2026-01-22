@@ -148,7 +148,7 @@ const MyMatches = () => {
     switch (sortBy) {
 
       case "relevance":
-        return list.sort((a, b) => calculateMatch(myProfile, b) - calculateMatch(myProfile, a));
+        return list.sort((a, b) =>  MatchCalculation(myProfile, b) -  MatchCalculation(myProfile, a));
 
       case "newest":
         return list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
