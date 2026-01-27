@@ -20,12 +20,10 @@ const ChatReport = () => {
 
     const handleApprove = async (id) => {
         try {
-            await api.delete(`/admin/delete-profile/${id}`, {status: "APPROVED"});
+            await api.delete(`/admin/${id}/backup-delete`);
 
             setChatReport(prev =>
-                prev.map(r =>
-                    r.id === id ? { ...r, status: "APPROVED" } : r
-                )
+                prev.filter(r => r.id !== id)
             );
             toast.success(`Report approved`);
         } catch (error) {
@@ -33,6 +31,22 @@ const ChatReport = () => {
             toast.error("Approval failed");
         }
     };
+
+    const handleReject = (id) => {
+        api.put(`/admin/reports/${id}/reject`)
+            .then(() => {
+                setChatReport(prev =>
+                    prev.filter(r => r.id !== id)
+                );
+                toast.success("Report rejected");
+            })
+            .catch(err => {
+                console.error(err);
+                toast.error("Rejection failed");
+            });
+    };
+
+    console.log("Chat Reports:", chatReport);
 
     return (
         <div className="container mt-4">
@@ -43,77 +57,85 @@ const ChatReport = () => {
                 <table className="table table-bordered table-hover align-middle text-center">
                     <thead>
                         <tr>
-                            <th style={{backgroundColor: "#00695C", color: "white", textAlign: "center"}}>S.No</th>
-                            <th style={{backgroundColor: "#00695C", color: "white", textAlign: "center"}}>Reason</th>
-                            <th style={{backgroundColor: "#00695C", color: "white", textAlign: "center"}}>Description</th>
-                            <th style={{backgroundColor: "#00695C", color: "white", textAlign: "center"}}>Reported User</th>
-                            <th style={{backgroundColor: "#00695C", color: "white", textAlign: "center"}}>Reporter</th>
-                            <th style={{backgroundColor: "#00695C", color: "white", textAlign: "center"}}>Status</th>
-                            <th style={{backgroundColor: "#00695C", color: "white", textAlign: "center"}}>Reported At</th>
-                            <th style={{backgroundColor: "#00695C", color: "white", textAlign: "center"}}>Chat</th>
-                            <th style={{backgroundColor: "#00695C", color: "white", textAlign: "center"}}>Action</th>
+                            <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}>S.No</th>
+                            <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}>Reason</th>
+                            <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}>Description</th>
+                            <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}>Reported User</th>
+                            <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}>Reporter</th>
+                            <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}>Status</th>
+                            <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}>Reported At</th>
+                            <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}>Chat</th>
+                            <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}>Action</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        {chatReport.map((item, index) => (
-                            <tr key={item.id}>
-                                <td>{index + 1}</td>
-                                <td className="text-danger fw-semibold">{item.reason}</td>
-                                <td>{item.description}</td>
+                        {
+                            chatReport.length === 0 ? (
+                                <tr>
+                                    <td colSpan="9">No reports found.</td>
+                                </tr>
+                            ) : (
+                                chatReport.map((item, index) => (
+                                    <tr key={item.id}>
+                                        <td>{index + 1}</td>
+                                        <td className="text-danger fw-semibold">{item.reason}</td>
+                                        <td>{item.description}</td>
 
-                                <td>
-                                    {item.reportedUser.firstName} {item.reportedUser.lastName}
-                                    <br />
-                                    <small className="text-muted">id: {item.reportedUser.id}</small>
-                                </td>
-                                <td>
-                                    {item.reporter.firstName} {item.reporter.lastName}
-                                    <br />
-                                    <small className="text-muted">id: {item.reporter.id}</small>
-                                </td>
+                                        <td>
+                                            {item.reportedUser.firstName} {item.reportedUser.lastName}
+                                            <br />
+                                            <small className="text-muted">id: {item.reportedUser.id}</small>
+                                        </td>
+                                        <td>
+                                            {item.reporter.firstName} {item.reporter.lastName}
+                                            <br />
+                                            <small className="text-muted">id: {item.reporter.id}</small>
+                                        </td>
 
-                                <td>
-                                    <span className={`badge ${item.status === "PENDING" ? "bg-warning text-dark"
-                                            : item.status === "APPROVED" ? "bg-success"
-                                                : "bg-danger"
-                                        }`}>
-                                        {item.status}
-                                    </span>
-                                </td>
+                                        <td>
+                                            <span className={`badge ${item.status === "PENDING" ? "bg-warning text-dark"
+                                                : item.status === "APPROVED" ? "bg-success"
+                                                    : "bg-danger"
+                                                }`}>
+                                                {item.status}
+                                            </span>
+                                        </td>
 
-                                <td>{new Date(item.reportedAt).toLocaleString()}</td>
+                                        <td>{new Date(item.reportedAt).toLocaleString()}</td>
 
-                                <td>
-                                    <button
-                                        className="btn btn-sm btn-outline-primary"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#viewModal"
-                                        onClick={() => setSelectedReport(item)}
-                                    >
-                                        View
-                                    </button>
-                                </td>
+                                        <td>
+                                            <button
+                                                className="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#viewModal"
+                                                onClick={() => setSelectedReport(item)}
+                                            >
+                                                View
+                                            </button>
+                                        </td>
 
-                                <td>
-                                    <button
-                                        className="btn btn-sm btn-outline-success me-2"
-                                        disabled={item.status !== "PENDING"}
-                                        onClick={() => handleApprove(item.id)}
-                                    >
-                                        Approve
-                                    </button>
+                                        <td>
+                                            <button
+                                                className="btn btn-sm btn-outline-success me-2"
+                                                disabled={item.status !== "PENDING"}
+                                                onClick={() => handleApprove(item.reportedUser.id)}
+                                            >
+                                                Approve
+                                            </button>
 
-                                    <button
-                                        className="btn btn-sm btn-danger"
-                                        disabled={item.status !== "PENDING"}
-                                        onClick={() => handleReject(item.id)}
-                                    >
-                                        Reject
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                                            <button
+                                                className="btn btn-sm btn-danger"
+                                                disabled={item.status !== "PENDING"}
+                                                onClick={() => handleReject(item.id)}
+                                            >
+                                                Reject
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )
+                        }
                     </tbody>
                 </table>
             </div>
