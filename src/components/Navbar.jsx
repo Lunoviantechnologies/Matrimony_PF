@@ -4,51 +4,60 @@ import UserNavbar from "./UserNavbar";
 import Login from "../pages/Login";
 import { useState } from "react";
 import AdminNavbar from "../admin/AdminNavbar";
+import { FaBars } from "react-icons/fa";
 
 const Navbar = () => {
     const navigate = useNavigate();
     const { isLoggedIn, role } = useSelector(state => state.auth);
     const [showLogin, setShowLogin] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     const handleDashboard = () => {
-        if (role[0] === "USER") {
-            navigate("/dashboard");
-        } else if (role[0] === "ADMIN") {
-            navigate("/admin");
-        }
+        if (role[0] === "USER") navigate("/dashboard");
+        else if (role[0] === "ADMIN") navigate("/admin");
     };
 
     return (
-        <nav className="navBody sticky-top container w-75 d-flex justify-content-between align-items-center">
-            <img src="/vivahjeevan_logo.png" height="70" width="70" onClick={handleDashboard} />
+        <nav className="navBody container w-75">
 
-            <div className="d-flex gap-4 align-items-center">
+            <div className="navInner">
 
-                {/* 🔓 PUBLIC NAVBAR (NOT LOGGED IN) */}
-                {!isLoggedIn && (
-                    <>
-                        <Link className="navLink" to="/">Home</Link>
-                        <Link className="navLink" to="/aboutUs">About Us</Link>
-                        <Link className="navLink" to="/contactUs">Contact Us</Link>
+                <img
+                    src="/vivahjeevan_logo.png"
+                    height="60"
+                    width="60"
+                    onClick={handleDashboard}
+                    className="logo"
+                />
 
-                        {/* ✅ LOGIN BUTTON */}
-                        <button className="navLogin" onClick={() => setShowLogin(true)} >
-                            Login
-                        </button>
-                        <button className="navLogin" onClick={() => navigate('/register')} >
-                            Sign Up
-                        </button>
-                    </>
-                )}
+                {/* Hamburger */}
+                <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+                    <FaBars />
+                </div>
 
-                {/* 👤 USER NAVBAR */}
-                {isLoggedIn && role[0] === "USER" && <UserNavbar />}
+                <div className={`navMenu ${menuOpen ? "show" : ""}`}>
 
-                {/* 🛠 ADMIN NAVBAR */}
-                {isLoggedIn && role[0] === "ADMIN" && <AdminNavbar />}
+                    {!isLoggedIn && (
+                        <>
+                            <Link className="navLink" to="/" onClick={() => setMenuOpen(false)}>Home</Link>
+                            <Link className="navLink" to="/aboutUs" onClick={() => setMenuOpen(false)}>About Us</Link>
+                            <Link className="navLink" to="/contactUs" onClick={() => setMenuOpen(false)}>Contact Us</Link>
+
+                            <button className="navAuthBtn" onClick={() => setShowLogin(true)}>
+                                Login
+                            </button>
+
+                            <button className="navAuthBtn" onClick={() => navigate('/register')}>
+                                Sign Up
+                            </button>
+                        </>
+                    )}
+
+                    {isLoggedIn && role[0] === "USER" && <UserNavbar />}
+                    {isLoggedIn && role[0] === "ADMIN" && <AdminNavbar />}
+                </div>
             </div>
 
-            {/* LOGIN MODAL */}
             <Login show={showLogin} onClose={() => setShowLogin(false)} />
         </nav>
     );

@@ -149,20 +149,26 @@ function PremiumSubscription() {
         order_id: razorpayOrderId,
 
         handler: async function (response) {
+          const festivalActive = isFestivalActive(plan);
+          const finalAmount = calculateDiscountedPrice(
+            festivalActive ? plan.festivalPrice : plan.priceRupees,
+            plan
+          );
+
+          navigate("/payment-success", {
+            state: {
+              planId: plan.planCode,
+              planName: plan.planName,
+              amount: finalAmount
+            }
+          });
+
           await axios.post(`${backendIP}/payment/verify`, {
             razorpay_order_id: response.razorpay_order_id,
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_signature: response.razorpay_signature
           }
           );
-
-          navigate("/payment-success", {
-            state: {
-              planId: plan.id,
-              planName: plan.planName,
-              amount: plan.priceRupees
-            }
-          });
         },
 
         theme: { color: "#e91e63" }
@@ -246,27 +252,74 @@ function PremiumSubscription() {
 
   const platinumFestivalActive = platinumPlan && isFestivalActive(platinumPlan);
   const platinumCountdown = platinumFestivalActive && getFestivalCountdown(platinumPlan);
+  const planMetaMap = {
+  BASIC: {
+    contacts: "0",
+    chat: "Limited",
+    astro: "No",
+    rm: "No",
+    benefit: "Profile creation, browse profiles"
+  },
+  GOLD: {
+    contacts: "30",
+    chat: "Yes",
+    astro: "No",
+    rm: "No",
+    benefit: "Full profile view, standard visibility"
+  },
+  GOLD_PLUS: {
+    contacts: "60",
+    chat: "Yes",
+    astro: "No",
+    rm: "No",
+    benefit: "Advanced search, higher visibility"
+  },
+  DIAMOND: {
+    contacts: "80",
+    chat: "Yes",
+    astro: "Basic (Auto)",
+    rm: "No",
+    benefit: "Profile boost, priority listing"
+  },
+  DIAMOND_PLUS: {
+    contacts: "150",
+    chat: "Yes",
+    astro: "Assisted",
+    rm: "Yes",
+    benefit: "Manual profile review"
+  },
+  PLATINUM: {
+    contacts: "300",
+    chat: "Yes",
+    astro: "Advanced (1:1)",
+    rm: "Yes",
+    benefit: "Senior RM, top visibility"
+  }
+};
+
+const getPlanMeta = (planCode = "") => {
+  if (planCode.includes("PLATINUM")) return planMetaMap.PLATINUM;
+  if (planCode.includes("DIAMOND_PLUS")) return planMetaMap.DIAMOND_PLUS;
+  if (planCode.includes("DIAMOND")) return planMetaMap.DIAMOND;
+  if (planCode.includes("GOLD_PLUS")) return planMetaMap.GOLD_PLUS;
+  if (planCode.includes("GOLD")) return planMetaMap.GOLD;
+  return planMetaMap.BASIC;
+};
+
 
   return (
     <div>
       {/* <Outlet /> */}
       <div className="premium-subscription-container">
         <header className="subscription-header">
-<<<<<<< HEAD
-          <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" className='v-logo'/>
+          <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" className='v-logo' />
           <div className="logo">Vivahjeevan</div>
-=======
-          <div className="logo">
-            <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" width={'50px'} />
-            Vivahjeevan
-          </div>
->>>>>>> 8daf26a0cf14f507857f169e5f71e9e32f70e0d0
         </header>
 
         <div className="banner-section">
           <h1>
             Upgrade now & Get upto{" "}
-            {platinumPlan ? `${platinumPlan.discountValue}%` : "..."} discount!
+            {platinumPlan ? `${platinumPlan.discountValue}%` : "No active offers"} discount!
           </h1>
 
           {platinumPlan ? (
@@ -290,67 +343,69 @@ function PremiumSubscription() {
 
         <div className="plans-section">
           <div className="plans-container-compact">
-            {planDetails.map((plan) => {
 
-              const festivalActive = isFestivalActive(plan);
-              const discountActive = isDiscountActive(plan);
+            {planDetails.length === 0 ? (
+              <div className="no-plans-message">
+                No plans available right now.
+              </div>
+            ) : (
+              planDetails.map((plan) => {
+                const festivalActive = isFestivalActive(plan);
+                const discountActive = isDiscountActive(plan);
+                const basePrice = festivalActive ? plan.festivalPrice : plan.priceRupees;
+                const discountedPrice = calculateDiscountedPrice(basePrice, plan);
+                const perMonth = (discountedPrice / plan.durationMonths).toFixed(2);
+                const countdown = getFestivalCountdown(plan);
 
-              const basePrice = festivalActive
-                ? plan.festivalPrice
-                : plan.priceRupees;
+                return (
+                  <div key={plan.planCode} className="plan-card-compact">
 
-              const discountedPrice = calculateDiscountedPrice(basePrice, plan);
-              const perMonth = (discountedPrice / plan.durationMonths).toFixed(2);
+                    {/* HEADER */}
+                    <div className="plan-header-compact">
+                      <h3>{plan.planName}</h3>
 
-              const countdown = getFestivalCountdown(plan);
-
-              return (
-                <div key={plan.planCode} className="plan-card-compact">
-
-                  {/* HEADER */}
-                  <div className="plan-header-compact">
-                    <h3>{plan.planName}</h3>
-
-                    {discountActive && (
-                      <div className="discount-badge-compact">
-                        {plan.discountType === "PERCENTAGE"
-                          ? `${plan.discountValue}% OFF`
-                          : `₹${plan.discountValue} OFF`}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* FESTIVAL LABEL */}
-                  {festivalActive && (
-                    <div className="festival-center-compact">
-                      <div className="festival-label-compact">
-                        <MdCelebration /> Festival Price
-                      </div>
-
-                      {countdown && (
-                        <div className="festival-timer-compact">
-                          ⏱ Ends in {countdown}
+                      {discountActive && (
+                        <div className="discount-badge-compact">
+                          {plan.discountType === "PERCENTAGE"
+                            ? `${plan.discountValue}% OFF`
+                            : `₹${plan.discountValue} OFF`}
                         </div>
                       )}
                     </div>
-                  )}
 
-                  {/* PRICE SECTION */}
-                  <div className="price-section-compact">
+                    {/* FESTIVAL LABEL */}
+                    {festivalActive && (
+                      <div className="festival-center-compact">
+                        <div className="festival-label-compact">
+                          <MdCelebration /> Festival Price
+                        </div>
 
-                    <div className="original-price-compact">
-                      ₹{basePrice}
+                        {countdown && (
+                          <div className="festival-timer-compact">
+                            ⏱ Ends in {countdown}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* PRICE SECTION */}
+                    <div className="price-section-compact">
+                      <div className="validity-month-compact">
+                        {plan.durationMonths} Months
+                      </div>
+                      <div className="original-price-compact">
+                        ₹{basePrice}
+                      </div>
+
+                      <div className="discounted-price-compact">
+                        ₹{discountedPrice}
+                      </div>
+
+                      <div className="per-month-compact">
+                        ₹{perMonth}/month
+                      </div>
+
                     </div>
-
-                    <div className="discounted-price-compact">
-                      ₹{discountedPrice}
-                    </div>
-
-                    <div className="per-month-compact">
-                      ₹{perMonth}/month
-                    </div>
-
-                  </div>
 
                   <button
                     className="continue-btn-compact"
@@ -358,14 +413,49 @@ function PremiumSubscription() {
                   >
                     Continue
                   </button>
+                                              {(() => {
+                          const meta = getPlanMeta(plan.planCode);
+                          return (
+                            <div className="plan-below-continue">
 
-                  <div className="auto-renewal-compact">
-                    Auto-renews on expiry
+                              <div className="plan-info-line">
+                                📞 <strong>Contacts:</strong> {meta.contacts} / month
+                              </div>
+
+                              <div className="plan-info-line">
+                                💬 <strong>Chat:</strong> {meta.chat}
+                              </div>
+
+                              <div className="plan-info-line">
+                                🔮 <strong>Astro Support:</strong> {meta.astro}
+                              </div>
+
+                              <div className="plan-info-line">
+                                🤝 <strong>Relationship Manager:</strong> {meta.rm}
+                              </div>
+
+                              <div className="plan-benefit-text">
+                                ⭐ {meta.benefit}
+                              </div>
+
+                              <div className="plan-warning-text">
+                                ⚠️ Contacts once viewed cannot be reversed or refunded
+                              </div>
+
+                            </div>
+                          );
+                        })()}
+                              
+
+                    <div className="auto-renewal-compact">
+                      Auto-renews on expiry
+                    </div>
+
                   </div>
+                );
+              })
+            )}
 
-                </div>
-              );
-            })}
           </div>
         </div>
 

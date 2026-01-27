@@ -104,7 +104,7 @@ export default function SubscriptionSettings({ myProfile, navigate }) {
                             color="success"
                             sx={{ mt: 2 }}
                             disabled={!!currentPlan}
-                            onClick={() => navigate("/premium")}
+                            onClick={() => navigate("/dashboard/premium")}
                         >
                             {currentPlan ? "Plan Active" : "Upgrade Plan"}
                         </Button>

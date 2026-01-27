@@ -1,5 +1,5 @@
 import React from "react";
-import { FaHeart, FaUserPlus, FaRupeeSign, FaChartLine, FaFileAlt, FaCheckCircle, FaHeadset, FaStar, FaMoneyCheckAlt } from "react-icons/fa";
+import { FaHeart, FaUserPlus, FaRupeeSign, FaChartLine, FaFileAlt, FaCheckCircle, FaHeadset, FaStar, FaMoneyCheckAlt, FaComments, FaUserShield } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "../stylesheets/adminSidebar.css";
 
@@ -45,9 +45,14 @@ export default function AdminSidebar() {
     const handleAstroTalk = () => {
         navigate('/admin/astroTalk');
     };
-      const handleAdminSupport = () => {
+    const handleAdminSupport = () => {
         navigate('/admin/admin_support');
     };
+
+    const handleUserChatReport = () => {
+        navigate('/admin/admin_chat_report');
+    };
+
     return (
         <aside className="admin-sidebar">
             <div className="sidebar-logo" onClick={() => (navigate("/admin"))}>Vivahjeevan</div>
@@ -63,7 +68,8 @@ export default function AdminSidebar() {
                 <button onClick={handleUserTicket}><FaHeadset /><span>User Support</span></button>
                 <button onClick={handlePaymentDisplay}><FaMoneyCheckAlt /><span>Payment Display</span></button>
                 <button onClick={handleAstroTalk}><FaStar /><span>Astrology Service</span></button>
-                <button onClick={handleAdminSupport}><FaStar /><span>Admin Support</span></button>
+                <button onClick={handleAdminSupport}><FaUserShield  /><span>Admin Support</span></button>
+                <button onClick={handleUserChatReport}><FaComments  /><span>User Chat Report</span></button>
             </nav>
         </aside>
     );
