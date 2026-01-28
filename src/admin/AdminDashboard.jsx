@@ -155,7 +155,7 @@ const AdminDashboard = () => {
         </section>
 
         <footer className="admin-footer">
-          © 2025 SaathJanam Admin • All Rights Reserved
+          © 2025 VivahJeevan Admin • All Rights Reserved
         </footer>
       </main>
     </div>

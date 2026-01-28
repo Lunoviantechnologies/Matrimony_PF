@@ -143,7 +143,7 @@ const RaiseTicket = () => {
             required
           />
 
-          <label>SaathJanam Member ID</label>
+          <label>VivahJeevan Member ID</label>
           <input type="text" value={form.memberId} disabled />
 
           <label>Describe the Issue *</label>

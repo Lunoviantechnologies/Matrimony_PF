@@ -18,12 +18,12 @@ const ChatReport = () => {
             .catch(err => console.error(err));
     };
 
-    const handleApprove = async (id) => {
+    const handleApprove = async (reportedUserId) => {
         try {
-            await api.delete(`/admin/${id}/backup-delete`);
+            await api.delete(`/admin/backup-delete/${reportedUserId}`);
 
             setChatReport(prev =>
-                prev.filter(r => r.id !== id)
+                prev.filter(r => r.reportedUser.id !== reportedUserId)
             );
             toast.success(`Report approved`);
         } catch (error) {

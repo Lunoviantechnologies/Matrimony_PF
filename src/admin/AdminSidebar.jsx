@@ -55,7 +55,7 @@ export default function AdminSidebar() {
 
     return (
         <aside className="admin-sidebar">
-            <div className="sidebar-logo" onClick={() => (navigate("/admin"))}>Vivahjeevan</div>
+            <div className="sidebar-logo" onClick={() => (navigate("/admin"))}>VivahJeevan</div>
 
             <nav className="sidebar-nav">
                 <button onClick={handleAdminDashboard}><FaChartLine /><span>Dashboard</span></button>

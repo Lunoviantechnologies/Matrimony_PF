@@ -532,9 +532,9 @@ export default function EditProfile() {
             </select>
             <select name="vegiterian" id="vegiterian" className="field" value={buffer.vegiterian || ""} onChange={(e) => handleEditInputLocal("vegiterian", e.target.value)}>
               <option value="">Select Food Preference</option>
-              <option value="Vegiterian">Vegiterian</option>
-              <option value="Non-Vegiterian">Non-Vegiterian</option>
-              <option value="Occasionally Non-Vegiterian">Occasionally Non-Vegiterian</option>
+              <option value="Vegetarian">Vegetarian</option>
+              <option value="Non-Vegetarian">Non-Vegetarian</option>
+              <option value="Occasionally Non-Vegetarian">Occasionally Non-Vegetarian</option>
               <option value="Eggetarian">Eggetarian</option>
             </select>
           </div>

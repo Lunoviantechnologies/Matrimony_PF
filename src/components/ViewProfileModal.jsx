@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../styleSheets/ViewProfileModal.css";
 import MatchPreferences from "./MatchPreferences";
+import { IoIosLock } from "react-icons/io";
 
 export default function ViewProfileModal({ premium, profile = {}, onClose = () => { } }) {
 
@@ -124,7 +125,15 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
 
             <div className="vp-section">
               <h4>About</h4>
-              <p className="vp-bio">{aboutYourself? aboutYourself : "No information available"}</p>
+              {
+                premium ? (
+                  <p className="vp-bio">{aboutYourself ? aboutYourself : "No information available"}</p>
+                ) : (
+                  <p className="vp-about-text vp-blur-text">
+                    <IoIosLock color="orange" size={18}/> Upgrade to Premium to view full profile details.
+                  </p>
+                )
+              }
             </div>
 
             <hr />
@@ -145,8 +154,18 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
 
             <div className="vp-contact">
               <h4>Contact</h4>
-              {mobileNumber && <div><strong>Phone:</strong> <a href={`tel:${mobileNumber}`}>{mobileNumber}</a></div>}
-              {emailId && <div><strong>Email:</strong> <a href={`mailto:${emailId}`}>{emailId}</a></div>}
+              {
+                premium ? (
+                  <div>
+                    {mobileNumber && <div><strong>Phone:</strong> <a href={`tel:${mobileNumber}`}>{mobileNumber}</a></div>}
+                    {emailId && <div><strong>Email:</strong> <a href={`mailto:${emailId}`}>{emailId}</a></div>}
+                  </div>
+                ) : (
+                  <p className="vp-contact-text vp-blur-text">
+                    <IoIosLock color="orange" size={18}/> Upgrade to Premium to view contact details.
+                  </p>
+                )
+              }
             </div>
 
             <hr />
@@ -164,10 +183,20 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
 
             <div className="vp-horoscope">
               <h4>Horoscope</h4>
-              <div><strong>Rashi:</strong> {rashi}</div>
-              <div><strong>Nakshatra:</strong> {nakshatra}</div>
-              <div><strong>Dosham:</strong> {dosham}</div>
-              <div><strong>Spiritual Path:</strong> {spituralPath}</div>
+              {
+                premium ? (
+                  <div>
+                    <div><strong>Rashi:</strong> {rashi}</div>
+                    <div><strong>Nakshatra:</strong> {nakshatra}</div>
+                    <div><strong>Dosham:</strong> {dosham}</div>
+                    <div><strong>Spiritual Path:</strong> {spituralPath}</div>
+                  </div>
+                ) : (
+                  <p className="vp-horoscope-text vp-blur-text">
+                    <IoIosLock color="orange" size={18}/> Upgrade to Premium to view horoscope details.
+                  </p>
+                )
+              }
             </div>
 
             <hr />
@@ -182,7 +211,7 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
             <div>
               {!premium && (
                 <div className="vp-premium-note">
-                  🔒 Upgrade to Premium to view full profile details and photos.
+                  <IoIosLock color="orange" size={18}/> Upgrade to Premium to view full profile details and photos.
                 </div>
               )}
             </div>

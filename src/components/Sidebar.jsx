@@ -16,11 +16,11 @@ const Sidebar = ({ filters, setFilters, onApply, onClear }) => {
         });
     };
 
-    const sections = [
+    const sections = [  
         {
             title:"CreatedBy",
             category:"profileFor",
-            options:["myself", "My Son","My Daughter","My Brother","My Sister","My Friend","My Relative"]
+            options:["Myself", "My Son","My Daughter","My Brother","My Sister","My Friend","My Relative"]
 
         },
         {
@@ -69,7 +69,7 @@ const Sidebar = ({ filters, setFilters, onApply, onClear }) => {
         {
             title: "Lifestyle",
             category: "lifestyle",
-            options: ["Vegetarian", "Non-Vegetarian", "Occasionally Non-Veg","Eggtarian"],
+            options: ["Vegetarian", "Non-Vegetarian", "Occasionally Non-Vegetarian","Eggetarian"],
         },
          {
             title: "Habbits",

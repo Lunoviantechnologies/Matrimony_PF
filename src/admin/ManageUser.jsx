@@ -2,8 +2,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import "../stylesheets/ManageUsers.css";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAdminProfiles } from "../redux/thunk/profileThunk";
-import axios from "axios";
-import backendIP from "../api/api";
 import { toast } from "react-toastify";
 import api from "../api/axiosInstance";
 
@@ -19,7 +17,7 @@ export default function ManageUser({ pageSize = 10 }) {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    if (role[0].toUpperCase() === "USER") {
+    if (role[0].toUpperCase() === "ADMIN") {
       dispatch(fetchAdminProfiles());
     };
   }, [dispatch, role]);

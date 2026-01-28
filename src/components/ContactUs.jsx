@@ -138,7 +138,7 @@ const ContactUs = () => {
         {/* Right: Contact Details */}
         <div className="contact-details">
           <h2>Get in Touch</h2>
-          <p className="company-name">SaathJanam Matrimony</p>
+          <p className="company-name">VivahJeevan Matrimony</p>
 
           <div className="detail-item">
             <FaMapMarkerAlt className="icon" />
