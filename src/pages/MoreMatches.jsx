@@ -132,7 +132,7 @@ const MoreMatches = () => {
       });
   }, [profiles, filters, allHiddenIds, myProfile, id]);
 
-  console.log("Filters:", filters);
+  // console.log("Filters:", filters);
 
   const sortedProfiles = useMemo(() => {
     let list = [...filteredProfiles];

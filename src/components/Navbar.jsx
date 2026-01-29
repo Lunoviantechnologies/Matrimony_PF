@@ -22,13 +22,16 @@ const Navbar = () => {
 
             <div className="navInner">
 
-                <img
-                    src="/vivahjeevan_logo.png"
-                    height="60"
-                    width="60"
-                    onClick={handleDashboard}
-                    className="logo"
-                />
+                <div className="navBrand" onClick={handleDashboard}>
+                    <img
+                        src="/vivahjeevan_logo.png"
+                        height="60"
+                        width="60"
+                        className="logo"
+                        alt="logo"
+                    />
+                    <h4>VivahJeevan</h4>
+                </div>
 
                 {/* Hamburger */}
                 <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>

@@ -16,7 +16,7 @@ const UserNavbar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const userName = myProfile?.firstName || "User";
+    const userName = myProfile?.firstName || "Loading...";
     const userPhoto = myProfile?.updatePhoto ? myProfile.updatePhoto : myProfile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
 
     useEffect(() => {

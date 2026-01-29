@@ -24,8 +24,8 @@ const initialValues = {
   religion: "",
   subCaste: "",
   subCasteOther: "",
-  gothra: "",
-  gothraOther: "",
+  gothram: "",
+  gothramOther: "",
   motherTongue: "",
   country: "",
   city: "",
@@ -42,7 +42,8 @@ const initialValues = {
   emailId: "",
   mobileNumber: "",
   createPassword: "",
-  role: "user",
+  documentFile: null,
+  role: "USER",
 };
 
 /* -------------------------------------------------------------
@@ -110,7 +111,7 @@ const validationSchemas = [
   Yup.object({
     religion: Yup.string().required("Religion is required"),
     subCaste: Yup.string().required("Sub-Community is required"),
-    gothra: Yup.string().required("Gothra is required"),
+    gothram: Yup.string().required("Gothram is required"),
   }),
 
 
@@ -150,6 +151,14 @@ const validationSchemas = [
       .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
         "Password must contain uppercase, lowercase, number, and special character"
       ),
+    documentFile: Yup.mixed()
+      .required("Document is required")
+      .test("fileType", "Only JPG, PNG or PDF allowed", (value) => {
+        return value && ["image/jpeg", "image/png", "application/pdf"].includes(value.type);
+      })
+      .test("fileSize", "File too large (max 2MB)", (value) => {
+        return value && value.size <= 2 * 1024 * 1024;
+      }),
   }),
 
   // STEP 9 (NO validation)
@@ -197,7 +206,7 @@ const subCommunityList = [
 ];
 
 /* ---------------- GOTHRA LIST ---------------- */
-const gothraList = [
+const gothramList = [
   "Aatharvas", "Agasthi", "Ahabhunasa", "Airan", "Alampayana", "Angiras",
   "Arrishinimi", "Athreyasya / Athreyasa", "Atri", "Attarishi", "Aukshanas",
   "Aushanas", "Babrahvya", "Badarayana", "Baijvayas", "Bansal", "Bashan",
@@ -302,48 +311,58 @@ const Register = () => {
   };
 
   const handleSubmit = (values) => {
-    // build ISO date
-    const dateOfBirthStr = `${values.dobYear}-${values.dobMonth.padStart(2, "0")}-${values.dobDay.padStart(2, "0")}`;
-
-    // Choose only the fields your backend expects — avoid sending empty strings
-    const payload = {
-      profileFor: values.profileFor || null,
-      gender: values.gender || null,
-      firstName: values.firstName || null,
-      lastName: values.lastName || null,
-      age: values.age ? Number(values.age) : null,
-      dateOfBirth: dateOfBirthStr || null,
-      religion: values.religion || null,
-      subCaste: values.subCaste || null,
-      motherTongue: values.motherTongue || null,
-      country: values.country || null,
-      city: values.city || null,
-      maritalStatus: values.maritalStatus || null,
-      noOfChildren: values.noOfChildren ? Number(values.noOfChildren) : null,
-      height: values.height || null,
-      highestEducation: values.highestEducation || null,
-      collegeName: values.collegeName || null,
-      sector: values.sector || null,
-      occupation: values.occupation || null,
-      companyName: values.companyName || null,
-      annualIncome: values.annualIncome || null,
-      workLocation: values.workLocation || null,
-      emailId: values.emailId || null,
-      mobileNumber: values.mobileNumber || null,
-      createPassword: values.createPassword || null,
-      role: values.role || "user"
+    const profileData = {
+      profileFor: values.profileFor,
+      gender: values.gender,
+      firstName: values.firstName,
+      lastName: values.lastName,
+      age: values.age,
+      dateOfBirth: values.dobDay && values.dobMonth && values.dobYear ? `${values.dobYear}-${values.dobMonth}-${values.dobDay}`: null,
+      religion: values.religion,
+      subCaste: values.subCaste,
+      gothram: values.gothram,
+      motherTongue: values.motherTongue,
+      country: values.country,
+      city: values.city,
+      maritalStatus: values.maritalStatus,
+      noOfChildren: values.noOfChildren,
+      height: values.height,
+      highestEducation: values.highestEducation,
+      collegeName: values.collegeName,
+      sector: values.sector,
+      occupation: values.occupation,
+      companyName: values.companyName,
+      annualIncome: values.annualIncome,
+      workLocation: values.workLocation,
+      emailId: values.emailId,
+      mobileNumber: values.mobileNumber,
+      createPassword: values.createPassword,
+      role: values.role
     };
 
-    console.log("Payload to server:", payload);
+    const formData = new FormData();
 
-    axios.post(`${backendIP}/profiles/register`, payload)
-      .then((response) => {
-        console.log("Server Response:", response.data);
-        toast.success("Registration successfull");
+    // 👇 MUST MATCH @RequestParam("profile")
+    formData.append("profile", JSON.stringify(profileData));
+
+    // 👇 MUST MATCH @RequestParam("document")
+    if (values.documentFile) {
+      formData.append("document", values.documentFile);
+    }
+
+    console.log("Submitting registration:", profileData, values.documentFile);
+
+    axios.post(`${backendIP}/profiles/register`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    })
+      .then(() => {
+        toast.success("Registration successful");
         navigate("/registration-success");
       })
       .catch((error) => {
-        console.error("There was an error!", error.response ? error.response.data : error.message);
+        console.error("Upload error:", error.response?.data || error.message);
         toast.error("Registration failed");
       });
   };
@@ -639,7 +658,7 @@ const Register = () => {
               {subCommunityList.map((sc) => (
                 <option key={sc} value={sc}>{sc}</option>
               ))}
-              <option value="Others">Others</option>
+              {/* <option value="Others">Others</option> */}
             </Field>
             <ErrorMessage name="subCaste" component="div" className="error-text" />
 
@@ -652,38 +671,37 @@ const Register = () => {
               />
             )}
 
-            {/* ---------------- GOTHRA ---------------- */}
+            {/* ---------------- GOTHRAM ---------------- */}
             <Field
               as="select"
-              name="gothra"
+              name="gothram"
               className="form-select"
               onChange={(e) => {
-                setFieldValue("gothra", e.target.value);
+                setFieldValue("gothram", e.target.value);
                 if (e.target.value !== "Others" && e.target.value !== "Dont know") {
-                  setFieldValue("gothraOther", "");
+                  setFieldValue("gothramOther", "");
                 }
               }}
             >
-              <option value="" disabled>Select Gothra</option>
-              {gothraList.map((g) => (
+              <option value="" disabled>Select Gothram</option>
+              {gothramList.map((g) => (
                 <option key={g} value={g}>{g}</option>
               ))}
               <option value="Others">Others</option>
-              <option value="Dont know">Dont know</option>
+              {/* <option value="Dont know">Dont know</option> */}
             </Field>
-            <ErrorMessage name="gothra" component="div" className="error-text" />
+            <ErrorMessage name="gothram" component="div" className="error-text" />
 
-            {/* Gothra Other */}
-            {(values.gothra === "Others" || values.gothra === "Dont know") && (
+            {/* Gothram Other */}
+            {(values.gothram === "Others" || values.gothram === "Dont know") && (
               <Field
-                name="gothraOther"
+                name="gothramOther"
                 className="form-input"
-                placeholder="Enter Gothra"
+                placeholder="Enter Gothram"
               />
             )}
           </>
         );
-
 
       /* ---------------------- STEP 4 ----------------------- */
       case 4:
@@ -871,6 +889,18 @@ const Register = () => {
 
             <Field name="createPassword" className="form-input" placeholder="Create Password" />
             <ErrorMessage name="createPassword" component="div" className="error-text" />
+
+            <label className="form-label mt-3">Upload Document (ID Proof Aadhar or PAN)</label>
+            <input
+              type="file"
+              accept=".jpg,.jpeg,.png,.pdf"
+              name="documentFile"
+              className="form-input"
+              onChange={(event) => {
+                setFieldValue("documentFile", event.currentTarget.files[0]);
+              }}
+            />
+            <ErrorMessage name="documentFile" component="div" className="error-text" />
           </>
         );
 
@@ -929,7 +959,7 @@ const Register = () => {
                   <button
                     type="button"
                     className="next-btn"
-                    disabled={step === 8 && !emailVerified}
+                    disabled={(step === 8 && !emailVerified) || (step === 8 && !values.documentFile)}
                     onClick={() => nextStep(validateForm, setTouched)}
                   >
                     NEXT

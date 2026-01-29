@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAdminProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
 import { toast } from "react-toastify";
+import backendIP from "../api/api";
 
 export default function AdminApprovals() {
   const dispatch = useDispatch();
@@ -96,32 +97,34 @@ export default function AdminApprovals() {
         </thead>
 
         <tbody>
-          {loading && (
-            <tr>
-              <td colSpan="7" className="text-center">Loading...</td>
-            </tr>
-          )}
+          {!loading && paginatedData.map((u, index) => {
+            return (
+              <tr key={u.id} className="text-center">
+                <td>{(page - 1) * pageSize + index + 1}</td>
+                <td>{u.id}</td>
+                <td>{u.firstName}</td>
+                <td>{u.aboutYourself || "-"}</td>
 
-          {!loading && paginatedData.length === 0 && (
-            <tr>
-              <td colSpan="7" className="text-center">No approvals pending</td>
-            </tr>
-          )}
+                <td>
+                  {u.documentFile ? (
+                    <a
+                      href={`${backendIP}/admin/document/${u.documentFile}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View
+                    </a>
+                  ) : "No Document"}
+                </td>
 
-          {!loading && paginatedData.map((u, index) => (
-            <tr key={u.id} className="text-center">
-              <td>{(page - 1) * pageSize + index + 1}</td>
-              <td>{u.id}</td>
-              <td>{u.firstName}</td>
-              <td>{u.aboutYourself || "-"}</td>
-              <td>{u.documentUrl ? <a href={u.documentUrl} target="_blank" rel="noreferrer">View</a> : "No Document"}</td>
-              <td>{u.createdAt ? new Date(u.createdAt).toLocaleString() : "-"}</td>
-              <td>
-                <button className="btn btn-success btn-sm me-2" onClick={() => handleActionApproved(u.id)}>Approve</button>
-                <button className="btn btn-danger btn-sm" onClick={() => handleActionReject(u.id)}>Reject</button>
-              </td>
-            </tr>
-          ))}
+                <td>{u.createdAt ? new Date(u.createdAt).toLocaleString() : "-"}</td>
+                <td>
+                  <button className="btn btn-success btn-sm me-2" onClick={() => handleActionApproved(u.id)}>Approve</button>
+                  <button className="btn btn-danger btn-sm" onClick={() => handleActionReject(u.id)}>Reject</button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
 

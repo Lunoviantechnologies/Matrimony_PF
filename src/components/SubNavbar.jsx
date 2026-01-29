@@ -8,25 +8,25 @@ const SubNavbar = () => {
         <div className="sticky-top sub_navbar">
             <div className="container d-flex justify-content-around">
                 <NavLink className="subnav_link" to="" end>
-                    <FiGrid size={18} /> Dashboard
+                    <FiGrid size={18} color="#6B7280"/> Dashboard
                 </NavLink>
                 <NavLink className="subnav_link" to="editProfile">
-                    <FiEdit size={18} /> Edit Profile
+                    <FiEdit size={18} color="#b14d77"/> Edit Profile
                 </NavLink>
                 <NavLink className="subnav_link" to="viewProfile">    
-                    <FiUser size={18} /> View Profile
+                    <FiUser size={18} color="orange"/> View Profile
                 </NavLink>
                 <NavLink className="subnav_link" to="requests">
-                    <FiInbox size={18} /> Requests
+                    <FiInbox size={18} color="#a552b2"/> Requests
                 </NavLink>
                 <NavLink className="subnav_link" to="search">
-                    <MdPersonSearch size={18} /> Search
+                    <MdPersonSearch size={18} color="#8c6a6a"/> Search
                 </NavLink>
                 <NavLink className="subnav_link" to="matches">
-                    <FiHeart size={18} /> Matches
+                    <FiHeart size={18} color="red"/> Matches
                 </NavLink>
                 <NavLink className="subnav_link" to="messages/:userId">
-                    <FiMessageSquare size={18} /> Messages
+                    <FiMessageSquare size={18} color="blue"/> Messages
                 </NavLink>
             </div>
         </div>

@@ -34,6 +34,20 @@ body::-webkit-scrollbar {
     text-decoration: none;
 }
 
+.navBrand {
+    display: flex;
+    align-items: center;
+    /* gap: 2px; */
+    cursor: pointer;
+}
+
+.navBrand h4 {
+    margin: 0;
+    font-family: 'Lucida Handwriting', cursive;
+    font-weight: 700;
+    color: rgb(139,69,19);
+}
+
 .navAuthBtn {
     border: none;
     outline: none;
