@@ -11,15 +11,15 @@ const Navbar = () => {
     const { isLoggedIn, role } = useSelector(state => state.auth);
     const [showLogin, setShowLogin] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [resourceOpen, setResourceOpen] = useState(false);
 
     const handleDashboard = () => {
-        if (role[0] === "USER") navigate("/dashboard");
-        else if (role[0] === "ADMIN") navigate("/admin");
+        if (role?.[0] === "USER") navigate("/dashboard");
+        else if (role?.[0] === "ADMIN") navigate("/admin");
     };
 
     return (
         <nav className="navBody container w-75">
-
             <div className="navInner">
 
                 <img
@@ -28,6 +28,7 @@ const Navbar = () => {
                     width="60"
                     onClick={handleDashboard}
                     className="logo"
+                    alt="logo"
                 />
 
                 {/* Hamburger */}
@@ -39,22 +40,63 @@ const Navbar = () => {
 
                     {!isLoggedIn && (
                         <>
-                            <Link className="navLink" to="/" onClick={() => setMenuOpen(false)}>Home</Link>
-                            <Link className="navLink" to="/aboutUs" onClick={() => setMenuOpen(false)}>About Us</Link>
-                            <Link className="navLink" to="/contactUs" onClick={() => setMenuOpen(false)}>Contact Us</Link>
+                            <Link className="navLink" to="/" onClick={() => setMenuOpen(false)}>
+                                Home
+                            </Link>
+
+{/* 🔽 Resources Dropdown */}
+<div className="navDropdown">
+  <span
+    className="navLink dropdownTitle"
+    onClick={() => setResourceOpen(prev => !prev)}
+  >
+    Resources ▾
+  </span>
+
+  <div className={`dropdownMenu ${resourceOpen ? "open" : ""}`}>
+    <Link
+      to="/resources/blog"
+      onClick={() => {
+        setMenuOpen(false);
+        setResourceOpen(false);
+      }}
+    >
+      Blog
+    </Link>
+
+    <Link
+      to="/resources/ebook"
+      onClick={() => {
+        setMenuOpen(false);
+        setResourceOpen(false);
+      }}
+    >
+      E-Book
+    </Link>
+  </div>
+</div>
+
+
+                            <Link className="navLink" to="/aboutUs" onClick={() => setMenuOpen(false)}>
+                                About Us
+                            </Link>
+
+                            <Link className="navLink" to="/contactUs" onClick={() => setMenuOpen(false)}>
+                                Contact Us
+                            </Link>
 
                             <button className="navAuthBtn" onClick={() => setShowLogin(true)}>
                                 Login
                             </button>
 
-                            <button className="navAuthBtn" onClick={() => navigate('/register')}>
+                            <button className="navAuthBtn" onClick={() => navigate("/register")}>
                                 Sign Up
                             </button>
                         </>
                     )}
 
-                    {isLoggedIn && role[0] === "USER" && <UserNavbar />}
-                    {isLoggedIn && role[0] === "ADMIN" && <AdminNavbar />}
+                    {isLoggedIn && role?.[0] === "USER" && <UserNavbar />}
+                    {isLoggedIn && role?.[0] === "ADMIN" && <AdminNavbar />}
                 </div>
             </div>
 

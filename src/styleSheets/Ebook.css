@@ -1,0 +1,107 @@
+.ebook-page {
+  background: #f8fafc;
+  padding: 60px 10%;
+  display: flex;
+  justify-content: center;
+}
+
+.ebook-article {
+  max-width: 900px;
+  background: #ffffff;
+  padding: 50px;
+  border-radius: 20px;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.08);
+}
+
+.ebook-article h1 {
+  font-size: 34px;
+  font-weight: 800;
+  color: #081c15;
+}
+
+.ebook-subtitle {
+  font-size: 20px;
+  color: #035f3f;
+  margin-top: 8px;
+}
+
+.ebook-tagline {
+  margin-top: 12px;
+  font-size: 16px;
+  color: #475569;
+}
+
+.ebook-icon {
+  color: #037430;
+  margin-right: 8px;
+}
+
+.ebook-icon.main {
+  font-size: 30px;
+}
+
+.ebook-icon.warning {
+  color: #f59e0b;
+}
+
+.ebook-article h2 {
+  margin-top: 36px;
+  font-size: 22px;
+  color: #035f3f;
+}
+
+.ebook-article p {
+  margin-top: 12px;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: #475569;
+}
+
+.highlight {
+  background: #d9f5e4;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.ebook-article ol {
+  padding-left: 20px;
+  margin-top: 12px;
+}
+
+.ebook-article ol li {
+  margin-bottom: 8px;
+}
+
+.ebook-download-btn {
+  margin-top: 24px;
+  background: linear-gradient(45deg, #9bcfb0, #71b98e);
+  border: none;
+  padding: 12px 26px;
+  border-radius: 14px;
+  font-weight: 700;
+  color: #035f3f;
+  cursor: pointer;
+}
+
+.ebook-download-btn.bottom {
+  margin-top: 40px;
+}
+/* Hero section */
+.ebook-hero {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.ebook-download-btn {
+  margin-top: 22px;
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* Make content breathe */
+.ebook-article h2 {
+  margin-top: 34px;
+}
