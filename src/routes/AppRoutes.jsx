@@ -48,6 +48,10 @@ import RefundPolicy from "../components/privacyInfo/RefundPolicy";
 import Disclaimer from "../components/privacyInfo/Disclaimer";
 import CommunityGuidelines from "../components/privacyInfo/CommunityGuidelines";
 import ChatReport from "../admin/ChatReport";
+import Resourses from "../components/Resources";
+import Blog from "../components/Blog";
+import EBook from "../components/EBook";
+import Ebookdownload from "../components/Ebookdownload";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -66,6 +70,14 @@ const AppRoutes = createBrowserRouter([
                 path: "/contactUs",
                 element: <ContactUs />
             },
+           {
+        path: "/resources",
+        element: <Resourses />, // <Outlet />
+        children: [
+          { path: "blog", element: <Blog /> },
+          { path: "ebook", element: <EBook /> }
+        ]
+      },
             {
                 path: "/register",
                 element: <Register />
