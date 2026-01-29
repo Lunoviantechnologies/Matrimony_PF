@@ -1,13 +1,5 @@
 import { Helmet } from "react-helmet";
-import {
-  FaOm,
-  FaHeart,
-  FaExclamationTriangle,
-  FaHandsHelping,
-  FaUsers,
-  FaCheckCircle,
-  FaQuestionCircle
-} from "react-icons/fa";
+import { FaOm,FaHeart,FaExclamationTriangle,FaHandsHelping,FaUsers, FaCheckCircle,FaQuestionCircle} from "react-icons/fa";
 import "../styleSheets/Blog.css";
 
 const Blog = () => {
