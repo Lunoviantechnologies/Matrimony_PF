@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "../styleSheets/contactUs.css";
+import "../styleSheets/ContactUs.css";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaTwitter, FaFacebookF, FaLinkedinIn, FaInstagram, } from "react-icons/fa";
 import backendIP from "../api/api";
 import { toast } from "react-toastify";

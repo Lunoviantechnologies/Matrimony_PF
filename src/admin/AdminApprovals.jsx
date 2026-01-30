@@ -71,6 +71,15 @@ export default function AdminApprovals() {
     }
   };
 
+  const openDocument = async (fileName) => {
+    const res = await api.get(`/profiles/view-document/${fileName}`, {
+      responseType: "blob",
+    });
+
+    const fileURL = URL.createObjectURL(res.data);
+    window.open(fileURL, "_blank");
+  };
+
   // Pagination
   const totalPages = Math.max(1, Math.ceil(visibleProfiles.length / pageSize));
   const paginatedData = visibleProfiles.slice((page - 1) * pageSize, page * pageSize);
@@ -78,7 +87,8 @@ export default function AdminApprovals() {
   const changePage = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) setPage(newPage);
   };
-  console.log("statuss : ", visibleProfiles);
+  // console.log("statuss : ", visibleProfiles);
+
   return (
     <div className="container mt-4">
       <h2 className="fw-bold mb-3" style={{ color: "#00695C" }}>Admin Approvals</h2>
@@ -104,16 +114,11 @@ export default function AdminApprovals() {
                 <td>{u.id}</td>
                 <td>{u.firstName}</td>
                 <td>{u.aboutYourself || "-"}</td>
-
                 <td>
                   {u.documentFile ? (
-                    <a
-                      href={`${backendIP}/admin/document/${u.documentFile}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
+                    <button className="btn btn-outline-primary" onClick={() => openDocument(u.documentFile)}>
                       View
-                    </a>
+                    </button>
                   ) : "No Document"}
                 </td>
 

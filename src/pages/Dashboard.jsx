@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
-import "../styleSheets/Dashboard.css";
+import "../styleSheets/dashboard.css";
 import { useDispatch, useSelector } from "react-redux";
-import backendIP from "../api/api";
 import { useNavigate } from "react-router-dom";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";

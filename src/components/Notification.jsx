@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import "../stylesheets/Notification.css";
+import "../styleSheets/Notification.css";
 import { FaBell } from "react-icons/fa";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";

@@ -1,7 +1,7 @@
 import React from "react";
 import { FaHeart, FaUserPlus, FaRupeeSign, FaChartLine, FaFileAlt, FaCheckCircle, FaHeadset, FaStar, FaMoneyCheckAlt, FaComments, FaUserShield } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import "../stylesheets/adminSidebar.css";
+import "../styleSheets/adminSidebar.css";
 
 export default function AdminSidebar() {
     const navigate = useNavigate();

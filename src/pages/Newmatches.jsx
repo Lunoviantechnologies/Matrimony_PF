@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import "../styleSheets/profileCard.css";
+import "../styleSheets/ProfileCard.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../styleSheets/ViewProfileModal.css";
+import "../styleSheets/viewProfileModal.css";
 import MatchPreferences from "./MatchPreferences";
 import { IoIosLock } from "react-icons/io";
 

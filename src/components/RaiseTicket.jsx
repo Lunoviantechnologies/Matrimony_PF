@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styleSheets/raiseTicket.css";
+import "../styleSheets/RaiseTicket.css";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import api from "../api/axiosInstance";
