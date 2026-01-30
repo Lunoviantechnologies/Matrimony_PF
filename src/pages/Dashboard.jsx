@@ -8,6 +8,7 @@ import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import { FaCrown } from "react-icons/fa";
 import { RiSecurePaymentFill } from "react-icons/ri";
 import api from "../api/axiosInstance";
+import DashboardAds from "./DashboardAds";
 
 const Dashboard = () => {
 
@@ -168,6 +169,7 @@ const Dashboard = () => {
   return (
     <div className="dashboard_body">
       {/* ====== Matches Section ====== */}
+       
       <section className="matchSection">
         <h2 style={{ color: "#695019", marginBottom: 15 }}>
           New Profile Matches
@@ -218,7 +220,10 @@ const Dashboard = () => {
           }
         </div>
       </section>
-
+      <div>
+           <DashboardAds /><br />
+      </div>
+           
       {/* ====== Request Section ====== */}
       <section
         style={{ background: "#fff", borderRadius: 15, padding: 24, marginBottom: 32, boxShadow: "0 1px 6px #ddd", }}>

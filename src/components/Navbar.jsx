@@ -46,37 +46,27 @@ const Navbar = () => {
                                 Home
                             </Link>
 
-{/* 🔽 Resources Dropdown */}
-<div className="navDropdown">
-  <span
-    className="navLink dropdownTitle"
-    onClick={() => setResourceOpen(prev => !prev)}
-  >
-    Resources ▾
-  </span>
+                                        {/* 🔽 Resources Dropdown */}
+                                        <div className="navDropdown">
+                                        <span
+                                            className="navLink dropdownTitle"
+                                            onClick={() => setResourceOpen(prev => !prev)}
+                                        >
+                                            Resources ▾
+                                        </span>
 
-  <div className={`dropdownMenu ${resourceOpen ? "open" : ""}`}>
-    <Link
-      to="/resources/blog"
-      onClick={() => {
-        setMenuOpen(false);
-        setResourceOpen(false);
-      }}
-    >
-      Blog
-    </Link>
-
-    <Link
-      to="/resources/ebook"
-      onClick={() => {
-        setMenuOpen(false);
-        setResourceOpen(false);
-      }}
-    >
-      E-Book
-    </Link>
-  </div>
-</div>
+                                        <div className={`dropdownMenu ${resourceOpen ? "open" : ""}`}>
+                                            <Link
+                                            to="/resources/blog"
+                                            onClick={() => {
+                                                setMenuOpen(false);
+                                                setResourceOpen(false);
+                                            }}
+                                            >
+                                            Blog
+                                            </Link>
+                                        </div>
+                                        </div>
 
 
                             <Link className="navLink" to="/aboutUs" onClick={() => setMenuOpen(false)}>

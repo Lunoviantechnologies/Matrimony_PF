@@ -50,9 +50,7 @@ import CommunityGuidelines from "../components/privacyInfo/CommunityGuidelines";
 import ChatReport from "../admin/ChatReport";
 import Resourses from "../components/Resources";
 import Blog from "../components/Blog";
-import EBook from "../components/EBook";
-import Ebookdownload from "../components/Ebookdownload";
-
+import DashboardAds from "../pages/DashboardAds";
 const AppRoutes = createBrowserRouter([
     {
         path: "/",
@@ -75,7 +73,6 @@ const AppRoutes = createBrowserRouter([
         element: <Resourses />, // <Outlet />
         children: [
           { path: "blog", element: <Blog /> },
-          { path: "ebook", element: <EBook /> }
         ]
       },
             {
@@ -131,6 +128,10 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "",
                 element: <Dashboard />
+            },
+             {
+                path: "dashboardads",
+                element: <DashboardAds />
             },
             {
                 path: "editProfile",

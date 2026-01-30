@@ -1,0 +1,68 @@
+.promo-card {
+  display: flex;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  min-height: 120px;
+  animation: fadePromo .4s ease;
+}
+
+.promo-left {
+  width: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.promo-right {
+  flex: 1;
+  padding: 14px 18px;
+}
+
+.promo-right h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+}
+
+.promo-right p {
+  margin: 6px 0 12px;
+  font-size: 13px;
+  color: #666;
+}
+
+.promo-right button {
+  background: linear-gradient(90deg,#2ecc71,#27ae60);
+  border: none;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 18px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.promo-premium .promo-left {
+  background: linear-gradient(135deg,#f39c12,#f1c40f);
+}
+
+.promo-profile .promo-left {
+  background: linear-gradient(135deg,#1abc9c,#16a085);
+}
+
+.promo-boost .promo-left {
+  background: linear-gradient(135deg,#3498db,#2980b9);
+}
+
+@keyframes fadePromo {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
