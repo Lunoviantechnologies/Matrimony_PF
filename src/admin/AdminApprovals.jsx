@@ -99,7 +99,9 @@ export default function AdminApprovals() {
             <th className="approveHeader text-center">S.No</th>
             <th className="approveHeader text-center">User ID</th>
             <th className="approveHeader text-center">User</th>
-            <th className="approveHeader text-center">Bio</th>
+            <th className="approveHeader text-center">Phone Number</th>
+            <th className="approveHeader text-center">Email</th>
+            <th className="approveHeader text-center">Date Of Birth</th>
             <th className="approveHeader text-center">Document</th>
             <th className="approveHeader text-center">Requested On</th>
             <th className="approveHeader text-center">Action</th>
@@ -112,8 +114,10 @@ export default function AdminApprovals() {
               <tr key={u.id} className="text-center">
                 <td>{(page - 1) * pageSize + index + 1}</td>
                 <td>{u.id}</td>
-                <td>{u.firstName}</td>
-                <td>{u.aboutYourself || "-"}</td>
+                <td>{u.firstName + " " + u.lastName}</td>
+                <td>{u.mobileNumber || "-"}</td>
+                <td>{u.emailId || "-"}</td>
+                <td>{u.dateOfBirth || "-"}</td>
                 <td>
                   {u.documentFile ? (
                     <button className="btn btn-outline-primary" onClick={() => openDocument(u.documentFile)}>
