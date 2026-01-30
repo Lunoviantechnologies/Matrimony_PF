@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaUsers, FaHeart, FaCheckCircle, FaRupeeSign, FaTimesCircle, FaHeadset, } from "react-icons/fa";
-import "../stylesheets/adminDashboard.css";
+import "../styleSheets/AdminDashboard.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAdminProfiles } from "../redux/thunk/profileThunk";
 import { useNavigate } from "react-router-dom";

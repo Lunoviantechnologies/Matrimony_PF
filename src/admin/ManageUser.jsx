@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import "../stylesheets/ManageUsers.css";
+import "../styleSheets/ManageUsers.css";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAdminProfiles } from "../redux/thunk/profileThunk";
 import { toast } from "react-toastify";

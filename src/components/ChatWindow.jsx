@@ -547,6 +547,10 @@ const ChatWindow = () => {
     }
   };
 
+  useEffect(() => {
+    setIsReported(false);
+  }, [userId]);
+
   return (
     <div className="chatpage-container">
       {/* LEFT PANEL */}

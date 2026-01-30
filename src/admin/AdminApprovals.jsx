@@ -71,6 +71,15 @@ export default function AdminApprovals() {
     }
   };
 
+  const openDocument = async (fileName) => {
+    const res = await api.get(`/profiles/view-document/${fileName}`, {
+      responseType: "blob",
+    });
+
+    const fileURL = URL.createObjectURL(res.data);
+    window.open(fileURL, "_blank");
+  };
+
   // Pagination
   const totalPages = Math.max(1, Math.ceil(visibleProfiles.length / pageSize));
   const paginatedData = visibleProfiles.slice((page - 1) * pageSize, page * pageSize);
@@ -78,7 +87,8 @@ export default function AdminApprovals() {
   const changePage = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) setPage(newPage);
   };
-  console.log("statuss : ", visibleProfiles);
+  // console.log("statuss : ", visibleProfiles);
+
   return (
     <div className="container mt-4">
       <h2 className="fw-bold mb-3" style={{ color: "#00695C" }}>Admin Approvals</h2>
@@ -89,7 +99,9 @@ export default function AdminApprovals() {
             <th className="approveHeader text-center">S.No</th>
             <th className="approveHeader text-center">User ID</th>
             <th className="approveHeader text-center">User</th>
-            <th className="approveHeader text-center">Bio</th>
+            <th className="approveHeader text-center">Phone Number</th>
+            <th className="approveHeader text-center">Email</th>
+            <th className="approveHeader text-center">Date Of Birth</th>
             <th className="approveHeader text-center">Document</th>
             <th className="approveHeader text-center">Requested On</th>
             <th className="approveHeader text-center">Action</th>
@@ -102,18 +114,15 @@ export default function AdminApprovals() {
               <tr key={u.id} className="text-center">
                 <td>{(page - 1) * pageSize + index + 1}</td>
                 <td>{u.id}</td>
-                <td>{u.firstName}</td>
-                <td>{u.aboutYourself || "-"}</td>
-
+                <td>{u.firstName + " " + u.lastName}</td>
+                <td>{u.mobileNumber || "-"}</td>
+                <td>{u.emailId || "-"}</td>
+                <td>{u.dateOfBirth || "-"}</td>
                 <td>
                   {u.documentFile ? (
-                    <a
-                      href={`${backendIP}/admin/document/${u.documentFile}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
+                    <button className="btn btn-outline-primary" onClick={() => openDocument(u.documentFile)}>
                       View
-                    </a>
+                    </button>
                   ) : "No Document"}
                 </td>
 

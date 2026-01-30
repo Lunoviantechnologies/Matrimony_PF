@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import {FaBookOpen,FaOm,FaHeart,FaUsers,FaExclamationTriangle,FaHandsHelping,FaListOl,FaArrowDown} from "react-icons/fa";
-import EbookDownload from "./EbookDownload";
-import "../styleSheets/EBook.css";
+import EbookDownload from "./Ebookdownload";
+import "../styleSheets/Ebook.css";
 
 const EBook = () => {
   const [openDownload, setOpenDownload] = useState(false);

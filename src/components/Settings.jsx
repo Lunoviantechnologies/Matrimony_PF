@@ -5,8 +5,8 @@ import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import { useNavigate } from "react-router-dom";
 import SubscriptionSettings from "./settings/SubscriptionSettings";
 import SupportSettings from "./settings/SupportSettings";
-import PrivacySettings from "./settings/privacySettings";
-import SecuritySettings from "./settings/securitySettings";
+import PrivacySettings from "./settings/PrivacySettings";
+import SecuritySettings from "./settings/SecuritySettings";
 
 export default function Settings() {
   const dispatch = useDispatch();
