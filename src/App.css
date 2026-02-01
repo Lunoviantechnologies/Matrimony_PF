@@ -15,7 +15,58 @@ html::-webkit-scrollbar,
 body::-webkit-scrollbar {
     display: none;
 }
+/* Resources Dropdown Wrapper */
+.navDropdown {
+    position: relative;
+}
 
+/* Dropdown Menu (Hidden by default) */
+.dropdownMenu {
+    position: absolute;
+    top: 42px;
+    left: 0;
+    background: #ffffff;
+    border-radius: 18px;
+    min-width: 200px;
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.18);
+    z-index: 3000;
+
+    /* Hidden state */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    pointer-events: none;
+
+    transition: all 0.25s ease;
+}
+
+/* ✅ Open state (controlled by click) */
+.dropdownMenu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Dropdown items */
+.dropdownMenu a {
+    display: block;
+    padding: 14px 20px;
+    font-weight: 600;
+    color: #035f3f;
+    text-decoration: none;
+}
+
+/* Hover effect only for items */
+.dropdownMenu a:hover {
+    background-color: #D9F5E4;
+}
+
+/* Make Resources text clickable */
+.dropdownTitle {
+    cursor: pointer;
+    user-select: none;
+}
 
 /* Navbar */
 
@@ -32,6 +83,20 @@ body::-webkit-scrollbar {
     color: #081c15;
     font-weight: 700;
     text-decoration: none;
+}
+
+.navBrand {
+    display: flex;
+    align-items: center;
+    /* gap: 2px; */
+    cursor: pointer;
+}
+
+.navBrand h4 {
+    margin: 0;
+    font-family: 'Lucida Handwriting', cursive;
+    font-weight: 700;
+    color: rgb(139,69,19);
 }
 
 .navAuthBtn {

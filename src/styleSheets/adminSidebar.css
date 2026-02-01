@@ -1,5 +1,5 @@
 .admin-sidebar {
-    width: 220px;
+    width: 225px;
     background: #00695C;
     display: flex;
     flex-direction: column;
@@ -17,11 +17,11 @@
 }
 
 .sidebar-logo {
-    font-size: 28px;
+    font-size: 25px;
     font-weight: bold;
     text-align: center;
-    /* margin-bottom: 5px; */
-    color: #00b36b;
+    font-family: 'Lucida Handwriting', cursive;
+    color: rgb(211, 175, 55);
 }
 
 .sidebar-nav {

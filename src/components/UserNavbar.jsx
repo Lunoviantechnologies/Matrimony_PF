@@ -16,7 +16,7 @@ const UserNavbar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const userName = myProfile?.firstName || "User";
+    const userName = myProfile?.firstName || "Loading...";
     const userPhoto = myProfile?.updatePhoto ? myProfile.updatePhoto : myProfile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
 
     useEffect(() => {
@@ -27,10 +27,19 @@ const UserNavbar = () => {
     // console.log("myProfile in UserNavbar :", myProfile);
 
     useEffect(() => {
-        api.get("plans").then(res => {
-            const platinum = res.data.find(p => p.planCode.includes("PLATINUM"));
-            setFestivalPlan(platinum);
-        });
+        api.get("plans")
+            .then(res => {
+                if (Array.isArray(res.data)) {
+                    const platinum = res.data.find(p => p.planCode?.includes("PLATINUM"));
+                    setFestivalPlan(platinum || null);
+                } else {
+                    setFestivalPlan(null);
+                }
+            })
+            .catch(err => {
+                console.error("Error fetching plans:", err);
+                setFestivalPlan(null);
+            });
     }, []);
 
     const isFestivalActive = (plan) => {

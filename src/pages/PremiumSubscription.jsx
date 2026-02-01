@@ -6,6 +6,12 @@ import backendIP from '../api/api';
 import { useSelector } from 'react-redux';
 import api from '../api/axiosInstance';
 import { MdCelebration } from "react-icons/md";
+import { BiStopwatch } from "react-icons/bi";
+import { FiPhone } from "react-icons/fi";
+import { BsChatDots } from "react-icons/bs";
+import { GiCrystalBall } from "react-icons/gi";
+import { FaUserTie, FaStar } from "react-icons/fa";
+import { IoWarningOutline } from "react-icons/io5";
 
 function PremiumSubscription() {
 
@@ -40,91 +46,6 @@ function PremiumSubscription() {
       document.body.removeChild(script);
     };
   }, []);
-
-  const plans = [
-    {
-      id: 'gold-3months',
-      name: 'Gold 3 Months',
-      discount: '60% off',
-      originalPrice: '₹4,540',
-      discountedPrice: '₹1,815',
-      perMonth: '₹605/month',
-      features: [
-        'Send unlimited Messages',
-        'View 50 Contact Numbers',
-        '5 Vivahjeevan Live passes',
-        'Standout from Profiles',
-        'Matches contact directly'
-      ],
-      duration: '3 months'
-    },
-    {
-      id: 'gold-plus-3months',
-      name: 'Gold Plus 3 Months',
-      discount: '65% off',
-      originalPrice: '₹5,560',
-      discountedPrice: '₹1,946',
-      perMonth: '₹648/month',
-      features: [
-        'Send unlimited Messages',
-        'View 75 Contact Numbers',
-        '6 Vivahjeevan Live passes',
-        'Standout from Profiles',
-        'Matches contact directly'
-      ],
-      duration: '3 months'
-    },
-    {
-      id: 'diamond-6months',
-      name: 'Diamond 6 Months',
-      discount: '65% off',
-      originalPrice: '₹6,520',
-      discountedPrice: '₹2,281',
-      perMonth: '₹381/month',
-      features: [
-        'Send unlimited Messages',
-        'View 100 Contact Numbers',
-        '8 Vivahjeevan Live passes',
-        'Standout from Profiles',
-        'Matches contact directly'
-      ],
-      duration: '6 months'
-    },
-    {
-      id: 'diamond-plus-6months',
-      name: 'Diamond Plus 6 Months',
-      discount: '66% off',
-      originalPrice: '₹8,199',
-      discountedPrice: '₹2,787',
-      perMonth: '₹464/month',
-      badge: 'TOP SELLER',
-      features: [
-        'Send unlimited Messages',
-        'View 100 Contacts (Unlimited)',
-        '9 Vivahjeevan Live passes',
-        'Standout from Profiles',
-        'Matches contact directly'
-      ],
-      duration: '6 months'
-    },
-    {
-      id: 'platinum-plus-12months',
-      name: 'Platinum 12 Months',
-      discount: '60% off',
-      originalPrice: '₹13,304',
-      discountedPrice: '₹5,321',
-      perMonth: '₹443/month',
-      badge: 'BEST VALUE',
-      features: [
-        'Send unlimited Messages',
-        'View 200 Contacts (Unlimited)',
-        '15 Vivahjeevan Live passes',
-        'Standout from Profiles',
-        'Matches contact directly'
-      ],
-      duration: '12 months'
-    }
-  ];
 
   const handlePlanSelect = async (plan) => {
     try {
@@ -252,60 +173,62 @@ function PremiumSubscription() {
 
   const platinumFestivalActive = platinumPlan && isFestivalActive(platinumPlan);
   const platinumCountdown = platinumFestivalActive && getFestivalCountdown(platinumPlan);
+
   const planMetaMap = {
-  BASIC: {
-    contacts: "0",
-    chat: "Limited",
-    astro: "No",
-    rm: "No",
-    benefit: "Profile creation, browse profiles"
-  },
-  GOLD: {
-    contacts: "30",
-    chat: "Yes",
-    astro: "No",
-    rm: "No",
-    benefit: "Full profile view, standard visibility"
-  },
-  GOLD_PLUS: {
-    contacts: "60",
-    chat: "Yes",
-    astro: "No",
-    rm: "No",
-    benefit: "Advanced search, higher visibility"
-  },
-  DIAMOND: {
-    contacts: "80",
-    chat: "Yes",
-    astro: "Basic (Auto)",
-    rm: "No",
-    benefit: "Profile boost, priority listing"
-  },
-  DIAMOND_PLUS: {
-    contacts: "150",
-    chat: "Yes",
-    astro: "Assisted",
-    rm: "Yes",
-    benefit: "Manual profile review"
-  },
-  PLATINUM: {
-    contacts: "300",
-    chat: "Yes",
-    astro: "Advanced (1:1)",
-    rm: "Yes",
-    benefit: "Senior RM, top visibility"
-  }
-};
+    BASIC: {
+      contacts: "0",
+      chat: "Limited",
+      astro: "No",
+      rm: "No",
+      benefit: "Profile creation, browse profiles"
+    },
+    GOLD: {
+      contacts: "30",
+      chat: "Yes",
+      astro: "No",
+      rm: "No",
+      benefit: "Full profile view, standard visibility"
+    },
+    GOLD_PLUS: {
+      contacts: "60",
+      chat: "Yes",
+      astro: "No",
+      rm: "No",
+      benefit: "Advanced search, higher visibility"
+    },
+    DIAMOND: {
+      contacts: "80",
+      chat: "Yes",
+      astro: "Basic",
+      rm: "No",
+      benefit: "Profile boost, priority listing"
+    },
+    DIAMOND_PLUS: {
+      contacts: "150",
+      chat: "Yes",
+      astro: "Assisted",
+      rm: "Yes",
+      benefit: "Manual profile review"
+    },
+    PLATINUM: {
+      contacts: "300",
+      chat: "Yes",
+      astro: "Advanced",
+      rm: "Yes",
+      benefit: "Senior RM, top visibility"
+    }
+  };
 
-const getPlanMeta = (planCode = "") => {
-  if (planCode.includes("PLATINUM")) return planMetaMap.PLATINUM;
-  if (planCode.includes("DIAMOND_PLUS")) return planMetaMap.DIAMOND_PLUS;
-  if (planCode.includes("DIAMOND")) return planMetaMap.DIAMOND;
-  if (planCode.includes("GOLD_PLUS")) return planMetaMap.GOLD_PLUS;
-  if (planCode.includes("GOLD")) return planMetaMap.GOLD;
-  return planMetaMap.BASIC;
-};
+  const getPlanMeta = (planCode = "") => {
+    const code = planCode.toUpperCase();
+    if (code.startsWith("PLATINUM")) return planMetaMap.PLATINUM;
+    if (code.startsWith("DIAMONDPLUS")) return planMetaMap.DIAMOND_PLUS;
+    if (code.startsWith("DIAMOND")) return planMetaMap.DIAMOND;
+    if (code.startsWith("GOLDPLUS")) return planMetaMap.GOLD_PLUS;
+    if (code.startsWith("GOLD")) return planMetaMap.GOLD;
 
+    return planMetaMap.BASIC;
+  };
 
   return (
     <div>
@@ -382,7 +305,7 @@ const getPlanMeta = (planCode = "") => {
 
                         {countdown && (
                           <div className="festival-timer-compact">
-                            ⏱ Ends in {countdown}
+                            <BiStopwatch /> Ends in {countdown}
                           </div>
                         )}
                       </div>
@@ -407,45 +330,45 @@ const getPlanMeta = (planCode = "") => {
 
                     </div>
 
-                  <button
-                    className="continue-btn-compact"
-                    onClick={() => handlePlanSelect(plan)}
-                  >
-                    Continue
-                  </button>
-                                              {(() => {
-                          const meta = getPlanMeta(plan.planCode);
-                          return (
-                            <div className="plan-below-continue">
+                    <button
+                      className="continue-btn-compact"
+                      onClick={() => handlePlanSelect(plan)}
+                    >
+                      Continue
+                    </button>
+                    {(() => {
+                      const meta = getPlanMeta(plan.planCode);
+                      return (
+                        <div className="plan-below-continue">
 
-                              <div className="plan-info-line">
-                                📞 <strong>Contacts:</strong> {meta.contacts} / month
-                              </div>
+                          <div className="plan-info-line">
+                            <FiPhone /> Contacts: {meta.contacts} / month
+                          </div>
 
-                              <div className="plan-info-line">
-                                💬 <strong>Chat:</strong> {meta.chat}
-                              </div>
+                          <div className="plan-info-line">
+                            <BsChatDots /> Chat: {meta.chat}
+                          </div>
 
-                              <div className="plan-info-line">
-                                🔮 <strong>Astro Support:</strong> {meta.astro}
-                              </div>
+                          <div className="plan-info-line">
+                            <GiCrystalBall /> Astro Support: {meta.astro}
+                          </div>
 
-                              <div className="plan-info-line">
-                                🤝 <strong>Relationship Manager:</strong> {meta.rm}
-                              </div>
+                          <div className="plan-info-line">
+                            <FaUserTie /> Relationship Manager: {meta.rm}
+                          </div>
 
-                              <div className="plan-benefit-text">
-                                ⭐ {meta.benefit}
-                              </div>
+                          <div className="plan-benefit-text">
+                            <FaStar /> {meta.benefit}
+                          </div>
 
-                              <div className="plan-warning-text">
-                                ⚠️ Contacts once viewed cannot be reversed or refunded
-                              </div>
+                          <div className="plan-warning-text">
+                            <IoWarningOutline /> Contacts once viewed cannot be reversed or refunded
+                          </div>
 
-                            </div>
-                          );
-                        })()}
-                              
+                        </div>
+                      );
+                    })()}
+
 
                     <div className="auto-renewal-compact">
                       Auto-renews on expiry

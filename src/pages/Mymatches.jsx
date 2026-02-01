@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import "../styleSheets/profileCard.css";
+import "../styleSheets/ProfileCard.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
@@ -126,7 +126,7 @@ const MyMatches = () => {
         const matchCountry = matchWithOther(filters.country, filters.otherValues?.country, p.country);
         const matchProfession = matchWithOther(filters.profession, filters.otherValues?.profession, p.occupation);
         const matchEducation = matchWithOther(filters.education, filters.otherValues?.education, p.highestEducation);
-        const matchLifestyle = !filters.lifestyle.length || (p.yourHobbies ? filters.lifestyle.some(f => p.yourHobbies.includes(f)) : false);
+        const matchLifestyle = !filters.lifestyle.length || filters.lifestyle.includes(p.vegiterian || "");
         const matchhabbits = !filters.habbits.length || filters.habbits.includes(p.habbits || "");
 
         const passedFilters =

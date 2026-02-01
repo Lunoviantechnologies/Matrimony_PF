@@ -334,6 +334,15 @@
   gap: 8px;
 }
 
+.vp-blur-text {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
 /* responsive */
 @media (max-width:900px) {
   .vp-modal {
@@ -352,5 +361,109 @@
   .vp-passport-small img {
     width: 84px;
     height: 104px;
+  }
+}
+
+@media (max-width: 900px) {
+  .vp-grid {
+    flex-direction: column;
+  }
+
+  .vp-left {
+    width: 100%;
+    align-items: center;
+  }
+
+  .vp-main-image {
+    height: 260px;
+  }
+
+  .vp-right {
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .vp-meta {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .vp-modal {
+    width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    padding: 10px;
+  }
+
+  .vp-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .vp-match-circle {
+    align-self: flex-end;
+    margin-right: 0;
+  }
+
+  .vp-name {
+    font-size: 18px;
+  }
+
+  .vp-age {
+    font-size: 13px;
+  }
+
+  .vp-main-image {
+    height: 220px;
+  }
+
+  .vp-thumb {
+    width: 52px;
+    height: 52px;
+  }
+
+  .vp-meta {
+    font-size: 13px;
+  }
+
+  .vp-section h4 {
+    font-size: 14px;
+  }
+
+  .vp-bio,
+  .vp-contact,
+  .vp-lifestyle,
+  .vp-horoscope {
+    font-size: 13px;
+  }
+
+  .vp-right {
+    padding-right: 2px;
+  }
+}
+
+@media (max-width: 400px) {
+  .vp-main-image {
+    height: 180px;
+  }
+
+  .vp-thumb {
+    width: 44px;
+    height: 44px;
+  }
+
+  .vp-name {
+    font-size: 16px;
+  }
+
+  .vp-match-circle {
+    width: 50px;
+    height: 50px;
+  }
+
+  .vp-match-percent {
+    font-size: 14px;
   }
 }

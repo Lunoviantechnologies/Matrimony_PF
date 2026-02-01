@@ -1,0 +1,19 @@
+.ebook-modal {
+  position: relative;
+}
+
+/* Close button */
+.ebook-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  color: #444;
+  cursor: pointer;
+}
+
+.ebook-close:hover {
+  color: #ff1744;
+}

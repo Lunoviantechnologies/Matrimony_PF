@@ -48,7 +48,9 @@ import RefundPolicy from "../components/privacyInfo/RefundPolicy";
 import Disclaimer from "../components/privacyInfo/Disclaimer";
 import CommunityGuidelines from "../components/privacyInfo/CommunityGuidelines";
 import ChatReport from "../admin/ChatReport";
-
+import Resourses from "../components/Resources";
+import Blog from "../components/Blog";
+import DashboardAds from "../pages/DashboardAds";
 const AppRoutes = createBrowserRouter([
     {
         path: "/",
@@ -66,6 +68,13 @@ const AppRoutes = createBrowserRouter([
                 path: "/contactUs",
                 element: <ContactUs />
             },
+           {
+        path: "/resources",
+        element: <Resourses />, // <Outlet />
+        children: [
+          { path: "blog", element: <Blog /> },
+        ]
+      },
             {
                 path: "/register",
                 element: <Register />
@@ -119,6 +128,10 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "",
                 element: <Dashboard />
+            },
+             {
+                path: "dashboardads",
+                element: <DashboardAds />
             },
             {
                 path: "editProfile",

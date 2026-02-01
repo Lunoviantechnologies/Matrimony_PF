@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "../styleSheets/contactUs.css";
+import "../styleSheets/ContactUs.css";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaTwitter, FaFacebookF, FaLinkedinIn, FaInstagram, } from "react-icons/fa";
 import backendIP from "../api/api";
 import { toast } from "react-toastify";
@@ -138,7 +138,7 @@ const ContactUs = () => {
         {/* Right: Contact Details */}
         <div className="contact-details">
           <h2>Get in Touch</h2>
-          <p className="company-name">SaathJanam Matrimony</p>
+          <p className="company-name">VivahJeevan Matrimony</p>
 
           <div className="detail-item">
             <FaMapMarkerAlt className="icon" />

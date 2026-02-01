@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaUsers, FaHeart, FaCheckCircle, FaRupeeSign, FaTimesCircle, FaHeadset, } from "react-icons/fa";
-import "../stylesheets/adminDashboard.css";
+import "../styleSheets/AdminDashboard.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAdminProfiles } from "../redux/thunk/profileThunk";
 import { useNavigate } from "react-router-dom";
@@ -155,7 +155,7 @@ const AdminDashboard = () => {
         </section>
 
         <footer className="admin-footer">
-          © 2025 SaathJanam Admin • All Rights Reserved
+          © 2025 VivahJeevan Admin • All Rights Reserved
         </footer>
       </main>
     </div>

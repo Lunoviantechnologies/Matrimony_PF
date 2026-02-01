@@ -11,6 +11,15 @@
     font-size: 14px;
 }
 
+/* Plan Icons */
+.plan-info-line svg,
+.plan-benefit-text svg,
+.plan-warning-text svg {
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+
 /* festival period */
 .festival-center-compact {
     display: flex;
@@ -260,7 +269,8 @@
 
 .price-section-compact {
     text-align: center;
-    min-height: 110px; /* 🔥 key for button alignment */
+    min-height: 110px;
+    /* 🔥 key for button alignment */
     margin-bottom: 18px;
 }
 
@@ -301,7 +311,8 @@
     text-transform: uppercase;
 
     cursor: pointer;
-    margin-top: auto; /* 🔥 aligns all buttons */
+    margin-top: auto;
+    /* 🔥 aligns all buttons */
 }
 
 .continue-btn-compact:hover {
@@ -313,44 +324,46 @@
    =============================== */
 
 .plan-below-continue {
-    margin-top: 16px;
-    padding-top: 14px;
-    border-top: 1px solid #ededed;
-    font-size: 14px;
-    color: #333;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed #e0e0e0;
+    font-size: 11px !important;
+    color: rgba(0, 0, 0, 0.65);
+    /* 👈 muted */
 }
 
-/* Clean professional rows (no emoji jump) */
 .plan-info-line {
-    display: grid;
-    grid-template-columns: 18px auto;
-    column-gap: 10px;
+    margin: 6px 0;
+    display: flex;
     align-items: center;
-    margin: 8px 0;
-    line-height: 1.5;
+    gap: 6px;
+    line-height: 1.4;
 }
 
-/* Neutral icon style */
-.plan-info-line span {
-    font-size: 14px;
-    color: #e91e63;
-    text-align: center;
+.plan-info-line svg {
+    opacity: 0.7;
 }
 
-/* Key benefit */
+.plan-info-line strong {
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+/* Benefit: slightly stronger but not bold-green shouting */
 .plan-benefit-text {
-    margin-top: 10px;
-    padding-top: 8px;
-    border-top: 1px dashed #ddd;
-    font-weight: 700;
+    margin-top: 8px;
+    font-size: 10px !important;
+    font-weight: 500;
     color: #2e7d32;
+    opacity: 0.85;
 }
 
-/* Warning text */
+/* Warning: small + softer red */
 .plan-warning-text {
     margin-top: 6px;
-    font-size: 12px;
-    color: #c62828;
+    font-size: 8px !important;
+    color: rgba(183, 28, 28, 0.85);
+    line-height: 1.4;
 }
 
 /* ===============================
@@ -1039,49 +1052,49 @@
 }
 
 .subscription-header {
-  display: flex;
-  align-items: center;
-  gap: 5px; 
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .v-logo {
-  width: 100px;
-  height: 100px;
-  object-fit: contain;
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
 }
 
 
 /* ================= DETAILS BELOW CONTINUE ================= */
 
 .plan-below-continue {
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px dashed #e0e0e0;
-  font-size: 13.5px;
-  color: #333;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed #e0e0e0;
+    font-size: 13.5px;
+    color: #333;
 }
 
 .plan-info-line {
-  margin: 6px 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+    margin: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .plan-info-line strong {
-  font-weight: 600;
+    font-weight: 600;
 }
 
 .plan-benefit-text {
-  margin-top: 8px;
-  font-size: 13.5px;
-  font-weight: 600;
-  color: #2e7d32;
+    margin-top: 8px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #2e7d32;
 }
 
 .plan-warning-text {
-  margin-top: 6px;
-  font-size: 11.5px;
-  color: #b71c1c;
-  line-height: 1.4;
+    margin-top: 6px;
+    font-size: 11.5px;
+    color: #b71c1c;
+    line-height: 1.4;
 }

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styleSheets/faq.css";
+import "../styleSheets/FAQ.css";
 import { FaChevronDown, FaChevronUp, FaQuestionCircle, } from "react-icons/fa";
 
 const FAQ = () => {
@@ -13,7 +13,7 @@ const FAQ = () => {
     {
       question: "Are all people allowed to become members?",
       answer:
-        "Yes. SaathJanam welcomes people from all castes, communities, and backgrounds across the world!",
+        "Yes. VivahJeevan welcomes people from all castes, communities, and backgrounds across the world!",
     },
     {
       question: "How long does membership approval take?",
@@ -23,7 +23,7 @@ const FAQ = () => {
     {
       question: "Can I meet my life partner online?",
       answer:
-        "Of course! Thousands of successful couples found love on SaathJanam. Build a strong profile and connect respectfully.",
+        "Of course! Thousands of successful couples found love on VivahJeevan. Build a strong profile and connect respectfully.",
     },
     {
       question: "What is the difference between Free and Premium?",

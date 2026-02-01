@@ -10,7 +10,7 @@ const AboutUs = () => {
         <div className="aboutus-container">
             {/* Header Section */}
             <header className="aboutus-header">
-                <h1 className="aboutus-title">Saathjanam.com</h1>
+                <h1 className="aboutus-title">VivahJeevan.com</h1>
                 <p className="aboutus-subtitle"><strong>Serving members worldwide</strong></p>
 
                 <div className="aboutus-links">
@@ -46,14 +46,14 @@ const AboutUs = () => {
                 <h2 className="aboutus-heading">Our Journey to Finding Happiness</h2>
 
                 <p>
-                    <strong>Saathjanam.com</strong> was established with a singular mission:
+                    <strong>VivahJeevan.com</strong> was established with a singular mission:
                     to redefine the way people meet and find their life partners.
                     Launched in 2025, we quickly grew to become one of the world’s most
                     trusted matrimonial services, driven by innovation, security, and a deep
                     understanding of our members' cultural needs.
                 </p>
 
-                <h3 className="aboutus-promise">The Saathjanam Promise</h3>
+                <h3 className="aboutus-promise">The VivahJeevan Promise</h3>
                 <ul>
                     <li><strong>Innovation:</strong> We continually upgrade our platform with smart matching algorithms.</li>
                     <li><strong>Trust:</strong> Every profile is screened to ensure a safe and genuine experience.</li>
@@ -61,7 +61,7 @@ const AboutUs = () => {
                 </ul>
 
                 <p className="aboutus-cta">
-                    Join the millions who have found their happily ever after with Saathjanam!
+                    Join the millions who have found their happily ever after with VivahJeevan!
                 </p>
             </main>
         </div>

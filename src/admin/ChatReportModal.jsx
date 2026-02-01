@@ -21,7 +21,7 @@ const ChatReportModal = ({ report }) => {
         }
     }, [report, pageNo]);
 
-    console.log("Fetched chat data:", chatData);
+    // console.log("Fetched chat data:", chatData);
 
     return (
         <div className="modal fade" id="viewModal" tabIndex="-1">

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styleSheets/raiseTicket.css";
+import "../styleSheets/RaiseTicket.css";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import api from "../api/axiosInstance";
@@ -143,7 +143,7 @@ const RaiseTicket = () => {
             required
           />
 
-          <label>SaathJanam Member ID</label>
+          <label>VivahJeevan Member ID</label>
           <input type="text" value={form.memberId} disabled />
 
           <label>Describe the Issue *</label>

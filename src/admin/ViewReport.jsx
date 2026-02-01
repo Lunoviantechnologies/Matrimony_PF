@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../stylesheets/ViewReport.css";
+import "../styleSheets/ViewReport.css";
 import { FaUsers, FaRupeeSign, FaChartPie, FaChartLine, FaEnvelope, FaTwitter, FaFacebookF, FaLinkedinIn, FaInstagram,} from "react-icons/fa";
 import axios from "axios";
 import backendIP from "../api/api";

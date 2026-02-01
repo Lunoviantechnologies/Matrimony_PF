@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import PsychologyIcon from "@mui/icons-material/Psychology";
@@ -7,20 +6,19 @@ import '../styleSheets/homePage.css';
 import FAQ from "../components/FAQ";
 
 const Home = () => {
-    const navigate = useNavigate();
 
     return (
         <div className="homePage">
 
             <div className="homeBanner container">  
                 <div className="bannerText">
-                    <img src="/vivahjeevan_logo.png" alt="saathjanam_logo" height={'200px'} />
+                    <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" height={'200px'} />
                     <h1>Vivahjeevan</h1>
                     <h4>Bond for Seven Lifetimes...</h4>
                 </div>
 
                 <div className="bannerImage">
-                    <img src="banner2.png" alt="homeBanner" />
+                    <img src="banner2.png" alt="homeBanner" loading="lazy"/>
                 </div>
             </div>
 

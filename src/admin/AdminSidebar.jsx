@@ -1,7 +1,7 @@
 import React from "react";
 import { FaHeart, FaUserPlus, FaRupeeSign, FaChartLine, FaFileAlt, FaCheckCircle, FaHeadset, FaStar, FaMoneyCheckAlt, FaComments, FaUserShield } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import "../stylesheets/adminSidebar.css";
+import "../styleSheets/adminSidebar.css";
 
 export default function AdminSidebar() {
     const navigate = useNavigate();
@@ -55,7 +55,7 @@ export default function AdminSidebar() {
 
     return (
         <aside className="admin-sidebar">
-            <div className="sidebar-logo" onClick={() => (navigate("/admin"))}>Vivahjeevan</div>
+            <div className="sidebar-logo" onClick={() => (navigate("/admin"))}>VivahJeevan</div>
 
             <nav className="sidebar-nav">
                 <button onClick={handleAdminDashboard}><FaChartLine /><span>Dashboard</span></button>
