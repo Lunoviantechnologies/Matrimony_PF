@@ -26,7 +26,7 @@ const AdminNavbar = () => {
                 </button>
 
                 <ul className="dropdown-menu dropdown-menu-end">
-                    <li><Link className="dropdown-item" to="/admin/settings">Settings</Link></li>
+                    <li><Link className="dropdown-item" to="/admin/admin_settings">Settings</Link></li>
                     <li><hr className="dropdown-divider" /></li>
                     <li><button className="dropdown-item text-danger" onClick={handleLogout}>Logout</button></li>
                 </ul>

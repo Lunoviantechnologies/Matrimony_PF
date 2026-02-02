@@ -16,6 +16,7 @@ const Navbar = () => {
     const handleDashboard = () => {
         if (role?.[0] === "USER") navigate("/dashboard");
         else if (role?.[0] === "ADMIN") navigate("/admin");
+        else navigate("/");
     };
 
     return (

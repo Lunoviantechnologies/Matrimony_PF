@@ -51,6 +51,9 @@ import ChatReport from "../admin/ChatReport";
 import Resourses from "../components/Resources";
 import Blog from "../components/Blog";
 import DashboardAds from "../pages/DashboardAds";
+import RelationshipManager from "../admin/RelationshipManager";
+import AdminSettings from "../admin/AdminSettings";
+
 const AppRoutes = createBrowserRouter([
     {
         path: "/",
@@ -275,6 +278,14 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "admin_chat_report",
                 element: <ChatReport />
+            },
+            {
+                path: "relationship_manager",
+                element: <RelationshipManager />
+            },
+            {
+                path: "admin_settings",
+                element: <AdminSettings />
             },
         ]
 
