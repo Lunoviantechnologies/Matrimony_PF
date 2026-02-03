@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { logout } from "../redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import AdminNotification from "./AdminNotifications";
+import { toast } from "react-toastify";
 
 const AdminNavbar = () => {
 
@@ -12,7 +13,7 @@ const AdminNavbar = () => {
 
     const handleLogout = () => {
         dispatch(logout());
-        alert("Logged out successfully!");
+        toast.success("Logged out successfully!");
         navigate("/");
     };
 

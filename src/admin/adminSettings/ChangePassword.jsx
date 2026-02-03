@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Card, CardContent, Typography, TextField, Button, Box, Stack, IconButton, InputAdornment, } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import api from "../api/axiosInstance";
+import api from "../../api/axiosInstance";
+import { toast } from "react-toastify";
 
 export default function ChangePassword({
     securityPassword,
@@ -16,45 +17,44 @@ export default function ChangePassword({
         const { oldPassword, newPassword, confirmPassword } = securityPassword;
 
         if (!oldPassword || !newPassword || !confirmPassword) {
-            alert("All fields are required");
+            toast.error("All fields are required");
             return;
         }
-        if (newPassword !== confirmPassword) {
-            alert("Passwords do not match");
-            return;
-        }
+        // if (newPassword !== confirmPassword) {
+        //     toast.error("Passwords do not match");
+        //     return;
+        // }
         if (newPassword.length < 8) {
-            alert("Password must be at least 8 characters");
+            toast.error("Password must be at least 8 characters");
             return;
         }
 
         api
-            .put(`/auth/change-password/${adminId}`, {
-                currentPassword: oldPassword,
+            .put(`/admin/account/change-password`, {
+                oldPassword: oldPassword,
                 newPassword,
                 confirmPassword,
             })
-            .then(() => {
-                alert("Password changed successfully");
+            .then((res) => {
+                toast.success("Password changed successfully");
                 setSecurityPassword({
                     oldPassword: "",
                     newPassword: "",
                     confirmPassword: "",
                 });
+                console.log("res: ", res);
             })
-            .catch(() => alert("Failed to change password"));
+            .catch((err) => {
+                toast.error(err.response.data.message);
+                console.log("err: ", err.response.data.message);
+            });
     };
 
     return (
         <Box
-            sx={{
-                maxWidth: 480,
-                mx: "auto",
-                px: { xs: 2, sm: 3 },
-                py: 3,
-            }}
+            sx={{ maxWidth: 480, mx: "auto", px: { xs: 2, sm: 3 }, py: 3, }}
         >
-            <Card>
+            <Card sx={{boxShadow: 10, borderRadius: 2,}}>
                 <CardContent>
                     <Typography variant="h6" fontWeight={600} gutterBottom>
                         Security Settings

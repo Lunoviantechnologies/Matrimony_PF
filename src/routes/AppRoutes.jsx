@@ -52,7 +52,7 @@ import Resourses from "../components/Resources";
 import Blog from "../components/Blog";
 import DashboardAds from "../pages/DashboardAds";
 import RelationshipManager from "../admin/RelationshipManager";
-import AdminSettings from "../admin/AdminSettings";
+import AdminSettings from "../admin/adminSettings/AdminSettings";
 
 const AppRoutes = createBrowserRouter([
     {

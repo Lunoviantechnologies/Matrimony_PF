@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { logout } from "../redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axiosInstance";
+import { toast } from "react-toastify";
 
 const UserNavbar = () => {
 
@@ -53,7 +54,7 @@ const UserNavbar = () => {
 
     const handleLogout = () => {
         dispatch(logout());
-        alert("Logged out successfully!");
+        toast.success("Logged out successfully!");
         navigate("/");
     };
 

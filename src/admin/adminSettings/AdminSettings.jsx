@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Button, Box } from "@mui/material";
-import ChangePassword from "./ChangePassword";
 import { useSelector } from "react-redux";
+import ChangePassword from "./ChangePassword";
+import CreateAdmin from "./CreateAdmin";
 
 const AdminSettings = () => {
 
@@ -15,9 +16,10 @@ const AdminSettings = () => {
 
     const tabs = [
         { label: "Security", index: 0 },
+        { label: "Create Admin", index: 1 },
     ];
 
-    console.log("AdminSettings rendered", id);
+    // console.log("AdminSettings rendered", id);
 
     return (
         <div>
@@ -45,6 +47,7 @@ const AdminSettings = () => {
             {/* Content */}
             <div>
                 {tab === 0 && <ChangePassword securityPassword={securityPassword} setSecurityPassword={setSecurityPassword} adminId= {id} />}
+                {tab === 1 && <CreateAdmin adminId={id} />}
             </div>
         </div>
     );

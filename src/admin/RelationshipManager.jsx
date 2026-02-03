@@ -49,14 +49,20 @@ const RelationshipManager = () => {
             profile
         };
     }).filter(item => item.profile);
-    console.log("Matched Users:", matchedUsers);
+    // console.log("Matched Users:", matchedUsers);
 
     // --- Pagination Logic ---
-    const totalPages = Math.ceil(matchedUsers.length / pageSize) || 1;
+    const totalPages = Math.max(1, Math.ceil(matchedUsers.length / pageSize));
     const paginatedPayments = matchedUsers.slice(
         (page - 1) * pageSize,
         page * pageSize
     );
+
+    useEffect(() => {
+        if (page > totalPages) {
+            setPage(totalPages);
+        }
+    }, [totalPages, page]);
 
     // console.log("Successful Payments:", successpayments);
 
@@ -109,32 +115,25 @@ const RelationshipManager = () => {
                     Showing <b>{paginatedPayments.length}</b> of <b>{matchedUsers.length}</b> records
                 </div>
 
-                <nav>
-                    <ul className="pagination mb-0">
-                        <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
-                            <button className="page-link" onClick={() => setPage(page - 1)}>
-                                Prev
-                            </button>
-                        </li>
+                <div className="mu-pagination mt-3">
+                    <button
+                        className="pagination_btn"
+                        disabled={page === 1}
+                        onClick={() => setPage((p) => p - 1)}
+                    >
+                        Prev
+                    </button>
 
-                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-                            <li
-                                key={num}
-                                className={`page-item ${page === num ? "active" : ""}`}
-                            >
-                                <button className="page-link" onClick={() => setPage(num)}>
-                                    {num}
-                                </button>
-                            </li>
-                        ))}
+                    <span className="mm-page-number">{page}</span>
 
-                        <li className={`page-item ${page === totalPages ? "disabled" : ""}`}>
-                            <button className="page-link" onClick={() => setPage(page + 1)}>
-                                Next
-                            </button>
-                        </li>
-                    </ul>
-                </nav>
+                    <button
+                        className="pagination_btn"
+                        disabled={page === totalPages}
+                        onClick={() => setPage((p) => p + 1)}
+                    >
+                        Next
+                    </button>
+                </div>
             </div>
 
         </div>
