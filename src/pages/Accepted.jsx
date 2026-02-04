@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "../styleSheets/requestCSS/profileRequest.css";
-import backendIP from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";

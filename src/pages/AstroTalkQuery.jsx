@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import api from "../api/axiosInstance";
-import { FaPhoneAlt, FaCommentDots, FaStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import "../styleSheets/astroTalkQuery.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import { useNavigate } from "react-router-dom";
+import AstroScore from "./AstroScore";
 
 const AstroTalkQuery = () => {
 
@@ -16,7 +17,6 @@ const AstroTalkQuery = () => {
     useEffect(() => {
         api.get("astro-number/All").then(res => {
             setAstroInfo(res.data);
-            // console.log("Astro Info : ", res.data);
         });
     }, []);
 
@@ -30,6 +30,10 @@ const AstroTalkQuery = () => {
             <p className="astro-subtitle">
                 Get accurate guidance for marriage, compatibility & future life
             </p>
+
+            <div>
+                <AstroScore />
+            </div>
 
             {
                 !myProfile?.premium ? (

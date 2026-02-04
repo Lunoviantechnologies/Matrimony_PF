@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../styleSheets/successPageCSS/registerSuccess.css";
 
 const RegisterSuccessPage = () => {
-    const [seconds, setSeconds] = useState(3);
+    const [seconds, setSeconds] = useState(10);
 
     useEffect(() => {
         // countdown
@@ -13,7 +13,7 @@ const RegisterSuccessPage = () => {
         // redirect
         const timeout = setTimeout(() => {
             window.location.href = "/";
-        }, 3000);
+        }, 10000);
 
         return () => {
             clearInterval(interval);
@@ -41,6 +41,10 @@ const RegisterSuccessPage = () => {
                         Your account has been created successfully.
                         <br />
                         Please log in to continue.
+                        <br />
+                        <strong>
+                            Your account will be activated after admin approval. This process may take up to 24 hours.
+                        </strong>
                     </p>
 
                     <p className="text-muted">
