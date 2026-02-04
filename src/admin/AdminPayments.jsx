@@ -52,12 +52,17 @@ export default function AdminPayments() {
   const filteredPayments = getFilteredPayments();
 
   // --- Pagination Logic ---
-  const totalPages = Math.ceil(filteredPayments.length / pageSize) || 1;
-
+  const totalPages = Math.max(1, Math.ceil(filteredPayments.length / pageSize));
   const paginatedPayments = filteredPayments.slice(
     (page - 1) * pageSize,
     page * pageSize
   );
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [totalPages, page]);
 
   return (
     <div className="admin-payments-container">

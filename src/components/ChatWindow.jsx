@@ -193,6 +193,19 @@ const ChatWindow = () => {
     }
   };
 
+  // LOAD DEFAULT MESSAGES FOR FREE USERS
+  useEffect(() => {
+    if (!selectedUser || isPremium) return;
+    if (messages.length > 0) return;
+
+    const receiverId =
+      Number(selectedUser.senderId) === Number(myId)
+        ? selectedUser.receiverId
+        : selectedUser.senderId;
+
+    sendDefaultFreeMessages(receiverId);
+  }, [selectedUser, isPremium]);
+
   /* CHECK PREMIUM */
   useEffect(() => {
     if (!myId) return;
@@ -432,6 +445,28 @@ const ChatWindow = () => {
           : m
       )
     );
+  };
+
+  const sendDefaultFreeMessages = (receiverId) => {
+    const defaults = [
+      "I came across your profile and felt we might be compatible. I would like to initiate a conversation.",
+      "Hello, I find your profile appealing and would like to learn more about you.",
+    ];
+
+    defaults.forEach(text => {
+      const msgBody = {
+        senderId: myId,
+        receiverId,
+        message: text,
+        timestamp: new Date().toISOString(),
+        seen: false
+      };
+
+      stompClientRef.current?.publish({
+        destination: `/app/chat.send/${receiverId}`,
+        body: JSON.stringify(msgBody),
+      });
+    });
   };
 
   const getUserImageById = (id) => {

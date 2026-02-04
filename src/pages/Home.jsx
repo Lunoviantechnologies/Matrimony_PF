@@ -1,5 +1,5 @@
 import React from "react";
-import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
+import { MdLocalFlorist } from "react-icons/md";
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import '../styleSheets/homePage.css';
@@ -10,7 +10,7 @@ const Home = () => {
     return (
         <div className="homePage">
 
-            <div className="homeBanner container">  
+            <div className="homeBanner container">
                 <div className="bannerText">
                     <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" height={'200px'} />
                     <h1>Vivahjeevan</h1>
@@ -18,7 +18,7 @@ const Home = () => {
                 </div>
 
                 <div className="bannerImage">
-                    <img src="banner2.png" alt="homeBanner" loading="lazy"/>
+                    <img src="banner2.png" alt="homeBanner" loading="lazy" />
                 </div>
             </div>
 
@@ -29,9 +29,11 @@ const Home = () => {
                     <div className="col-sm-4 mb-3 mb-sm-0">
                         <div className="card homeCard">
                             <div className="card-body">
-                                <CurrencyExchangeIcon sx={{ fontSize: 70, color: 'green', mb: 1, }} />
-                                <h6 className="card-title" style={{ fontWeight: 'bold' }}>30 Day Money Back Guarantee</h6>
-                                <p className="card-text opacity-75">Get matched with someone special within 30 days, or we’ll refund your money—guaranteed!</p>
+                                <MdLocalFlorist size={70} color="#8B6F47" />
+                                <h6 className="card-title" style={{ fontWeight: 'bold' }}>Spiritual Compatibility Focus</h6>
+                                <p className="card-text opacity-75">
+                                    Where values, beliefs, and life purpose align We prioritize inner values, faith alignment, and practical life harmony.
+                                </p>
                             </div>
                         </div>
                     </div>

@@ -2,6 +2,7 @@ import React from "react";
 import { FaHeart, FaUserPlus, FaRupeeSign, FaChartLine, FaFileAlt, FaCheckCircle, FaHeadset, FaStar, FaMoneyCheckAlt, FaComments, FaUserShield } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "../styleSheets/adminSidebar.css";
+import { MdConnectWithoutContact } from "react-icons/md";
 
 export default function AdminSidebar() {
     const navigate = useNavigate();
@@ -53,6 +54,10 @@ export default function AdminSidebar() {
         navigate('/admin/admin_chat_report');
     };
 
+    const handleRelationshipManager = () => {
+        navigate('/admin/relationship_manager');
+    };
+
     return (
         <aside className="admin-sidebar">
             <div className="sidebar-logo" onClick={() => (navigate("/admin"))}>VivahJeevan</div>
@@ -70,6 +75,7 @@ export default function AdminSidebar() {
                 <button onClick={handleAstroTalk}><FaStar /><span>Astrology Service</span></button>
                 <button onClick={handleAdminSupport}><FaUserShield  /><span>Admin Support</span></button>
                 <button onClick={handleUserChatReport}><FaComments  /><span>User Chat Report</span></button>
+                <button onClick={handleRelationshipManager}><MdConnectWithoutContact size={20} /><span>Relationship Manager</span></button>
             </nav>
         </aside>
     );

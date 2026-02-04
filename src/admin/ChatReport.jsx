@@ -81,6 +81,12 @@ const ChatReport = () => {
         setCurrentPage(1);
     }, [activeTab]);
 
+    useEffect(() => {
+        if (currentPage > totalPages) {
+            setCurrentPage(totalPages);
+        }
+    }, [totalPages, currentPage]);
+
     return (
         <div className="container mt-4">
             <h2 className="fw-bold mb-3">User Chat Report</h2>
@@ -115,15 +121,15 @@ const ChatReport = () => {
                 <table className="table table-bordered table-hover align-middle text-center">
                     <thead>
                         <tr>
-                            <th style={{ backgroundColor: "#00695C", color: "white" , textAlign: "center"}}> S.No </th>
-                            <th style={{ backgroundColor: "#00695C", color: "white" , textAlign: "center"}}> Reason </th>
-                            <th style={{ backgroundColor: "#00695C", color: "white" , textAlign: "center"}}> Description </th>
-                            <th style={{ backgroundColor: "#00695C", color: "white" , textAlign: "center"}}> Reported User </th>
-                            <th style={{ backgroundColor: "#00695C", color: "white" , textAlign: "center"}}> Reporter </th>
-                            <th style={{ backgroundColor: "#00695C", color: "white" , textAlign: "center"}}> Status </th>
-                            <th style={{ backgroundColor: "#00695C", color: "white" , textAlign: "center"}}> Reported At </th>
-                            <th style={{ backgroundColor: "#00695C", color: "white" , textAlign: "center"}}> Chat </th>
-                            <th style={{ backgroundColor: "#00695C", color: "white" , textAlign: "center"}}> Admin Comment </th>
+                            <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}> S.No </th>
+                            <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}> Reason </th>
+                            <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}> Description </th>
+                            <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}> Reported User </th>
+                            <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}> Reporter </th>
+                            <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}> Status </th>
+                            <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}> Reported At </th>
+                            <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}> Chat </th>
+                            <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}> Admin Comment </th>
                             {activeTab === "PENDING" && (
                                 <th style={{ backgroundColor: "#00695C", color: "white", textAlign: "center" }}>
                                     Action
@@ -168,12 +174,12 @@ const ChatReport = () => {
                                     <td>
                                         <span
                                             className={`badge ${item.status === "PENDING"
-                                                    ? "bg-warning text-dark"
-                                                    : item.status === "APPROVED"
-                                                        ? "bg-success"
-                                                        : item.status === "REJECTED"
-                                                            ? "bg-info"
-                                                            : "bg-danger"
+                                                ? "bg-warning text-dark"
+                                                : item.status === "APPROVED"
+                                                    ? "bg-success"
+                                                    : item.status === "REJECTED"
+                                                        ? "bg-info"
+                                                        : "bg-danger"
                                                 }`}
                                         >
                                             {item.status}
@@ -224,43 +230,24 @@ const ChatReport = () => {
             </div>
 
             {/* Pagination */}
-            <ul className="pagination">
-                <li
-                    className={`page-item ${currentPage === 1 ? "disabled" : ""
-                        }`}
-                >
+            <ul className="pagination justify-content-center">
+                <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
                     <button
                         className="page-link"
-                        onClick={() => setCurrentPage(currentPage - 1)}
+                        onClick={() => setCurrentPage((p) => p - 1)}
                     >
                         Prev
                     </button>
                 </li>
 
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                    (num) => (
-                        <li
-                            key={num}
-                            className={`page-item ${currentPage === num ? "active" : ""
-                                }`}
-                        >
-                            <button
-                                className="page-link"
-                                onClick={() => setCurrentPage(num)}
-                            >
-                                {num}
-                            </button>
-                        </li>
-                    )
-                )}
+                <li className="page-item active">
+                    <span className="page-link">{currentPage}</span>
+                </li>
 
-                <li
-                    className={`page-item ${currentPage === totalPages ? "disabled" : ""
-                        }`}
-                >
+                <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
                     <button
                         className="page-link"
-                        onClick={() => setCurrentPage(currentPage + 1)}
+                        onClick={() => setCurrentPage((p) => p + 1)}
                     >
                         Next
                     </button>

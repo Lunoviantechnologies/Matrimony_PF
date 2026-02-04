@@ -3,6 +3,7 @@ import "../styleSheets/loginStyle.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../redux/thunk/loginThunk";
+import { toast } from "react-toastify";
 
 const Login = ({ show, onClose }) => {
 
@@ -36,7 +37,7 @@ const Login = ({ show, onClose }) => {
                 }
             })
             .catch(() => {
-                alert("Login failed. Please check your credentials.");
+                toast.error("Login failed. Please check your credentials.");
             });
     };
 

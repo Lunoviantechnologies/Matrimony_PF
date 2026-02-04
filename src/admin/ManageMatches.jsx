@@ -15,6 +15,8 @@ export default function ManageMatches() {
   const [activeProfile, setActiveProfile] = useState(null);
   const [anchorRect, setAnchorRect] = useState(null);
   const [viewport, setViewport] = useState({ w: 0, h: 0 });
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
   /* -----------------------------------
      Fetch ACCEPTED friends
@@ -78,7 +80,19 @@ export default function ManageMatches() {
       };
     })
     .filter(Boolean);
-    // console.log("friendPairs : ", friendPairs);
+  // console.log("friendPairs : ", friendPairs);
+
+  const totalPages = Math.max(1, Math.ceil(friendPairs.length / pageSize));
+  const paginatedPairs = friendPairs.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [totalPages, currentPage]);
 
   /* -----------------------------------
      Popover handlers
@@ -129,7 +143,7 @@ export default function ManageMatches() {
       <h2 className="mm-title">Matched Profiles</h2>
 
       <div className="mm-list">
-        {friendPairs.map((m, index) => (
+        {paginatedPairs.map((m, index) => (
           <div key={index} className="mm-pair-card">
 
             {/* Left user */}
@@ -202,6 +216,26 @@ export default function ManageMatches() {
           </div>
         </>
       )}
+
+      <div className="mm-pagination">
+        <button
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage(prev => prev - 1)}
+          className="pagination_btn"
+        >
+          Prev
+        </button>
+
+        <span className="mm-page-number">{currentPage}</span>
+
+        <button
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage(prev => prev + 1)}
+          className="pagination_btn"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

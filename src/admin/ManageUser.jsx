@@ -5,7 +5,7 @@ import { fetchAdminProfiles } from "../redux/thunk/profileThunk";
 import { toast } from "react-toastify";
 import api from "../api/axiosInstance";
 
-export default function ManageUser({ pageSize = 10 }) {
+export default function ManageUser() {
   const dispatch = useDispatch();
   const { token, role } = useSelector((state) => state.auth);
   const { profiles, loading } = useSelector((state) => state.profiles);
@@ -15,6 +15,7 @@ export default function ManageUser({ pageSize = 10 }) {
   const [detailUser, setDetailUser] = useState(null);
   const [confirm, setConfirm] = useState({ open: false, user: null });
   const [page, setPage] = useState(1);
+  const pageSize = 10;
 
   useEffect(() => {
     if (role[0].toUpperCase() === "ADMIN") {
@@ -42,44 +43,30 @@ export default function ManageUser({ pageSize = 10 }) {
   const filteredUsers = useMemo(() => {
     const safeSearch = String(search || "").toLowerCase();
 
-    return profiles.filter((u) => {
-      const name = `${u.firstName || ""} ${u.lastName || ""}`.toLowerCase();
-      const matchSearch = name.includes(safeSearch);
-      const matchStatus = statusFilter ? u.profileStatus === statusFilter : true;
-      return matchSearch && matchStatus;
-    });
+    return profiles
+      .filter(u => u.accountStatus && u.accountStatus.toUpperCase() === "APPROVED" )
+      .filter((u) => {
+        const name = `${u.firstName || ""} ${u.lastName || ""}`.toLowerCase();
+        const matchSearch = name.includes(safeSearch);
+        const matchStatus = statusFilter ? u.profileStatus === statusFilter : true;
+        return matchSearch && matchStatus;
+      });
   }, [profiles, search, statusFilter]);
 
-  const totalPages = Math.ceil(filteredUsers.length / pageSize) || 1;
-
+  const totalPages = Math.max(1, Math.ceil(filteredUsers.length / pageSize));
   const paginatedUsers = filteredUsers.slice(
     (page - 1) * pageSize,
     page * pageSize
   );
 
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [totalPages, page]);
+
   const openDetail = (user) => setDetailUser(user);
   const closeDetail = () => setDetailUser(null);
-
-  // ------------------------------
-  // NUMERIC PAGINATION BUTTONS
-  // ------------------------------
-  const PaginationButtons = () => {
-    let buttons = [];
-
-    for (let i = 1; i <= totalPages; i++) {
-      buttons.push(
-        <button
-          key={i}
-          className={`pg-btn ${page === i ? "active" : ""}`}
-          onClick={() => setPage(i)}
-        >
-          {i}
-        </button>
-      );
-    }
-
-    return buttons;
-  };
 
   return (
     <div className="manage-users-root">
@@ -115,7 +102,7 @@ export default function ManageUser({ pageSize = 10 }) {
         <table className="mu-table">
           <thead>
             <tr>
-              <th>Thumbnail</th>
+              <th>User Id</th>
               <th>User</th>
               <th>Age</th>
               <th>City</th>
@@ -140,7 +127,7 @@ export default function ManageUser({ pageSize = 10 }) {
               </tr>
             ) : (
               paginatedUsers.map((u, index) => {
-                const initials = `${(u.firstName || "U").charAt(0)}${(u.lastName || "").charAt(0)}`.toUpperCase();
+                // const initials = `${(u.firstName || "U").charAt(0)}${(u.lastName || "").charAt(0)}`.toUpperCase();
 
                 return (
                   <tr
@@ -148,7 +135,7 @@ export default function ManageUser({ pageSize = 10 }) {
                     className={u.active !== true ? "mu-row-muted" : ""}
                   >
                     <td>
-                      <div className="mu-avatar">{initials}</div>
+                      <div className="mu-avatar">{u.id}</div>
                     </td>
 
                     <td onClick={() => openDetail(u)}>
@@ -157,7 +144,7 @@ export default function ManageUser({ pageSize = 10 }) {
                           <div className="mu-name">
                             {u.firstName} {u.lastName}
                           </div>
-                          <div className="mu-id">ID: {getUserId(u) || "N/A"}</div>
+                          {/* <div className="mu-id">ID: {getUserId(u) || "N/A"}</div> */}
                         </div>
                       </div>
                     </td>
@@ -166,7 +153,7 @@ export default function ManageUser({ pageSize = 10 }) {
                     <td>{u.city || "-"}</td>
 
                     <td>
-                      <span className={`mu-badge ${u.premium ? "premium" : "" }`}>
+                      <span className={`mu-badge ${u.premium ? "premium" : ""}`}>
                         {u.premium ? "Premium" : "Free"}
                       </span>
                     </td>
@@ -197,31 +184,25 @@ export default function ManageUser({ pageSize = 10 }) {
         </table>
       </div>
 
-      {/* FOOTER + PAGINATION */}
-      <div className="mu-footer">
-        <span className="mu-rows-info">
-          Showing {paginatedUsers.length} of {filteredUsers.length} users
-        </span>
+      {/* PAGINATION */}
+      <div className="mu-pagination mt-3">
+        <button
+          className="pagination_btn"
+          disabled={page === 1}
+          onClick={() => setPage((p) => p - 1)}
+        >
+          Prev
+        </button>
 
-        <div className="mu-pagination">
-          <button
-            className="pg-btn"
-            disabled={page === 1}
-            onClick={() => setPage((p) => p - 1)}
-          >
-            Prev
-          </button>
+        <span className="mm-page-number">{page}</span>
 
-          {PaginationButtons()}
-
-          <button
-            className="pg-btn"
-            disabled={page === totalPages}
-            onClick={() => setPage((p) => p + 1)}
-          >
-            Next
-          </button>
-        </div>
+        <button
+          className="pagination_btn"
+          disabled={page === totalPages}
+          onClick={() => setPage((p) => p + 1)}
+        >
+          Next
+        </button>
       </div>
 
       {/* MODALS (DETAIL + CONFIRM DELETE) */}

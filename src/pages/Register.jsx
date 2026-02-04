@@ -1,14 +1,12 @@
-
-
-  import React, { useState } from "react";
-  import { Formik, Form, Field, ErrorMessage } from "formik";
-  import * as Yup from "yup";
-  import { FaUser, FaUserFriends, FaMapMarkerAlt, FaBriefcase, FaGraduationCap, FaRing, FaBookOpen, FaUserCheck } from "react-icons/fa";
-  import "../styleSheets/register.css";
-  import axios from "axios";
-  import backendIP from "../api/api";
-  import { useNavigate } from "react-router-dom";
-  import { toast } from "react-toastify";
+import React, { useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { FaUser, FaUserFriends, FaMapMarkerAlt, FaBriefcase, FaGraduationCap, FaRing, FaBookOpen, FaUserCheck } from "react-icons/fa";
+import "../styleSheets/register.css";
+import axios from "axios";
+import backendIP from "../api/api";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
   /* -------------------------------------------------------------
     INITIAL VALUES
@@ -52,27 +50,27 @@
     role: "USER",
   };
 
-  /* -------------------------------------------------------------
-    STEP-WISE VALIDATION
-  ------------------------------------------------------------- */
-  const validationSchemas = [
-    // STEP 1
-    Yup.object({
-      profileFor: Yup.string().required("Select one"),
+/* -------------------------------------------------------------
+  STEP-WISE VALIDATION
+------------------------------------------------------------- */
+const validationSchemas = [
+  // STEP 1
+  Yup.object({
+    profileFor: Yup.string().required("Select one"),
 
-      gender: Yup.string()
-        .nullable()
-        .when("profileFor", (profileFor, schema) => {
-          if (
-            profileFor === "Myself" ||
-            profileFor === "My Friend" ||
-            profileFor === "My Relative"
-          ) {
-            return schema.required("Select gender");
-          }
-          return schema.notRequired();
-        }),
-    }),
+    gender: Yup.string()
+      .nullable()
+      .when("profileFor", (profileFor, schema) => {
+        if (
+          profileFor === "Myself" ||
+          profileFor === "My Friend" ||
+          profileFor === "My Relative"
+        ) {
+          return schema.required("Select gender");
+        }
+        return schema.notRequired();
+      }),
+  }),
 
     // STEP 2
     Yup.object({
@@ -97,33 +95,33 @@
           otherwise: (schema) => schema.notRequired(),
         }),
 
-      dobDay: Yup.number()
-        .typeError("Date must be a number")
-        .min(1, "Minimum date is 1")
-        .max(31, "Maximum date is 31")
-        .nullable(),
+    dobDay: Yup.number()
+      .typeError("Date must be a number")
+      .min(1, "Minimum date is 1")
+      .max(31, "Maximum date is 31")
+      .nullable(),
 
-      dobMonth: Yup.number()
-        .typeError("Month must be a number")
-        .min(1, "Minimum month is 1")
-        .max(12, "Maximum month is 12")
-        .nullable(),
+    dobMonth: Yup.number()
+      .typeError("Month must be a number")
+      .min(1, "Minimum month is 1")
+      .max(12, "Maximum month is 12")
+      .nullable(),
 
-      dobYear: Yup.number()
-        .typeError("Year must be a number")
-        .integer("Year must be an integer")
-        .min(1900, "Enter valid year")
-        .max(new Date().getFullYear(), "Year cannot be in future")
-        .nullable(),
-    }),
+    dobYear: Yup.number()
+      .typeError("Year must be a number")
+      .integer("Year must be an integer")
+      .min(1900, "Enter valid year")
+      .max(new Date().getFullYear(), "Year cannot be in future")
+      .nullable(),
+  }),
 
 
-    // STEP 3
-    Yup.object({
-      religion: Yup.string().required("Religion is required"),
-      subCaste: Yup.string().required("Sub-Community is required"),
-      gothram: Yup.string().required("Gothram is required"),
-    }),
+  // STEP 3
+  Yup.object({
+    religion: Yup.string().required("Religion is required"),
+    subCaste: Yup.string().required("Sub-Community is required"),
+    gothram: Yup.string().required("Gothram is required"),
+  }),
 
 
     // STEP 4
@@ -140,63 +138,63 @@ Yup.object({
 }),
 // sidence status required"),
 
-    // STEP 5
-    Yup.object({
-      maritalStatus: Yup.string().required("marital Status required"),
-      height: Yup.string().required("Height is required"),
-    }),
+  // STEP 5
+  Yup.object({
+    maritalStatus: Yup.string().required("marital Status required"),
+    height: Yup.string().required("Height is required"),
+  }),
 
-    // STEP 6
-    Yup.object({
-      highestEducation: Yup.string().required("Required"),
-      collegeName: Yup.string().required("Required"),
-    }),
+  // STEP 6
+  Yup.object({
+    highestEducation: Yup.string().required("Required"),
+    collegeName: Yup.string().required("Required"),
+  }),
 
-    // STEP 7
-    Yup.object({
-      sector: Yup.string().required("Required"),
-      occupation: Yup.string().required("Required"),
-      companyName: Yup.string().required("Required"),
-    }),
+  // STEP 7
+  Yup.object({
+    sector: Yup.string().required("Required"),
+    occupation: Yup.string().required("Required"),
+    companyName: Yup.string().required("Required"),
+  }),
 
-    // STEP 8
-    Yup.object({
-      emailId: Yup.string().email("Invalid emailId").required("Email is Required"),
-      mobileNumber: Yup.string()
-        .matches(/^\d{10}$/, "Enter 10-digit mobile")
-        .required("Required"),
-      createPassword: Yup.string().required("Password is required")
-        .min(8, "Password must be at least 8 characters")
-        .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
-          "Password must contain uppercase, lowercase, number, and special character"
-        ),
-      documentFile: Yup.mixed()
-        .required("Document is required")
-        .test("fileType", "Only JPG, PNG or PDF allowed", (value) => {
-          return value && ["image/jpeg", "image/png", "application/pdf"].includes(value.type);
-        })
-        .test("fileSize", "File too large (max 2MB)", (value) => {
-          return value && value.size <= 2 * 1024 * 1024;
-        }),
-    }),
+  // STEP 8
+  Yup.object({
+    emailId: Yup.string().email("Invalid emailId").required("Email is Required"),
+    mobileNumber: Yup.string()
+      .matches(/^\d{10}$/, "Enter 10-digit mobile")
+      .required("Required"),
+    createPassword: Yup.string().required("Password is required")
+      .min(8, "Password must be at least 8 characters")
+      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
+        "Password must contain uppercase, lowercase, number, and special character"
+      ),
+    documentFile: Yup.mixed()
+      .required("Document is required")
+      .test("fileType", "Only JPG, PNG or PDF allowed", (value) => {
+        return value && ["image/jpeg", "image/png", "application/pdf"].includes(value.type);
+      })
+      .test("fileSize", "File too large (max 2MB)", (value) => {
+        return value && value.size <= 2 * 1024 * 1024;
+      }),
+  }),
 
-    // STEP 9 (NO validation)
-    Yup.object({}),
-  ];
-  const calculateAge = (day, month, year) => {
-    if (!day || !month || !year) return "";
+  // STEP 9 (NO validation)
+  Yup.object({}),
+];
+const calculateAge = (day, month, year) => {
+  if (!day || !month || !year) return "";
 
-    const dob = new Date(year, month - 1, day);
-    const today = new Date();
+  const dob = new Date(year, month - 1, day);
+  const today = new Date();
 
-    if (isNaN(dob.getTime())) return "";
+  if (isNaN(dob.getTime())) return "";
 
-    let age = today.getFullYear() - dob.getFullYear();
-    const m = today.getMonth() - dob.getMonth();
+  let age = today.getFullYear() - dob.getFullYear();
+  const m = today.getMonth() - dob.getMonth();
 
-    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-      age--;
-    }
+  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+    age--;
+  }
 
     return age >= 0 ? age : "";
   };
@@ -471,8 +469,8 @@ const religionSubCommunityMap = {
 
 
 
-  /* ---------------- GOTHRA LIST ---------------- */
-  const gothramList = [
+/* ---------------- GOTHRA LIST ---------------- */
+const gothramList = [
   "Bharadwaj",
     "Kashyapa / Kaashyapa",
     "Gautam / Gouthama",
@@ -571,60 +569,60 @@ const [citiesList, setCitiesList] = useState([]);
 
     const navigate = useNavigate();
 
-    const [emailVerified, setEmailVerified] = useState(false);
-    const [otpSent, setOtpSent] = useState(false);
-    const [otp, setOtp] = useState("");
-    const [loading, setLoading] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    // Height calculations
+  // Height calculations
 
-    const heights = [];
+  const heights = [];
 
-    for (let cm = 122; cm <= 213; cm++) { // 4'0" to 7'0"
-      const feet = Math.floor(cm / 30.48);
-      const inches = Math.round((cm / 2.54) % 12);
+  for (let cm = 122; cm <= 213; cm++) { // 4'0" to 7'0"
+    const feet = Math.floor(cm / 30.48);
+    const inches = Math.round((cm / 2.54) % 12);
 
-      heights.push({
-        label: `${feet} ft ${inches} in (${cm} cm)`,
-        value: cm
-      });
-    };
+    heights.push({
+      label: `${feet} ft ${inches} in (${cm} cm)`,
+      value: cm
+    });
+  };
 
-    /* -------------------------------------------------------------
-      NEXT STEP HANDLER
-    ------------------------------------------------------------- */
-    const nextStep = async (validateForm, setTouched) => {
-      const allErrors = await validateForm();
+  /* -------------------------------------------------------------
+    NEXT STEP HANDLER
+  ------------------------------------------------------------- */
+  const nextStep = async (validateForm, setTouched) => {
+    const allErrors = await validateForm();
 
-      // Get only fields of current step
-      const stepFields = Object.keys(validationSchemas[step - 1].fields);
+    // Get only fields of current step
+    const stepFields = Object.keys(validationSchemas[step - 1].fields);
 
-      const stepErrors = {};
+    const stepErrors = {};
+    stepFields.forEach((field) => {
+      if (allErrors[field]) stepErrors[field] = allErrors[field];
+    });
+
+    // If current step has errors → touch only those
+    if (Object.keys(stepErrors).length > 0) {
+      const touchedFields = {};
       stepFields.forEach((field) => {
-        if (allErrors[field]) stepErrors[field] = allErrors[field];
+        touchedFields[field] = true;
       });
 
-      // If current step has errors → touch only those
-      if (Object.keys(stepErrors).length > 0) {
-        const touchedFields = {};
-        stepFields.forEach((field) => {
-          touchedFields[field] = true;
-        });
+      setTouched((prev) => ({ ...prev, ...touchedFields }));
+      return;
+    }
 
-        setTouched((prev) => ({ ...prev, ...touchedFields }));
-        return;
-      }
+    // Move to next step
+    if (step < totalSteps) setStep(step + 1);
+  };
 
-      // Move to next step
-      if (step < totalSteps) setStep(step + 1);
-    };
-
-    /* -------------------------------------------------------------
-      PREVIOUS STEP
-    ------------------------------------------------------------- */
-    const prevStep = () => {
-      if (step > 1) setStep(step - 1);
-    };
+  /* -------------------------------------------------------------
+    PREVIOUS STEP
+  ------------------------------------------------------------- */
+  const prevStep = () => {
+    if (step > 1) setStep(step - 1);
+  };
 
    const handleSubmit = (values) => {
 
@@ -637,8 +635,8 @@ const [citiesList, setCitiesList] = useState([]);
 
     dateOfBirth:
       values.dobDay && values.dobMonth && values.dobYear
-        ? `${values.dobYear}-${values.dobMonth}-${values.dobDay}`
-        : null,
+          ? `${values.dobYear}-${String(values.dobMonth).padStart(2, '0')}-${String(values.dobDay).padStart(2, '0')}`
+          : null,
 
     religion: values.religion,
 
@@ -699,129 +697,129 @@ const [citiesList, setCitiesList] = useState([]);
 };
 
 
-    const sendEmailOtp = async (email) => {
-      try {
-        setLoading(true);
-        await axios.post(`${backendIP}/auth/register/send-otp`, { email });
-        setOtpSent(true);
-        toast.success("OTP sent to your email");
-      } catch (err) {
-        toast.error("Failed to send OTP");
-        console.log("error : ", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const sendEmailOtp = async (email) => {
+    try {
+      setLoading(true);
+      await axios.post(`${backendIP}/auth/register/send-otp`, { email });
+      setOtpSent(true);
+      toast.success("OTP sent to your email");
+    } catch (err) {
+      toast.error("Failed to send OTP");
+      console.log("error : ", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const verifyEmailOtp = async (email) => {
-      try {
-        setLoading(true);
+  const verifyEmailOtp = async (email) => {
+    try {
+      setLoading(true);
 
-        const res = await axios.post(`${backendIP}/auth/register/verify-otp`,
-          {
-            email: email,
-            otp: Number(otp)
-          }
-        );
-        console.log("OTP verification response:", email, otp, res.data);
-
-        if (res.data === "Email verified successfully") {
-          setEmailVerified(true);
-          toast.success("Email verified successfully");
-        } else {
-          toast.error("Invalid OTP");
+      const res = await axios.post(`${backendIP}/auth/register/verify-otp`,
+        {
+          email: email,
+          otp: Number(otp)
         }
-      } catch (err) {
-        toast.error("OTP verification failed");
-      } finally {
-        setLoading(false);
+      );
+      console.log("OTP verification response:", email, otp, res.data);
+
+      if (res.data === "Email verified successfully") {
+        setEmailVerified(true);
+        toast.success("Email verified successfully");
+      } else {
+        toast.error("Invalid OTP");
       }
-    };
+    } catch (err) {
+      toast.error("OTP verification failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    /* -------------------------------------------------------------
-      RENDER STEP CONTENT
-    ------------------------------------------------------------- */
-    const renderStep = (values, setFieldValue, setTouched) => {
-      switch (step) {
-        /* ---------------------- STEP 1 ----------------------- */
-        case 1:
-          return (
-            <>
-              <div className="step-icon"><FaUserFriends /></div>
-              <h2>This profile is for</h2>
+  /* -------------------------------------------------------------
+    RENDER STEP CONTENT
+  ------------------------------------------------------------- */
+  const renderStep = (values, setFieldValue, setTouched) => {
+    switch (step) {
+      /* ---------------------- STEP 1 ----------------------- */
+      case 1:
+        return (
+          <>
+            <div className="step-icon"><FaUserFriends /></div>
+            <h2>This profile is for</h2>
 
-              {/* PROFILE FOR OPTIONS */}
-              <div className="option-group">
-                {["Myself", "My Son", "My Daughter", "My Brother", "My Sister", "My Friend", "My Relative",].map((option) => (
-                  <button
-                    type="button"
-                    key={option}
-                    className={`option-btn ${values.profileFor === option ? "selected" : ""
-                      }`}
-                    onClick={() => {
-                      setFieldValue("profileFor", option);
-                      setTouched({ profileFor: true });
+            {/* PROFILE FOR OPTIONS */}
+            <div className="option-group">
+              {["Myself", "My Son", "My Daughter", "My Brother", "My Sister", "My Friend", "My Relative",].map((option) => (
+                <button
+                  type="button"
+                  key={option}
+                  className={`option-btn ${values.profileFor === option ? "selected" : ""
+                    }`}
+                  onClick={() => {
+                    setFieldValue("profileFor", option);
+                    setTouched({ profileFor: true });
 
-                      // AUTO-SET GENDER LOGIC
-                      if (option === "My Son" || option === "My Brother") {
-                        setFieldValue("gender", "Male");
+                    // AUTO-SET GENDER LOGIC
+                    if (option === "My Son" || option === "My Brother") {
+                      setFieldValue("gender", "Male");
+                      setTouched({ gender: true });
+                    } else if (option === "My Daughter" || option === "My Sister") {
+                      setFieldValue("gender", "Female");
+                      setTouched({ gender: true });
+                    } else {
+                      // For Myself / My Friend / My Relative → Manual gender selection
+                      setFieldValue("gender", "");
+                    }
+                  }}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+
+            <ErrorMessage name="profileFor" component="div" className="error-text" />
+
+            {/* MANUAL GENDER SELECTION ONLY FOR THESE */}
+            {["Myself", "My Friend", "My Relative"].includes(values.profileFor) && (
+              <>
+                <h3 className="mt-3">
+                  {values.profileFor === "My Friend"
+                    ? "Is your friend Male or Female?"
+                    : values.profileFor === "My Relative"
+                      ? "Is your relative Male or Female?"
+                      : "Are you Male or Female?"}
+                </h3>
+
+                <div className="option-group">
+                  {["Male", "Female"].map((g) => (
+                    <button
+                      type="button"
+                      key={g}
+                      className={`option-btn ${values.gender === g ? "selected" : ""
+                        }`}
+                      onClick={() => {
+                        setFieldValue("gender", g);
                         setTouched({ gender: true });
-                      } else if (option === "My Daughter" || option === "My Sister") {
-                        setFieldValue("gender", "Female");
-                        setTouched({ gender: true });
-                      } else {
-                        // For Myself / My Friend / My Relative → Manual gender selection
-                        setFieldValue("gender", "");
-                      }
-                    }}
-                  >
-                    {option}
-                  </button>
-                ))}
-              </div>
+                      }}
+                    >
+                      {g}
+                    </button>
+                  ))}
+                </div>
 
-              <ErrorMessage name="profileFor" component="div" className="error-text" />
+                <ErrorMessage name="gender" component="div" className="error-text" />
+              </>
+            )}
+          </>
+        );
 
-              {/* MANUAL GENDER SELECTION ONLY FOR THESE */}
-              {["Myself", "My Friend", "My Relative"].includes(values.profileFor) && (
-                <>
-                  <h3 className="mt-3">
-                    {values.profileFor === "My Friend"
-                      ? "Is your friend Male or Female?"
-                      : values.profileFor === "My Relative"
-                        ? "Is your relative Male or Female?"
-                        : "Are you Male or Female?"}
-                  </h3>
-
-                  <div className="option-group">
-                    {["Male", "Female"].map((g) => (
-                      <button
-                        type="button"
-                        key={g}
-                        className={`option-btn ${values.gender === g ? "selected" : ""
-                          }`}
-                        onClick={() => {
-                          setFieldValue("gender", g);
-                          setTouched({ gender: true });
-                        }}
-                      >
-                        {g}
-                      </button>
-                    ))}
-                  </div>
-
-                  <ErrorMessage name="gender" component="div" className="error-text" />
-                </>
-              )}
-            </>
-          );
-
-        /* ---------------------- STEP 2 ----------------------- */
-        case 2:
-          return (
-            <>
-              <div className="step-icon"><FaUser /></div>
-              <h2>Tell us about you</h2>
+      /* ---------------------- STEP 2 ----------------------- */
+      case 2:
+        return (
+          <>
+            <div className="step-icon"><FaUser /></div>
+            <h2>Tell us about you</h2>
 
               {/* First Name */}
              <Field name="firstName">
@@ -962,11 +960,11 @@ const [citiesList, setCitiesList] = useState([]);
 </Field>
 
 
-              <ErrorMessage name="dobDay" component="div" className="error-text" />
-              <ErrorMessage name="dobMonth" component="div" className="error-text" />
-              <ErrorMessage name="dobYear" component="div" className="error-text" />
-            </>
-          );
+            <ErrorMessage name="dobDay" component="div" className="error-text" />
+            <ErrorMessage name="dobMonth" component="div" className="error-text" />
+            <ErrorMessage name="dobYear" component="div" className="error-text" />
+          </>
+        );
 
 
         /* ---------------------- STEP 3 ----------------------- */
@@ -1098,16 +1096,16 @@ const [citiesList, setCitiesList] = useState([]);
 
               <ErrorMessage name="gothram" component="div" className="error-text" />
 
-              {/* Gothram Other */}
-              {(values.gothram === "Others" || values.gothram === "Dont know") && (
-                <Field
-                  name="gothramOther"
-                  className="form-input"
-                  placeholder="Enter Gothram"
-                />
-              )}
-            </>
-          );
+            {/* Gothram Other */}
+            {(values.gothram === "Others" || values.gothram === "Dont know") && (
+              <Field
+                name="gothramOther"
+                className="form-input"
+                placeholder="Enter Gothram"
+              />
+            )}
+          </>
+        );
 
         /* ---------------------- STEP 4 ----------------------- */
      case 4:
@@ -1231,151 +1229,151 @@ const [citiesList, setCitiesList] = useState([]);
 )}
 
 
-              <Field name="noOfChildren" className="form-input" placeholder="Number Of Childern (Optional)" />
+            <Field name="noOfChildren" className="form-input" placeholder="Number Of Childern (Optional)" />
 
-              <Field as="select" name="height" className="form-select">
-                <option value={""} disabled>Select your Height</option>
-                {heights.map((h) => (
-                  <option key={h.value} value={h.value}>
-                    {h.label}
-                  </option>
-                ))}
-              </Field>
-            </>
-          )
+            <Field as="select" name="height" className="form-select">
+              <option value={""} disabled>Select your Height</option>
+              {heights.map((h) => (
+                <option key={h.value} value={h.value}>
+                  {h.label}
+                </option>
+              ))}
+            </Field>
+          </>
+        )
 
-        /* ---------------------- STEP 6 ----------------------- */
-        case 6:
-          return (
-            <>
-              <div className="step-icon"><FaGraduationCap /></div>
-              <h2>Education</h2>
+      /* ---------------------- STEP 6 ----------------------- */
+      case 6:
+        return (
+          <>
+            <div className="step-icon"><FaGraduationCap /></div>
+            <h2>Education</h2>
 
-              <Field as="select" name="highestEducation" className="form-select">
-                <option value={""} disabled>Select your higher Qualification</option>
-                <option value="Tenth">10th</option>
-                <option value="Twelfth">12th / Intermediate</option>
-                <option value="Diploma">Diploma</option>
-                <option value="B.A">B.A</option>
-                <option value="B.Sc">B.Sc</option>
-                <option value="B.Com">B.Com</option>
-                <option value="B.E / B.Tech">B.E / B.Tech</option>
-                <option value="MBBS">MBBS</option>
-                <option value="LLB">LLB</option>
-                <option value="M.A">M.A</option>
-                <option value="M.Sc">M.Sc</option>
-                <option value="M.Com">M.Com</option>
-                <option value="M.E / M.Tech">M.E / M.Tech</option>
-                <option value="MBA">MBA</option>
-                <option value="MCA">MCA</option>
-                <option value="CA">CA</option>
-                <option value="CS">CS</option>
-                <option value="ICWA">ICWA</option>
-                <option value="PhD">PhD</option>
-              </Field>
+            <Field as="select" name="highestEducation" className="form-select">
+              <option value={""} disabled>Select your higher Qualification</option>
+              <option value="Tenth">10th</option>
+              <option value="Twelfth">12th / Intermediate</option>
+              <option value="Diploma">Diploma</option>
+              <option value="B.A">B.A</option>
+              <option value="B.Sc">B.Sc</option>
+              <option value="B.Com">B.Com</option>
+              <option value="B.E / B.Tech">B.E / B.Tech</option>
+              <option value="MBBS">MBBS</option>
+              <option value="LLB">LLB</option>
+              <option value="M.A">M.A</option>
+              <option value="M.Sc">M.Sc</option>
+              <option value="M.Com">M.Com</option>
+              <option value="M.E / M.Tech">M.E / M.Tech</option>
+              <option value="MBA">MBA</option>
+              <option value="MCA">MCA</option>
+              <option value="CA">CA</option>
+              <option value="CS">CS</option>
+              <option value="ICWA">ICWA</option>
+              <option value="PhD">PhD</option>
+            </Field>
 
-              <Field name="collegeName" className="form-input" placeholder="College / University Name" />
-              <ErrorMessage name="collegeName" component="div" className="error-text" />
-            </>
-          );
+            <Field name="collegeName" className="form-input" placeholder="College / University Name" />
+            <ErrorMessage name="collegeName" component="div" className="error-text" />
+          </>
+        );
 
-        /* ---------------------- STEP 7 ----------------------- */
-        case 7:
-          return (
-            <>
-              <div className="step-icon"><FaBriefcase /></div>
-              <h2>Career Details</h2>
+      /* ---------------------- STEP 7 ----------------------- */
+      case 7:
+        return (
+          <>
+            <div className="step-icon"><FaBriefcase /></div>
+            <h2>Career Details</h2>
 
-              <Field as="select" name="sector" placeholder="Sector" className="form-select">
-                <option value={""} disabled>Select your sector</option>
-                <option value="Government">Government / PSU</option>
-                <option value="Private">Private</option>
-                <option value="Business">Business</option>
-                <option value="Self-Employed">Self-Employed / Freelancer</option>
-                <option value="Defense">Defense / Armed Forces</option>
-                <option value="Not Working">Not Working</option>
-              </Field>
+            <Field as="select" name="sector" placeholder="Sector" className="form-select">
+              <option value={""} disabled>Select your sector</option>
+              <option value="Government">Government / PSU</option>
+              <option value="Private">Private</option>
+              <option value="Business">Business</option>
+              <option value="Self-Employed">Self-Employed / Freelancer</option>
+              <option value="Defense">Defense / Armed Forces</option>
+              <option value="Not Working">Not Working</option>
+            </Field>
 
-              <Field name="occupation" className="form-input" placeholder="Your Profession" />
-              <ErrorMessage name="occupation" component="div" className="error-text" />
+            <Field name="occupation" className="form-input" placeholder="Your Profession" />
+            <ErrorMessage name="occupation" component="div" className="error-text" />
 
-              <Field name="companyName" className="form-input" placeholder="Company Name" />
-              <ErrorMessage name="companyName" component="div" className="error-text" />
+            <Field name="companyName" className="form-input" placeholder="Company Name" />
+            <ErrorMessage name="companyName" component="div" className="error-text" />
 
-              <Field name="workLocation" className="form-input" placeholder="Enter your working Location" />
+            <Field name="workLocation" className="form-input" placeholder="Enter your working Location" />
 
-              <Field as="select" name="annualIncome" className="form-select">
-                <option value={""} disabled>Select your yearly Income</option>
-                <option value={"Below ₹ 1 Lakh yearly"}>Below ₹ 1 Lakh yearly</option>
-                <option value={"₹ 1 to 3 Lakh yearly"}>₹ 1 to 3 Lakh yearly</option>
-                <option value={"₹ 3 to 5 Lakh yearly"}>₹ 3 to 5 Lakh yearly</option>
-                <option value={"₹ 5 to 7 Lakh yearly"}>₹ 5 to 7 Lakh yearly</option>
-                <option value={"₹ 7 to 10 Lakh yearly"}>₹ 7 to 10 Lakh yearly</option>
-                <option value={"₹ 10 to 15 Lakh yearly"}>₹ 10 to 15 Lakh yearly</option>
-                <option value={"Above ₹ 15 Lakh yearly"}>Above ₹ 15 Lakh yearly</option>
-              </Field>
-            </>
-          );
+            <Field as="select" name="annualIncome" className="form-select">
+              <option value={""} disabled>Select your yearly Income</option>
+              <option value={"Below ₹ 1 Lakh yearly"}>Below ₹ 1 Lakh yearly</option>
+              <option value={"₹ 1 to 3 Lakh yearly"}>₹ 1 to 3 Lakh yearly</option>
+              <option value={"₹ 3 to 5 Lakh yearly"}>₹ 3 to 5 Lakh yearly</option>
+              <option value={"₹ 5 to 7 Lakh yearly"}>₹ 5 to 7 Lakh yearly</option>
+              <option value={"₹ 7 to 10 Lakh yearly"}>₹ 7 to 10 Lakh yearly</option>
+              <option value={"₹ 10 to 15 Lakh yearly"}>₹ 10 to 15 Lakh yearly</option>
+              <option value={"Above ₹ 15 Lakh yearly"}>Above ₹ 15 Lakh yearly</option>
+            </Field>
+          </>
+        );
 
-        /* ---------------------- STEP 8 ----------------------- */
-        case 8:
-          return (
-            <>
-              <div className="step-icon"><FaUser /></div>
-              <h2>Contact Information</h2>
+      /* ---------------------- STEP 8 ----------------------- */
+      case 8:
+        return (
+          <>
+            <div className="step-icon"><FaUser /></div>
+            <h2>Contact Information</h2>
 
-              {/* EMAIL */}
-              <div className="email-verify-box">
-                <Field
-                  name="emailId"
-                  className="form-input"
-                  placeholder="Email Address"
-                  disabled={emailVerified}
-                  onChange={(e) => { setFieldValue("emailId", e.target.value); }}
-                />
+            {/* EMAIL */}
+            <div className="email-verify-box">
+              <Field
+                name="emailId"
+                className="form-input"
+                placeholder="Email Address"
+                disabled={emailVerified}
+                onChange={(e) => { setFieldValue("emailId", e.target.value); }}
+              />
 
-                {!emailVerified && (
-                  <button
-                    type="button"
-                    className="verify-btn"
-                    disabled={!values.emailId || loading}
-                    onClick={() => sendEmailOtp(values.emailId)}
-                  >
-                    {
-                      loading ? (
-                        <span className="btn-loader" />
-                      ) : otpSent ? ("Resend OTP") : ("Verify Email")
-                    }
-                  </button>
-                )}
-
-                {emailVerified && (
-                  <span className="verified-text">✅ Verified</span>
-                )}
-              </div>
-
-              <ErrorMessage name="emailId" component="div" className="error-text" />
-
-              {/* OTP */}
-              {otpSent && !emailVerified && (
-                <div className="otp-box">
-                  <input
-                    type="text"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    placeholder="Enter OTP"
-                    className="form-input"
-                  />
-                  <button
-                    type="button"
-                    className="verify-btn"
-                    disabled={!otp || loading}
-                    onClick={() => verifyEmailOtp(values.emailId)}
-                  >
-                    Confirm OTP
-                  </button>
-                </div>
+              {!emailVerified && (
+                <button
+                  type="button"
+                  className="verify-btn"
+                  disabled={!values.emailId || loading}
+                  onClick={() => sendEmailOtp(values.emailId)}
+                >
+                  {
+                    loading ? (
+                      <span className="btn-loader" />
+                    ) : otpSent ? ("Resend OTP") : ("Verify Email")
+                  }
+                </button>
               )}
+
+              {emailVerified && (
+                <span className="verified-text">✅ Verified</span>
+              )}
+            </div>
+
+            <ErrorMessage name="emailId" component="div" className="error-text" />
+
+            {/* OTP */}
+            {otpSent && !emailVerified && (
+              <div className="otp-box">
+                <input
+                  type="text"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  placeholder="Enter OTP"
+                  className="form-input"
+                />
+                <button
+                  type="button"
+                  className="verify-btn"
+                  disabled={!otp || loading}
+                  onClick={() => verifyEmailOtp(values.emailId)}
+                >
+                  Confirm OTP
+                </button>
+              </div>
+            )}
 
              <Field name="mobileNumber">
   {({ field }) => (
@@ -1396,66 +1394,66 @@ const [citiesList, setCitiesList] = useState([]);
 
               <ErrorMessage name="mobileNumber" component="div" className="error-text" />
 
-              <Field name="createPassword" className="form-input" placeholder="Create Password" />
-              <ErrorMessage name="createPassword" component="div" className="error-text" />
+            <Field name="createPassword" className="form-input" placeholder="Create Password" />
+            <ErrorMessage name="createPassword" component="div" className="error-text" />
 
-              <label className="form-label mt-3">Upload Document (ID Proof Aadhar or PAN)</label>
-              <input
-                type="file"
-                accept=".jpg,.jpeg,.png,.pdf"
-                name="documentFile"
-                className="form-input"
-                onChange={(event) => {
-                  setFieldValue("documentFile", event.currentTarget.files[0]);
-                }}
-              />
-              <ErrorMessage name="documentFile" component="div" className="error-text" />
-            </>
-          );
+            <label className="form-label mt-3">Upload Document (ID Proof Aadhar or PAN)</label>
+            <input
+              type="file"
+              accept=".jpg,.jpeg,.png,.pdf"
+              name="documentFile"
+              className="form-input"
+              onChange={(event) => {
+                setFieldValue("documentFile", event.currentTarget.files[0]);
+              }}
+            />
+            <ErrorMessage name="documentFile" component="div" className="error-text" />
+          </>
+        );
 
-        /* ---------------------- STEP 9 ----------------------- */
-        case 9:
-          return (
-            <>
-              <div className="step-icon"><FaRing /></div>
-              <h2>Confirm & Submit</h2>
-              <p>Please review your details and submit your profile.</p>
+      /* ---------------------- STEP 9 ----------------------- */
+      case 9:
+        return (
+          <>
+            <div className="step-icon"><FaRing /></div>
+            <h2>Confirm & Submit</h2>
+            <p>Please review your details and submit your profile.</p>
 
-              <button type="submit" className="submit-btn">
-                Create My Profile
-              </button>
-            </>
-          );
+            <button type="submit" className="submit-btn">
+              Create My Profile
+            </button>
+          </>
+        );
 
-        default:
-          return null;
-      }
-    };
+      default:
+        return null;
+    }
+  };
 
-    /* -------------------------------------------------------------
-      MAIN RETURN
-    ------------------------------------------------------------- */
-    return (
-      <div className="matrimony-container">
-        <div className="form-wrapper">
+  /* -------------------------------------------------------------
+    MAIN RETURN
+  ------------------------------------------------------------- */
+  return (
+    <div className="matrimony-container">
+      <div className="form-wrapper">
 
-          {/* PROGRESS BAR */}
-          <div className="progress-bar-container">
-            <div
-              className="progress-bar"
-              style={{ width: `${(step / totalSteps) * 100}%` }}
-            ></div>
-          </div>
+        {/* PROGRESS BAR */}
+        <div className="progress-bar-container">
+          <div
+            className="progress-bar"
+            style={{ width: `${(step / totalSteps) * 100}%` }}
+          ></div>
+        </div>
 
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchemas[step - 1]}
-            onSubmit={handleSubmit}
-          >
-            {({ values, validateForm, setTouched, setFieldValue }) => (
-              <Form className="fade-in">
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchemas[step - 1]}
+          onSubmit={handleSubmit}
+        >
+          {({ values, validateForm, setTouched, setFieldValue }) => (
+            <Form className="fade-in">
 
-                {renderStep(values, setFieldValue, setTouched)}
+              {renderStep(values, setFieldValue, setTouched)}
 
                 {/* NAVIGATION BUTTONS */}
                 <div className="nav-buttons d-flex justify-content-evenly" style={{ marginTop: 25 }}>
@@ -1479,12 +1477,12 @@ const [citiesList, setCitiesList] = useState([]);
                   )}
                 </div>
 
-              </Form>
-            )}
-          </Formik>
-        </div>
+            </Form>
+          )}
+        </Formik>
       </div>
-    );
-  };
+    </div>
+  );
+};
 
-  export default Register;
+export default Register;
