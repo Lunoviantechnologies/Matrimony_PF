@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import AstroScore from "./AstroScore";
 
 const AstroTalkQuery = () => {
-
     const [astroInfo, setAstroInfo] = useState([]);
     const { id, myProfile } = useSelector(state => state.auth);
     const dispatch = useDispatch();
@@ -22,7 +21,16 @@ const AstroTalkQuery = () => {
 
     useEffect(() => {
         dispatch(fetchMyProfile(id));
-    }, [id]);
+    }, [id, dispatch]);
+
+    // 🔹 Get latest plan
+    const sortedPayments = [...(myProfile?.payments || [])].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+
+    const activePlanCode = sortedPayments[0]?.planCode || "";
+
+    const isPlatinum = activePlanCode.startsWith("PLATINUM");
 
     return (
         <div className="astro-container">
@@ -31,55 +39,83 @@ const AstroTalkQuery = () => {
                 Get accurate guidance for marriage, compatibility & future life
             </p>
 
-            <div>
-                <AstroScore />
+            <div className="astro-content d-flex justify-content-center align-items-center">
+                <div>
+                    <AstroScore />
+                </div>
+
+                <div>
+                    {!isPlatinum ? (
+                        <div className="astro-grid">
+                            {astroInfo.map((astro) => (
+                                <div className="astro-card text-center" key={astro.id}>
+                                    <div className="astro-avatar">
+                                        {astro.name.charAt(0)}
+                                    </div>
+                                    <h3 className="astro-name">{astro.name}</h3>
+
+                                    {/* 🔒 Hidden details */}
+                                    <div className="blurred-text mt-2">
+                                        Upgrade to Platinum to view astrologer details
+                                    </div>
+
+                                    <button
+                                        className="upgrade-btn mt-3"
+                                        onClick={() => navigate("/dashboard/premium")}
+                                    >
+                                        Upgrade to Platinum
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="astro-grid">
+                            {astroInfo.map((astro) => (
+                                <div className="astro-card" key={astro.id}>
+                                    <div className="astro-avatar">
+                                        {astro.name.charAt(0)}
+                                    </div>
+
+                                    <h3 className="astro-name">{astro.name}</h3>
+                                    <p className="astro-info">
+                                        <strong>{astro.experience}+ yrs</strong> Experience
+                                    </p>
+
+                                    <div className="astro-rating">
+                                        Rating : <FaStar className="pb-1" /> {4.5}
+                                    </div>
+
+                                    <div className="astro-price">
+                                        ₹{astro.price}/min
+                                    </div>
+
+                                    <div className="astro-languages">
+                                        <span className="astro-info">
+                                            <strong>Languages:</strong> {astro.languages}
+                                        </span>
+                                    </div>
+
+                                    <div className="astro-languages">
+                                        <span className="astro-number">
+                                            <strong>Mobile:</strong> {astro.astroNumber}
+                                        </span>
+                                    </div>
+
+                                    <a
+                                        href={`https://wa.me/${astro.astroNumber}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="astro-whatsapp"
+                                    >
+                                        📞 Chat on WhatsApp
+                                    </a>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
-
-            {
-                !myProfile?.premium ? (
-                    <div className="astro-upgrade">
-                        <h3>Premium Feature</h3>
-                        <p>
-                            Upgrade to <strong>Premium</strong> to access Astrology Consultations.
-                        </p>
-                        <button className="upgrade-btn" onClick={ () => navigate("/dashboard/premium")}>
-                            Upgrade Now
-                        </button>
-                    </div>
-                ) : (
-                    <div className="astro-grid">
-                        {astroInfo.map((astro) => (
-                            <div className="astro-card" key={astro.id}>
-                                <div className="astro-avatar">
-                                    {astro.name.charAt(0)}
-                                </div>
-
-                                <h3 className="astro-name">{astro.name}</h3>
-                                <p className="astro-info">
-                                    <strong>{astro.experience}+ yrs</strong> Experience
-                                </p>
-                                <div className="astro-rating">
-                                    Rating : <FaStar className="pb-1" /> {4.5}
-                                </div>
-                                <div className="astro-price">
-                                    ₹{astro.price}/min
-                                </div>
-                                <div className="astro-languages">
-                                    <span className="astro-info">
-                                        <strong>Languages:</strong> {astro.languages}
-                                    </span>
-                                </div>
-                                <div className="astro-languages">
-                                    <span className="astro-number">
-                                        <strong>Mobile:</strong> {astro.astroNumber}
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
-                    </div >
-                )
-            }
-        </div >
+        </div>
     );
 };
 

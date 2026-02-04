@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../styleSheets/EditProfile.css";
 import { FaCamera, FaChevronRight, FaEdit, FaPlus } from "react-icons/fa";
-import backendIP from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import imageCompression from "browser-image-compression";

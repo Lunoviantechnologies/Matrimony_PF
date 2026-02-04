@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import App from "../App";
 import Register from "../pages/Register";
 import PremiumSubscription from '../pages/PremiumSubscription';
@@ -71,13 +71,13 @@ const AppRoutes = createBrowserRouter([
                 path: "/contactUs",
                 element: <ContactUs />
             },
-           {
-        path: "/resources",
-        element: <Resourses />, // <Outlet />
-        children: [
-          { path: "blog", element: <Blog /> },
-        ]
-      },
+            {
+                path: "/resources",
+                element: <Resourses />, // <Outlet />
+                children: [
+                    { path: "blog", element: <Blog /> },
+                ]
+            },
             {
                 path: "/register",
                 element: <Register />
@@ -132,7 +132,7 @@ const AppRoutes = createBrowserRouter([
                 path: "",
                 element: <Dashboard />
             },
-             {
+            {
                 path: "dashboardads",
                 element: <DashboardAds />
             },
@@ -152,6 +152,7 @@ const AppRoutes = createBrowserRouter([
                 path: "matches",
                 element: <Matches />,
                 children: [
+                    { index: true, element: <Navigate to="newmatches" replace /> },
                     {
                         path: "mymatches",
                         element: <MyMatches />
@@ -174,6 +175,7 @@ const AppRoutes = createBrowserRouter([
                 path: "requests",
                 element: <Requests />,
                 children: [
+                    { index: true, element: <Navigate to="received" replace /> },
                     {
                         path: "accepted",
                         element: <Accepted />
