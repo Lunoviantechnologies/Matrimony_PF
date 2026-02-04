@@ -1,3 +1,5 @@
+
+
   import React, { useState } from "react";
   import { Formik, Form, Field, ErrorMessage } from "formik";
   import * as Yup from "yup";
@@ -28,7 +30,11 @@
     gothramOther: "",
     motherTongue: "",
     country: "",
+    state: "",
+
     city: "",
+    residenceStatus: "",
+
     maritalStatus: "",
     noOfChildren: "",
     height: "",
@@ -70,10 +76,15 @@
 
     // STEP 2
     Yup.object({
-      firstName: Yup.string().required("First name is Required"),
-      lastName: Yup.string().required("Last name is Required"),
+      firstName: Yup.string()
+        .matches(/^[A-Za-z\s]+$/, "Only letters allowed")
+        .required("First name is Required"),
 
-      // 👇 AGE: required ONLY if DOB is NOT fully provided
+      lastName: Yup.string()
+        .matches(/^[A-Za-z\s]+$/, "Only letters allowed")
+        .required("Last name is Required"),
+
+            // 👇 AGE: required ONLY if DOB is NOT fully provided
       age: Yup.number()
         .typeError("Age must be a number")
         .when(["dobDay", "dobMonth", "dobYear"], {
@@ -116,10 +127,18 @@
 
 
     // STEP 4
-    Yup.object({
-      country: Yup.string().required("Country is required"),
-      city: Yup.string().required("City is required"),
-    }),
+ // STEP 4
+Yup.object({
+  country: Yup.string().required("Country is required"),
+  state: Yup.string().required("State is required"),
+
+  city: Yup.string()
+    .matches(/^[A-Za-z\s]+$/, "Only letters allowed")
+    .required("City is required"),
+
+  residenceStatus: Yup.string().required("Residence status required")
+}),
+// sidence status required"),
 
     // STEP 5
     Yup.object({
@@ -181,55 +200,276 @@
 
     return age >= 0 ? age : "";
   };
-  /* ---------------- SUB COMMUNITY LIST ---------------- */
-  const subCommunityList = [
-    "Ayodhi",
-    "Bhoomanchi Reddy",
-    "Chowdary",
-    "Desuru",
-    "Gandla",
-    "Ganjam",
-    "Gone Kapu",
-    "Gudati",
-    "Kapu",
-    "Motati",
-    "Palle",
-    "Palnati",
-    "Panta",
-    "Pedakanti",
-    "Poknati",
-    "Reddiyar",
-    "Sajjana",
-    "Vanni",
-    "Velanati",
-    "Balija",
-    "Balija Naidu",
-    "Balija Setty",
-    "Telaga",
-    "Telaga Kapu",
-    "Naidu Kapu",
-    "Munnuru Kapu",
-    "Ontari",
-    "Ontari Kapu",
-    "Kamma Kapu",
-    "Turpu Kapu",
-    "Rayalaseema Kapu",
-    "Coastal Kapu",
-    "Uttara Kapu",
-    "Dakshina Kapu",
-    "Golla Kapu",
-    "Kuruba Kapu",
-    "Boyar Kapu",
-    "Gavara",
-    "Gavara Naidu",
-    "Kalinga Kapu",
-    "Kapu Reddy",
-    "Kapu Velama",
-    "Kapu Naicker",
-    "General Kapu",
-    "Other Kapu Sub-Caste",
-    "Others"
+  const Hinducommunity =[
+
   ];
+  
+    const HindusubCommunityList = [ "Ayodhi", "Bhoomanchi Reddy", "Chowdary", "Desuru", "Gandla", "Ganjam", "Gone Kapu", "Gudati", "Kapu", "Motati", "Palle", "Palnati", "Panta", "Pedakanti", "Poknati", "Reddiyar", "Sajjana", "Vanni", "Velanati", "Balija", "Balija Naidu", "Balija Setty", "Telaga", "Telaga Kapu", "Naidu Kapu", "Munnuru Kapu", "Ontari", "Ontari Kapu", "Kamma Kapu", "Turpu Kapu", "Rayalaseema Kapu", "Coastal Kapu", "Uttara Kapu", "Dakshina Kapu", "Golla Kapu", "Kuruba Kapu", "Boyar Kapu", "Gavara", "Gavara Naidu", "Kalinga Kapu", "Kapu Reddy", "Kapu Velama", "Kapu Naicker", "General Kapu", "Other Kapu Sub-Caste", "Others" ];
+  
+  const muslimCommunityList = [
+  "Shia",
+  "Sunni",
+
+  "Ansari",
+  "Arain",
+  "Awan",
+  "Bohra",
+  "Dekkani",
+  "Dudekula",
+  "Hanafi",
+  "Jat",
+  "Khoja",
+  "Lebbai",
+  "Malik",
+  "Mapila",
+  "Maraicar",
+  "Memon",
+  "Mughal",
+  "Pathan",
+  "Qureshi",
+  "Rajput",
+  "Rowther",
+  "Shafi",
+  "Sheikh",
+  "Siddiqui",
+  "Syed",
+  "Others",
+  "UnSpecified",
+
+  "Other Caste",
+  "Don't wish to specify"
+];
+const jainDigambarCommunityList = [
+  "Jain - Agarwal",
+  "Jain - Asati",
+  "Jain - Ayodhyavasi",
+  "Jain - Bagherwal",
+  "Jain - Bania",
+  "Jain - Barhiya",
+  "Jain - Charanagare",
+  "Jain - Chaturtha",
+  "Jain - Dhakada",
+  "Jain - Gahoi / Grihapati",
+  "Jain - Golalare / Kharaua",
+  "Jain - Golapurva",
+  "Jain - Golsinghare",
+  "Jain - Harada",
+  "Jain - Humad / Humbad",
+  "Jain - Intercaste",
+  "Jain - Jaiswal",
+  "Jain - KVO",
+  "Jain - Kambhoja",
+  "Jain - Kasar",
+  "Jain - Kathanere",
+  "Jain - Khandelwal",
+  "Jain - Kharaua",
+  "Jain - Kutchi",
+  "Jain - Lamechu",
+  "Jain - Nema",
+  "Jain - Oswal",
+  "Jain - Padmavati Porwal",
+  "Jain - Palliwar",
+  "Jain - Panchama",
+  "Jain - Parmar",
+  "Jain - Parwar / Paravara",
+  "Jain - Porwad / Porwal",
+  "Jain - Porwal",
+  "Jain - Saitwal",
+  "Jain - Samanar / Nayinar",
+  "Jain - Samiya",
+  "Jain - Sarak",
+  "Jain - Shrimali",
+  "Jain - Upadhyaya",
+  "Jain - Vaishya",
+  "Jain - Veerwal",
+  "Jain - Others",
+  "Jain - Unspecified",
+  "Other Caste",
+  "Don’t wish to specify"
+];
+const sikhFullCommunityList = [
+  "Jat Sikh",
+  "Khatri Sikh",
+  "Arora Sikh",
+  "Ramgarhia",
+  "Ahluwalia",
+  "Mazhabi Sikh",
+  "Ravidassia",
+  "Labana",
+  "Saini Sikh",
+  "Bhatra Sikh",
+  "Nai Sikh",
+  "Ravidasia Sikh",
+  "Valmiki Sikh",
+  "Sikh – Others",
+  "Sikh – Not Specified"
+];
+const christianDivisionList = [
+  "Roman Catholic",
+  "Latin Catholic",
+  "Syro Malabar",
+  "Syro Malankara",
+  "Malankara Catholic",
+  "Orthodox",
+  "Jacobite",
+  "Marthoma",
+  "Church of South India (CSI)",
+  "Church of North India (CNI)",
+  "Anglican / Episcopal",
+  "Protestant",
+  "Pentecost",
+  "Brethren",
+  "Baptist",
+  "Evangelist",
+  "Born Again",
+  "Lutheran",
+  "Methodist",
+  "Presbyterian",
+  "Seventh-day Adventist",
+  "Adventist",
+  "Assembly of God (AG)",
+  "Church of God",
+  "Church of Christ",
+  "Reformed Baptist",
+  "Reformed Presbyterian",
+  "Mennonite",
+  "Moravian",
+  "Congregational",
+  "Calvinist",
+  "Apostolic",
+  "Malabar Independent Syrian Church",
+  "Knanaya Catholic",
+  "Knanaya Jacobite",
+  "Chaldean Syrian",
+  "Melkite",
+  "Jehovah’s Witness",
+  "Latter Day Saints (LDS)",
+  "Anglo-Indian",
+  "Christian – Others",
+  "Christian – Not Specified"
+];
+const christianCasteList = [
+  // SC origin
+  "Mala",
+  "Madiga",
+  "Adi Andhra",
+  "Adi Dravida",
+  "Adi Karnataka",
+  "Pulaya",
+  "Paraiyar",
+  "Sambava",
+  "Pallan / Devandra Kula Vellalar",
+  "Rohit / Chamar",
+
+  // BC / OBC origin
+  "Kapu Christian",
+  "Reddy Christian",
+  "Balija Christian",
+  "Telaga Christian",
+  "Velama Christian",
+  "Kamma Christian",
+  "Gavara Christian",
+  "Goud Christian",
+  "Yadava Christian",
+  "Vaddera Christian",
+  "Perika Christian",
+  "Kummari Christian",
+  "Rajaka / Vannar Christian",
+
+  // Forward / OC
+  "Brahmin Christian",
+  "Kshatriya Christian",
+  "Vaishya Christian",
+
+  // Regional
+  "Latin Christian",
+  "Syrian Christian",
+  "Knanaya Christian",
+  "Anglo-Indian Christian",
+
+  // General
+  "Christian – Others",
+  "Christian – No Caste",
+  "Christian – Not Specified"
+];
+const jainShwetambarCommunityList = [
+  "Jain - Oswal",
+  "Jain - Porwal",
+  "Jain - Shrimali",
+  "Jain - Khandelwal",
+  "Jain - Agarwal",
+  "Jain - Kutchi",
+  "Jain - Others",
+  "Jain - Unspecified",
+  "Don’t wish to specify"
+];
+
+
+
+const buddhistCommunityList = [
+  "Theravada",
+  "Mahayana",
+  "Vajrayana",
+  "Navayana",
+  "Buddhist – Others",
+  "Buddhist – Not Specified"
+];
+const jewishCommunityList = [
+  "Ashkenazi",
+  "Sephardi",
+  "Mizrahi",
+  "Jewish – Others",
+  "Jewish – Not Specified"
+];
+
+const parsiCommunityList = [
+  "Parsi Zoroastrian",
+  "Irani Zoroastrian",
+  "Parsi – Others",
+  "Parsi – Not Specified"
+];
+
+const noReligionCommunityList = [
+  "No Religion",
+  "Atheist",
+  "Agnostic",
+  "Spiritual but not religious"
+];
+
+const interReligionCommunityList = [
+  "Inter-Religion",
+  "Inter-Caste",
+  "Mixed Religion Family"
+];
+
+
+  /* ---------------- SUB COMMUNITY LIST ---------------- */
+const religionSubCommunityMap = {
+  Hindu: HindusubCommunityList,
+
+
+  Muslim: muslimCommunityList,
+
+
+  Christian: christianCasteList,
+
+  Sikh: sikhFullCommunityList,
+
+  "Jain - Digambar": jainDigambarCommunityList,
+  "Jain - Shwetambar": jainShwetambarCommunityList,
+
+  Buddhist: buddhistCommunityList,
+
+  Jewish: jewishCommunityList,
+  Parsi: parsiCommunityList,
+  "No Religion": noReligionCommunityList,
+  "Inter-Religion": interReligionCommunityList
+};
+
+
+
+
+
 
   /* ---------------- GOTHRA LIST ---------------- */
   const gothramList = [
@@ -282,12 +522,53 @@
     "Not Sure",
     "Don’t know"
   ];
+  const religionGothramMap = {
+    Hindu: gothramList,
 
+  Muslim: ["Not applicable"],
+  Christian: ["Not applicable"],
+  Sikh: ["Not applicable"],
+  "Jain - Digambar": ["Not applicable"],
+  "Jain - Shwetambar": ["Not applicable"],
+  Buddhist: ["Not applicable"],
+  Jewish: ["Not applicable"],
+  Parsi: ["Not applicable"],
+  "No Religion": ["Not applicable"],
+  "Inter-Religion": ["Not applicable"]
+};
+const fetchStatesByCountry = async (country) => {
+  const res = await fetch("https://countriesnow.space/api/v0.1/countries/states", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ country })
+  });
 
+  const data = await res.json();
+  return data.data?.states || [];
+};
+
+const fetchCitiesByState = async (country, state) => {
+  const res = await fetch("https://countriesnow.space/api/v0.1/countries/state/cities", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      country,
+      state
+    })
+  });
+
+  const data = await res.json();
+  return data.data || [];
+};
+const allowOnlyLetters = (value) => value.replace(/[^a-zA-Z\s]/g, "");
+const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
 
   const Register = () => {
     const [step, setStep] = useState(1);
     const totalSteps = 9;
+    const [statesList, setStatesList] = useState([]);
+const [citiesList, setCitiesList] = useState([]);
+
     const navigate = useNavigate();
 
     const [emailVerified, setEmailVerified] = useState(false);
@@ -345,62 +626,78 @@
       if (step > 1) setStep(step - 1);
     };
 
-    const handleSubmit = (values) => {
-      const profileData = {
-        profileFor: values.profileFor,
-        gender: values.gender,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        age: values.age,
-        dateOfBirth: values.dobDay && values.dobMonth && values.dobYear ? `${values.dobYear}-${values.dobMonth}-${values.dobDay}`: null,
-        religion: values.religion,
-        subCaste: values.subCaste,
-        gothram: values.gothram,
-        motherTongue: values.motherTongue,
-        country: values.country,
-        city: values.city,
-        maritalStatus: values.maritalStatus,
-        noOfChildren: values.noOfChildren,
-        height: values.height,
-        highestEducation: values.highestEducation,
-        collegeName: values.collegeName,
-        sector: values.sector,
-        occupation: values.occupation,
-        companyName: values.companyName,
-        annualIncome: values.annualIncome,
-        workLocation: values.workLocation,
-        emailId: values.emailId,
-        mobileNumber: values.mobileNumber,
-        createPassword: values.createPassword,
-        role: values.role
-      };
+   const handleSubmit = (values) => {
 
-      const formData = new FormData();
+  const profileData = {
+    profileFor: values.profileFor,
+    gender: values.gender,
+    firstName: values.firstName,
+    lastName: values.lastName,
+    age: values.age,
 
-      // 👇 MUST MATCH @RequestParam("profile")
-      formData.append("profile", JSON.stringify(profileData));
+    dateOfBirth:
+      values.dobDay && values.dobMonth && values.dobYear
+        ? `${values.dobYear}-${values.dobMonth}-${values.dobDay}`
+        : null,
 
-      // 👇 MUST MATCH @RequestParam("document")
-      if (values.documentFile) {
-        formData.append("document", values.documentFile);
-      }
+    religion: values.religion,
 
-      console.log("Submitting registration:", profileData, values.documentFile);
+    // ✅ FIXED : send typed value when Others is selected
+    subCaste:
+      values.subCaste === "Others"
+        ? values.subCasteOther
+        : values.subCaste,
 
-      axios.post(`${backendIP}/profiles/register`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      })
-        .then(() => {
-          toast.success("Registration successful");
-          navigate("/registration-success");
-        })
-        .catch((error) => {
-          console.error("Upload error:", error.response?.data || error.message);
-          toast.error("Registration failed");
-        });
-    };
+    // ✅ FIXED : same for gothram
+    gothram:
+      values.gothram === "Others"
+        ? values.gothramOther
+        : values.gothram,
+
+    motherTongue: values.motherTongue,
+    country: values.country,
+    city: values.city,
+    maritalStatus: values.maritalStatus,
+    noOfChildren: values.noOfChildren,
+    height: values.height,
+    highestEducation: values.highestEducation,
+    collegeName: values.collegeName,
+    sector: values.sector,
+    occupation: values.occupation,
+    companyName: values.companyName,
+    annualIncome: values.annualIncome,
+    workLocation: values.workLocation,
+    emailId: values.emailId,
+    mobileNumber: values.mobileNumber,
+    createPassword: values.createPassword,
+    role: values.role
+  };
+
+  const formData = new FormData();
+
+  formData.append("profile", JSON.stringify(profileData));
+
+  if (values.documentFile) {
+    formData.append("document", values.documentFile);
+  }
+
+  console.log("Submitting registration:", profileData, values.documentFile);
+
+  axios.post(`${backendIP}/profiles/register`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  })
+    .then(() => {
+      toast.success("Registration successful");
+      navigate("/registration-success");
+    })
+    .catch((error) => {
+      console.error("Upload error:", error.response?.data || error.message);
+      toast.error("Registration failed");
+    });
+};
+
 
     const sendEmailOtp = async (email) => {
       try {
@@ -527,105 +824,143 @@
               <h2>Tell us about you</h2>
 
               {/* First Name */}
-              <Field
-                className="form-input"
-                name="firstName"
-                placeholder="First Name"
-              />
-              <ErrorMessage name="firstName" component="div" className="error-text" />
+             <Field name="firstName">
+  {({ field }) => (
+    <input
+      {...field}
+      className="form-input"
+      placeholder="First Name"
+      onChange={(e) => {
+        setFieldValue(
+          "firstName",
+          allowOnlyLetters(e.target.value)
+        );
+      }}
+    />
+  )}
+</Field>
 
-              {/* Last Name */}
-              <Field
-                className="form-input"
-                name="lastName"
-                placeholder="Last Name"
-              />
-              <ErrorMessage name="lastName" component="div" className="error-text" />
+            <Field name="lastName">
+  {({ field }) => (
+    <input
+      {...field}
+      className="form-input"
+      placeholder="Last Name"
+      onChange={(e) => {
+        setFieldValue(
+          "lastName",
+          allowOnlyLetters(e.target.value)
+        );
+      }}
+    />
+  )}
+</Field>
+<Field name="age">
+  {({ field }) => (
+    <input
+      {...field}
+      className="form-input"
+      placeholder="Age (Auto-calculated)"
+      disabled={values.dobDay && values.dobMonth && values.dobYear}
+      onChange={(e) => {
+        setFieldValue(
+          "age",
+          allowOnlyNumbers(e.target.value)
+        );
+      }}
+    />
+  )}
 
-              {/* AGE (AUTO-CALCULATED) */}
-              <Field
-                className="form-input"
-                name="age"
-                placeholder="Age (Auto-calculated)"
-                disabled={values.dobDay && values.dobMonth && values.dobYear}
-              />
-              <ErrorMessage name="age" component="div" className="error-text" />
+</Field>
+<ErrorMessage name="age" component="div" className="error-text" />
+
 
               {/* DATE OF BIRTH */}
-              <label className="form-label">Date of Birth</label>
-              <div className="dob-fields">
-                <Field
-                  name="dobDay"
-                  placeholder="DD"
-                  className="form-input dobInput"
-                  onChange={(e) => {
-                    const day = e.target.value;
-                    setFieldValue("dobDay", day);
+             <Field name="dobDay">
+  {({ field }) => (
+    <input
+      {...field}
+      className="form-input dobInput"
+      placeholder="DD"
+      onChange={(e) => {
+        const day = allowOnlyNumbers(e.target.value);
+        setFieldValue("dobDay", day);
 
-                    if (day && values.dobMonth && values.dobYear) {
-                      const dob = new Date(values.dobYear, values.dobMonth - 1, day);
-                      const today = new Date();
+        if (day && values.dobMonth && values.dobYear) {
+          const dob = new Date(values.dobYear, values.dobMonth - 1, day);
+          const today = new Date();
 
-                      let age = today.getFullYear() - dob.getFullYear();
-                      const m = today.getMonth() - dob.getMonth();
+          let age = today.getFullYear() - dob.getFullYear();
+          const m = today.getMonth() - dob.getMonth();
 
-                      if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-                        age--;
-                      }
+          if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+            age--;
+          }
 
-                      setFieldValue("age", age);
-                    }
-                  }}
-                />
+          setFieldValue("age", age);
+        }
+      }}
+    />
+  )}
+</Field>
 
-                <Field
-                  name="dobMonth"
-                  placeholder="MM"
-                  className="form-input dobInput"
-                  onChange={(e) => {
-                    const month = e.target.value;
-                    setFieldValue("dobMonth", month);
 
-                    if (values.dobDay && month && values.dobYear) {
-                      const dob = new Date(values.dobYear, month - 1, values.dobDay);
-                      const today = new Date();
+                <Field name="dobMonth">
+  {({ field }) => (
+    <input
+      {...field}
+      className="form-input dobInput"
+      placeholder="MM"
+      onChange={(e) => {
+        const month = allowOnlyNumbers(e.target.value);
+        setFieldValue("dobMonth", month);
 
-                      let age = today.getFullYear() - dob.getFullYear();
-                      const m = today.getMonth() - dob.getMonth();
+        if (values.dobDay && month && values.dobYear) {
+          const dob = new Date(values.dobYear, month - 1, values.dobDay);
+          const today = new Date();
 
-                      if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-                        age--;
-                      }
+          let age = today.getFullYear() - dob.getFullYear();
+          const m = today.getMonth() - dob.getMonth();
 
-                      setFieldValue("age", age);
-                    }
-                  }}
-                />
+          if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+            age--;
+          }
 
-                <Field
-                  name="dobYear"
-                  placeholder="YYYY"
-                  className="form-input dobInput"
-                  onChange={(e) => {
-                    const year = e.target.value;
-                    setFieldValue("dobYear", year);
+          setFieldValue("age", age);
+        }
+      }}
+    />
+  )}
+</Field>
 
-                    if (values.dobDay && values.dobMonth && year) {
-                      const dob = new Date(year, values.dobMonth - 1, values.dobDay);
-                      const today = new Date();
+<Field name="dobYear">
+  {({ field }) => (
+    <input
+      {...field}
+      className="form-input dobInput"
+      placeholder="YYYY"
+      onChange={(e) => {
+        const year = allowOnlyNumbers(e.target.value);
+        setFieldValue("dobYear", year);
 
-                      let age = today.getFullYear() - dob.getFullYear();
-                      const m = today.getMonth() - dob.getMonth();
+        if (values.dobDay && values.dobMonth && year) {
+          const dob = new Date(year, values.dobMonth - 1, values.dobDay);
+          const today = new Date();
 
-                      if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-                        age--;
-                      }
+          let age = today.getFullYear() - dob.getFullYear();
+          const m = today.getMonth() - dob.getMonth();
 
-                      setFieldValue("age", age);
-                    }
-                  }}
-                />
-              </div>
+          if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+            age--;
+          }
+
+          setFieldValue("age", age);
+        }
+      }}
+    />
+  )}
+</Field>
+
 
               <ErrorMessage name="dobDay" component="div" className="error-text" />
               <ErrorMessage name="dobMonth" component="div" className="error-text" />
@@ -639,18 +974,19 @@
           return (
             <>
               <div className="step-icon"><FaBookOpen /></div>
-              <h2>Religion & Community</h2>
-
-              {/* Religion */}
               <Field as="select" name="religion" className="form-select">
-                <option value="" disabled>Select Religion</option>
-                <option value="Hindu">Hindu</option>
-                <option value="Muslim">Muslim</option>
-                <option value="Christian">Christian</option>
-                <option value="Sikh">Sikh</option>
-                <option value="Jain">Jain</option>
-                <option value="Buddhist">Buddhist</option>
-              </Field>
+                  <option value="" disabled>Select Religion</option>
+
+                  <option value="Hindu">Hindu</option>
+                  <option value="Muslim">Muslim</option>
+                  <option value="Christian">Christian</option>
+                  <option value="Sikh">Sikh</option>
+
+                  <option value="Jain - Digambar">Jain - Digambar</option>
+                  <option value="Jain - Shwetambar">Jain - Shwetambar</option>
+
+                  <option value="Buddhist">Buddhist</option>
+                </Field>
               <ErrorMessage name="religion" component="div" className="error-text" />
 
               {/* Mother Tongue */}
@@ -676,25 +1012,46 @@
                 <option value="Manipuri">Manipuri</option>
                 <option value="English">English</option>
               </Field>
+              
+              
 
               {/* ---------------- SUB COMMUNITY ---------------- */}
-              <Field
-                as="select"
-                name="subCaste"
-                className="form-select"
-                onChange={(e) => {
-                  setFieldValue("subCaste", e.target.value);
-                  if (e.target.value !== "Others") {
-                    setFieldValue("subCasteOther", "");
-                  }
-                }}
-              >
-                <option value="" disabled>Select Sub-Community</option>
-                {subCommunityList.map((sc) => (
-                  <option key={sc} value={sc}>{sc}</option>
-                ))}
-                {/* <option value="Others">Others</option> */}
-              </Field>
+            <Field
+                  as="select"
+                  name="subCaste"
+                  className="form-select"
+                  onChange={(e) => {
+                    setFieldValue("subCaste", e.target.value);
+                    if (e.target.value !== "Others") {
+                      setFieldValue("subCasteOther", "");
+                    }
+                  }}
+                >
+                  <option value="" disabled>Select Sub-Community</option>
+                    <option value="No particular caste">No particular caste</option>
+                  {(religionSubCommunityMap[values.religion] || []).map((sc) => (
+                    <option key={sc} value={sc}>{sc}</option>
+                  ))}
+                </Field>
+                <div>
+                        <input
+                      type="checkbox"
+                      checked={values.subCaste === "No particular caste"}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setFieldValue("subCaste", "No particular caste");
+                          setFieldValue("subCasteOther", "");
+                        } else {
+                          setFieldValue("subCaste", "");
+                        }
+                      }}
+                    />
+                    &nbsp; No particular caste
+
+
+
+                </div>
+
               <ErrorMessage name="subCaste" component="div" className="error-text" />
 
               {/* Sub Community Other */}
@@ -705,26 +1062,40 @@
                   placeholder="Enter Sub-Community"
                 />
               )}
+              
 
               {/* ---------------- GOTHRAM ---------------- */}
-              <Field
-                as="select"
-                name="gothram"
-                className="form-select"
-                onChange={(e) => {
-                  setFieldValue("gothram", e.target.value);
-                  if (e.target.value !== "Others" && e.target.value !== "Dont know") {
-                    setFieldValue("gothramOther", "");
-                  }
-                }}
-              >
-                <option value="" disabled>Select Gothram</option>
-                {gothramList.map((g) => (
-                  <option key={g} value={g}>{g}</option>
-                ))}
-                <option value="Others">Others</option>
-                {/* <option value="Dont know">Dont know</option> */}
-              </Field>
+            <Field
+                  as="select"
+                  name="gothram"
+                  className="form-select"
+                  onChange={(e) => {
+                    setFieldValue("gothram", e.target.value);
+
+                    if (e.target.value !== "Others") {
+                      setFieldValue("gothramOther", "");
+                    }
+                  }}
+                >
+                  <option value="" disabled>Select Gothram</option>
+
+                  {(religionGothramMap[values.religion] || []).map((g) => (
+                    
+                    <option key={g} value={g}>{g}</option>
+                  ))}
+                  onChange={(e) => {
+  setFieldValue("religion", e.target.value);
+  setFieldValue("subCaste", "");
+  setFieldValue("gothram", "");
+  setFieldValue("gothramOther", "");
+}}
+
+
+                  {values.religion === "Hindu" && (
+                    <option value="Others">Others</option>
+                  )}
+                </Field>
+
               <ErrorMessage name="gothram" component="div" className="error-text" />
 
               {/* Gothram Other */}
@@ -739,25 +1110,93 @@
           );
 
         /* ---------------------- STEP 4 ----------------------- */
-        case 4:
-          return (
-            <>
-              <div className="step-icon"><FaMapMarkerAlt /></div>
-              <h2>Where do you live?</h2>
+     case 4:
+  return (
+    <>
+      <div className="step-icon"><FaMapMarkerAlt /></div>
+      <h2>Where do you live?</h2>
 
-              <Field as="select" name="country" className="form-select">
-                <option value={""} disabled>Select your Country</option>
-                <option value={"India"}>India</option>
-                <option value={"USA"}>USA</option>
-                <option value={"UK"}>UK</option>
-                <option value={"Canada"}>Canada</option>
-                <option value={"Australia"}>Australia</option>
-              </Field>
+      {/* Country */}
+      <Field
+        as="select"
+        name="country"
+        className="form-select"
+        onChange={async (e) => {
+          const country = e.target.value;
 
-              <Field name="city" className="form-input" placeholder="City" />
-              <ErrorMessage name="city" component="div" className="error-text" />
-            </>
-          );
+          setFieldValue("country", country);
+          setFieldValue("state", "");
+          setFieldValue("city", "");
+
+          setCitiesList([]);
+
+          const states = await fetchStatesByCountry(country);
+          setStatesList(states);
+        }}
+      >
+        <option value="" disabled>Select your Country</option>
+        <option value="India">India</option>
+        <option value="United States">United States</option>
+        <option value="United Kingdom">United Kingdom</option>
+        <option value="Canada">Canada</option>
+        <option value="Australia">Australia</option>
+      </Field>
+
+      {/* State */}
+      <Field
+        as="select"
+        name="state"
+        className="form-select"
+        disabled={!values.country}
+        onChange={async (e) => {
+          const state = e.target.value;
+
+          setFieldValue("state", state);
+          setFieldValue("city", "");
+
+          const cities = await fetchCitiesByState(values.country, state);
+          setCitiesList(cities);
+        }}
+      >
+        <option value="" disabled>Select State</option>
+
+        {statesList.map((s) => (
+          <option key={s.name} value={s.name}>
+            {s.name}
+          </option>
+        ))}
+      </Field>
+
+      {/* District / City */}
+      <Field
+        as="select"
+        name="city"
+        className="form-select"
+        disabled={!values.state}
+      >
+        <option value="" disabled>Select District / City</option>
+
+        {citiesList.map((c) => (
+          <option key={c} value={c}>
+            {c}
+          </option>
+        ))}
+      </Field>
+
+      <ErrorMessage name="city" component="div" className="error-text" />
+
+      {/* Residence status */}
+      <Field as="select" name="residenceStatus" className="form-select">
+        <option value="" disabled>Residence Status</option>
+        <option value="Own House">Own House</option>
+        <option value="Rented">Rented</option>
+        <option value="With Parents">With Parents</option>
+      </Field>
+
+      <ErrorMessage name="residenceStatus" component="div" className="error-text" />
+    </>
+  );
+
 
         /* ---------------------- STEP 5 ----------------------- */
         case 5:
@@ -765,13 +1204,32 @@
             <>
               <div className="step-icon"><FaUserCheck /></div>
               <h2>Marital Status & Height</h2>
-              <Field as="select" name="maritalStatus" className="form-select">
-                <option value={""} disabled>Select your Marital Status</option>
-                <option value={"Single"}>Single</option>
-                <option value={"Divorced"}>Divorced</option>
-                <option value={"Separated"}>Separated</option>
-                <option value={"Widowed"}>Widowed</option>
-              </Field>
+             <Field as="select" name="maritalStatus" className="form-select">
+  <option value="" disabled>Select your Marital Status</option>
+  <option value="Single">Single</option>
+  <option value="Divorced">Divorced</option>
+  <option value="Separated">Separated</option>
+  <option value="Widowed">Widowed</option>
+</Field>
+
+{values.maritalStatus && values.maritalStatus !== "Single" && (
+ <Field name="noOfChildren">
+  {({ field }) => (
+    <input
+      {...field}
+      className="form-input"
+      placeholder="Number Of Children"
+      onChange={(e) => {
+        setFieldValue(
+          "noOfChildren",
+          allowOnlyNumbers(e.target.value)
+        );
+      }}
+    />
+  )}
+</Field>
+)}
+
 
               <Field name="noOfChildren" className="form-input" placeholder="Number Of Childern (Optional)" />
 
@@ -919,7 +1377,23 @@
                 </div>
               )}
 
-              <Field name="mobileNumber" className="form-input" placeholder="Mobile Number" />
+             <Field name="mobileNumber">
+  {({ field }) => (
+    <input
+      {...field}
+      className="form-input"
+      placeholder="Mobile Number"
+      maxLength={10}
+      onChange={(e) => {
+        setFieldValue(
+          "mobileNumber",
+          allowOnlyNumbers(e.target.value)
+        );
+      }}
+    />
+  )}
+</Field>
+
               <ErrorMessage name="mobileNumber" component="div" className="error-text" />
 
               <Field name="createPassword" className="form-input" placeholder="Create Password" />
@@ -994,7 +1468,10 @@
                     <button
                       type="button"
                       className="next-btn"
-                      disabled={(step === 8 && !emailVerified) || (step === 8 && !values.documentFile)}
+                      disabled={
+                        (step === 8 && !emailVerified) || (step === 8 && !values.documentFile)
+                        || (step === 2 && Number(values.age) < 18)
+                      }
                       onClick={() => nextStep(validateForm, setTouched)}
                     >
                       NEXT

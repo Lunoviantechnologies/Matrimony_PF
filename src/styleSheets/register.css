@@ -2,11 +2,14 @@
   font-family: 'Inter', sans-serif;
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+  align-items: center;      /* ✅ center the card like desktop */
+  min-height: 100vh;       /* ✅ full screen */
   background-color: #D9F5E4;
   padding: 2rem 1rem;
+  overflow-y: auto;        /* ✅ allow scroll if content grows */
+  
 }
+
 
 .form-wrapper {
   background: #ffffff;
@@ -102,13 +105,16 @@ h2 {
 }
 
 .option-group {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
-  justify-content: flex-start;
+  grid-auto-flow: row;
+
+  margin-bottom: 24px;   /* ✅ add this */
 }
 
-.option-btn {
+
+/* .option-btn {
   padding: 10px 20px;
   border: 1px solid #ced4da;
   border-radius: 50px;
@@ -117,7 +123,27 @@ h2 {
   color: #495057;
   font-weight: 500;
   transition: all 0.2s;
+  width: auto;             
+  justify-self: center;  
+} */
+.option-btn {
+  padding: 10px 12px;   /* ✅ reduce side padding */
+  border: 1px solid #ced4da;
+  border-radius: 50px;
+  cursor: pointer;
+  background-color: #fff;
+  color: #495057;
+  font-weight: 500;
+  transition: all 0.2s;
+
+  width: 100%;
+  max-width: 100%;      /* ✅ never overflow grid cell */
+  justify-self: center;
+
+  white-space: normal; /* ✅ allow text wrap */
+  text-align: center;  /* ✅ center text */
 }
+
 
 .option-btn.selected {
   background-color: #eafcff;
@@ -287,7 +313,7 @@ h2 {
 }
 
 /* Mobile responsive */
-@media (max-width: 576px) {
+/* @media (max-width: 576px) {
 
   .email-verify-box,
   .otp-box {
@@ -298,4 +324,47 @@ h2 {
   .verify-btn {
     width: 100%;
   }
+} */
+
+.email-verify-box {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
+
+.otp-box {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+@media (max-width: 480px) {
+
+  /* Container spacing */
+  .matrimony-container {
+    padding: 1rem;
+  }
+
+  /* Card spacing */
+  .form-wrapper {
+    padding: 1.5rem;
+  }
+
+  /* Keep SAME 3-column layout */
+  .option-group {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  /* Prevent button overflow */
+  .option-btn {
+    padding: 8px 10px;
+    font-size: 13px;
+    line-height: 1.2;
+  }
+
+  /* Space before NEXT button */
+  .next-btn {
+    margin-top: 12px;
+  }
+}
+
