@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import imageCompression from "browser-image-compression";
 import api from "../api/axiosInstance";
+import Cropper from "react-easy-crop";
+
 import { toast } from "react-toastify";
 
 export default function EditProfile() {
@@ -19,6 +21,16 @@ export default function EditProfile() {
 
   const [openModal, setOpenModal] = useState(null);
   const [editBuffer, setEditBuffer] = useState({});
+  const [cropOpen, setCropOpen] = useState(false);
+const [selectedImage, setSelectedImage] = useState(null);
+const [previewOpen, setPreviewOpen] = useState(false);
+
+
+
+const [crop, setCrop] = useState({ x: 0, y: 0 });
+const [zoom, setZoom] = useState(1);
+const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+
 
   const fileInputRef = useRef(null);
 
@@ -161,39 +173,16 @@ export default function EditProfile() {
     setEditBuffer((p) => ({ ...p, [key]: value }));
 
   /* ------------------ Photo upload (preview only) ------------------ */
-  const handleFileChange = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+const handleFileChange = async (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
 
-    // optional: limit max selected file size client side
-    const MAX_ALLOWED_MB = 10; // you can change to 5 or 2
-    if (file.size / (1024 * 1024) > MAX_ALLOWED_MB) {
-      if (!window.confirm(`Selected file is > ${MAX_ALLOWED_MB}MB. Continue and compress?`)) {
-        return;
-      }
-    }
+  const imageUrl = URL.createObjectURL(file);
 
-    try {
-      // compress
-      const options = {
-        maxSizeMB: 1,            // final max size in MB (tune as needed)
-        maxWidthOrHeight: 1024,  // scale down big images
-        useWebWorker: true,
-        maxIteration: 10
-      };
-      const compressedFile = await imageCompression(file, options);
+  setSelectedImage(imageUrl);
+  setCropOpen(true);
+};
 
-      // show preview from compressed blob (faster and smaller)
-      const previewUrl = URL.createObjectURL(compressedFile);
-      setPhoto(previewUrl); // temporary preview
-
-      // upload compressed file
-      await uploadPhoto(compressedFile);
-    } catch (err) {
-      console.error("Compression/upload failed", err);
-      toast.error("Failed to compress or upload image");
-    }
-  };
 
   const uploadPhoto = async (file) => {
     if (!file || !id) return;
@@ -271,6 +260,41 @@ export default function EditProfile() {
       </div>
     </div>
   );
+   const createImage = (url) =>
+  new Promise((resolve, reject) => {
+    const image = new Image();
+    image.addEventListener("load", () => resolve(image));
+    image.addEventListener("error", (error) => reject(error));
+    image.setAttribute("crossOrigin", "anonymous");
+    image.src = url;
+  });
+
+async function getCroppedImg(imageSrc, pixelCrop) {
+  const image = await createImage(imageSrc);
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = pixelCrop.width;
+  canvas.height = pixelCrop.height;
+
+  ctx.drawImage(
+    image,
+    pixelCrop.x,
+    pixelCrop.y,
+    pixelCrop.width,
+    pixelCrop.height,
+    0,
+    0,
+    pixelCrop.width,
+    pixelCrop.height
+  );
+
+  return new Promise((resolve) => {
+    canvas.toBlob((file) => {
+      resolve(file);
+    }, "image/jpeg");
+  });
+}
 
   if (loading) return <div>Loading profile...</div>;
 
@@ -281,13 +305,19 @@ export default function EditProfile() {
       <main className="page-content">
         <aside className="left-column">
           <div className="photo-card">
-            <div className="photo-box">
+            <div className="photo-box"
+                style={{ "--bg-img": `url(${getProfileImage()})` }}>
               <img
-                key={photo}
-                src={getProfileImage()}
-                alt="Profile"
-                className="photo-preview"
-              />
+  key={photo}
+  src={getProfileImage()}
+  alt="Profile"
+  className="photo-preview"
+  onClick={() => {
+    if (selectedImage || photo) setPreviewOpen(true);
+  }}
+  style={{ cursor: "pointer" }}
+/>
+
 
               <div
                 className="camera-action"
@@ -455,6 +485,101 @@ export default function EditProfile() {
           </div>
         </section>
       </main>
+      {/* ------------------ Crop Photo Modal ------------------ */}
+{cropOpen && selectedImage && (
+  <div className="modal-overlay">
+    <div className="modal-card" style={{ width: 420 }}>
+
+      <div className="modal-header">
+        <h3>Adjust your photo</h3>
+        <button
+          className="modal-close"
+          onClick={() => setCropOpen(false)}
+        >
+          ✕
+        </button>
+      </div>
+
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          height: 300,
+          background: "#000"
+        }}
+      >
+        <Cropper
+          image={selectedImage}
+          crop={crop}
+          zoom={zoom}
+          aspect={1}
+          cropShape="rect"
+          showGrid={false}
+          onCropChange={setCrop}
+          onZoomChange={(z) => setZoom(Number(z))}
+          onCropComplete={(c, pixels) =>
+            setCroppedAreaPixels(pixels)
+          }
+        />
+      </div>
+
+      <div style={{ padding: 12 }}>
+        <input
+          type="range"
+          min={1}
+          max={3}
+          step={0.1}
+          value={zoom}
+          onChange={(e) => setZoom(Number(e.target.value))}
+          style={{ width: "100%" }}
+        />
+      </div>
+
+      <div className="modal-footer">
+        <button
+          className="btn-outline"
+          onClick={() => setCropOpen(false)}
+        >
+          Cancel
+        </button>
+
+        <button
+          className="btn-primary"
+          onClick={async () => {
+
+            if (!croppedAreaPixels) {
+              toast.error("Please adjust the photo");
+              return;
+            }
+
+            const croppedFile = await getCroppedImg(
+              selectedImage,
+              croppedAreaPixels
+            );
+
+            const compressed = await imageCompression(croppedFile, {
+              maxSizeMB: 1,
+              maxWidthOrHeight: 1024,
+              useWebWorker: true
+            });
+
+            const previewUrl = URL.createObjectURL(compressed);
+            setPhoto(previewUrl);
+
+            await uploadPhoto(compressed);
+
+            setCropOpen(false);
+          }}
+        >
+          Done
+        </button>
+      </div>
+
+    </div>
+  </div>
+)}
+
+              
 
       {/* ------------------ Modal ------------------ */}
       {openModal && (
@@ -475,9 +600,11 @@ export default function EditProfile() {
             </div>
           </div>
         </div>
+        
       )}
     </div>
   );
+  
 
   /* ------------------ helpers ------------------ */
 
@@ -738,6 +865,7 @@ export default function EditProfile() {
                 <input key={i} className="hobby-input" value={h} onChange={(e) => updateHobbyInBuffer("partnerHobbies", i, e.target.value)} placeholder={`Partner Hobby ${i + 1}`} />
               ))}
               <button type="button" className="add-hobby-btn" onClick={() => addHobbyToBuffer("partnerHobbies")}><FaPlus /> Add Hobby</button>
+              
             </div>
           </div>
         );

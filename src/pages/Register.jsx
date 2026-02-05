@@ -7,6 +7,7 @@ import axios from "axios";
 import backendIP from "../api/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
   /* -------------------------------------------------------------
     INITIAL VALUES
@@ -28,16 +29,14 @@ import { toast } from "react-toastify";
     gothramOther: "",
     motherTongue: "",
     country: "",
-    state: "",
-
+    stateId: "",
+districtId: "",
     city: "",
     residenceStatus: "",
-
     maritalStatus: "",
+    livingStatus: "",
     noOfChildren: "",
-    height: "",
     highestEducation: "",
-    collegeName: "",
     sector: "",
     occupation: "",
     companyName: "",
@@ -57,7 +56,6 @@ const validationSchemas = [
   // STEP 1
   Yup.object({
     profileFor: Yup.string().required("Select one"),
-
     gender: Yup.string()
       .nullable()
       .when("profileFor", (profileFor, schema) => {
@@ -72,113 +70,91 @@ const validationSchemas = [
       }),
   }),
 
-    // STEP 2
-    Yup.object({
-      firstName: Yup.string()
-        .matches(/^[A-Za-z\s]+$/, "Only letters allowed")
-        .required("First name is Required"),
+  // STEP 2
+  Yup.object({
+    firstName: Yup.string()
+      .matches(/^[A-Za-z\s]+$/, "Only letters allowed")
+      .required("First name is Required"),
 
-      lastName: Yup.string()
-        .matches(/^[A-Za-z\s]+$/, "Only letters allowed")
-        .required("Last name is Required"),
+    lastName: Yup.string()
+      .matches(/^[A-Za-z\s]+$/, "Only letters allowed")
+      .required("Last name is Required"),
 
-            // 👇 AGE: required ONLY if DOB is NOT fully provided
-      age: Yup.number()
-        .typeError("Age must be a number")
-        .when(["dobDay", "dobMonth", "dobYear"], {
-          is: (day, month, year) => !day || !month || !year,
-          then: (schema) =>
-            schema
-              .required("Age is required")
-              .min(18, "Minimum age is 18")
-              .max(60, "Maximum age is 60"),
-          otherwise: (schema) => schema.notRequired(),
-        }),
+    age: Yup.number()
+      .typeError("Age must be a number")
+      .when(["dobDay", "dobMonth", "dobYear"], {
+        is: (day, month, year) => !day || !month || !year,
+        then: (schema) =>
+          schema
+            .required("Age is required")
+            .min(18, "Minimum age is 18")
+            .max(60, "Maximum age is 60"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
 
-    dobDay: Yup.number()
-      .typeError("Date must be a number")
-      .min(1, "Minimum date is 1")
-      .max(31, "Maximum date is 31")
-      .nullable(),
-
-    dobMonth: Yup.number()
-      .typeError("Month must be a number")
-      .min(1, "Minimum month is 1")
-      .max(12, "Maximum month is 12")
-      .nullable(),
-
-    dobYear: Yup.number()
-      .typeError("Year must be a number")
-      .integer("Year must be an integer")
-      .min(1900, "Enter valid year")
-      .max(new Date().getFullYear(), "Year cannot be in future")
-      .nullable(),
+    dobDay: Yup.number().nullable(),
+    dobMonth: Yup.number().nullable(),
+    dobYear: Yup.number().nullable(),
   }),
-
 
   // STEP 3
   Yup.object({
     religion: Yup.string().required("Religion is required"),
     subCaste: Yup.string().required("Sub-Community is required"),
-    gothram: Yup.string().required("Gothram is required"),
   }),
 
-
-    // STEP 4
- // STEP 4
+  // STEP 4
+// STEP 4
 Yup.object({
   country: Yup.string().required("Country is required"),
-  state: Yup.string().required("State is required"),
-
-  city: Yup.string()
-    .matches(/^[A-Za-z\s]+$/, "Only letters allowed")
-    .required("City is required"),
-
-  residenceStatus: Yup.string().required("Residence status required")
+  stateId: Yup.string().required("State is required"),
+  city: Yup.string().required("City is required"),
+  residenceStatus: Yup.string().when("country", {
+    is: (c) => c && c !== "1",   // 1 = India id (adjust if needed)
+    then: (s) => s.required("Residence status required"),
+    otherwise: (s) => s.notRequired(),
+  }),
 }),
-// sidence status required"),
 
-  // STEP 5
+  // STEP 5  ✅ Marital only
+ Yup.object({
+  maritalStatus: Yup.string().required("Marital status required"),
+  livingStatus: Yup.string().when("maritalStatus", {
+    is: (v) => ["Divorced", "Widowed", "Separated"].includes(v),
+    then: (s) => s.required("Living status required"),
+    otherwise: (s) => s.notRequired(),
+  }),
+}),
+
+  // STEP 6  ✅ Education
   Yup.object({
-    maritalStatus: Yup.string().required("marital Status required"),
-    height: Yup.string().required("Height is required"),
+    highestEducation: Yup.string().required("Education required"),
   }),
 
-  // STEP 6
-  Yup.object({
-    highestEducation: Yup.string().required("Required"),
-    collegeName: Yup.string().required("Required"),
-  }),
-
-  // STEP 7
+  // STEP 7  ✅ Career
   Yup.object({
     sector: Yup.string().required("Required"),
     occupation: Yup.string().required("Required"),
     companyName: Yup.string().required("Required"),
   }),
 
-  // STEP 8
+  // STEP 8  ✅ Contact
   Yup.object({
     emailId: Yup.string().email("Invalid emailId").required("Email is Required"),
     mobileNumber: Yup.string()
       .matches(/^\d{10}$/, "Enter 10-digit mobile")
       .required("Required"),
-    createPassword: Yup.string().required("Password is required")
+    createPassword: Yup.string()
+      .required("Password is required")
       .min(8, "Password must be at least 8 characters")
-      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
         "Password must contain uppercase, lowercase, number, and special character"
       ),
-    documentFile: Yup.mixed()
-      .required("Document is required")
-      .test("fileType", "Only JPG, PNG or PDF allowed", (value) => {
-        return value && ["image/jpeg", "image/png", "application/pdf"].includes(value.type);
-      })
-      .test("fileSize", "File too large (max 2MB)", (value) => {
-        return value && value.size <= 2 * 1024 * 1024;
-      }),
+    documentFile: Yup.mixed().required("Document is required"),
   }),
 
-  // STEP 9 (NO validation)
+  // STEP 9
   Yup.object({}),
 ];
 const calculateAge = (day, month, year) => {
@@ -464,99 +440,30 @@ const religionSubCommunityMap = {
   "Inter-Religion": interReligionCommunityList
 };
 
-
-
-
-
-
-/* ---------------- GOTHRA LIST ---------------- */
-const gothramList = [
-  "Bharadwaj",
-    "Kashyapa / Kaashyapa",
-    "Gautam / Gouthama",
-    "Vashishtha",
-    "Vishwamitra",
-    "Atri",
-    "Angiras",
-    "Bhrigu",
-    "Parashar / Parashara",
-    "Shandilya / Sandilyasa",
-    "Kaushika / Kaushik",
-    "Kaundinya / Koundanya",
-    "Jamadagni",
-    "Markendeya",
-    "Moudgalya",
-    "Manava",
-    "Kapila",
-    "Agastya",
-    "Pulastya",
-    "Pulaha",
-    "Krishna Atreya",
-    "Sage Durvasa",
-    "Sage Lomasa",
-    "Sage Narada",
-    "Sage Valmiki",
-    "Sage Vyasa",
-    "Sage Dattatreya",
-    "Sage Sanaka",
-    "Sage Sanandana",
-    "Sage Sanatana",
-    "Sage Sanatkumara",
-    "Athreya",
-    "Kasyapa",
-    "Bhardwaj",
-    "Sandilya",
-    "Goutham",
-    "Vasishta",
-    "Vishvamitra",
-    "Koundinya",
-    "Parasar",
-    "Kausika",
-    "Family Gothra",
-    "Village Gothra",
-    "Temple Gothra",
-    "Traditional Gothra",
-    "Unknown Gothra",
-    "Not Sure",
-    "Don’t know"
-  ];
-  const religionGothramMap = {
-    Hindu: gothramList,
-
-  Muslim: ["Not applicable"],
-  Christian: ["Not applicable"],
-  Sikh: ["Not applicable"],
-  "Jain - Digambar": ["Not applicable"],
-  "Jain - Shwetambar": ["Not applicable"],
-  Buddhist: ["Not applicable"],
-  Jewish: ["Not applicable"],
-  Parsi: ["Not applicable"],
-  "No Religion": ["Not applicable"],
-  "Inter-Religion": ["Not applicable"]
-};
-const fetchStatesByCountry = async (country) => {
-  const res = await fetch("https://countriesnow.space/api/v0.1/countries/states", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ country })
-  });
-
-  const data = await res.json();
-  return data.data?.states || [];
+const fetchCountries = async () => {
+  const res = await axios.get(`${backendIP}/locations/countries`);
+  return res.data || [];
 };
 
-const fetchCitiesByState = async (country, state) => {
-  const res = await fetch("https://countriesnow.space/api/v0.1/countries/state/cities", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      country,
-      state
-    })
-  });
+const fetchStatesByCountryId = async (countryId) => {
+  const res = await axios.get(
+    `${backendIP}/locations/states/${countryId}`
+  );
+  return res.data || [];
+};
 
-  const data = await res.json();
-  return data.data || [];
+const fetchDistrictsByStateId = async (stateId) => {
+  const res = await axios.get(
+    `${backendIP}/locations/districts/${stateId}`
+  );
+  return res.data || [];
+};
+
+const fetchCitiesByDistrictId = async (districtId) => {
+  const res = await axios.get(
+    `${backendIP}/locations/cities/${districtId}`
+  );
+  return res.data || [];
 };
 const allowOnlyLetters = (value) => value.replace(/[^a-zA-Z\s]/g, "");
 const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
@@ -565,7 +472,9 @@ const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
     const [step, setStep] = useState(1);
     const totalSteps = 9;
     const [statesList, setStatesList] = useState([]);
-const [citiesList, setCitiesList] = useState([]);
+    const [countriesList, setCountriesList] = useState([]);
+    const [districtsList, setDistrictsList] = useState([]);
+    const [citiesList, setCitiesList] = useState([]);
 
     const navigate = useNavigate();
 
@@ -573,21 +482,6 @@ const [citiesList, setCitiesList] = useState([]);
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
-
-  // Height calculations
-
-  const heights = [];
-
-  for (let cm = 122; cm <= 213; cm++) { // 4'0" to 7'0"
-    const feet = Math.floor(cm / 30.48);
-    const inches = Math.round((cm / 2.54) % 12);
-
-    heights.push({
-      label: `${feet} ft ${inches} in (${cm} cm)`,
-      value: cm
-    });
-  };
-
   /* -------------------------------------------------------------
     NEXT STEP HANDLER
   ------------------------------------------------------------- */
@@ -616,6 +510,18 @@ const [citiesList, setCitiesList] = useState([]);
     // Move to next step
     if (step < totalSteps) setStep(step + 1);
   };
+  useEffect(() => {
+  const loadCountries = async () => {
+    try {
+      const data = await fetchCountries();
+      setCountriesList(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  loadCountries();
+}, []);
 
   /* -------------------------------------------------------------
     PREVIOUS STEP
@@ -646,20 +552,14 @@ const [citiesList, setCitiesList] = useState([]);
         ? values.subCasteOther
         : values.subCaste,
 
-    // ✅ FIXED : same for gothram
-    gothram:
-      values.gothram === "Others"
-        ? values.gothramOther
-        : values.gothram,
-
     motherTongue: values.motherTongue,
-    country: values.country,
-    city: values.city,
-    maritalStatus: values.maritalStatus,
+    countryId: values.country,
+    stateId: values.stateId,
+    // districtId: values.districtId,
+    // city: values.city,
+        maritalStatus: values.maritalStatus,
     noOfChildren: values.noOfChildren,
-    height: values.height,
     highestEducation: values.highestEducation,
-    collegeName: values.collegeName,
     sector: values.sector,
     occupation: values.occupation,
     companyName: values.companyName,
@@ -1061,49 +961,6 @@ const [citiesList, setCitiesList] = useState([]);
                 />
               )}
               
-
-              {/* ---------------- GOTHRAM ---------------- */}
-            <Field
-                  as="select"
-                  name="gothram"
-                  className="form-select"
-                  onChange={(e) => {
-                    setFieldValue("gothram", e.target.value);
-
-                    if (e.target.value !== "Others") {
-                      setFieldValue("gothramOther", "");
-                    }
-                  }}
-                >
-                  <option value="" disabled>Select Gothram</option>
-
-                  {(religionGothramMap[values.religion] || []).map((g) => (
-                    
-                    <option key={g} value={g}>{g}</option>
-                  ))}
-                  onChange={(e) => {
-  setFieldValue("religion", e.target.value);
-  setFieldValue("subCaste", "");
-  setFieldValue("gothram", "");
-  setFieldValue("gothramOther", "");
-}}
-
-
-                  {values.religion === "Hindu" && (
-                    <option value="Others">Others</option>
-                  )}
-                </Field>
-
-              <ErrorMessage name="gothram" component="div" className="error-text" />
-
-            {/* Gothram Other */}
-            {(values.gothram === "Others" || values.gothram === "Dont know") && (
-              <Field
-                name="gothramOther"
-                className="form-input"
-                placeholder="Enter Gothram"
-              />
-            )}
           </>
         );
 
@@ -1115,82 +972,76 @@ const [citiesList, setCitiesList] = useState([]);
       <h2>Where do you live?</h2>
 
       {/* Country */}
-      <Field
-        as="select"
-        name="country"
-        className="form-select"
-        onChange={async (e) => {
-          const country = e.target.value;
+    <Field
+  as="select"
+  name="country"
+  className="form-select"
+  onChange={async (e) => {
+    const countryId = e.target.value;
 
-          setFieldValue("country", country);
-          setFieldValue("state", "");
-          setFieldValue("city", "");
+    setFieldValue("country", countryId);
+    setFieldValue("state", "");
+    setFieldValue("stateId", "");
+    setFieldValue("districtId", "");
+    setFieldValue("city", "");
 
-          setCitiesList([]);
+    setStatesList([]);
+    setDistrictsList([]);
+    setCitiesList([]);
 
-          const states = await fetchStatesByCountry(country);
-          setStatesList(states);
-        }}
-      >
-        <option value="" disabled>Select your Country</option>
-        <option value="India">India</option>
-        <option value="United States">United States</option>
-        <option value="United Kingdom">United Kingdom</option>
-        <option value="Canada">Canada</option>
-        <option value="Australia">Australia</option>
-      </Field>
+    if (countryId) {
+      const states = await fetchStatesByCountryId(countryId);
+      setStatesList(states);
+    }
+  }}
+>
+  <option value="" disabled>Select your Country</option>
 
-      {/* State */}
-      <Field
-        as="select"
-        name="state"
-        className="form-select"
-        disabled={!values.country}
-        onChange={async (e) => {
-          const state = e.target.value;
+  {countriesList.map((c) => (
+    <option key={c.id} value={c.id}>
+      {c.name}
+    </option>
+  ))}
+</Field>
 
-          setFieldValue("state", state);
-          setFieldValue("city", "");
+<Field
+  as="select"
+  name="stateId"
+  className="form-select"
+  disabled={!values.country}
+>
+  <option value="" disabled>Select State</option>
 
-          const cities = await fetchCitiesByState(values.country, state);
-          setCitiesList(cities);
-        }}
-      >
-        <option value="" disabled>Select State</option>
+  {statesList.map((s) => (
+    <option key={s.id} value={s.id}>
+      {s.name}
+    </option>
+  ))}
+</Field>
 
-        {statesList.map((s) => (
-          <option key={s.name} value={s.name}>
-            {s.name}
-          </option>
-        ))}
-      </Field>
-
-      {/* District / City */}
-      <Field
-        as="select"
-        name="city"
-        className="form-select"
-        disabled={!values.state}
-      >
-        <option value="" disabled>Select District / City</option>
-
-        {citiesList.map((c) => (
-          <option key={c} value={c}>
-            {c}
-          </option>
-        ))}
-      </Field>
+<Field
+  name="districtId"
+  className="form-input"
+  placeholder="Enter your District"
+/>
+<Field
+  name="city"
+  className="form-input"
+  placeholder="Enter your City"
+/>
 
       <ErrorMessage name="city" component="div" className="error-text" />
 
-      {/* Residence status */}
-      <Field as="select" name="residenceStatus" className="form-select">
-        <option value="" disabled>Residence Status</option>
-        <option value="Own House">Own House</option>
-        <option value="Rented">Rented</option>
-        <option value="With Parents">With Parents</option>
-      </Field>
-
+              {/* Residence status */}
+              {values.country !== "India" && (
+                <Field as="select" name="residenceStatus" className="form-select">
+                  <option value="" disabled>Residence Status</option>
+                  <option value="Citizen">Citizen</option>
+                  <option value="NRI">NRI</option>
+                  <option value="H1">H1</option>
+                  <option value="Green Card">Green Card</option>
+                </Field>
+              )}
       <ErrorMessage name="residenceStatus" component="div" className="error-text" />
     </>
   );
@@ -1201,7 +1052,7 @@ const [citiesList, setCitiesList] = useState([]);
           return (
             <>
               <div className="step-icon"><FaUserCheck /></div>
-              <h2>Marital Status & Height</h2>
+              <h2>Marital Status</h2>
              <Field as="select" name="maritalStatus" className="form-select">
   <option value="" disabled>Select your Marital Status</option>
   <option value="Single">Single</option>
@@ -1209,6 +1060,13 @@ const [citiesList, setCitiesList] = useState([]);
   <option value="Separated">Separated</option>
   <option value="Widowed">Widowed</option>
 </Field>
+{["Divorced", "Widowed", "Separated"].includes(values.maritalStatus) && (
+  <Field as="select" name="livingStatus" className="form-select">
+    <option value="" disabled>Living status</option>
+    <option value="Staying with parents">Staying with parents</option>
+    <option value="Living separately">Living separately</option>
+  </Field>
+)}
 
 {values.maritalStatus && values.maritalStatus !== "Single" && (
  <Field name="noOfChildren">
@@ -1227,23 +1085,9 @@ const [citiesList, setCitiesList] = useState([]);
   )}
 </Field>
 )}
-
-
-            <Field name="noOfChildren" className="form-input" placeholder="Number Of Childern (Optional)" />
-
-            <Field as="select" name="height" className="form-select">
-              <option value={""} disabled>Select your Height</option>
-              {heights.map((h) => (
-                <option key={h.value} value={h.value}>
-                  {h.label}
-                </option>
-              ))}
-            </Field>
           </>
         )
-
-      /* ---------------------- STEP 6 ----------------------- */
-      case 6:
+           case 6:
         return (
           <>
             <div className="step-icon"><FaGraduationCap /></div>
@@ -1272,12 +1116,9 @@ const [citiesList, setCitiesList] = useState([]);
               <option value="PhD">PhD</option>
             </Field>
 
-            <Field name="collegeName" className="form-input" placeholder="College / University Name" />
-            <ErrorMessage name="collegeName" component="div" className="error-text" />
           </>
         );
-
-      /* ---------------------- STEP 7 ----------------------- */
+      /* ---------------------- STEP 6 ----------------------- */
       case 7:
         return (
           <>
@@ -1310,12 +1151,14 @@ const [citiesList, setCitiesList] = useState([]);
               <option value={"₹ 5 to 7 Lakh yearly"}>₹ 5 to 7 Lakh yearly</option>
               <option value={"₹ 7 to 10 Lakh yearly"}>₹ 7 to 10 Lakh yearly</option>
               <option value={"₹ 10 to 15 Lakh yearly"}>₹ 10 to 15 Lakh yearly</option>
-              <option value={"Above ₹ 15 Lakh yearly"}>Above ₹ 15 Lakh yearly</option>
+              <option value={"₹ 15 to 20 Lakh yearly"}>₹ 15 to 20 Lakh yearly</option>
+              <option value={"₹ 20 to 30 Lakh yearly"}>₹ 20 to 30 Lakh yearly</option>
+              <option value={"Above ₹ 30 Lakh yearly"}>Above ₹ 30 Lakh yearly</option>
             </Field>
           </>
         );
 
-      /* ---------------------- STEP 8 ----------------------- */
+      /* ---------------------- STEP 7 ----------------------- */
       case 8:
         return (
           <>
@@ -1411,7 +1254,7 @@ const [citiesList, setCitiesList] = useState([]);
           </>
         );
 
-      /* ---------------------- STEP 9 ----------------------- */
+      /* ---------------------- STEP 8----------------------- */
       case 9:
         return (
           <>
