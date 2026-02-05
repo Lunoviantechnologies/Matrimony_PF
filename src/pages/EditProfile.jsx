@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../styleSheets/EditProfile.css";
 import { FaCamera, FaChevronRight, FaEdit, FaPlus } from "react-icons/fa";
-import backendIP from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import imageCompression from "browser-image-compression";
@@ -412,7 +411,7 @@ async function getCroppedImg(imageSrc, pixelCrop) {
 
               <div className="right-col underlined-block">
                 <Row label="Religion" value={profileData.religion} />
-                <Row label="Sub Caste" value={profileData.subCaste} />
+                <Row label="Sub Community" value={profileData.subCaste} />
                 <Row label="Occupation" value={profileData.occupation} />
                 <Row label="Company" value={profileData.companyName} />
                 <Row label="Sector" value={profileData.sector} />
@@ -783,7 +782,7 @@ async function getCroppedImg(imageSrc, pixelCrop) {
             </label>
 
             <label className="field"><div className="field-label">Gender</div>
-              <input value={buffer.gender || ""} onChange={(e) => handleEditInputLocal("gender", e.target.value)} />
+              <input value={buffer.gender || ""} onChange={(e) => handleEditInputLocal("gender", e.target.value)} disabled />
             </label>
 
             <label className="field"><div className="field-label">Mother Tongue</div>
@@ -794,7 +793,7 @@ async function getCroppedImg(imageSrc, pixelCrop) {
               <input value={buffer.religion || ""} onChange={(e) => handleEditInputLocal("religion", e.target.value)} />
             </label>
 
-            <label className="field"><div className="field-label">Sub Caste</div>
+            <label className="field"><div className="field-label">Sub Community</div>
               <input value={buffer.subCaste || ""} onChange={(e) => handleEditInputLocal("subCaste", e.target.value)} />
             </label>
 
@@ -835,7 +834,14 @@ async function getCroppedImg(imageSrc, pixelCrop) {
         return (
           <div className="modal-form">
             <label className="field"><div className="field-label">Spiritual Path</div>
-              <input value={buffer.spiritualPath || ""} onChange={(e) => handleEditInputLocal("spiritualPath", e.target.value)} />
+              <input
+                value={buffer.spiritualPath || ""}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const onlyText = val.replace(/[0-9]/g, ""); // remove digits
+                  handleEditInputLocal("spiritualPath", onlyText);
+                }}
+              />
             </label>
           </div>
         );

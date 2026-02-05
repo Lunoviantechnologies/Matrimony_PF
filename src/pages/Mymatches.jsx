@@ -8,6 +8,7 @@ import { useOutletContext, useNavigate } from "react-router-dom";
 import api from "../api/axiosInstance";
 import { FaCrown, FaUser } from "react-icons/fa";
 import { MatchCalculation } from "../utils/MatchCalculation";
+import { toast } from "react-toastify";
 
 const MyMatches = () => {
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ const MyMatches = () => {
   const handleSendRequest = (receiverId) => {
     api.post(`/friends/send/${id}/${receiverId}`)
       .then(() => {
-        alert("Request sent successfully");
+        toast.success("Request sent successfully");
         setSentRequests(prev => [...prev, { senderId: id, receiverId }]);
       })
       .catch(err => console.error(err));

@@ -53,6 +53,8 @@ export default function SubscriptionSettings({ myProfile, navigate }) {
         return validTill && validTill >= new Date();
     });
 
+    console.log("Current Plan: ", currentPlan);
+
     /* -------------------- UI -------------------- */
     return (
         <Box

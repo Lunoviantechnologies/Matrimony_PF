@@ -1,3 +1,17 @@
+.blurred-text {
+    color: #999;
+    font-size: 14px;
+    font-style: italic;
+}
+
+.astro-whatsapp {
+    display: block;
+    margin-top: 10px;
+    font-weight: 600;
+    color: #25D366;
+    text-decoration: none;
+}
+
 .astro-upgrade {
     max-width: 420px;
     margin: 40px auto;

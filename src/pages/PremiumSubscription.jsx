@@ -222,7 +222,7 @@ function PremiumSubscription() {
   const getPlanMeta = (planCode = "") => {
     const code = planCode.toUpperCase();
     if (code.startsWith("PLATINUM")) return planMetaMap.PLATINUM;
-    if (code.startsWith("DIAMONDPLUS")) return planMetaMap.DIAMOND_PLUS;
+    if (code.startsWith("DIAMOND_PLUS")) return planMetaMap.DIAMOND_PLUS;
     if (code.startsWith("DIAMOND")) return planMetaMap.DIAMOND;
     if (code.startsWith("GOLDPLUS")) return planMetaMap.GOLD_PLUS;
     if (code.startsWith("GOLD")) return planMetaMap.GOLD;
