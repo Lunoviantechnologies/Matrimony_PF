@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import '../styleSheets/ProfileView.css';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, } from "recharts";
-import { FiCamera, FiUpload, FiEdit, FiChevronDown } from "react-icons/fi";
-import { FaHeart, FaEye, FaHandshake, FaMousePointer } from "react-icons/fa";
+import { FiEdit } from "react-icons/fi";
+import { FaEye, FaHandshake } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axiosInstance";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
+import { toast } from "react-toastify";
 
 const PROFILE_FIELDS = [
   "firstName",
@@ -32,6 +32,14 @@ const PROFILE_FIELDS = [
   "motherTongue",
   "familyType",
   "familyStatus",
+];
+
+const PHOTO_SLOTS = [
+  "updatePhoto",
+  "updatePhoto1",
+  "updatePhoto2",
+  "updatePhoto3",
+  "updatePhoto4",
 ];
 
 const calculateProfileCompletion = (profile) => {
@@ -60,7 +68,6 @@ export default function ProfileView() {
   const { id, myProfile, role } = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
-  // profile / modal state
   const [profile, setProfile] = useState(initialProfile);
   const [chartData, setChartData] = useState([]);
   const [profileView, setProfileView] = useState(0);
@@ -88,9 +95,7 @@ export default function ProfileView() {
     const fetchAcceptedRequests = async () => {
       try {
         const receivedAccepted = await api.get(`/friends/accepted/received/${id}`);
-
         const sentAccepted = await api.get(`/friends/accepted/sent/${id}`);
-
         const merged = [...receivedAccepted.data, ...sentAccepted.data];
 
         setAcceptedRequests(merged);
@@ -139,6 +144,36 @@ export default function ProfileView() {
     }));
   };
 
+  const handlePhotoUpload = async (slot, file) => {
+    if (!file || !id) return;
+
+    console.log("slot: ", slot);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      await api.put(`/profile-photos/${slot}/${id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      toast.success("Photo uploaded successfull");
+      dispatch(fetchMyProfile(id));
+    } catch (err) {
+      console.error("Upload failed:", err);
+      toast.error("Photo uploaded failed");
+    }
+  };
+
+  const handleDeletePhoto = async (slot) => {
+    try {
+      await api.delete(`/profile-photos/${slot}/${id}`);
+      dispatch(fetchMyProfile(id));
+      toast.success("Photo deleted successfull");
+    } catch (err) {
+      console.error("Delete failed:", err);
+      toast.error("Photo deleted failed");
+    }
+  };
+
   return (
     <div className="pv-container">
       <div className="pv-top">
@@ -181,10 +216,7 @@ export default function ProfileView() {
                   alt={myProfile?.firstName}
                   className="pv-profile-photo"
                   onError={(e) => {
-                    e.currentTarget.src =
-                      myProfile?.gender === "Female"
-                        ? "/placeholder_girl.png"
-                        : "/placeholder_boy.png";
+                    e.currentTarget.src = myProfile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
                   }}
                 />
               ) : (
@@ -292,6 +324,47 @@ export default function ProfileView() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className="myPhotos">
+          <h2 className="photo-header">Photos</h2>
+
+          <div className="photo-grid">
+            {PHOTO_SLOTS.map((slot, index) => {
+              const photo = myProfile?.[slot];
+
+              return (
+                <div key={slot} className="photo-box">
+                  {photo ? (
+                    <>
+                      <img src={photo} alt={`photo-${index}`} />
+
+                      <button
+                        className="delete-btn"
+                        onClick={() => handleDeletePhoto(slot)}
+                      >
+                        ✕
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <label className="upload-label">
+                        +
+                        <input
+                          type="file"
+                          hidden
+                          accept="image/*"
+                          onChange={(e) =>
+                            handlePhotoUpload(slot, e.target.files[0])
+                          }
+                        />
+                      </label>
+                    </>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

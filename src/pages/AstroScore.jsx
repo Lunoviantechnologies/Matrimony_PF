@@ -1,73 +1,86 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
-import api from "../api/axiosInstance";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
+import api from "../api/axiosInstance";
+import "../styleSheets/astroScore.css";
 
 const AstroScore = () => {
+    const dispatch = useDispatch();
+
+    const { id, role, myProfile } = useSelector(state => state.auth);
+    const { profiles } = useSelector(state => state.profiles);
+
     const [acceptedRequests, setAcceptedRequests] = useState([]);
     const [scores, setScores] = useState({});
     const [loadingId, setLoadingId] = useState(null);
-
-    const { id, role } = useSelector(state => state.auth);
-    const { myProfile } = useSelector(state => state.auth);
-    const { profiles } = useSelector(state => state.profiles);
-
-    const dispatch = useDispatch();
+    const [plans, setPlans] = useState([]);
 
     useEffect(() => {
-        if (id) dispatch(fetchMyProfile(id));
-        if (role[0].toUpperCase() === "USER") {
+        if (!id) return;
+
+        dispatch(fetchMyProfile(id));
+        if (role[0]?.toUpperCase() === "USER") {
             dispatch(fetchUserProfiles());
         }
-    }, [id, dispatch]);
+    }, [id, role, dispatch]);
+
+    useEffect(() => {
+        const fetchPlans = async () => {
+            try {
+                const res = await api.get("/plans");
+                setPlans(res.data);
+            } catch (err) {
+                console.error("Plans fetch error:", err);
+            }
+        };
+
+        fetchPlans();
+    }, []);
 
     useEffect(() => {
         if (!id) return;
 
         const fetchAcceptedRequests = async () => {
             try {
-                const receivedAccepted = await api.get(`/friends/accepted/received/${id}`);
-                const sentAccepted = await api.get(`/friends/accepted/sent/${id}`);
-                setAcceptedRequests([...receivedAccepted.data, ...sentAccepted.data]);
+                const received = await api.get(`/friends/accepted/received/${id}`);
+                const sent = await api.get(`/friends/accepted/sent/${id}`);
+
+                setAcceptedRequests([...received.data, ...sent.data]);
             } catch (error) {
-                console.error("Error fetching accepted requests:", error);
+                console.error("Accepted requests error:", error);
             }
         };
 
         fetchAcceptedRequests();
     }, [id]);
 
-    // 🔹 Latest plan
-    const sortedPayments = [...(myProfile?.payments || [])].sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-    );
+    const now = new Date();
+    const activePayment = (myProfile?.payments || [])
+        .filter(p => {
+            if (p.status !== "PAID") return false;
+            if (p.premiumEnd) {
+                return new Date(p.premiumEnd) > now;
+            }
+            return true;
+        })
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+    const activePlan = plans.find(plan => plan.planCode === activePayment?.planCode);
+    const isAstroEnabled = activePlan?.astroSupport?.toLowerCase() !== "no";
+    const isPlatinum = activePlan?.planCode?.startsWith("PLATINUM");
 
-    const activePlanCode = sortedPayments[0]?.planCode || "";
+    // console.log("activePayment: ", activePayment)
+    // console.log("activePlan: ", activePlan)
+    // console.log("isAstroEnabled: ", isAstroEnabled)
+    // console.log("isPlatinum: ", isPlatinum)
 
-    const getPlanType = () => {
-        if (activePlanCode.startsWith("GOLD")) return "GOLD";
-        if (activePlanCode.startsWith("DIAMONDPLUS")) return "DIAMONDPLUS";
-        if (activePlanCode.startsWith("DIAMOND")) return "DIAMOND";
-        if (activePlanCode.startsWith("PLATINUM")) return "PLATINUM";
-        return "FREE";
-    };
-
-    const planType = getPlanType();
-    const isAstroEnabled = ["DIAMOND", "DIAMONDPLUS", "PLATINUM"].includes(planType);
-
-    const handleGetScore = async (friendId) => {
+    const handleGetScore = async friendId => {
         try {
             setLoadingId(friendId);
-            const res = await api.post(`/astro/score`, {
-                userId: id,
-                friendId
-            });
 
-            setScores(prev => ({
-                ...prev,
-                [friendId]: res.data.score
-            }));
+            const res = await api.post(`/astrology/match/${id}/${friendId}`);
+
+            setScores(prev => ({ ...prev, [friendId]: res.data.score }));
         } catch (err) {
             console.error("Astro score error:", err);
         } finally {
@@ -75,15 +88,16 @@ const AstroScore = () => {
         }
     };
 
-    // 🔹 helper to get image from profiles
-    const getProfileImage = (userId) => {
+    const getProfileImage = userId => {
         const profile = profiles?.find(p => p.id === userId);
         return profile?.updatePhoto ? profile.updatePhoto : profile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
     };
 
     return (
         <div className="container py-4">
-            <h3 className="fw-bold mb-4 text-center">Astro Compatibility</h3>
+            <h3 className="fw-bold mb-4 text-center">
+                Astro Compatibility
+            </h3>
 
             {acceptedRequests.length === 0 && (
                 <div className="alert alert-info text-center">
@@ -91,42 +105,47 @@ const AstroScore = () => {
                 </div>
             )}
 
-            {acceptedRequests.map((req) => {
+            {acceptedRequests.map(req => {
                 const friendId = req.senderId === id ? req.receiverId : req.senderId;
                 const friendName = req.senderId === id ? req.receiverName : req.senderName;
                 const score = scores[friendId];
 
                 return (
-                    <div key={req.requestId} className="card shadow-sm border-0 mb-4">
+                    <div key={req.requestId} className="card shadow-sm border-0 mb-4" >
                         <div className="card-body">
                             <div className="row align-items-center text-center">
 
-                                {/* You */}
+                                {/* YOU */}
                                 <div className="col-md-4 mb-3 mb-md-0">
                                     <img
                                         src={getProfileImage(id)}
                                         alt="You"
-                                        className="rounded-circle mb-2"
                                         width="80"
                                         height="80"
+                                        className="rounded-circle mb-2"
                                         style={{ objectFit: "cover" }}
+                                        draggable={false}
+                                        onContextMenu={e =>
+                                            e.preventDefault()
+                                        }
                                     />
-                                    <h6 className="mb-0">You</h6>
+                                    <h6>You</h6>
                                 </div>
 
-                                {/* Middle */}
+                                {/* CENTER */}
                                 <div className="col-md-4">
+
                                     <button
                                         className="btn btn-outline-primary btn-sm px-4"
                                         disabled={!isAstroEnabled || loadingId === friendId}
                                         onClick={() => handleGetScore(friendId)}
                                     >
-                                        {loadingId === friendId ? "Calculating..." : "Check Astro Score"}
+                                        {loadingId === friendId ? "Calculating..." : "Check Score"}
                                     </button>
 
                                     {!isAstroEnabled && (
                                         <div className="mt-2 text-danger small">
-                                            Upgrade to <b>Platinum</b> for astro advanced support
+                                            Upgrade your plan for astro support
                                         </div>
                                     )}
 
@@ -136,34 +155,27 @@ const AstroScore = () => {
                                                 {score}% Match
                                             </span>
                                         </div>
-                                    )}
-
-                                    {planType === "PLATINUM" && score !== undefined && (
-                                        <a
-                                            href="https://wa.me/919999999999"
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="d-block mt-2 text-decoration-none fw-semibold"
-                                        >
-                                            📞 Consult Astrologer on WhatsApp
-                                        </a>
-                                    )}
+                                    )}  
                                 </div>
 
-                                {/* Partner */}
+                                {/* FRIEND */}
                                 <div className="col-md-4 mt-3 mt-md-0">
                                     <img
                                         src={getProfileImage(friendId)}
                                         alt={friendName}
-                                        className="rounded-circle mb-2"
                                         width="80"
                                         height="80"
+                                        className="rounded-circle mb-2"
                                         style={{ objectFit: "cover" }}
                                     />
-                                    <h6 className="mb-0">{friendName}</h6>
+                                    <h6>{friendName}</h6>
                                 </div>
 
                             </div>
+                        </div>
+
+                        <div className="sys-message">
+                            <p>--- This is a system generated score ---</p>
                         </div>
                     </div>
                 );

@@ -148,7 +148,7 @@ const AdminDashboard = () => {
 
         <section className="quick-actions">
           <h2>Quick Actions</h2>
-          <div className="actions">
+          <div className="actions w-50 mx-auto">
             <button className="action-btn" onClick={ () => navigate("/admin/aprovals")}><FaCheckCircle /> Approvals</button>
             <button className="action-btn" onClick={ () => navigate("/admin/admin_support")}><FaHeadset /> Support</button>
           </div>

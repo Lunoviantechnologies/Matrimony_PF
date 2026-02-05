@@ -1,3 +1,105 @@
+/* ---------- Photos Section ---------- */
+.myPhotos {
+  width: 100%;
+  grid-column: 1 / -1;
+  margin-top: 20px;
+}
+
+.photo-header{
+  color: #0f5132;
+}
+
+.pv-bottom {
+  width: 100%;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+.photo-box {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+/* hover effect */
+.photo-box:hover {
+  border-color: #888;
+  transform: translateY(-2px);
+}
+
+.photo-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.upload-label {
+  font-size: 42px;
+  cursor: pointer;
+  color: #888;
+  user-select: none;
+  transition: 0.2s;
+}
+
+.upload-label:hover {
+  color: #444;
+  transform: scale(1.1);
+}
+
+/* ---------- Delete Button ---------- */
+
+.delete-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  border: none;
+  background: rgba(0, 0, 0, 0.65);
+  color: white;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.2s;
+}
+
+.delete-btn:hover {
+  background: red;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1100px) {
+  .photo-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 800px) {
+  .photo-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 550px) {
+  .photo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 /* Variables */
 :root {
   --bg: #f7fbf8;
@@ -16,13 +118,13 @@
 .pv-container {
   font-family: var(--font-sans);
   padding: 20px;
-  display: flex; 
+  display: flex;
   flex-direction: column;
   gap: 20px;
   color: #12321b;
   background: #D9F5E4;
 }
- 
+
 /* Top section */
 .pv-top {
   display: flex;

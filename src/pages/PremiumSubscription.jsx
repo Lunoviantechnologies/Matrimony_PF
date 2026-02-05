@@ -141,13 +141,12 @@ function PremiumSubscription() {
     if (!isDiscountActive(plan)) return basePrice;
 
     if (plan.discountType === "PERCENTAGE") {
-      return Math.round(
-        basePrice - (basePrice * plan.discountValue) / 100
-      );
+      return Number((basePrice - (basePrice * plan.discountValue) / 100).toFixed(2));
     }
 
     if (plan.discountType === "FLAT") {
-      return Math.max(basePrice - plan.discountValue, 0);
+      const discounted = Math.max(basePrice - plan.discountValue, 0);
+      return Number(discounted.toFixed(2));
     }
 
     return basePrice;
@@ -174,60 +173,11 @@ function PremiumSubscription() {
   const platinumFestivalActive = platinumPlan && isFestivalActive(platinumPlan);
   const platinumCountdown = platinumFestivalActive && getFestivalCountdown(platinumPlan);
 
-  const planMetaMap = {
-    BASIC: {
-      contacts: "0",
-      chat: "Limited",
-      astro: "No",
-      rm: "No",
-      benefit: "Profile creation, browse profiles"
-    },
-    GOLD: {
-      contacts: "30",
-      chat: "Yes",
-      astro: "No",
-      rm: "No",
-      benefit: "Full profile view, standard visibility"
-    },
-    GOLD_PLUS: {
-      contacts: "60",
-      chat: "Yes",
-      astro: "No",
-      rm: "No",
-      benefit: "Advanced search, higher visibility"
-    },
-    DIAMOND: {
-      contacts: "80",
-      chat: "Yes",
-      astro: "Basic",
-      rm: "No",
-      benefit: "Profile boost, priority listing"
-    },
-    DIAMOND_PLUS: {
-      contacts: "150",
-      chat: "Yes",
-      astro: "Assisted",
-      rm: "Yes",
-      benefit: "Manual profile review"
-    },
-    PLATINUM: {
-      contacts: "300",
-      chat: "Yes",
-      astro: "Advanced",
-      rm: "Yes",
-      benefit: "Senior RM, top visibility"
-    }
-  };
-
-  const getPlanMeta = (planCode = "") => {
-    const code = planCode.toUpperCase();
-    if (code.startsWith("PLATINUM")) return planMetaMap.PLATINUM;
-    if (code.startsWith("DIAMOND_PLUS")) return planMetaMap.DIAMOND_PLUS;
-    if (code.startsWith("DIAMOND")) return planMetaMap.DIAMOND;
-    if (code.startsWith("GOLDPLUS")) return planMetaMap.GOLD_PLUS;
-    if (code.startsWith("GOLD")) return planMetaMap.GOLD;
-
-    return planMetaMap.BASIC;
+  const renderFeatureValue = (value) => {
+    if (value === true) return "Yes";
+    if (value === false) return "No";
+    if (value === null || value === undefined) return "-";
+    return value;
   };
 
   return (
@@ -336,39 +286,34 @@ function PremiumSubscription() {
                     >
                       Continue
                     </button>
-                    {(() => {
-                      const meta = getPlanMeta(plan.planCode);
-                      return (
-                        <div className="plan-below-continue">
 
-                          <div className="plan-info-line">
-                            <FiPhone /> Contacts: {meta.contacts} / month
-                          </div>
+                    <div className="plan-below-continue">
 
-                          <div className="plan-info-line">
-                            <BsChatDots /> Chat: {meta.chat}
-                          </div>
+                      <div className="plan-info-line">
+                        <FiPhone /> Contacts: {renderFeatureValue(plan.contacts)} / month
+                      </div>
 
-                          <div className="plan-info-line">
-                            <GiCrystalBall /> Astro Support: {meta.astro}
-                          </div>
+                      <div className="plan-info-line">
+                        <BsChatDots /> Chat: {renderFeatureValue(plan.chat)}
+                      </div>
 
-                          <div className="plan-info-line">
-                            <FaUserTie /> Relationship Manager: {meta.rm}
-                          </div>
+                      <div className="plan-info-line">
+                        <GiCrystalBall /> Astro Support: {renderFeatureValue(plan.astroSupport)}
+                      </div>
 
-                          <div className="plan-benefit-text">
-                            <FaStar /> {meta.benefit}
-                          </div>
+                      <div className="plan-info-line">
+                        <FaUserTie /> Relationship Manager: {renderFeatureValue(plan.relationshipManager)}
+                      </div>
 
-                          <div className="plan-warning-text">
-                            <IoWarningOutline /> Contacts once viewed cannot be reversed or refunded
-                          </div>
+                      <div className="plan-benefit-text">
+                        <FaStar /> {renderFeatureValue(plan.benefit)}
+                      </div>
 
-                        </div>
-                      );
-                    })()}
+                      <div className="plan-warning-text">
+                        <IoWarningOutline /> Contacts once viewed cannot be reversed or refunded
+                      </div>
 
+                    </div>
 
                     <div className="auto-renewal-compact">
                       Auto-renews on expiry

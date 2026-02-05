@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../api/axiosInstance";
 import { toast } from "react-toastify";
+import "../styleSheets/astro.css";
 
 const AstroAdd = ({ astro, onClose, onSuccess }) => {
 

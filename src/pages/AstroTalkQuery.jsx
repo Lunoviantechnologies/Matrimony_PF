@@ -9,6 +9,8 @@ import AstroScore from "./AstroScore";
 
 const AstroTalkQuery = () => {
     const [astroInfo, setAstroInfo] = useState([]);
+    const [plans, setPlans] = useState([]);
+
     const { id, myProfile } = useSelector(state => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -23,13 +25,33 @@ const AstroTalkQuery = () => {
         dispatch(fetchMyProfile(id));
     }, [id, dispatch]);
 
-    // 🔹 Get latest plan
-    const sortedPayments = [...(myProfile?.payments || [])].sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    useEffect(() => {
+        const fetchPlans = async () => {
+            try {
+                const res = await api.get("/plans");
+                setPlans(res.data);
+            } catch (err) {
+                console.error("Plans fetch error:", err);
+            }
+        };
+
+        fetchPlans();
+    }, []);
+
+    const now = new Date();
+    const activePayment = (myProfile?.payments || [])
+        .filter(p => {
+            if (p.status !== "PAID") return false;
+            if (p.premiumEnd) {
+                return new Date(p.premiumEnd) > now;
+            }
+            return true;
+        })
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+    const activePlan = plans.find(
+        plan => plan.planCode === activePayment?.planCode
     );
-
-    const activePlanCode = sortedPayments[0]?.planCode || "";
-
+    const activePlanCode = activePayment?.planCode || "";
     const isPlatinum = activePlanCode.startsWith("PLATINUM");
 
     return (

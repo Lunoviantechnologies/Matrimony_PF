@@ -53,6 +53,7 @@ import Blog from "../components/Blog";
 import DashboardAds from "../pages/DashboardAds";
 import RelationshipManager from "../admin/RelationshipManager";
 import AdminSettings from "../admin/adminSettings/AdminSettings";
+import Login from "../pages/Login";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -73,7 +74,7 @@ const AppRoutes = createBrowserRouter([
             },
             {
                 path: "/resources",
-                element: <Resourses />, // <Outlet />
+                element: <Resourses />,
                 children: [
                     { path: "blog", element: <Blog /> },
                 ]
@@ -81,6 +82,10 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "/register",
                 element: <Register />
+            },
+            {
+                path: "/login",
+                element: <Login />
             },
             {
                 path: "forgotpassword",

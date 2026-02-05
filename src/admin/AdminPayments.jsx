@@ -64,7 +64,7 @@ export default function AdminPayments() {
     }
   }, [totalPages, page]);
 
-  // console.log("Paginated Payments: ", paginatedPayments);
+  // console.log("Paginated Payments: ", successpayments);
 
   return (
     <div className="admin-payments-container">

@@ -157,7 +157,7 @@ const MoreMatches = () => {
     }
   }, [filteredProfiles, sortBy]);
 
-  // console.log("Filtered Profiles:", filteredProfiles);
+  console.log("Filtered Profiles:", filteredProfiles);
 
   const handleProfileCount = (userId) => {
     api.post(`profiles/record/${id}/${userId}`).then(res => {
