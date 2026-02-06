@@ -27,9 +27,17 @@ const NewMatches = () => {
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [anchorRect, setAnchorRect] = useState(null);
+const maskName = (name = "") => {
+  if (!name) return "—";
+  return name.charAt(0).toUpperCase() + "*****";
+};
   const PAGE_SIZE = 10;
   const [page, setPage] = useState(1);
 
+const getDisplayName = (first, last) => {
+  if (myProfile?.premium) return `${first || ""} ${last || ""}`.trim();
+  return `${maskName(first)} ${maskName(last || "")}`.trim();
+};
   useEffect(() => {
     const loadRequests = async () => {
       try {
@@ -219,12 +227,14 @@ const NewMatches = () => {
                         </div>
                       </div>
 
-                      <div className="profile-details">
-                        <h3 className="name">{p.firstName + " " + (p.lastName || "")}</h3>
-                        <span className="meta">{getAge(p.dateOfBirth)} yrs • {p.height || "-"}</span>
-                        <p className="line">{p.occupation || "-"} • {p.highestEducation || "-"}</p>
-                        <p className="line">{p.city || "-"}</p>
-                        <p className="line">{p.religion || "-"} | {p.subCaste || "-"}</p>
+              <div className="profile-details">
+                <h3 className="name">
+  {getDisplayName(p.firstName, p.lastName)}
+</h3>
+                <span className="meta">{getAge(p.dateOfBirth)} yrs • {p.height || "-"}</span>
+                <p className="line">{p.occupation || "-"} • {p.highestEducation || "-"}</p>
+                <p className="line">{p.city || "-"}</p>
+                <p className="line">{p.religion || "-"} | {p.subCaste || "-"}</p>
 
                         <div className="btn-row">
                           <button

@@ -9,7 +9,15 @@ const Rejected = () => {
   const [rejectedRequests, setRejectedRequests] = useState([]);
   const { id, myProfile } = useSelector(state => state.auth);
   const dispatch = useDispatch();
+  const maskName = (name = "") => {
+  if (!name) return "-";
+  return name.charAt(0).toUpperCase() + "*****";
+};
 
+const getDisplayName = (name) => {
+  if (myProfile?.premium) return name || "-";
+  return maskName(name);
+};
   useEffect( () => {
     dispatch(fetchMyProfile(id));
   }, [id])
@@ -55,7 +63,11 @@ const Rejected = () => {
                 </div>
 
                 <div className="text-section">
-                  <h3 className="name">{user.senderId === id ? user.receiverName : user.senderName}</h3>
+                  <h3 className="name">
+  {getDisplayName(
+    user.senderId === id ? user.receiverName : user.senderName
+  )}
+</h3>
                   <p className="details" style={{ color: "#d62828", fontWeight: 600 }}>
                     {user.senderId === id ? "They rejected your request" : "You rejected their request"}
                   </p>

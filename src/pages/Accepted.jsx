@@ -18,7 +18,15 @@ const Accepted = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // console.log("User ID in Accepted component:", profiles);
+   const maskName = (name = "") => {
+  if (!name) return "-";
+  return name.charAt(0).toUpperCase() + "*****";
+};
 
+const getDisplayName = (name) => {
+  if (myProfile?.premium) return name || "-";
+  return maskName(name);
+};
   useEffect(() => {
     dispatch(fetchMyProfile(id));
   }, [id]);
@@ -93,9 +101,11 @@ const Accepted = () => {
               </div>
 
               <div className="text-section">
-                <h3 className="name">
-                  {user.senderId === id ? user.receiverName : user.senderName}
-                </h3>
+                              <h3 className="name">
+  {getDisplayName(
+    user.senderId === id ? user.receiverName : user.senderName
+  )}
+</h3>
 
                 <p className="request-status">
                   {user.senderId === id ? "They accepted your request" : "You accepted their request"}

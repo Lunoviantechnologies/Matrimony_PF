@@ -12,7 +12,15 @@ const Received = () => {
   const dispatch = useDispatch();
   const { profiles } = useSelector(state => state.profiles);
   const [receivedRequests, setReceivedRequests] = useState([]);
+   const maskName = (name = "") => {
+  if (!name) return "-";
+  return name.charAt(0).toUpperCase() + "*****";
+};
 
+const getDisplayName = (name) => {
+  if (myProfile?.premium) return name || "-";
+  return maskName(name);
+};
   useEffect ( () => {
     dispatch(fetchMyProfile(id));
   }, [id]);
@@ -90,7 +98,9 @@ const Received = () => {
                 </div>
 
                 <div className="text-section">
-                  <h3 className="name">{user.senderName}</h3>
+                 <h3 className="name">
+  {getDisplayName(user.senderName)}
+</h3>
                 </div>
               </div>
 
