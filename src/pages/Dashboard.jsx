@@ -95,6 +95,16 @@ const Dashboard = () => {
   }, [sortedPayments]);
 
   const isPremiumActive = !!currentPlan;
+  const maskName = (name = "") => {
+  if (!name) return "—";
+  return name.charAt(0).toUpperCase() + "*****";
+};
+
+const getDisplayName = (first, last) => {
+  if (isPremiumActive) return `${first || ""} ${last || ""}`.trim();
+
+  return `${maskName(first)} ${maskName(last)}`.trim();
+};
 
   useEffect(() => {
     const fetchAcceptedRequests = async () => {
@@ -392,7 +402,9 @@ const Dashboard = () => {
                   )}
                   <div
                     style={{ position: "absolute", bottom: 15, left: 0, right: 0, textAlign: "center", color: "#fff", }}>
-                    <div style={{ fontWeight: "bold", fontSize: 18 }}>{i.firstName}</div>
+                    <div style={{ fontWeight: "bold", fontSize: 18, color: "#f7f6f6" }}>
+                          {getDisplayName(i.firstName, i.lastName)}
+                        </div>
                     <div style={{ fontSize: 14 }}>{i.city} • {i.age} Years old</div>
                   </div>
                   {/* Online Indicator */}
@@ -453,7 +465,9 @@ const Dashboard = () => {
               />
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: "bold", fontSize: 20 }}>{req.senderName}</div>
+              <div style={{ fontWeight: "bold", fontSize: 20 }}>
+                  {isPremiumActive ? req.senderName : maskName(req.senderName)}
+                </div>
             </div>
             <div>
               <button onClick={() => { handleAccept(req.requestId) }}
@@ -534,9 +548,9 @@ const Dashboard = () => {
                 className={`premium-img ${!isPremiumActive ? "premiumblur-image" : ""}`}
                 style={{ width: 60, height: 60, borderRadius: 15, objectFit: "cover", marginRight: 15, }} />
               <div>
-                <div style={{ fontWeight: "bold", fontSize: 18, color: "#5C4218", }}>
-                  {i.firstName} {i.lastName}
-                </div>
+                <div style={{ fontWeight: "bold", fontSize: 18, color: "#5C4218" }}>
+                    {getDisplayName(i.firstName, i.lastName)}
+                  </div>
                 <div style={{ color: "#8A6F47" }}>{i.city}, {i.country} || {i.age} years || {i.motherTongue}</div>
               </div>
             </div>

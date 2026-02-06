@@ -1,195 +1,106 @@
 import React, { useState, useRef, useEffect } from "react";
-import "../styleSheets/Notification.css";
 import { FaBell } from "react-icons/fa";
-import SockJS from "sockjs-client";
-import { Client } from "@stomp/stompjs";
-import backendIP from "../api/api";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import api from "../api/axiosInstance";
+import { markRead, markAllRead} from "../redux/slices/notificationSlice";
+import "../styleSheets/Notification.css";
 
 const Notification = ({ onNavigate }) => {
-  const { id: myId, token } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { id: myId } = useSelector(s => s.auth);
+  const notifications = useSelector(s => s.notifications.list);
 
-  const [notifications, setNotifications] = useState([]);
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // ------------------------------------------------
-  // 1. Load old notifications once
-  // ------------------------------------------------
+  // close dropdown on outside click
   useEffect(() => {
-    if (!myId) return;
-
-    console.log("📥 Fetching saved notifications...");
-
-    api.get(`/notifications/GetAll?userId=${myId}`)
-      .then((res) => {
-        console.log("📦 Initial notifications:", res.data);
-
-        const data = Array.isArray(res.data)
-          ? res.data : res.data?.content || [];
-
-        // 🔑 normalize read flag
-        const normalized = data.map((n) => ({ ...n, read: Boolean(n.read), }));
-
-        setNotifications(normalized);
-      })
-      .catch((err) => {
-        console.error("❌ Failed loading notifications:", err);
-        setNotifications([]);
-      });
-  }, [myId]);
-
-  // ------------------------------------------------
-  // 2. WebSocket + STOMP Setup
-  // ------------------------------------------------
-  useEffect(() => {
-    if (!myId) return;
-
-    const wsBase = backendIP.replace("/api", "");
-    const wsURL = `${wsBase}/ws-chat?userId=${myId}`;
-
-    console.log("🌐 Attempting WS connection:", wsURL);
-
-    const socket = new SockJS(wsURL);
-    const client = new Client({
-      webSocketFactory: () => socket,
-      reconnectDelay: 5000,
-      connectHeaders: {
-        Authorization: `Bearer ${token}`
-      },
-
-      onConnect: () => {
-        console.log("🟢 WS CONNECTED for user:", myId);
-
-        client.subscribe(`/user/queue/notifications/user`, (message) => {
-          console.log("📨 Live notification received:", message);
-
-          const notif = JSON.parse(message.body);
-
-          setNotifications((prev) => [
-            { ...notif, read: false },
-            ...(Array.isArray(prev) ? prev : []),
-          ]);
-        }
-        );
-      },
-
-      onWebSocketClose: () => {
-        console.warn("🔴 WebSocket closed — will auto reconnect");
-      },
-
-      onStompError: (frame) => {
-        console.error("❌ STOMP Error:", frame);
-      },
-    });
-
-    client.activate();
-
-    return () => {
-      console.log("🛑 Cleaning WS connection...");
-      client.deactivate();
-    };
-  }, [myId]);
-
-  // ------------------------------------------------
-  // 3. Close dropdown when clicking outside
-  // ------------------------------------------------
-  useEffect(() => {
-    const handler = (e) => {
+    const handler = e => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // ------------------------------------------------
-  // 4. Mark as Read
-  // ------------------------------------------------
-  const markAsRead = async (id) => {
+  // unread count
+  const unreadCount =
+    notifications?.filter(n => !n.read).length || 0;
+
+  // mark single notification read
+  const handleMarkRead = async item => {
     try {
-      await api.post(`/notifications/read/${id}`);
+      await api.post(`/notifications/read/${item.id}`);
 
-      setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, read: true } : n))
-      );
+      dispatch(markRead(item.id));
 
-      console.log("✔ Marked read:", id);
+      if (onNavigate) {
+        onNavigate(item.type, item.targetId);
+      }
+
+      setOpen(false);
     } catch (err) {
-      console.error("❌ Failed marking read:", err);
+      console.error("Failed marking read:", err);
     }
   };
 
-  /* ------------------------------------------------
-    5. Mark ALL notifications read
- ------------------------------------------------ */
-  const markAllAsRead = async () => {
+  // mark all read
+  const handleMarkAll = async e => {
+    e.stopPropagation();
+
     try {
       await api.post(`/notifications/mark-all-read?userId=${myId}`);
 
-      setNotifications((prev) =>
-        prev.map((n) => ({ ...n, read: true }))
-      );
+      dispatch(markAllRead());
     } catch (err) {
-      console.error("❌ Failed marking all read:", err);
+      console.error("Failed marking all read:", err);
     }
   };
 
-  // ------------------------------------------------
-  // 6. On Click of Notification
-  // ------------------------------------------------
-  const handleItemClick = (item) => {
-    console.log("➡ Notification clicked:", item);
-
-    markAsRead(item.id);
-    onNavigate(item.type, item.targetId);
-    setOpen(false);
-  };
-
-  // ------------------------------------------------
-  // 7. Unread Count
-  // ------------------------------------------------
-  const unreadCount = notifications?.filter((n) => !n.read).length || 0;
-
-  // ------------------------------------------------
-  // 8. Render
-  // ------------------------------------------------
   return (
     <div className="notif-container" ref={dropdownRef}>
+      {/* Bell */}
       <div className="notif-icon" onClick={() => setOpen(!open)}>
         <FaBell size={20} />
-        {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
+        {unreadCount > 0 && (
+          <span className="notif-badge">{unreadCount}</span>
+        )}
       </div>
 
+      {/* Dropdown */}
       {open && (
         <div className="notif-dropdown">
+
           {unreadCount > 0 && (
             <div className="notif-actions">
               <button
                 className="mark-all-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  markAllAsRead();
-                }}
+                onClick={handleMarkAll}
               >
                 Mark all as read
               </button>
             </div>
           )}
-          
-          {(!notifications || notifications.length === 0) && (
-            <div className="notif-empty">No notifications</div>
+
+          {notifications.length === 0 && (
+            <div className="notif-empty">
+              No notifications
+            </div>
           )}
 
-          {notifications.map((item) => (
+          {notifications.map(item => (
             <div
               key={item.id}
-              className={`notif-item ${!item.read ? "unread" : ""}`}
-              onClick={() => handleItemClick(item)}
+              className={`notif-item ${!item.read ? "unread" : ""
+                }`}
+              onClick={() => handleMarkRead(item)}
             >
-              <div className="notif-title">{item.message}</div>
+              <div className="notif-title">
+                {item.message}
+              </div>
+
               <div className="notif-time">
                 {new Date(item.createdAt).toLocaleString()}
               </div>

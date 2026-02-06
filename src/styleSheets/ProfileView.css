@@ -5,7 +5,7 @@
   margin-top: 20px;
 }
 
-.photo-header{
+.photo-header {
   color: #0f5132;
 }
 
@@ -46,12 +46,25 @@
   object-fit: cover;
 }
 
+.photo-box input[type="file"] {
+  display: none;
+  pointer-events: none;
+}
+
 .upload-label {
   font-size: 42px;
   cursor: pointer;
   color: #888;
   user-select: none;
   transition: 0.2s;
+  border: none;
+  background: transparent;
+  position: relative;
+  z-index: 5;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .upload-label:hover {

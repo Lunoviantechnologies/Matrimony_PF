@@ -173,6 +173,7 @@ export default function ProfileView() {
       toast.error("Photo deleted failed");
     }
   };
+  console.log("profile: ", myProfile);
 
   return (
     <div className="pv-container">
@@ -329,6 +330,7 @@ export default function ProfileView() {
 
         <div className="myPhotos">
           <h2 className="photo-header">Photos</h2>
+          <b>Kindly make sure the image is under 20 KB</b>
 
           <div className="photo-grid">
             {PHOTO_SLOTS.map((slot, index) => {
@@ -339,7 +341,6 @@ export default function ProfileView() {
                   {photo ? (
                     <>
                       <img src={photo} alt={`photo-${index}`} />
-
                       <button
                         className="delete-btn"
                         onClick={() => handleDeletePhoto(slot)}
@@ -349,23 +350,34 @@ export default function ProfileView() {
                     </>
                   ) : (
                     <>
-                      <label className="upload-label">
+                      <button
+                        type="button"
+                        className="upload-label"
+                        onClick={() =>
+                          document.getElementById(`upload-${slot}`).click()
+                        }
+                      >
                         +
-                        <input
-                          type="file"
-                          hidden
-                          accept="image/*"
-                          onChange={(e) =>
-                            handlePhotoUpload(slot, e.target.files[0])
-                          }
-                        />
-                      </label>
+                      </button>
+
+                      <input
+                        id={`upload-${slot}`}
+                        type="file"
+                        accept="image/*"
+                        style={{ display: "none" }}
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) handlePhotoUpload(slot, file);
+                          e.target.value = ""; // allow reselect same image
+                        }}
+                      />
                     </>
                   )}
                 </div>
               );
             })}
           </div>
+
         </div>
       </div>
     </div>

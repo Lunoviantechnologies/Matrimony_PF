@@ -110,11 +110,9 @@
 .photo-box {
   width: 100%;              /* ✅ fill the card */
   max-width: 280px;        /* optional – control size */
-  aspect-ratio: 1 / 1;     /* ✅ always square */
+  aspect-ratio: 1 / 1;    
   overflow: hidden;
-  .photo-box {
   margin: 0 auto;
-}
 
   position: relative;
 }

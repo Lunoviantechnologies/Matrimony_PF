@@ -174,12 +174,96 @@ const calculateAge = (day, month, year) => {
 
     return age >= 0 ? age : "";
   };
-  const Hinducommunity =[
-
-  ];
-  
-    const HindusubCommunityList = [ "Ayodhi", "Bhoomanchi Reddy", "Chowdary", "Desuru", "Gandla", "Ganjam", "Gone Kapu", "Gudati", "Kapu", "Motati", "Palle", "Palnati", "Panta", "Pedakanti", "Poknati", "Reddiyar", "Sajjana", "Vanni", "Velanati", "Balija", "Balija Naidu", "Balija Setty", "Telaga", "Telaga Kapu", "Naidu Kapu", "Munnuru Kapu", "Ontari", "Ontari Kapu", "Kamma Kapu", "Turpu Kapu", "Rayalaseema Kapu", "Coastal Kapu", "Uttara Kapu", "Dakshina Kapu", "Golla Kapu", "Kuruba Kapu", "Boyar Kapu", "Gavara", "Gavara Naidu", "Kalinga Kapu", "Kapu Reddy", "Kapu Velama", "Kapu Naicker", "General Kapu", "Other Kapu Sub-Caste", "Others" ];
-  
+ const HindusubCommunityList = [
+  "Anavil Brahmin",
+  "Audichya Brahmin",
+  "Ayodhi",
+  "Balija",
+  "Balija Naidu",
+  "Balija Setty",
+  "Barendra Brahmin",
+  "Bhoomanchi Reddy",
+  "Boyar Kapu",
+  "Brahmin – Not Specified",
+  "Chitpavan Brahmin",
+  "Chowdary",
+  "Coastal Kapu",
+  "Dakshina Kapu",
+  "Deshastha Brahmin",
+  "Desuru",
+  "Dravida Brahmin",
+  "Gandla",
+  "Ganjam",
+  "Gaur Brahmin",
+  "Gavara",
+  "Gavara Naidu",
+  "General Kapu",
+  "Golla Kapu",
+  "Gone Kapu",
+  "Goud Saraswat Brahmin",
+  "Gudati",
+  "Havyaka Brahmin",
+  "Iyengar",
+  "Iyer",
+  "Kalinga Brahmin",
+  "Kalinga Kapu",
+  "Kamma Kapu",
+  "Kanyakubja Brahmin",
+  "Kapu",
+  "Kapu Naicker",
+  "Kapu Reddy",
+  "Kapu Velama",
+  "Karanakamma Brahmin",
+  "Karhade Brahmin",
+  "Khedaval Brahmin",
+  "Konkani Brahmin",
+  "Kota Brahmin",
+  "Kulin Brahmin",
+  "Kuruba Kapu",
+  "Maithil Brahmin",
+  "Madhwa Brahmin",
+  "Modh Brahmin",
+  "Motati",
+  "Mulakanadu Brahmin",
+  "Munnuru Kapu",
+  "Nagar Brahmin",
+  "Naidu Kapu",
+  "Namboodiri",
+  "Niyogi Brahmin",
+  "Ontari",
+  "Ontari Kapu",
+  "Other Brahmin",
+  "Other Kapu Sub-Caste",
+  "Others",
+  "Palle",
+  "Palnati",
+  "Panta",
+  "Pedakanti",
+  "Poknati",
+  "Pushkarna Brahmin",
+  "Rarhi Brahmin",
+  "Rayalaseema Kapu",
+  "Reddiyar",
+  "Sajjana",
+  "Sakaldwipi Brahmin",
+  "Sanadhya Brahmin",
+  "Saraswat Brahmin",
+  "Saryuparin Brahmin",
+  "Shrimali Brahmin",
+  "Shivalli Brahmin",
+  "Smartha Brahmin",
+  "Telaga",
+  "Telaga Kapu",
+  "Tulu Brahmin",
+  "Turpu Kapu",
+  "Tyagi Brahmin",
+  "Uttara Kapu",
+  "Vaidiki Brahmin",
+  "Vanni",
+  "Velanadu Brahmin",
+  "Velanati"
+].sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
+   
   const muslimCommunityList = [
   "Shia",
   "Sunni",
@@ -1033,7 +1117,7 @@ const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
       <ErrorMessage name="city" component="div" className="error-text" />
 
               {/* Residence status */}
-              {values.country !== "India" && (
+             {values.country && values.country !== "1" && (
                 <Field as="select" name="residenceStatus" className="form-select">
                   <option value="" disabled>Residence Status</option>
                   <option value="Citizen">Citizen</option>

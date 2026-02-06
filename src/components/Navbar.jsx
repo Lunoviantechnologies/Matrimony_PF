@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import UserNavbar from "./UserNavbar";
-// import Login from "../pages/Login";
 import { useState } from "react";
 import AdminNavbar from "../admin/AdminNavbar";
 import { FaBars } from "react-icons/fa";
@@ -9,7 +8,6 @@ import { FaBars } from "react-icons/fa";
 const Navbar = () => {
     const navigate = useNavigate();
     const { isLoggedIn, role } = useSelector(state => state.auth);
-    // const [showLogin, setShowLogin] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [resourceOpen, setResourceOpen] = useState(false);
 
@@ -78,7 +76,6 @@ const Navbar = () => {
                                 Contact Us
                             </Link>
 
-                            {/* <button className="navAuthBtn" onClick={() => setShowLogin(true)}> */}
                             <button className="navAuthBtn" onClick={() => navigate("/login")}>
                                 Login
                             </button>
@@ -94,7 +91,6 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {/* <Login show={showLogin} onClose={() => setShowLogin(false)} /> */}
         </nav>
     );
 };

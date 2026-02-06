@@ -3,6 +3,8 @@ import { TextField, Button, Card, CardContent, Typography, Alert, Box, IconButto
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "axios";
 import backendIp from "../api/api";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function ForgotPassword() {
   const [step, setStep] = useState(1);
@@ -15,6 +17,7 @@ export default function ForgotPassword() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const resetMessages = () => {
     setSuccess("");
@@ -69,8 +72,11 @@ export default function ForgotPassword() {
       setOtp("");
       setNewPassword("");
       setConfirmPassword("");
+      navigate("/login");
+      toast.success("Password reset successful");
     } catch (err) {
       setError(err.response?.data?.message || "Password reset failed");
+      toast.error("Password reset failed");
     } finally {
       setLoading(false);
     }
