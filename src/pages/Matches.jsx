@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import MatchesSort from "./MatchesSort";
+import { useSelector } from "react-redux";
 
 const EMPTY_FILTERS = {
     profileFor:[],
@@ -24,7 +25,6 @@ const EMPTY_FILTERS = {
 };
 
 const Matches = () => {
-
     const [filtersDraft, setFiltersDraft] = useState(EMPTY_FILTERS);
     const [filters, setFilters] = useState(EMPTY_FILTERS);
     const [sortBy, setSortBy] = useState("relevance");
@@ -38,7 +38,8 @@ const Matches = () => {
         setFilters(EMPTY_FILTERS);
         setSortBy("relevance");
     };
-
+     const myProfile = useSelector(state => state.auth.myProfile);
+    const isPremiumActive = !!myProfile?.premium;
     return (
         <div className="container-fluid">
             <div className="row min-vh-100">
@@ -80,7 +81,7 @@ const Matches = () => {
 
                         {/* Nested Route Content */}
                         <div className="w-100 ps-0 ps-md-4">
-                            <Outlet context={{ filters, sortBy }} />
+                           <Outlet context={{ filters, sortBy, isPremiumActive }} />
                         </div>
 
                     </div>

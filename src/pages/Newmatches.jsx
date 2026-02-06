@@ -25,7 +25,15 @@ const NewMatches = () => {
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [anchorRect, setAnchorRect] = useState(null);
+const maskName = (name = "") => {
+  if (!name) return "—";
+  return name.charAt(0).toUpperCase() + "*****";
+};
 
+const getDisplayName = (first, last) => {
+  if (myProfile?.premium) return `${first || ""} ${last || ""}`.trim();
+  return `${maskName(first)} ${maskName(last || "")}`.trim();
+};
   useEffect(() => {
     if (role[0].toUpperCase() === "USER") {
       dispatch(fetchUserProfiles());
@@ -207,7 +215,9 @@ const NewMatches = () => {
               </div>
 
               <div className="profile-details">
-                <h3 className="name">{p.firstName + " " + (p.lastName || "")}</h3>
+                <h3 className="name">
+  {getDisplayName(p.firstName, p.lastName)}
+</h3>
                 <span className="meta">{getAge(p.dateOfBirth)} yrs • {p.height || "-"}</span>
                 <p className="line">{p.occupation || "-"} • {p.highestEducation || "-"}</p>
                 <p className="line">{p.city || "-"}</p>

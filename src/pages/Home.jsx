@@ -10,7 +10,7 @@ const Home = () => {
     return (
         <div className="homePage">
 
-            <div className="homeBanner container">
+            <div className="homeBanner container-fluid">
                 <div className="bannerText">
                     <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" height={'200px'} />
                     <h1>Vivahjeevan</h1>
@@ -25,8 +25,8 @@ const Home = () => {
             <div className="container mt-5 mb-5 py-4 w-75">
                 <h2 className="cardHeader">The Matrimony Experience</h2>
 
-                <div className="row mt-4">
-                    <div className="col-sm-4 mb-3 mb-sm-0">
+               <div className="row mt-4 experienceRow">
+                    <div className="col-4 mb-3">
                         <div className="card homeCard">
                             <div className="card-body">
                                 <MdLocalFlorist size={70} color="#8B6F47" />
@@ -37,7 +37,7 @@ const Home = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-sm-4">
+                    <div className="col-4 mb-3">
                         <div className="card homeCard">
                             <div className="card-body">
                                 <TaskAltIcon sx={{ fontSize: 70, color: 'blue', mb: 1, }} />
@@ -46,7 +46,7 @@ const Home = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-sm-4">
+                    <div className="col-4 mb-3">
                         <div className="card homeCard">
                             <div className="card-body">
                                 <PsychologyIcon sx={{ fontSize: 70, color: '#00eaffff', mb: 1, }} />

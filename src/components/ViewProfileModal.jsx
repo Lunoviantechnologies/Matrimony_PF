@@ -70,7 +70,14 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
       onClose();
     }
   };
+  const maskName = (name = "") => {
+  if (!name) return "—";
+  return name.charAt(0).toUpperCase() + "*****";
+};
 
+const displayName = premium
+  ? fullName
+  : `${maskName(firstName)} ${maskName(lastName)}`;
   const renderCentered = () => (
     <div className="vp-backdrop" onClick={handleBackdrop}>
       <div className="vp-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
@@ -98,9 +105,10 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
 
           <div className="vp-right">
             <div className="vp-header-row">
-              <h2 className="vp-name">
-                {fullName} <span className="vp-age"><br />{age ? `${age} yrs` : ""}</span>
-              </h2>
+             <h2 className="vp-name">
+  {displayName}
+  <span className="vp-age"><br />{age ? `${age} yrs` : ""}</span>
+</h2>
 
               <div className="vp-match-circle">
                 <div className="vp-match-percent">{matchPercent}%</div>

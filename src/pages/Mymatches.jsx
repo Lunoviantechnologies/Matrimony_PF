@@ -17,7 +17,18 @@ const MyMatches = () => {
   const { profiles } = useSelector((state) => state.profiles);
   const { id, myProfile, role } = useSelector((state) => state.auth);
   const { filters, sortBy } = useOutletContext();
+const maskName = (name = "") => {
+  if (!name) return "-";
+  return name.charAt(0).toUpperCase() + "*****";
+};
 
+const getDisplayName = (first, last) => {
+  if (myProfile?.premium) {
+    return `${first || ""} ${last || ""}`.trim();   // ✅ full name
+  }
+
+  return `${maskName(first)} ${maskName(last)}`.trim(); // ✅ masked
+};
   const [sentRequests, setSentRequests] = useState([]);
   const [receivedRequests, setReceivedRequests] = useState([]);
   const [acceptedList, setAcceptedList] = useState([]);
@@ -214,7 +225,7 @@ const MyMatches = () => {
               </div>
 
               <div className="profile-details">
-                <h3 className="name">{p.firstName + " " + p.lastName}</h3>
+                <h3 className="name">{getDisplayName(p.firstName , p.lastName)}</h3>
                 <span className="meta">{p.age} yrs • {p.height}</span>
                 <p className="line">{p.occupation} • {p.highestEducation}</p>
                 <p className="line">{p.city}</p>
