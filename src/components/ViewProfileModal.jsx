@@ -5,7 +5,13 @@ import { IoIosLock } from "react-icons/io";
 
 export default function ViewProfileModal({ premium, profile = {}, onClose = () => { } }) {
 
+  const images = [profile.updatePhoto, profile.updatePhoto1, profile.updatePhoto2, profile.updatePhoto3, profile.updatePhoto4].filter(Boolean);
+  const [imgIndex, setImgIndex] = useState(0);
   const [matchPercent, setMatchPercent] = useState(0);
+
+  const locked = !premium && imgIndex > 0;
+  const nextImage = () => { setImgIndex(i => (i + 1) % images.length); };
+  const prevImage = () => { setImgIndex(i => (i - 1 + images.length) % images.length); };
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -78,15 +84,30 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
 
         <div className="vp-grid">
           <div className="vp-left">
-            <div className="vp-main-image">
-              <img src={imgSrc} alt={fullName}
-                className={`profile-img ${!premium ? "blur-image" : ""}`}
-                onError={(e) => {
-                  e.target.src = gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
-                }}
+            <div className="vp-main-image carousel">
+
+              <img
+                src={images[imgIndex] ? images[imgIndex] : profile.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
+                alt={fullName}
+                className={locked ? "blur-image" : ""}
                 draggable={false}
                 onContextMenu={(e) => e.preventDefault()}
               />
+
+              {locked && (
+                <div className="premium-overlay">
+                  <IoIosLock color="orange" size={18} />
+                  Upgrade to Premium to view photos
+                </div>
+              )}
+
+              {images.length > 1 && (
+                <>
+                  <button className="nav left" onClick={prevImage}>‹</button>
+                  <button className="nav right" onClick={nextImage}>›</button>
+                </>
+              )}
+
             </div>
 
             {photos && photos.length > 1 && (
@@ -130,7 +151,7 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
                   <p className="vp-bio">{aboutYourself ? aboutYourself : "No information available"}</p>
                 ) : (
                   <p className="vp-about-text vp-blur-text">
-                    <IoIosLock color="orange" size={18}/> Upgrade to Premium to view full profile details.
+                    <IoIosLock color="orange" size={18} /> Upgrade to Premium to view full profile details.
                   </p>
                 )
               }
@@ -162,7 +183,7 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
                   </div>
                 ) : (
                   <p className="vp-contact-text vp-blur-text">
-                    <IoIosLock color="orange" size={18}/> Upgrade to Premium to view contact details.
+                    <IoIosLock color="orange" size={18} /> Upgrade to Premium to view contact details.
                   </p>
                 )
               }
@@ -193,7 +214,7 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
                   </div>
                 ) : (
                   <p className="vp-horoscope-text vp-blur-text">
-                    <IoIosLock color="orange" size={18}/> Upgrade to Premium to view horoscope details.
+                    <IoIosLock color="orange" size={18} /> Upgrade to Premium to view horoscope details.
                   </p>
                 )
               }
@@ -211,7 +232,7 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
             <div>
               {!premium && (
                 <div className="vp-premium-note">
-                  <IoIosLock color="orange" size={18}/> Upgrade to Premium to view full profile details and photos.
+                  <IoIosLock color="orange" size={18} /> Upgrade to Premium to view full profile details and photos.
                 </div>
               )}
             </div>

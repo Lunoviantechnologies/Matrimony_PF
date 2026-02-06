@@ -5,7 +5,6 @@ import ViewProfileModal from "./ViewProfileModal";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import api from "../api/axiosInstance";
 
-
 const SearchProfiles = () => {
 
     const { id, role, myProfile } = useSelector(state => state.auth);
@@ -137,7 +136,7 @@ const SearchProfiles = () => {
             <div>
                 {
                     filteredSearch.length === 0 ? (
-                        <h3>Please do search your favourites</h3>
+                        <h3> Search by name, location, profession, religion, or interests to find matches </h3>
                     ) : (
                         <div className="profile-cards-wrapper">
                             {filteredSearch.map((p) => {

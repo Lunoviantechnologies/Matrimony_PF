@@ -8,6 +8,7 @@ import { useOutletContext, useNavigate } from "react-router-dom";
 import api from "../api/axiosInstance";
 import { FaCrown, FaUser } from "react-icons/fa";
 import { toast } from "react-toastify";
+import MatchesImageCarousel from "./MatchesImageCarousel";
 
 const Nearme = () => {
   const navigate = useNavigate();
@@ -21,46 +22,42 @@ const Nearme = () => {
   const [receivedRequests, setReceivedRequests] = useState([]);
   const [acceptedList, setAcceptedList] = useState([]);
   const [rejectedList, setRejectedList] = useState([]);
+  const [requestsLoaded, setRequestsLoaded] = useState(false);
 
   const [anchorRect, setAnchorRect] = useState(null);
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const PAGE_SIZE = 10;
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    if (role[0].toUpperCase() === "USER") {
-      dispatch(fetchUserProfiles());
-    };
-    dispatch(fetchMyProfile(id));
-
-    api.get(`/friends/sent/${id}`)
-      .then(res => setSentRequests(res.data))
-      .catch(err => console.error(err));
-
-    api.get(`/friends/received/${id}`)
-      .then(res => setReceivedRequests(res.data))
-      .catch(err => console.error(err));
-
-    const fetchAcceptedRequests = async () => {
+    const loadRequests = async () => {
       try {
+        if (role[0].toUpperCase() === "USER") {
+          dispatch(fetchUserProfiles());
+        }
+
+        dispatch(fetchMyProfile(id));
+
+        const sent = await api.get(`/friends/sent/${id}`);
+        const received = await api.get(`/friends/received/${id}`);
         const receivedAccepted = await api.get(`/friends/accepted/received/${id}`);
         const sentAccepted = await api.get(`/friends/accepted/sent/${id}`);
-        setAcceptedList([...receivedAccepted.data, ...sentAccepted.data]);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchAcceptedRequests();
-
-    const fetchRejectedRequests = async () => {
-      try {
         const receivedRejected = await api.get(`/friends/rejected/received/${id}`);
         const sentRejected = await api.get(`/friends/rejected/sent/${id}`);
+
+        setSentRequests(sent.data);
+        setReceivedRequests(received.data);
+        setAcceptedList([...receivedAccepted.data, ...sentAccepted.data]);
         setRejectedList([...receivedRejected.data, ...sentRejected.data]);
+
+        setRequestsLoaded(true);
       } catch (err) {
         console.error(err);
       }
     };
-    fetchRejectedRequests();
+
+    loadRequests();
   }, [dispatch, id, role]);
 
   // ---- Combine all hidden IDs ----
@@ -103,19 +100,21 @@ const Nearme = () => {
 
   // ---- Filter profiles ----
   const filteredProfiles = useMemo(() => {
+    if (!requestsLoaded || !myProfile?.city) return [];
+
     return profiles
       .filter(p => p.id !== id)
-      .filter(p => p.gender !== myProfile?.gender)
+      .filter(p => p.gender !== myProfile.gender)
       .filter(p => !allHiddenIds.includes(p.id))
-      .filter(p => p.city === myProfile?.city)
+      .filter(p => p.city === myProfile.city)
       .filter(p => {
         const age = getAge(p.dateOfBirth);
-
-        const matchAge = !filters.age.length || filters.age.some(range => {
-          const [min, max] = range.split("-").map(Number);
-          return age >= min && age <= max;
-        });
-
+        const matchAge =
+          !filters.age.length ||
+          filters.age.some(range => {
+            const [min, max] = range.split("-").map(Number);
+            return age >= min && age <= max;
+          });
         const matchprofileFor = !filters.profileFor.length || filters.profileFor.includes(p.profileFor || "");
         const matchMaritalStatus = !filters.maritalStatus.length || filters.maritalStatus.includes(p.maritalStatus || "");
         const matchReligion = matchWithOther(filters.religion, filters.otherValues?.religion, p.religion);
@@ -126,9 +125,9 @@ const Nearme = () => {
         const matchLifestyle = !filters.lifestyle.length || filters.lifestyle.includes(p.vegiterian || "");
         const matchhabbits = !filters.habbits.length || filters.habbits.includes(p.habbits || "");
 
-        return matchprofileFor && matchAge && matchMaritalStatus && matchReligion && matchCaste && matchCountry && matchEducation && matchProfession && matchLifestyle && matchhabbits;
+        return (matchprofileFor && matchAge && matchMaritalStatus && matchReligion && matchCaste && matchCountry && matchEducation && matchProfession && matchLifestyle && matchhabbits);
       });
-  }, [profiles, filters, allHiddenIds, myProfile, id]);
+  }, [profiles, filters, allHiddenIds, myProfile, id, requestsLoaded]);
 
   const sortedProfiles = useMemo(() => {
     let list = [...filteredProfiles];
@@ -158,80 +157,101 @@ const Nearme = () => {
     })
   };
 
+  useEffect(() => {
+    setPage(1);
+  }, [sortedProfiles.length]);
+
+  const totalPages = Math.ceil(sortedProfiles.length / PAGE_SIZE);
+  const paginatedProfiles = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return sortedProfiles.slice(start, start + PAGE_SIZE);
+  }, [sortedProfiles, page]);
+
+  const goPrev = () => {
+    setPage(p => Math.max(1, p - 1));
+  };
+  const goNext = () => {
+    setPage(p => Math.min(totalPages, p + 1));
+  };
+
   return (
     <div className="profile-main-container">
       <h2 className="profile-title">Near Matches For You</h2>
 
       <div className="profile-cards-wrapper">
-        {
-          sortedProfiles.length === 0 ? (
-            <p className="empty-state">No profiles found matching your criteria.</p>
-          ) : (
-            sortedProfiles.map((p) => {
-              const isSent = sentIds.includes(p.id);
-              return (
-                <article className="profile-card" key={p.id}>
-                  <div className="image-box">
-                    <img src={p.updatePhoto ? p.updatePhoto : p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
-                      alt={`${p.firstName} ${p.lastName}`}
-                      className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
-                      onError={(e) => {
-                        e.target.src = p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
-                      }}
-                      draggable={false}
-                      onContextMenu={(e) => e.preventDefault()}
-                    />
+        {!requestsLoaded ? (
+          <p>Loading nearby matches...</p>
+        ) : sortedProfiles.length === 0 ? (
+          <p className="empty-state"> No profiles found matching your criteria. </p>
+        ) : (
+          paginatedProfiles.map((p) => {
+            const isSent = sentIds.includes(p.id);
+            return (
+              <article className="profile-card" key={p.id}>
+                <div className="image-box">
+                  <MatchesImageCarousel
+                    profile={p}
+                    isPremiumUser={myProfile?.premium}
+                    onUpgrade={() => navigate("/dashboard/premium")}
+                  />
 
-                    <div className="premium-badge">
-                      {p.premium ? (
-                        <span className="premium-icon"> <FaCrown /> </span>
-                      ) : (
-                        <span className="free-icon"> <FaUser /> free</span>
-                      )}
-                    </div>
-
-                    {!myProfile?.premium && (
-                      <div className="premium-overlay" onClick={() => navigate("/dashboard/premium")}>
-                        🔒 Upgrade to Premium
-                      </div>
+                  <div className="premium-badge">
+                    {p.premium ? (
+                      <span className="premium-icon"><FaCrown /></span>
+                    ) : (
+                      <span className="free-icon"><FaUser /> free</span>
                     )}
                   </div>
+                </div>
 
-                  <div className="profile-details">
-                    <h3 className="name">{p.firstName + " " + p.lastName}</h3>
-                    <span className="meta">{p.age} yrs • {p.height}</span>
-                    <p className="line">{p.occupation} • {p.highestEducation}</p>
-                    <p className="line">{p.city}</p>
-                    <p className="line">{p.religion} | {p.subCaste}</p>
+                <div className="profile-details">
+                  <h3 className="name">{p.firstName + " " + p.lastName}</h3>
+                  <span className="meta">{p.age} yrs • {p.height}</span>
+                  <p className="line">{p.occupation} • {p.highestEducation}</p>
+                  <p className="line">{p.city}</p>
+                  <p className="line">{p.religion} | {p.subCaste}</p>
 
-                    <div className="btn-row">
-                      <button
-                        className="btn btn-view"
-                        onClick={(e) => {
-                          handleProfileCount(p.id);
-                          setSelectedProfile(p);
-                          // setAnchorRect(e.target.getBoundingClientRect());
-                          setShowModal(true);
-                        }}
-                      >
-                        View Profile
-                      </button>
+                  <div className="btn-row">
+                    <button
+                      className="btn btn-view"
+                      onClick={(e) => {
+                        handleProfileCount(p.id);
+                        setSelectedProfile(p);
+                        // setAnchorRect(e.target.getBoundingClientRect());
+                        setShowModal(true);
+                      }}
+                    >
+                      View Profile
+                    </button>
 
-                      <button
-                        className={`btn ${isSent ? "btn-sent" : "btn-send"}`}
-                        disabled={isSent}
-                        onClick={() => handleSendRequest(p.id)}
-                      >
-                        {isSent ? "Sent" : "Send Request"}
-                      </button>
-                    </div>
+                    <button
+                      className={`btn ${isSent ? "btn-sent" : "btn-send"}`}
+                      disabled={isSent}
+                      onClick={() => handleSendRequest(p.id)}
+                    >
+                      {isSent ? "Sent" : "Send Request"}
+                    </button>
                   </div>
-                </article>
-              );
-            })
-          )
-        }
+                </div>
+              </article>
+            );
+          })
+        )}
       </div>
+
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button onClick={goPrev} disabled={page === 1}>
+            Prev
+          </button>
+
+          <span>{page}</span>
+
+          <button onClick={goNext} disabled={page === totalPages}>
+            Next
+          </button>
+        </div>
+      )}
 
       {showModal && (
         <ViewProfileModal

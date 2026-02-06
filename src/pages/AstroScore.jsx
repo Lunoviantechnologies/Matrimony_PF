@@ -4,10 +4,11 @@ import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
 import "../styleSheets/astroScore.css";
+import { useNavigate } from "react-router-dom";
 
 const AstroScore = () => {
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
     const { id, role, myProfile } = useSelector(state => state.auth);
     const { profiles } = useSelector(state => state.profiles);
 
@@ -144,7 +145,7 @@ const AstroScore = () => {
                                     </button>
 
                                     {!isAstroEnabled && (
-                                        <div className="mt-2 text-danger small">
+                                        <div className="mt-2 text-danger small" onClick={() => navigate("/dashboard/premium")}>
                                             Upgrade your plan for astro support
                                         </div>
                                     )}

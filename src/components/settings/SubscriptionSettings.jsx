@@ -11,10 +11,8 @@ export default function SubscriptionSettings({ myProfile, navigate }) {
     /* -------------------- STATUS HELPERS -------------------- */
     const getPaymentStatus = (payment) => {
         const status = payment.status?.toUpperCase();
-
         if (status === "FAILED") return "FAILED";
         if (status === "PENDING") return "PENDING";
-
         if (status === "PAID") {
             const end = payment.premiumEnd ? new Date(payment.premiumEnd) : null;
             return end && end >= new Date() ? "ACTIVE" : "EXPIRED";
