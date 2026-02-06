@@ -11,7 +11,23 @@ export const loginUser = createAsyncThunk(
             const response  = await axios.post(`${backendIP}/auth/login`, { emailId, createPassword });
             const token = response.data.token;
             const decodedToken = jwtDecode(token);
-            // console.log("login res: ", response);
+
+            // 🔗 Apply referral code (if user came from referral link)
+            try {
+                const referralCode = localStorage.getItem("referralCode");
+                if (referralCode) {
+                    await axios.post(
+                        `${backendIP}/referrals/use-code`,
+                        { referralCode },
+                        { headers: { Authorization: `Bearer ${token}` } }
+                    );
+                    localStorage.removeItem("referralCode");
+                }
+            } catch (refErr) {
+                // Fail silently – do not block login if referral apply fails
+                // console.error("Failed to apply referral code:", refErr);
+            }
+
             return { 
                 token, 
                 id : decodedToken.id,
