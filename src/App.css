@@ -15,6 +15,7 @@ html::-webkit-scrollbar,
 body::-webkit-scrollbar {
     display: none;
 }
+
 /* Resources Dropdown Wrapper */
 .navDropdown {
     position: relative;
@@ -96,7 +97,7 @@ body::-webkit-scrollbar {
     margin: 0;
     font-family: 'Lucida Handwriting', cursive;
     font-weight: 700;
-    color: rgb(139,69,19);
+    color: rgb(139, 69, 19);
 }
 
 .navAuthBtn {
@@ -494,4 +495,27 @@ body::-webkit-scrollbar {
     background-color: #00695C !important;
     color: white !important;
     font-weight: bold !important;
+}
+
+/* pagination */
+.mm-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.mm-page-number {
+    font-weight: bold;
+    padding: 4px 10px;
+}
+
+.pagination_btn {
+    border: none;
+    background-color: #0454c4;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }

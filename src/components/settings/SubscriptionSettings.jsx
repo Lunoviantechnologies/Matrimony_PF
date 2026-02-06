@@ -8,27 +8,18 @@ export default function SubscriptionSettings({ myProfile, navigate }) {
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
     );
 
-    /* -------------------- PLAN HELPERS -------------------- */
-    const getPlanMonths = (planCode = "") => {
-        const parts = planCode.split("_");
-        return Number(parts[parts.length - 1]) || 0;
-    };
-
-    const getPlanEndDate = (createdAt, planCode) => {
-        if (!createdAt || !planCode) return null;
-        const startDate = new Date(createdAt);
-        const endDate = new Date(startDate);
-        endDate.setMonth(endDate.getMonth() + getPlanMonths(planCode));
-        return endDate;
-    };
-
-    const getPaymentStatus = (payment, validTill) => {
+    /* -------------------- STATUS HELPERS -------------------- */
+    const getPaymentStatus = (payment) => {
         const status = payment.status?.toUpperCase();
+
         if (status === "FAILED") return "FAILED";
         if (status === "PENDING") return "PENDING";
+
         if (status === "PAID") {
-            return validTill && validTill >= new Date() ? "ACTIVE" : "EXPIRED";
+            const end = payment.premiumEnd ? new Date(payment.premiumEnd) : null;
+            return end && end >= new Date() ? "ACTIVE" : "EXPIRED";
         }
+
         return "UNKNOWN";
     };
 
@@ -37,9 +28,9 @@ export default function SubscriptionSettings({ myProfile, navigate }) {
             case "ACTIVE":
                 return { label: "Active", color: "success" };
             case "EXPIRED":
-                return { label: "Expired", color: "secondary" };
+                return { label: "Expired", color: "error" };
             case "FAILED":
-                return { label: "Failed", color: "danger" };
+                return { label: "Failed", color: "error" };
             case "PENDING":
                 return { label: "Pending", color: "warning" };
             default:
@@ -47,22 +38,28 @@ export default function SubscriptionSettings({ myProfile, navigate }) {
         }
     };
 
-    const currentPlan = sortedPayments.find((payment) => {
-        if (payment.status?.toUpperCase() !== "PAID") return false;
-        const validTill = getPlanEndDate(payment.createdAt, payment.planCode);
-        return validTill && validTill >= new Date();
-    });
+    /* -------------------- FIND CURRENT ACTIVE PLAN -------------------- */
+    const currentPlan = sortedPayments.find(
+        (payment) => getPaymentStatus(payment) === "ACTIVE"
+    );
+
+    console.log("Current Plan:", currentPlan);
+    console.log("Sorted Payments:", sortedPayments);
+
+    /* -------------------- DATE FORMATTER -------------------- */
+    const formatDate = (date) =>
+        date
+            ? new Date(date).toLocaleDateString("en-IN", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+            })
+            : "N/A";
 
     /* -------------------- UI -------------------- */
+
     return (
-        <Box
-            sx={{
-                maxWidth: 900,
-                mx: "auto",
-                px: { xs: 2, sm: 3 },
-                py: 3,
-            }}
-        >
+        <Box sx={{ maxWidth: 600, mx: "auto", px: 2, py: 3 }}>
             <Stack spacing={3}>
 
                 {/* ================= SUBSCRIPTION DETAILS ================= */}
@@ -77,20 +74,26 @@ export default function SubscriptionSettings({ myProfile, navigate }) {
                                 <Chip label="Active" color="success" size="small" />
 
                                 <Typography variant="body2" sx={{ mt: 1 }}>
+                                    Plan: {currentPlan.planName}
+                                </Typography>
+
+                                <Typography variant="body2">
                                     Amount: {currentPlan.amount} {currentPlan.currency}
                                 </Typography>
 
                                 <Typography variant="body2">
-                                    Valid Till:{" "}
-                                    {getPlanEndDate(
-                                        currentPlan.createdAt,
-                                        currentPlan.planCode
-                                    )?.toLocaleDateString("en-IN", {
-                                        day: "2-digit",
-                                        month: "long",
-                                        year: "numeric",
-                                    })}
+                                    Valid From: {formatDate(currentPlan.premiumStart)}
                                 </Typography>
+
+                                <Typography variant="body2">
+                                    Valid Till: {formatDate(currentPlan.premiumEnd)}
+                                </Typography>
+
+                                {currentPlan.expiryMessage && (
+                                    <Typography variant="body2" color="text.secondary">
+                                        {currentPlan.expiryMessage}
+                                    </Typography>
+                                )}
                             </>
                         ) : (
                             <Typography variant="body2" color="text.secondary">
@@ -123,18 +126,15 @@ export default function SubscriptionSettings({ myProfile, navigate }) {
                         ) : (
                             <Stack spacing={2}>
                                 {sortedPayments.map((payment, index) => {
-                                    const validTill = getPlanEndDate(
-                                        payment.createdAt,
-                                        payment.planCode
-                                    );
-                                    const status = getPaymentStatus(payment, validTill);
+                                    const status = getPaymentStatus(payment);
                                     const chipProps = getStatusChipProps(status);
 
                                     return (
                                         <Card key={payment.id || index} variant="outlined">
                                             <CardContent>
+
                                                 <Typography variant="body1">
-                                                    Plan: {payment.planCode}
+                                                    Plan: {payment.planName}
                                                 </Typography>
 
                                                 <Typography variant="body2">
@@ -142,10 +142,15 @@ export default function SubscriptionSettings({ myProfile, navigate }) {
                                                 </Typography>
 
                                                 <Typography variant="body2">
-                                                    Date:{" "}
-                                                    {new Date(payment.createdAt).toLocaleDateString(
-                                                        "en-IN"
-                                                    )}
+                                                    Purchased: {formatDate(payment.createdAt)}
+                                                </Typography>
+
+                                                <Typography variant="body2">
+                                                    Valid From: {formatDate(payment.premiumStart)}
+                                                </Typography>
+
+                                                <Typography variant="body2">
+                                                    Valid Till: {formatDate(payment.premiumEnd)}
                                                 </Typography>
 
                                                 <Typography variant="body2">
@@ -156,18 +161,8 @@ export default function SubscriptionSettings({ myProfile, navigate }) {
                                                     Transaction ID: {payment.transactionId || "N/A"}
                                                 </Typography>
 
-                                                {(status === "ACTIVE" || status === "EXPIRED") && (
-                                                    <Typography variant="body2">
-                                                        Valid Till:{" "}
-                                                        {validTill?.toLocaleDateString("en-IN")}
-                                                    </Typography>
-                                                )}
+                                                <Chip {...chipProps} size="small" sx={{ mt: 1 }} />
 
-                                                <Chip
-                                                    {...chipProps}
-                                                    size="small"
-                                                    sx={{ mt: 1 }}
-                                                />
                                             </CardContent>
                                         </Card>
                                     );

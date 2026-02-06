@@ -7,6 +7,7 @@ import ViewProfileModal from "../components/ViewProfileModal";
 import { useOutletContext, useNavigate } from "react-router-dom";
 import api from "../api/axiosInstance";
 import { FaCrown, FaUser } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const Nearme = () => {
   const navigate = useNavigate();
@@ -73,7 +74,7 @@ const Nearme = () => {
   const handleSendRequest = (receiverId) => {
     api.post(`/friends/send/${id}/${receiverId}`)
       .then(() => {
-        alert("Request sent successfully");
+        toast.success("Request sent successfully");
         setSentRequests(prev => [...prev, { senderId: id, receiverId }]);
       })
       .catch(err => console.error(err));

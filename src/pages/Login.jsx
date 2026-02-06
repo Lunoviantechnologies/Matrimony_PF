@@ -3,19 +3,16 @@ import "../styleSheets/loginStyle.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../redux/thunk/loginThunk";
+import { toast } from "react-toastify";
 
-const Login = ({ show, onClose }) => {
+const Login = () => {
 
     const navigate = useNavigate();
     const [auth, setAuth] = useState({ emailId: "", createPassword: "" });
     const [showPassword, setShowPassword] = useState(false);
 
     const dispatch = useDispatch();
-    const { loading, error, role, isLoggedIn } = useSelector(state => state.auth);
-    if (!show) return null;
-
-    const handleRegister = () => onClose();
-    const handleForget = () => onClose();
+    const { loading } = useSelector(state => state.auth);
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -23,72 +20,61 @@ const Login = ({ show, onClose }) => {
         dispatch(loginUser(auth))
             .unwrap()
             .then((data) => {
-                onClose();
                 const role = Array.isArray(data.role)
-                    ? data.role[0]?.toUpperCase() : typeof data.role === "string" ? data.role.toUpperCase() : "";
+                    ? data.role[0]?.toUpperCase()
+                    : typeof data.role === "string"
+                        ? data.role.toUpperCase()
+                        : "";
 
-                if (role === "ADMIN") {
-                    navigate("/admin");
-                } else if (role === "USER") {
-                    navigate("/dashboard");
-                } else {
-                    navigate("/"); // fallback
-                }
+                if (role === "ADMIN") navigate("/admin");
+                else if (role === "USER") navigate("/dashboard");
+                else navigate("/");
             })
             .catch(() => {
-                alert("Login failed. Please check your credentials.");
+                toast.error("Login failed. Please check your credentials.");
             });
     };
 
     return (
-        <div className="login-form">
+        <div className="login-page">
+            <div className="login-form">
 
-            {/* Loading Overlay */}
-            {loading && (
-                <div className="loading-overlay">
-                    <div className="spinner-border text-light"></div>
-                </div>
-            )}
+                {loading && (
+                    <div className="loading-overlay">
+                        <div className="spinner-border text-light"></div>
+                    </div>
+                )}
 
-            {/* Blur background */}
-            <div
-                className={`blur-bg-overlay ${show ? "active" : ""}`}
-                onClick={onClose}
-            ></div>
+                <div className="form-box">
 
-            {/* Popup */}
-            <div className={`form-popup ${show ? "show" : ""}`}>
-                <span className="close-btn material-symbols-rounded" onClick={onClose}>
-                    <i className="bi bi-x-circle"></i>
-                </span>
-
-                <div className="form-box login">
                     <div className="form-details">
                         <h2>WELCOME BACK !</h2>
                         <p>Please log in using your personal information to stay connected with us.</p>
                     </div>
 
                     <div className="form-content">
+
                         <div className="login-header">
-                            <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" />
+                            <img src="/vivahjeevan_logo.png" alt="logo" />
                             <h2>LOGIN</h2>
                         </div>
 
-                        <form>
-                            {/* EMAIL */}
+                        <form onSubmit={handleLogin}>
+
                             <div className="input-field">
                                 <input
                                     type="text"
+                                    placeholder=" "
                                     required
-                                    onChange={(e) => setAuth({ ...auth, emailId: e.target.value })}
+                                    onChange={(e) =>
+                                        setAuth({ ...auth, emailId: e.target.value })
+                                    }
                                 />
                                 <label>Email</label>
                             </div>
 
-                            {/* PASSWORD */}
                             <div className="input-field position-relative">
                                 <input
-                                    id="loginPassword"
                                     type={showPassword ? "text" : "password"}
                                     placeholder=" "
                                     required
@@ -96,58 +82,43 @@ const Login = ({ show, onClose }) => {
                                         setAuth({ ...auth, createPassword: e.target.value })
                                     }
                                 />
-                                <label htmlFor="loginPassword">Password</label>
+                                <label>Password</label>
 
                                 <span
                                     onClick={() => setShowPassword(!showPassword)}
                                     className="position-absolute top-50 end-0 translate-middle-y me-3"
-                                    style={{ cursor: "pointer", zIndex: 10 }}
+                                    style={{ cursor: "pointer" }}
                                 >
                                     <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
                                 </span>
                             </div>
 
-                            <Link
-                                to="forgotpassword"
-                                onClick={handleForget}
-                                className="forgot-pass-link"
-                            >
+                            <Link to="/forgotpassword" className="forgot-pass-link">
                                 Forgot password?
                             </Link>
 
-                            {/* LOGIN BUTTON WITH SPINNER */}
-                            <button
-                                type="submit"
-                                onClick={handleLogin}
-                                disabled={loading}
-                                className="login-btn"
-                            >
+                            <button type="submit" disabled={loading}>
                                 {loading ? (
-                                    <span>
+                                    <>
                                         <span className="spinner-border spinner-border-sm me-2"></span>
                                         Logging in...
-                                    </span>
-                                ) : (
-                                    "Log In"
-                                )}
+                                    </>
+                                ) : "Log In"}
                             </button>
+
                         </form>
 
-                        <div className="mt-4 signup-link">
-                            <span>
-                                New to Matrimony?
-                                <Link to="register" onClick={handleRegister} className="signupa">
-                                    {" "}SignUp for Free
-                                </Link>
-                            </span>
+                        <div className="signup-link">
+                            New to Matrimony?
+                            <Link to="/register"> SignUp for Free</Link>
                         </div>
 
                         <div className="policy-links">
-                            <span onClick={() => { onClose(); navigate("/terms&conditions"); }}>
+                            <span onClick={() => navigate("/terms&conditions")}>
                                 Terms & Conditions
                             </span>
                             <span>|</span>
-                            <span onClick={() => { onClose(); navigate("/privacy_policy"); }}>
+                            <span onClick={() => navigate("/privacy_policy")}>
                                 Privacy Policy
                             </span>
                         </div>

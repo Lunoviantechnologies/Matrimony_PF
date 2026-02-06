@@ -66,52 +66,61 @@ const Footer = () => {
   return (
     <footer className="footer">
 
-      <div className="d-flex justify-content-start">
-        <div>
-          <img src="/vivahjeevan_logo.png" alt="Vivahjeevan_logo" height={"100px"} />
-        </div>
+  <div className="footer-top">
 
-        <div>
-          <h2 className="footer-heading">
-            Vivahjeevan.com - Serving members worldwide
-          </h2>
+  <div className="footer-brand">
+  <img
+    src="/vivahjeevan_logo.png"
+    alt="Vivahjeevan_logo"
+    className="footer-brand-logo"
+   width="60px" height="60px"/>
+  <span className="footer-brand-text">Vivahjeevan</span>
+</div>
 
-          <p className="footer-description">
-            Viviahjeevan.com, one of India's leading matrimonial platforms, was
-            founded with a simple objective — to help people find happiness. By
-            redefining how Indian brides and grooms meet for marriage,
-            Viviahjeevan.com continues to connect millions of people worldwide.
-          </p>
-        </div>
+
+    <div className="footer-top-text">
+      <h2 className="footer-heading">
+        Vivahjeevan.com - Serving members worldwide
+      </h2>
+
+      <p className="footer-description">
+        Viviahjeevan.com, one of India's leading matrimonial platforms, was
+        founded with a simple objective — to help people find happiness. By
+        redefining how Indian brides and grooms meet for marriage,
+        Viviahjeevan.com continues to connect millions of people worldwide.
+      </p>
+    </div>
+
+  </div>
+
+  <div className="footer-content">
+    {FOOTER_LINKS.map((column) => (
+      <div key={column.title} className="footer-column">
+        <h3 className="footer-column-title">{column.title}</h3>
+
+        <ul className="footer-list">
+          {column.links.map((link) => {
+            const route = ROUTE_MAP[link] || `/${getSlug(link)}`;
+
+            return (
+              <li key={link}>
+                <Link to={route} className="footer-link">
+                  {link}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       </div>
+    ))}
+  </div>
 
-      <div className="footer-content">
-        {FOOTER_LINKS.map((column) => (
-          <div key={column.title} className="footer-column">
-            <h3 className="footer-column-title">{column.title}</h3>
+  <div className="footer-copyright">
+    &copy; {new Date().getFullYear()} Vivahjeevan.com. All Rights Reserved.
+  </div>
 
-            <ul className="footer-list">
-              {column.links.map((link) => {
-                const route = ROUTE_MAP[link] || `/${getSlug(link)}`;
+</footer>
 
-                return (
-                  <li key={link}>
-                    <Link to={route} className="footer-link">
-                      {link}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        ))}
-      </div>
-
-      <div className="footer-copyright">
-        &copy; {new Date().getFullYear()} Vivahjeevan.com. All Rights Reserved.
-      </div>
-
-    </footer>
   );
 };
 

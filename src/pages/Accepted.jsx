@@ -1,22 +1,25 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "../styleSheets/requestCSS/profileRequest.css";
-import backendIP from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
+import ViewProfileModal from "../components/ViewProfileModal";
 
 const Accepted = () => {
   const [acceptedRequests, setAcceptedRequests] = useState([]);
 
   const { id, role, myProfile } = useSelector(state => state.auth);
   const { profiles } = useSelector(state => state.profiles);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState(null);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // console.log("User ID in Accepted component:", profiles);
 
-  useEffect( () => {
+  useEffect(() => {
     dispatch(fetchMyProfile(id));
   }, [id]);
 
@@ -51,17 +54,24 @@ const Accepted = () => {
     if (!acceptedRequests.length || !profiles.length) return [];
 
     return acceptedRequests.map(req => {
-      const otherUserId =
-        req.senderId === id ? req.receiverId : req.senderId;
-
+      const otherUserId = req.senderId === id ? req.receiverId : req.senderId;
       const profile = profiles.find(p => p.id === otherUserId);
-
       return {
         ...req,
+        profile,
         image: profile?.updatePhoto ? profile.updatePhoto : profile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png",
       };
     });
   }, [acceptedRequests, profiles, id]);
+
+  // console.log("acceptedWithImages : ", acceptedRequests);
+  // console.log("selectedP: ", selectedProfile);
+
+  const handleProfile = (user) => {
+    // console.log("user: ", user);
+    setSelectedProfile(user.profile)
+    setShowModal(true);
+  };
 
   return (
     <div className="received-container">
@@ -100,9 +110,22 @@ const Accepted = () => {
               >
                 Message
               </button>
+
+              <button className="accept" onClick={() => handleProfile(user)} >
+                View Profile
+              </button>
             </div>
           </div>
         ))
+      )}
+
+      {showModal && selectedProfile && (
+        <ViewProfileModal
+          premium={myProfile.premium}
+          profile={selectedProfile}
+          // anchorRect={anchorRect}
+          onClose={() => setShowModal(false)}
+        />
       )}
     </div>
   );

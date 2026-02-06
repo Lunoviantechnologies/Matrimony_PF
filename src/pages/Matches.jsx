@@ -55,7 +55,7 @@ const Matches = () => {
                         <div className="d-flex flex-wrap align-items-center justify-content-evenly w-100 py-2 py-md-3 gap-2">
 
                             <div className="matches_nav d-flex flex-wrap justify-content-center justify-content-md-start gap-2 gap-md-3">
-                                <NavLink to="newmatches" className={({ isActive }) => `matches_link ${isActive ? "active" : ""}`}>
+                                <NavLink end to="newmatches" className={({ isActive }) => `matches_link ${isActive ? "active" : ""}`}>
                                     New Matches
                                 </NavLink>
 

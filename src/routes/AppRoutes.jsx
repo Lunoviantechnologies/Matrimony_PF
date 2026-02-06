@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import App from "../App";
 import Register from "../pages/Register";
 import PremiumSubscription from '../pages/PremiumSubscription';
@@ -51,6 +51,10 @@ import ChatReport from "../admin/ChatReport";
 import Resourses from "../components/Resources";
 import Blog from "../components/Blog";
 import DashboardAds from "../pages/DashboardAds";
+import RelationshipManager from "../admin/RelationshipManager";
+import AdminSettings from "../admin/adminSettings/AdminSettings";
+import Login from "../pages/Login";
+
 const AppRoutes = createBrowserRouter([
     {
         path: "/",
@@ -68,16 +72,20 @@ const AppRoutes = createBrowserRouter([
                 path: "/contactUs",
                 element: <ContactUs />
             },
-           {
-        path: "/resources",
-        element: <Resourses />, // <Outlet />
-        children: [
-          { path: "blog", element: <Blog /> },
-        ]
-      },
+            {
+                path: "/resources",
+                element: <Resourses />,
+                children: [
+                    { path: "blog", element: <Blog /> },
+                ]
+            },
             {
                 path: "/register",
                 element: <Register />
+            },
+            {
+                path: "/login",
+                element: <Login />
             },
             {
                 path: "forgotpassword",
@@ -129,7 +137,7 @@ const AppRoutes = createBrowserRouter([
                 path: "",
                 element: <Dashboard />
             },
-             {
+            {
                 path: "dashboardads",
                 element: <DashboardAds />
             },
@@ -149,6 +157,7 @@ const AppRoutes = createBrowserRouter([
                 path: "matches",
                 element: <Matches />,
                 children: [
+                    { index: true, element: <Navigate to="newmatches" replace /> },
                     {
                         path: "mymatches",
                         element: <MyMatches />
@@ -171,6 +180,7 @@ const AppRoutes = createBrowserRouter([
                 path: "requests",
                 element: <Requests />,
                 children: [
+                    { index: true, element: <Navigate to="received" replace /> },
                     {
                         path: "accepted",
                         element: <Accepted />
@@ -275,6 +285,14 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "admin_chat_report",
                 element: <ChatReport />
+            },
+            {
+                path: "relationship_manager",
+                element: <RelationshipManager />
+            },
+            {
+                path: "admin_settings",
+                element: <AdminSettings />
             },
         ]
 

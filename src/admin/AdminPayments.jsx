@@ -52,12 +52,19 @@ export default function AdminPayments() {
   const filteredPayments = getFilteredPayments();
 
   // --- Pagination Logic ---
-  const totalPages = Math.ceil(filteredPayments.length / pageSize) || 1;
-
+  const totalPages = Math.max(1, Math.ceil(filteredPayments.length / pageSize));
   const paginatedPayments = filteredPayments.slice(
     (page - 1) * pageSize,
     page * pageSize
   );
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [totalPages, page]);
+
+  // console.log("Paginated Payments: ", successpayments);
 
   return (
     <div className="admin-payments-container">
@@ -111,15 +118,16 @@ export default function AdminPayments() {
       <table className="table table-bordered table-striped mt-3">
         <thead>
           <tr>
-            <th style={{ color: "white", backgroundColor: "#00695C" }}>Sr. No</th>
-            <th style={{ color: "white", backgroundColor: "#00695C" }}>UserId</th>
-            <th style={{ color: "white", backgroundColor: "#00695C" }}>User Name</th>
-            <th style={{ color: "white", backgroundColor: "#00695C" }}>Plan</th>
-            <th style={{ color: "white", backgroundColor: "#00695C" }}>Amount</th>
-            <th style={{ color: "white", backgroundColor: "#00695C" }}>Transaction ID</th>
-            <th style={{ color: "white", backgroundColor: "#00695C" }}>Payment Mode</th>
-            <th style={{ color: "white", backgroundColor: "#00695C" }}>Payment Date</th>
-            <th style={{ color: "white", backgroundColor: "#00695C" }}>Status</th>
+            <th style={{ color: "white", backgroundColor: "#00695C", textAlign:"center" }}>Sr. No</th>
+            <th style={{ color: "white", backgroundColor: "#00695C", textAlign:"center" }}>UserId</th>
+            <th style={{ color: "white", backgroundColor: "#00695C", textAlign:"center" }}>User Name</th>
+            <th style={{ color: "white", backgroundColor: "#00695C", textAlign:"center" }}>Plan</th>
+            <th style={{ color: "white", backgroundColor: "#00695C", textAlign:"center" }}>Amount</th>
+            <th style={{ color: "white", backgroundColor: "#00695C", textAlign:"center" }}>Transaction ID</th>
+            <th style={{ color: "white", backgroundColor: "#00695C", textAlign:"center" }}>Payment Mode</th>
+            <th style={{ color: "white", backgroundColor: "#00695C", textAlign:"center" }}>Payment Date</th>
+            <th style={{ color: "white", backgroundColor: "#00695C", textAlign:"center" }}>Expiry Date</th>
+            <th style={{ color: "white", backgroundColor: "#00695C", textAlign:"center" }}>Status</th>
           </tr>
         </thead>
 
@@ -139,9 +147,10 @@ export default function AdminPayments() {
               <td>{p.name}</td>
               <td>{p.planCode}</td>
               <td>₹{p.amount}</td>
-              <td>{p.transactionId}</td>
+              <td>{p.razorpayPaymentId}</td>
               <td>{p.paymentMode || "N/A"}</td>
               <td>{new Date(p.createdAt).toLocaleString()}</td>
+              <td>{p.premiumEnd ? new Date(p.premiumEnd).toLocaleDateString() : "N/A"}</td>
               <td>
                 <span
                   className={`badge ${p.status.toUpperCase() === "PAID"

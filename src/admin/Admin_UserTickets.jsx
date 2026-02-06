@@ -29,7 +29,7 @@ export default function Admin_UserTickets() {
 
   const resolveTicket = async (ticketId) => {
     try {
-      await api.delete( `/tickets/${ticketId}/resolve` );
+      await api.delete(`/tickets/${ticketId}/resolve`);
       fetchTickets();
       toast.success("Ticket resolved successfully!");
     } catch (error) {
@@ -38,12 +38,17 @@ export default function Admin_UserTickets() {
   };
 
   // Pagination Logic
-  const totalPages = Math.ceil(tickets.length / pageSize);
-
+  const totalPages = Math.max(1, Math.ceil(tickets.length / pageSize));
   const currentTickets = tickets.slice(
     (page - 1) * pageSize,
     page * pageSize
   );
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [totalPages, page]);
 
   return (
     <div className="container mt-4">
@@ -93,43 +98,26 @@ export default function Admin_UserTickets() {
       </table>
 
       {/* Pagination — ALWAYS Visible */}
-      <div className="d-flex justify-content-center mt-4">
-        <ul className="pagination">
+      <div className="mu-pagination mt-3">
+        <button
+          className="pagination_btn"
+          disabled={page === 1}
+          onClick={() => setPage((p) => p - 1)}
+        >
+          Prev
+        </button>
 
-          {/* Prev Button */}
-          <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
-            <button
-              className="page-link"
-              onClick={() => page > 1 && setPage(page - 1)}
-            >
-              Prev
-            </button>
-          </li>
+        <span className="mm-page-number">{page}</span>
 
-          {/* Page Numbers (always show even if only 1 page) */}
-          {Array.from({ length: totalPages || 1 }, (_, i) => (
-            <li
-              key={i}
-              className={`page-item ${page === i + 1 ? "active" : ""}`}
-            >
-              <button className="page-link" onClick={() => setPage(i + 1)}>
-                {i + 1}
-              </button>
-            </li>
-          ))}
-
-          {/* Next Button */}
-          <li className={`page-item ${page === totalPages ? "disabled" : ""}`}>
-            <button
-              className="page-link"
-              onClick={() => page < totalPages && setPage(page + 1)}
-            >
-              Next
-            </button>
-          </li>
-
-        </ul>
+        <button
+          className="pagination_btn"
+          disabled={page === totalPages}
+          onClick={() => setPage((p) => p + 1)}
+        >
+          Next
+        </button>
       </div>
+
     </div>
   );
 };

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAdminProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
 import { toast } from "react-toastify";
-import backendIP from "../api/api";
 
 export default function AdminApprovals() {
   const dispatch = useDispatch();
@@ -84,10 +83,11 @@ export default function AdminApprovals() {
   const totalPages = Math.max(1, Math.ceil(visibleProfiles.length / pageSize));
   const paginatedData = visibleProfiles.slice((page - 1) * pageSize, page * pageSize);
 
-  const changePage = (newPage) => {
-    if (newPage >= 1 && newPage <= totalPages) setPage(newPage);
-  };
-  // console.log("statuss : ", visibleProfiles);
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [totalPages, page]);
 
   return (
     <div className="container mt-4">
@@ -142,19 +142,25 @@ export default function AdminApprovals() {
           Showing {visibleProfiles.length === 0 ? 0 : (page - 1) * pageSize + 1}–{Math.min(page * pageSize, visibleProfiles.length)} of {visibleProfiles.length}
         </span>
 
-        <ul className="pagination mb-0">
-          <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
-            <button className="page-link" onClick={() => changePage(page - 1)}>Prev</button>
-          </li>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
-            <li key={num} className={`page-item ${page === num ? "active" : ""}`}>
-              <button className="page-link" onClick={() => changePage(num)}>{num}</button>
-            </li>
-          ))}
-          <li className={`page-item ${page === totalPages ? "disabled" : ""}`}>
-            <button className="page-link" onClick={() => changePage(page + 1)}>Next</button>
-          </li>
-        </ul>
+        <div className="mu-pagination mt-3">
+          <button
+            className="pagination_btn"
+            disabled={page === 1}
+            onClick={() => setPage((p) => p - 1)}
+          >
+            Prev
+          </button>
+
+          <span className="mm-page-number">{page}</span>
+
+          <button
+            className="pagination_btn"
+            disabled={page === totalPages}
+            onClick={() => setPage((p) => p + 1)}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -50,33 +50,31 @@ const Dashboard = () => {
     .slice(0, 5);
   // console.log("Premium filtered Profiles in Dashboard:", premiumFilteredProfiles);
 
-  const userPayment = myProfile?.payments?.length > 0 ? myProfile.payments[myProfile.payments.length - 1] : null;
-  // console.log("User Payments in Dashboard:", userPayment);
-  const getPlanMonths = (planCode = "") => {
-    const parts = planCode.split("_");
-    return Number(parts[parts.length - 1]);
+  // ---------- PREMIUM HELPERS ----------
+  const sortedPayments = useMemo(() => {
+    return [...(myProfile?.payments || [])].sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+  }, [myProfile]);
+
+  const getPaymentStatus = (payment) => {
+    if (!payment) return "UNKNOWN";
+    const status = payment.status?.toUpperCase();
+    if (status === "FAILED") return "FAILED";
+    if (status === "PENDING") return "PENDING";
+    if (status === "PAID") {
+      const end = payment.premiumEnd ? new Date(payment.premiumEnd) : null;
+
+      return end && end >= new Date() ? "ACTIVE" : "EXPIRED";
+    }
+    return "UNKNOWN";
   };
 
-  const getPlanEndDate = (createdAt, planCode) => {
-    if (!createdAt || !planCode) return null;
+  const currentPlan = useMemo(() => {
+    return sortedPayments.find((p) => getPaymentStatus(p) === "ACTIVE");
+  }, [sortedPayments]);
 
-    const startDate = new Date(createdAt);
-    const months = getPlanMonths(planCode);
-
-    const endDate = new Date(startDate);
-    endDate.setMonth(endDate.getMonth() + months);
-
-    return endDate;
-  };
-
-  const isPlanActive = (payment) => {
-    if (!payment?.createdAt || !payment?.planCode) return false;
-
-    const endDate = getPlanEndDate(payment.createdAt, payment.planCode);
-    if (!endDate) return false;
-
-    return new Date() <= new Date(endDate);
-  };
+  const isPremiumActive = !!currentPlan;
 
   useEffect(() => {
     const fetchAcceptedRequests = async () => {
@@ -168,7 +166,7 @@ const Dashboard = () => {
   return (
     <div className="dashboard_body">
       {/* ====== Matches Section ====== */}
-       
+
       <section className="matchSection">
         <h2 style={{ color: "#695019", marginBottom: 15 }}>
           New Profile Matches
@@ -189,14 +187,14 @@ const Dashboard = () => {
                   <img
                     src={i.updatePhoto ? i.updatePhoto : i.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"} alt={i.firstName}
                     style={{ objectFit: "cover", }}
-                    className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
+                    className={`profile-img ${!isPremiumActive ? "blur-image" : ""}`}
                     onError={(e) => {
                       e.target.src = i.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
                     }}
                     draggable={false}
                     onContextMenu={(e) => e.preventDefault()}
                   />
-                  {!myProfile?.premium && (
+                  {!isPremiumActive && (
                     <div className="premium-overlay" onClick={() => navigate("/dashboard/premium")}>
                       🔒 Upgrade to Premium
                     </div>
@@ -220,9 +218,9 @@ const Dashboard = () => {
         </div>
       </section>
       <div>
-           <DashboardAds /><br />
+        <DashboardAds /><br />
       </div>
-           
+
       {/* ====== Request Section ====== */}
       <section
         style={{ background: "#fff", borderRadius: 15, padding: 24, marginBottom: 32, boxShadow: "0 1px 6px #ddd", }}>
@@ -257,7 +255,7 @@ const Dashboard = () => {
                 className={`request-img ${!myProfile?.premium ? "requestblur-image" : ""}`}
                 style={{ width: 110, height: 90, borderRadius: 15, marginRight: 22, objectFit: "cover", }}
                 onError={(e) => {
-                  e.target.src = p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+                  e.target.src = req.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
                 }}
                 draggable={false}
                 onContextMenu={(e) => e.preventDefault()}
@@ -288,44 +286,45 @@ const Dashboard = () => {
             <RiSecurePaymentFill /> My Subscription Plan
           </h3>
 
-          {!userPayment || !isPlanActive(userPayment) ? (
+          {!currentPlan ? (
             <p style={{ color: "#999", fontStyle: "italic" }}>
               No active subscription plan
             </p>
           ) : (
             <div className="planSection">
+
               <p style={{ fontWeight: "bold" }}>
-                Plan Name: {userPayment.planCode}
+                Plan Name: {currentPlan.planName}
               </p>
 
               <p>
-                Amount: {userPayment.currency} {userPayment.amount}
+                Amount: {currentPlan.currency} {currentPlan.amount}
               </p>
 
               <p>
-                Paid Date:{" "}
-                {new Date(userPayment.createdAt).toLocaleDateString("en-IN", {
+                Valid From:{" "}
+                {new Date(currentPlan.premiumStart).toLocaleDateString("en-IN", {
                   day: "2-digit",
                   month: "long",
                   year: "numeric",
                 })}
-              </p>
-
-              <p>
-                Validity: {getPlanMonths(userPayment.planCode)} Months
               </p>
 
               <p>
                 Valid Till:{" "}
-                {getPlanEndDate(
-                  userPayment.createdAt,
-                  userPayment.planCode
-                )?.toLocaleDateString("en-IN", {
+                {new Date(currentPlan.premiumEnd).toLocaleDateString("en-IN", {
                   day: "2-digit",
                   month: "long",
                   year: "numeric",
                 })}
               </p>
+
+              {currentPlan.expiryMessage && (
+                <p style={{ color: "#888" }}>
+                  {currentPlan.expiryMessage}
+                </p>
+              )}
+
             </div>
           )}
         </div>
@@ -341,7 +340,7 @@ const Dashboard = () => {
               <img
                 src={i.updatePhoto ? i.updatePhoto : i.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
                 alt={i.firstName}
-                className={`premium-img ${!myProfile?.premium ? "premiumblur-image" : ""}`}
+                className={`premium-img ${!isPremiumActive ? "premiumblur-image" : ""}`}
                 style={{ width: 60, height: 60, borderRadius: 15, objectFit: "cover", marginRight: 15, }} />
               <div>
                 <div style={{ fontWeight: "bold", fontSize: 18, color: "#5C4218", }}>
