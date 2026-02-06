@@ -2,6 +2,14 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## Environment (avoid 403 in production)
+
+1. Copy `.env.example` to `.env`.
+2. Set `VITE_API_URL` to your backend API base URL:
+   - **Local:** `http://localhost:8080/api`
+   - **Production:** `https://your-backend-domain.com/api` (no trailing slash)
+3. On the **backend**, set CORS to allow your frontend origin (e.g. in `application-prod.properties` or env `CORS_ALLOWED_ORIGINS=https://your-frontend-domain.com`). If the frontend origin is not allowed, the browser will get 403.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
