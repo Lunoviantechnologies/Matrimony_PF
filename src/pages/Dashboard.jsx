@@ -15,6 +15,8 @@ const Dashboard = () => {
   const [acceptedRequests, setAcceptedRequests] = useState([]);
   const [receivedRequests, setReceivedRequests] = useState([]);
   const [rejectedRequests, setRejectedRequests] = useState([]);
+  const [referSummary, setReferSummary] = useState(null);
+  const [showReferBanner, setShowReferBanner] = useState(false);
   const { id, myProfile, role } = useSelector(state => state.auth);
   const { profiles } = useSelector(state => state.profiles);
   const dispatch = useDispatch();
@@ -26,6 +28,24 @@ const Dashboard = () => {
       dispatch(fetchUserProfiles());
     };
   }, [id, dispatch, role]);
+
+  useEffect(() => {
+    const loadReferral = async () => {
+      try {
+        const res = await api.get("/referrals/me");
+        const data = res.data;
+        setReferSummary(data);
+        if (data && data.completedReferrals < data.totalReferralsNeeded) {
+          setShowReferBanner(true);
+        }
+      } catch (e) {
+        // ignore referral errors
+      }
+    };
+    if (id) {
+      loadReferral();
+    }
+  }, [id]);
   console.log("My Profile in Dashboard:", myProfile);
 
   const now = new Date();
@@ -165,6 +185,177 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard_body">
+      {showReferBanner && referSummary && (
+        <div
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(254,249,195,1) 0%, rgba(254,243,199,1) 35%, rgba(255,255,255,1) 100%)",
+            borderRadius: 18,
+            padding: "18px 22px",
+            marginBottom: 22,
+            boxShadow: "0 10px 25px rgba(0,0,0,0.06)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 18,
+            border: "1px solid #fde68a",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: "50%",
+                background:
+                  "radial-gradient(circle at 30% 30%, #facc15, #eab308)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 6px 14px rgba(234,179,8,0.45)",
+              }}
+            >
+              <span style={{ fontSize: 24 }}>🎁</span>
+            </div>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <h3
+                  style={{
+                    margin: 0,
+                    color: "#78350f",
+                    fontSize: 18,
+                    fontWeight: 800,
+                  }}
+                >
+                  Refer &amp; Earn
+                </h3>
+                <span
+                  style={{
+                    fontSize: 11,
+                    padding: "3px 8px",
+                    borderRadius: 999,
+                    backgroundColor: "#22c55e",
+                    color: "#fefce8",
+                    fontWeight: 700,
+                    letterSpacing: 0.3,
+                  }}
+                >
+                  NEW
+                </span>
+              </div>
+              <p
+                style={{
+                  margin: "4px 0 6px",
+                  color: "#7c2d12",
+                  fontSize: 13,
+                }}
+              >
+                Invite 2 friends and get{" "}
+                <b style={{ fontWeight: 800 }}>₹100 instant reward</b> on your
+                next upgrade.
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  marginTop: 4,
+                }}
+              >
+                <div
+                  style={{
+                    flex: 1,
+                    height: 8,
+                    borderRadius: 999,
+                    backgroundColor: "#fef9c3",
+                    overflow: "hidden",
+                    border: "1px solid #facc15",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${
+                        (referSummary.completedReferrals /
+                          referSummary.totalReferralsNeeded) *
+                        100
+                      }%`,
+                      height: "100%",
+                      background:
+                        "linear-gradient(90deg,#22c55e,#16a34a,#15803d)",
+                    }}
+                  />
+                </div>
+                <span
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: "#78350f",
+                    minWidth: 60,
+                    textAlign: "right",
+                  }}
+                >
+                  {referSummary.completedReferrals}/
+                  {referSummary.totalReferralsNeeded} done
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+              gap: 6,
+              minWidth: 150,
+            }}
+          >
+            <button
+              onClick={() => {
+                setShowReferBanner(false);
+                navigate("/dashboard/settings?tab=refer");
+              }}
+              style={{
+                background:
+                  "linear-gradient(90deg,#166534,#16a34a,#22c55e)",
+                color: "#fefce8",
+                border: "none",
+                padding: "9px 20px",
+                borderRadius: 999,
+                fontWeight: 800,
+                cursor: "pointer",
+                fontSize: 13,
+                boxShadow: "0 8px 18px rgba(21,128,61,0.45)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Invite Now
+            </button>
+            <button
+              onClick={() => setShowReferBanner(false)}
+              style={{
+                background: "transparent",
+                color: "#7c6f42",
+                border: "none",
+                cursor: "pointer",
+                fontSize: 12,
+                textDecoration: "underline",
+              }}
+            >
+              Maybe later
+            </button>
+            <span
+              style={{
+                fontSize: 11,
+                color: "#854d0e",
+                marginTop: 2,
+              }}
+            >
+              Reward balance:{" "}
+              <b>₹{referSummary.rewardBalance ?? 0}</b>
+            </span>
+          </div>
+        </div>
+      )}
       {/* ====== Matches Section ====== */}
 
       <section className="matchSection">

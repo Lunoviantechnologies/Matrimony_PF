@@ -50,6 +50,7 @@ import CommunityGuidelines from "../components/privacyInfo/CommunityGuidelines";
 import ChatReport from "../admin/ChatReport";
 import Resourses from "../components/Resources";
 import Blog from "../components/Blog";
+import ReferralLanding from "../components/ReferralLanding";
 import DashboardAds from "../pages/DashboardAds";
 import RelationshipManager from "../admin/RelationshipManager";
 import AdminSettings from "../admin/adminSettings/AdminSettings";
@@ -82,6 +83,10 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "/register",
                 element: <Register />
+            },
+            {
+                path: "/referral/:code",
+                element: <ReferralLanding />
             },
             {
                 path: "/login",

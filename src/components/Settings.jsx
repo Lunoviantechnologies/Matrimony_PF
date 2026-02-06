@@ -2,15 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Typography, Button, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import SubscriptionSettings from "./settings/SubscriptionSettings";
 import SupportSettings from "./settings/SupportSettings";
 import PrivacySettings from "./settings/PrivacySettings";
 import SecuritySettings from "./settings/SecuritySettings";
+import ReferAndEarn from "./settings/ReferAndEarn";
 
 export default function Settings() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { id, myProfile } = useSelector((state) => state.auth);
 
   const [tab, setTab] = useState(0);
@@ -26,11 +28,21 @@ export default function Settings() {
     }
   }, [id, dispatch]);
 
+  // If URL query has ?tab=refer, open Refer & Earn tab by default
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tabParam = params.get("tab");
+    if (tabParam === "refer") {
+      setTab(4);
+    }
+  }, [location.search]);
+
   const tabs = [
     { label: "Privacy", index: 0 },
     { label: "Subscription", index: 1 },
     { label: "Security", index: 2 },
     { label: "Support", index: 3 },
+    { label: "Refer & Earn", index: 4 },
   ];
 
   return (
@@ -74,6 +86,7 @@ export default function Settings() {
         )}
 
         {tab === 3 && <SupportSettings userId={id} />}
+        {tab === 4 && <ReferAndEarn />}
       </div>
     </div>
   );

@@ -91,6 +91,7 @@ const UserNavbar = () => {
                 <ul className="dropdown-menu dropdown-menu-end">
                     <li><Link className="dropdown-item" to="editProfile">Profile</Link></li>
                     <li><Link className="dropdown-item" to="settings">Settings</Link></li>
+                    <li><Link className="dropdown-item" to="settings?tab=refer">Rewards</Link></li>
                     <li><hr className="dropdown-divider" /></li>
                     <li><button className="dropdown-item text-danger" onClick={handleLogout}>Logout</button></li>
                 </ul>
