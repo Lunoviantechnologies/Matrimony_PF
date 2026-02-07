@@ -4,6 +4,7 @@ import UserNavbar from "./UserNavbar";
 import { useState } from "react";
 import AdminNavbar from "../admin/AdminNavbar";
 import { FaBars } from "react-icons/fa";
+import "../styleSheets/navbar.css";
 
 const Navbar = () => {
     const navigate = useNavigate();

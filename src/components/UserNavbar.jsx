@@ -8,6 +8,7 @@ import { logout } from "../redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axiosInstance";
 import { toast } from "react-toastify";
+import "../styleSheets/navbar.css";
 
 const UserNavbar = () => {
 

@@ -10,22 +10,24 @@ const Home = () => {
     return (
         <div className="homePage">
 
-            <div className="homeBanner container">
-                <div className="bannerText">
-                    <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" height={'200px'} />
-                    <h1>Vivahjeevan</h1>
-                    <h4>Bond for Seven Lifetimes...</h4>
-                </div>
+            <div className="homeBanner">
+                <div className="bannerInner container">
+                    <div className="bannerText">
+                        <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" height={'200px'} />
+                        <h1>Vivahjeevan</h1>
+                        <h4>Bond for Seven Lifetimes...</h4>
+                    </div>
 
-                <div className="bannerImage">
-                    <img src="banner2.png" alt="homeBanner" loading="lazy" />
+                    <div className="bannerImage">
+                        <img src="banner2.png" alt="homeBanner" loading="lazy" />
+                    </div>
                 </div>
             </div>
 
             <div className="container mt-5 mb-5 py-4 w-75">
                 <h2 className="cardHeader">The Matrimony Experience</h2>
 
-                <div className="row mt-4">
+                <div className="row mt-4 experienceScroll">
                     <div className="col-sm-4 mb-3 mb-sm-0">
                         <div className="card homeCard">
                             <div className="card-body">
