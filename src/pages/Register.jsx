@@ -9,45 +9,45 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 
-  /* -------------------------------------------------------------
-    INITIAL VALUES
-  ------------------------------------------------------------- */
-  const initialValues = {
-    profileFor: "",
-    gender: "",
-    firstName: "",
-    lastName: "",
-    dobDay: "",
-    dobMonth: "",
-    dobYear: "",
-    dateOfBirth: "",
-    age: "",
-    religion: "",
-    subCaste: "",
-    subCasteOther: "",
-    gothram: "",
-    gothramOther: "",
-    motherTongue: "",
-    country: "",
-    stateId: "",
-districtId: "",
-    city: "",
-    residenceStatus: "",
-    maritalStatus: "",
-    livingStatus: "",
-    noOfChildren: "",
-    highestEducation: "",
-    sector: "",
-    occupation: "",
-    companyName: "",
-    annualIncome: "",
-    workLocation: "",
-    emailId: "",
-    mobileNumber: "",
-    createPassword: "",
-    documentFile: null,
-    role: "USER",
-  };
+/* -------------------------------------------------------------
+  INITIAL VALUES
+------------------------------------------------------------- */
+const initialValues = {
+  profileFor: "",
+  gender: "",
+  firstName: "",
+  lastName: "",
+  dobDay: "",
+  dobMonth: "",
+  dobYear: "",
+  dateOfBirth: "",
+  age: "",
+  religion: "",
+  subCaste: "",
+  subCasteOther: "",
+  gothram: "",
+  gothramOther: "",
+  motherTongue: "",
+  country: "",
+  state: "",
+  district: "",
+  city: "",
+  residenceStatus: "",
+  maritalStatus: "",
+  livingStatus: "",
+  noOfChildren: "",
+  highestEducation: "",
+  sector: "",
+  occupation: "",
+  companyName: "",
+  annualIncome: "",
+  workLocation: "",
+  emailId: "",
+  mobileNumber: "",
+  createPassword: "",
+  documentFile: null,
+  role: "USER",
+};
 
 /* -------------------------------------------------------------
   STEP-WISE VALIDATION
@@ -104,27 +104,28 @@ const validationSchemas = [
   }),
 
   // STEP 4
-// STEP 4
-Yup.object({
-  country: Yup.string().required("Country is required"),
-  stateId: Yup.string().required("State is required"),
-  city: Yup.string().required("City is required"),
-  residenceStatus: Yup.string().when("country", {
-    is: (c) => c && c !== "1",   // 1 = India id (adjust if needed)
-    then: (s) => s.required("Residence status required"),
-    otherwise: (s) => s.notRequired(),
+  // STEP 4
+  Yup.object({
+    country: Yup.string().required("Country is required"),
+    state: Yup.string().required("State is required"),
+    district: Yup.string().required("District is required"),
+    city: Yup.string().required("City is required"),
+    residenceStatus: Yup.string().when("country", {
+      is: (c) => c && c !== "1",   // 1 = India id (adjust if needed)
+      then: (s) => s.required("Residence status required"),
+      otherwise: (s) => s.notRequired(),
+    }),
   }),
-}),
 
   // STEP 5  ✅ Marital only
- Yup.object({
-  maritalStatus: Yup.string().required("Marital status required"),
-  livingStatus: Yup.string().when("maritalStatus", {
-    is: (v) => ["Divorced", "Widowed", "Separated"].includes(v),
-    then: (s) => s.required("Living status required"),
-    otherwise: (s) => s.notRequired(),
+  Yup.object({
+    maritalStatus: Yup.string().required("Marital status required"),
+    livingStatus: Yup.string().when("maritalStatus", {
+      is: (v) => ["Divorced", "Widowed", "Separated"].includes(v),
+      then: (s) => s.required("Living status required"),
+      otherwise: (s) => s.notRequired(),
+    }),
   }),
-}),
 
   // STEP 6  ✅ Education
   Yup.object({
@@ -172,9 +173,9 @@ const calculateAge = (day, month, year) => {
     age--;
   }
 
-    return age >= 0 ? age : "";
-  };
- const HindusubCommunityList = [
+  return age >= 0 ? age : "";
+};
+const HindusubCommunityList = [
   "Anavil Brahmin",
   "Audichya Brahmin",
   "Ayodhi",
@@ -263,8 +264,8 @@ const calculateAge = (day, month, year) => {
   "Velanadu Brahmin",
   "Velanati"
 ].sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
-   
-  const muslimCommunityList = [
+
+const muslimCommunityList = [
   "Shia",
   "Sunni",
 
@@ -501,7 +502,7 @@ const interReligionCommunityList = [
 ];
 
 
-  /* ---------------- SUB COMMUNITY LIST ---------------- */
+/* ---------------- SUB COMMUNITY LIST ---------------- */
 const religionSubCommunityMap = {
   Hindu: HindusubCommunityList,
 
@@ -526,22 +527,22 @@ const religionSubCommunityMap = {
 
 const fetchCountries = async () => {
   const res = await axios.get(`${backendIP}/locations/countries`);
+  // console.log("res country: ", res.data);
   return res.data || [];
 };
 
 const fetchStatesByCountryId = async (countryId) => {
-  const res = await axios.get(
-    `${backendIP}/locations/states/${countryId}`
-  );
+  const res = await axios.get(`${backendIP}/locations/states/${countryId}`);
+  console.log("res state: ", res.data);
   return res.data || [];
 };
 
-const fetchDistrictsByStateId = async (stateId) => {
-  const res = await axios.get(
-    `${backendIP}/locations/districts/${stateId}`
-  );
-  return res.data || [];
-};
+// const fetchDistrictsByStateId = async (stateId) => {
+//   const res = await axios.get(
+//     `${backendIP}/locations/districts/${stateId}`
+//   );
+//   return res.data || [];
+// };
 
 const fetchCitiesByDistrictId = async (districtId) => {
   const res = await axios.get(
@@ -552,15 +553,15 @@ const fetchCitiesByDistrictId = async (districtId) => {
 const allowOnlyLetters = (value) => value.replace(/[^a-zA-Z\s]/g, "");
 const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
 
-  const Register = () => {
-    const [step, setStep] = useState(1);
-    const totalSteps = 9;
-    const [statesList, setStatesList] = useState([]);
-    const [countriesList, setCountriesList] = useState([]);
-    const [districtsList, setDistrictsList] = useState([]);
-    const [citiesList, setCitiesList] = useState([]);
+const Register = () => {
+  const [step, setStep] = useState(1);
+  const totalSteps = 9;
+  const [statesList, setStatesList] = useState([]);
+  const [countriesList, setCountriesList] = useState([]);
+  const [districtsList, setDistrictsList] = useState([]);
+  const [citiesList, setCitiesList] = useState([]);
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [emailVerified, setEmailVerified] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
@@ -595,17 +596,17 @@ const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
     if (step < totalSteps) setStep(step + 1);
   };
   useEffect(() => {
-  const loadCountries = async () => {
-    try {
-      const data = await fetchCountries();
-      setCountriesList(data);
-    } catch (e) {
-      console.error(e);
-    }
-  };
+    const loadCountries = async () => {
+      try {
+        const data = await fetchCountries();
+        setCountriesList(data);
+      } catch (e) {
+        console.error(e);
+      }
+    };
 
-  loadCountries();
-}, []);
+    loadCountries();
+  }, []);
 
   /* -------------------------------------------------------------
     PREVIOUS STEP
@@ -614,71 +615,71 @@ const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
     if (step > 1) setStep(step - 1);
   };
 
-   const handleSubmit = (values) => {
+  const handleSubmit = (values) => {
 
-  const profileData = {
-    profileFor: values.profileFor,
-    gender: values.gender,
-    firstName: values.firstName,
-    lastName: values.lastName,
-    age: values.age,
+    const selectedCountry = countriesList.find(c => c.id === Number(values.country));
+    const selectedState = statesList.find(s => s.id === Number(values.state));
 
-    dateOfBirth:
-      values.dobDay && values.dobMonth && values.dobYear
+    const profileData = {
+      profileFor: values.profileFor,
+      gender: values.gender,
+      firstName: values.firstName,
+      lastName: values.lastName,
+      age: values.age,
+
+      dateOfBirth:
+        values.dobDay && values.dobMonth && values.dobYear
           ? `${values.dobYear}-${String(values.dobMonth).padStart(2, '0')}-${String(values.dobDay).padStart(2, '0')}`
           : null,
 
-    religion: values.religion,
+      religion: values.religion,
 
-    // ✅ FIXED : send typed value when Others is selected
-    subCaste:
-      values.subCaste === "Others"
-        ? values.subCasteOther
-        : values.subCaste,
+      // ✅ FIXED : send typed value when Others is selected
+      subCaste: values.subCaste === "Others" ? values.subCasteOther : values.subCaste,
+      motherTongue: values.motherTongue,
+      country: selectedCountry?.name,
+      state: selectedState?.name,
+      district: values.district,
+      city: values.city,
+      residenceStatus: values.residenceStatus,
+      maritalStatus: values.maritalStatus,
+      noOfChildren: values.noOfChildren,
+      highestEducation: values.highestEducation,
+      sector: values.sector,
+      occupation: values.occupation,
+      companyName: values.companyName,
+      annualIncome: values.annualIncome,
+      workLocation: values.workLocation,
+      emailId: values.emailId,
+      mobileNumber: values.mobileNumber,
+      createPassword: values.createPassword,
+      role: values.role
+    };
 
-    motherTongue: values.motherTongue,
-    countryId: values.country,
-    stateId: values.stateId,
-    // districtId: values.districtId,
-    // city: values.city,
-        maritalStatus: values.maritalStatus,
-    noOfChildren: values.noOfChildren,
-    highestEducation: values.highestEducation,
-    sector: values.sector,
-    occupation: values.occupation,
-    companyName: values.companyName,
-    annualIncome: values.annualIncome,
-    workLocation: values.workLocation,
-    emailId: values.emailId,
-    mobileNumber: values.mobileNumber,
-    createPassword: values.createPassword,
-    role: values.role
-  };
+    const formData = new FormData();
 
-  const formData = new FormData();
+    formData.append("profile", JSON.stringify(profileData));
 
-  formData.append("profile", JSON.stringify(profileData));
-
-  if (values.documentFile) {
-    formData.append("document", values.documentFile);
-  }
-
-  console.log("Submitting registration:", profileData, values.documentFile);
-
-  axios.post(`${backendIP}/profiles/register`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data"
+    if (values.documentFile) {
+      formData.append("document", values.documentFile);
     }
-  })
-    .then(() => {
-      toast.success("Registration successful");
-      navigate("/registration-success");
+
+    console.log("Submitting registration:", profileData);
+
+    axios.post(`${backendIP}/profiles/register`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
     })
-    .catch((error) => {
-      console.error("Upload error:", error.response?.data || error.message);
-      toast.error("Registration failed");
-    });
-};
+      .then(() => {
+        toast.success("Registration successful");
+        navigate("/registration-success");
+      })
+      .catch((error) => {
+        console.error("Upload error:", error.response?.data || error.message);
+        toast.error("Registration failed");
+      });
+  };
 
 
   const sendEmailOtp = async (email) => {
@@ -805,373 +806,364 @@ const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
             <div className="step-icon"><FaUser /></div>
             <h2>Tell us about you</h2>
 
-              {/* First Name */}
-             <Field name="firstName">
-  {({ field }) => (
-    <input
-      {...field}
-      className="form-input"
-      placeholder="First Name"
-      onChange={(e) => {
-        setFieldValue(
-          "firstName",
-          allowOnlyLetters(e.target.value)
-        );
-      }}
-    />
-  )}
-</Field>
+            {/* First Name */}
+            <Field name="firstName">
+              {({ field }) => (
+                <input
+                  {...field}
+                  className="form-input"
+                  placeholder="First Name"
+                  onChange={(e) => {
+                    setFieldValue(
+                      "firstName",
+                      allowOnlyLetters(e.target.value)
+                    );
+                  }}
+                />
+              )}
+            </Field>
 
             <Field name="lastName">
-  {({ field }) => (
-    <input
-      {...field}
-      className="form-input"
-      placeholder="Last Name"
-      onChange={(e) => {
-        setFieldValue(
-          "lastName",
-          allowOnlyLetters(e.target.value)
-        );
-      }}
-    />
-  )}
-</Field>
-<Field name="age">
-  {({ field }) => (
-    <input
-      {...field}
-      className="form-input"
-      placeholder="Age (Auto-calculated)"
-      disabled={values.dobDay && values.dobMonth && values.dobYear}
-      onChange={(e) => {
-        setFieldValue(
-          "age",
-          allowOnlyNumbers(e.target.value)
-        );
-      }}
-    />
-  )}
+              {({ field }) => (
+                <input
+                  {...field}
+                  className="form-input"
+                  placeholder="Last Name"
+                  onChange={(e) => {
+                    setFieldValue(
+                      "lastName",
+                      allowOnlyLetters(e.target.value)
+                    );
+                  }}
+                />
+              )}
+            </Field>
 
-</Field>
-<ErrorMessage name="age" component="div" className="error-text" />
+            {/* DATE OF BIRTH */}
+            <Field name="dobDay">
+              {({ field }) => (
+                <input
+                  {...field}
+                  className="form-input dobInput"
+                  placeholder="DD"
+                  onChange={(e) => {
+                    const day = allowOnlyNumbers(e.target.value);
+                    setFieldValue("dobDay", day);
 
+                    if (day && values.dobMonth && values.dobYear) {
+                      const dob = new Date(values.dobYear, values.dobMonth - 1, day);
+                      const today = new Date();
 
-              {/* DATE OF BIRTH */}
-             <Field name="dobDay">
-  {({ field }) => (
-    <input
-      {...field}
-      className="form-input dobInput"
-      placeholder="DD"
-      onChange={(e) => {
-        const day = allowOnlyNumbers(e.target.value);
-        setFieldValue("dobDay", day);
+                      let age = today.getFullYear() - dob.getFullYear();
+                      const m = today.getMonth() - dob.getMonth();
 
-        if (day && values.dobMonth && values.dobYear) {
-          const dob = new Date(values.dobYear, values.dobMonth - 1, day);
-          const today = new Date();
+                      if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                        age--;
+                      }
 
-          let age = today.getFullYear() - dob.getFullYear();
-          const m = today.getMonth() - dob.getMonth();
-
-          if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-            age--;
-          }
-
-          setFieldValue("age", age);
-        }
-      }}
-    />
-  )}
-</Field>
+                      setFieldValue("age", age);
+                    }
+                  }}
+                />
+              )}
+            </Field>
 
 
-                <Field name="dobMonth">
-  {({ field }) => (
-    <input
-      {...field}
-      className="form-input dobInput"
-      placeholder="MM"
-      onChange={(e) => {
-        const month = allowOnlyNumbers(e.target.value);
-        setFieldValue("dobMonth", month);
+            <Field name="dobMonth">
+              {({ field }) => (
+                <input
+                  {...field}
+                  className="form-input dobInput"
+                  placeholder="MM"
+                  onChange={(e) => {
+                    const month = allowOnlyNumbers(e.target.value);
+                    setFieldValue("dobMonth", month);
 
-        if (values.dobDay && month && values.dobYear) {
-          const dob = new Date(values.dobYear, month - 1, values.dobDay);
-          const today = new Date();
+                    if (values.dobDay && month && values.dobYear) {
+                      const dob = new Date(values.dobYear, month - 1, values.dobDay);
+                      const today = new Date();
 
-          let age = today.getFullYear() - dob.getFullYear();
-          const m = today.getMonth() - dob.getMonth();
+                      let age = today.getFullYear() - dob.getFullYear();
+                      const m = today.getMonth() - dob.getMonth();
 
-          if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-            age--;
-          }
+                      if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                        age--;
+                      }
 
-          setFieldValue("age", age);
-        }
-      }}
-    />
-  )}
-</Field>
+                      setFieldValue("age", age);
+                    }
+                  }}
+                />
+              )}
+            </Field>
 
-<Field name="dobYear">
-  {({ field }) => (
-    <input
-      {...field}
-      className="form-input dobInput"
-      placeholder="YYYY"
-      onChange={(e) => {
-        const year = allowOnlyNumbers(e.target.value);
-        setFieldValue("dobYear", year);
+            <Field name="dobYear">
+              {({ field }) => (
+                <input
+                  {...field}
+                  className="form-input dobInput"
+                  placeholder="YYYY"
+                  onChange={(e) => {
+                    const year = allowOnlyNumbers(e.target.value);
+                    setFieldValue("dobYear", year);
 
-        if (values.dobDay && values.dobMonth && year) {
-          const dob = new Date(year, values.dobMonth - 1, values.dobDay);
-          const today = new Date();
+                    if (values.dobDay && values.dobMonth && year) {
+                      const dob = new Date(year, values.dobMonth - 1, values.dobDay);
+                      const today = new Date();
 
-          let age = today.getFullYear() - dob.getFullYear();
-          const m = today.getMonth() - dob.getMonth();
+                      let age = today.getFullYear() - dob.getFullYear();
+                      const m = today.getMonth() - dob.getMonth();
 
-          if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-            age--;
-          }
+                      if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                        age--;
+                      }
 
-          setFieldValue("age", age);
-        }
-      }}
-    />
-  )}
-</Field>
-
+                      setFieldValue("age", age);
+                    }
+                  }}
+                />
+              )}
+            </Field>
 
             <ErrorMessage name="dobDay" component="div" className="error-text" />
             <ErrorMessage name="dobMonth" component="div" className="error-text" />
             <ErrorMessage name="dobYear" component="div" className="error-text" />
-          </>
-        );
 
-
-        /* ---------------------- STEP 3 ----------------------- */
-        case 3:
-          return (
-            <>
-              <div className="step-icon"><FaBookOpen /></div>
-              <Field as="select" name="religion" className="form-select">
-                  <option value="" disabled>Select Religion</option>
-
-                  <option value="Hindu">Hindu</option>
-                  <option value="Muslim">Muslim</option>
-                  <option value="Christian">Christian</option>
-                  <option value="Sikh">Sikh</option>
-
-                  <option value="Jain - Digambar">Jain - Digambar</option>
-                  <option value="Jain - Shwetambar">Jain - Shwetambar</option>
-
-                  <option value="Buddhist">Buddhist</option>
-                </Field>
-              <ErrorMessage name="religion" component="div" className="error-text" />
-
-              {/* Mother Tongue */}
-              <Field as="select" name="motherTongue" className="form-select">
-                <option value="" disabled>Select your Mother Tongue</option>
-                {/* Major Indian Languages */}
-                <option value="Hindi">Hindi</option>
-                <option value="Bengali">Bengali</option>
-                <option value="Telugu">Telugu</option>
-                <option value="Marathi">Marathi</option>
-                <option value="Tamil">Tamil</option>
-                <option value="Urdu">Urdu</option>
-                <option value="Gujarati">Gujarati</option>
-                <option value="Kannada">Kannada</option>
-                <option value="Odia">Odia</option>
-                <option value="Malayalam">Malayalam</option>
-                <option value="Punjabi">Punjabi</option>
-                <option value="Assamese">Assamese</option>
-                <option value="Konkani">Konkani</option>
-                <option value="Sindhi">Sindhi</option>
-                <option value="Nepali">Nepali</option>
-                <option value="Kashmiri">Kashmiri</option>
-                <option value="Manipuri">Manipuri</option>
-                <option value="English">English</option>
-              </Field>
-              
-              
-
-              {/* ---------------- SUB COMMUNITY ---------------- */}
-            <Field
-                  as="select"
-                  name="subCaste"
-                  className="form-select"
-                  onChange={(e) => {
-                    setFieldValue("subCaste", e.target.value);
-                    if (e.target.value !== "Others") {
-                      setFieldValue("subCasteOther", "");
-                    }
-                  }}
-                >
-                  <option value="" disabled>Select Sub-Community</option>
-                    <option value="No particular caste">No particular caste</option>
-                  {(religionSubCommunityMap[values.religion] || []).map((sc) => (
-                    <option key={sc} value={sc}>{sc}</option>
-                  ))}
-                </Field>
-                <div>
-                        <input
-                      type="checkbox"
-                      checked={values.subCaste === "No particular caste"}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setFieldValue("subCaste", "No particular caste");
-                          setFieldValue("subCasteOther", "");
-                        } else {
-                          setFieldValue("subCaste", "");
-                        }
-                      }}
-                    />
-                    &nbsp; No particular caste
-
-
-
-                </div>
-
-              <ErrorMessage name="subCaste" component="div" className="error-text" />
-
-              {/* Sub Community Other */}
-              {values.subCaste === "Others" && (
-                <Field
-                  name="subCasteOther"
+            <Field name="age">
+              {({ field }) => (
+                <input
+                  {...field}
                   className="form-input"
-                  placeholder="Enter Sub-Community"
+                  placeholder="Age (Auto-calculated)"
+                  disabled={values.dobDay && values.dobMonth && values.dobYear}
+                  onChange={(e) => {
+                    setFieldValue(
+                      "age",
+                      allowOnlyNumbers(e.target.value)
+                    );
+                  }}
                 />
               )}
-              
+
+            </Field>
+            <ErrorMessage name="age" component="div" className="error-text" />
           </>
         );
 
-        /* ---------------------- STEP 4 ----------------------- */
-     case 4:
-  return (
-    <>
-      <div className="step-icon"><FaMapMarkerAlt /></div>
-      <h2>Where do you live?</h2>
 
-      {/* Country */}
-    <Field
-  as="select"
-  name="country"
-  className="form-select"
-  onChange={async (e) => {
-    const countryId = e.target.value;
+      /* ---------------------- STEP 3 ----------------------- */
+      case 3:
+        return (
+          <>
+            <div className="step-icon"><FaBookOpen /></div>
+            <Field as="select" name="religion" className="form-select">
+              <option value="" disabled>Select Religion</option>
 
-    setFieldValue("country", countryId);
-    setFieldValue("state", "");
-    setFieldValue("stateId", "");
-    setFieldValue("districtId", "");
-    setFieldValue("city", "");
+              <option value="Hindu">Hindu</option>
+              <option value="Muslim">Muslim</option>
+              <option value="Christian">Christian</option>
+              <option value="Sikh">Sikh</option>
 
-    setStatesList([]);
-    setDistrictsList([]);
-    setCitiesList([]);
+              <option value="Jain - Digambar">Jain - Digambar</option>
+              <option value="Jain - Shwetambar">Jain - Shwetambar</option>
 
-    if (countryId) {
-      const states = await fetchStatesByCountryId(countryId);
-      setStatesList(states);
-    }
-  }}
->
-  <option value="" disabled>Select your Country</option>
+              <option value="Buddhist">Buddhist</option>
+            </Field>
+            <ErrorMessage name="religion" component="div" className="error-text" />
 
-  {countriesList.map((c) => (
-    <option key={c.id} value={c.id}>
-      {c.name}
-    </option>
-  ))}
-</Field>
-
-<Field
-  as="select"
-  name="stateId"
-  className="form-select"
-  disabled={!values.country}
->
-  <option value="" disabled>Select State</option>
-
-  {statesList.map((s) => (
-    <option key={s.id} value={s.id}>
-      {s.name}
-    </option>
-  ))}
-</Field>
-
-<Field
-  name="districtId"
-  className="form-input"
-  placeholder="Enter your District"
-/>
-<Field
-  name="city"
-  className="form-input"
-  placeholder="Enter your City"
-/>
-
-      <ErrorMessage name="city" component="div" className="error-text" />
-
-              {/* Residence status */}
-             {values.country && values.country !== "1" && (
-                <Field as="select" name="residenceStatus" className="form-select">
-                  <option value="" disabled>Residence Status</option>
-                  <option value="Citizen">Citizen</option>
-                  <option value="NRI">NRI</option>
-                  <option value="H1">H1</option>
-                  <option value="Green Card">Green Card</option>
-                </Field>
-              )}
-      <ErrorMessage name="residenceStatus" component="div" className="error-text" />
-    </>
-  );
+            {/* Mother Tongue */}
+            <Field as="select" name="motherTongue" className="form-select">
+              <option value="" disabled>Select your Mother Tongue</option>
+              {/* Major Indian Languages */}
+              <option value="Hindi">Hindi</option>
+              <option value="Bengali">Bengali</option>
+              <option value="Telugu">Telugu</option>
+              <option value="Marathi">Marathi</option>
+              <option value="Tamil">Tamil</option>
+              <option value="Urdu">Urdu</option>
+              <option value="Gujarati">Gujarati</option>
+              <option value="Kannada">Kannada</option>
+              <option value="Odia">Odia</option>
+              <option value="Malayalam">Malayalam</option>
+              <option value="Punjabi">Punjabi</option>
+              <option value="Assamese">Assamese</option>
+              <option value="Konkani">Konkani</option>
+              <option value="Sindhi">Sindhi</option>
+              <option value="Nepali">Nepali</option>
+              <option value="Kashmiri">Kashmiri</option>
+              <option value="Manipuri">Manipuri</option>
+              <option value="English">English</option>
+            </Field>
 
 
-        /* ---------------------- STEP 5 ----------------------- */
-        case 5:
-          return (
-            <>
-              <div className="step-icon"><FaUserCheck /></div>
-              <h2>Marital Status</h2>
-             <Field as="select" name="maritalStatus" className="form-select">
-  <option value="" disabled>Select your Marital Status</option>
-  <option value="Single">Single</option>
-  <option value="Divorced">Divorced</option>
-  <option value="Separated">Separated</option>
-  <option value="Widowed">Widowed</option>
-</Field>
-{["Divorced", "Widowed", "Separated"].includes(values.maritalStatus) && (
-  <Field as="select" name="livingStatus" className="form-select">
-    <option value="" disabled>Living status</option>
-    <option value="Staying with parents">Staying with parents</option>
-    <option value="Living separately">Living separately</option>
-  </Field>
-)}
 
-{values.maritalStatus && values.maritalStatus !== "Single" && (
- <Field name="noOfChildren">
-  {({ field }) => (
-    <input
-      {...field}
-      className="form-input"
-      placeholder="Number Of Children"
-      onChange={(e) => {
-        setFieldValue(
-          "noOfChildren",
-          allowOnlyNumbers(e.target.value)
+            {/* ---------------- SUB COMMUNITY ---------------- */}
+            <Field
+              as="select"
+              name="subCaste"
+              className="form-select"
+              onChange={(e) => {
+                setFieldValue("subCaste", e.target.value);
+                if (e.target.value !== "Others") {
+                  setFieldValue("subCasteOther", "");
+                }
+              }}
+            >
+              <option value="" disabled>Select Sub-Community</option>
+              <option value="No particular caste">No particular caste</option>
+              {(religionSubCommunityMap[values.religion] || []).map((sc) => (
+                <option key={sc} value={sc}>{sc}</option>
+              ))}
+            </Field>
+            <div>
+              <input
+                type="checkbox"
+                checked={values.subCaste === "No particular caste"}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setFieldValue("subCaste", "No particular caste");
+                    setFieldValue("subCasteOther", "");
+                  } else {
+                    setFieldValue("subCaste", "");
+                  }
+                }}
+              />
+              &nbsp; No particular caste
+
+
+
+            </div>
+
+            <ErrorMessage name="subCaste" component="div" className="error-text" />
+
+            {/* Sub Community Other */}
+            {values.subCaste === "Others" && (
+              <Field
+                name="subCasteOther"
+                className="form-input"
+                placeholder="Enter Sub-Community"
+              />
+            )}
+
+          </>
         );
-      }}
-    />
-  )}
-</Field>
-)}
+
+      /* ---------------------- STEP 4 ----------------------- */
+      case 4:
+        return (
+          <>
+            <div className="step-icon"><FaMapMarkerAlt /></div>
+            <h2>Where do you live?</h2>
+
+            {/* Country */}
+            <Field
+              as="select"
+              name="country"
+              className="form-select"
+              onChange={async (e) => {
+                const countryId = e.target.value;
+                console.log("countryId: ", countryId)
+                setFieldValue("country", countryId);
+                setFieldValue("state", "");
+                setFieldValue("stateId", "");
+                setFieldValue("districtId", "");
+                setFieldValue("city", "");
+
+                setStatesList([]);
+                setDistrictsList([]);
+                setCitiesList([]);
+
+                if (countryId) {
+                  const states = await fetchStatesByCountryId(countryId);
+                  setStatesList(states);
+                }
+              }}
+            >
+              <option value="" disabled>Select your Country</option>
+
+              {countriesList.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </Field>
+
+            <Field
+              as="select"
+              name="state"
+              className="form-select"
+              disabled={!values.country}
+            >
+              <option value="" disabled>Select State</option>
+
+              {statesList.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </Field>
+
+            <Field name="district" className="form-input" placeholder="Enter your District" />
+            <Field name="city" className="form-input" placeholder="Enter your City" />
+
+            <ErrorMessage name="city" component="div" className="error-text" />
+
+            {/* Residence status */}
+            {values.country && values.country !== "1" && (
+              <Field as="select" name="residenceStatus" className="form-select">
+                <option value="" disabled>Residence Status</option>
+                <option value="Citizen">Citizen</option>
+                <option value="NRI">NRI</option>
+                <option value="H1">H1</option>
+                <option value="Green Card">Green Card</option>
+              </Field>
+            )}
+            <ErrorMessage name="residenceStatus" component="div" className="error-text" />
+          </>
+        );
+
+
+      /* ---------------------- STEP 5 ----------------------- */
+      case 5:
+        return (
+          <>
+            <div className="step-icon"><FaUserCheck /></div>
+            <h2>Marital Status</h2>
+            <Field as="select" name="maritalStatus" className="form-select">
+              <option value="" disabled>Select your Marital Status</option>
+              <option value="Single">Single</option>
+              <option value="Divorced">Divorced</option>
+              <option value="Separated">Separated</option>
+              <option value="Widowed">Widowed</option>
+            </Field>
+            {["Divorced", "Widowed", "Separated"].includes(values.maritalStatus) && (
+              <Field as="select" name="livingStatus" className="form-select">
+                <option value="" disabled>Living status</option>
+                <option value="Staying with parents">Staying with parents</option>
+                <option value="Living separately">Living separately</option>
+              </Field>
+            )}
+
+            {values.maritalStatus && values.maritalStatus !== "Single" && (
+              <Field name="noOfChildren">
+                {({ field }) => (
+                  <input
+                    {...field}
+                    className="form-input"
+                    placeholder="Number Of Children"
+                    onChange={(e) => {
+                      setFieldValue(
+                        "noOfChildren",
+                        allowOnlyNumbers(e.target.value)
+                      );
+                    }}
+                  />
+                )}
+              </Field>
+            )}
           </>
         )
-           case 6:
+      case 6:
         return (
           <>
             <div className="step-icon"><FaGraduationCap /></div>
@@ -1302,24 +1294,24 @@ const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
               </div>
             )}
 
-             <Field name="mobileNumber">
-  {({ field }) => (
-    <input
-      {...field}
-      className="form-input"
-      placeholder="Mobile Number"
-      maxLength={10}
-      onChange={(e) => {
-        setFieldValue(
-          "mobileNumber",
-          allowOnlyNumbers(e.target.value)
-        );
-      }}
-    />
-  )}
-</Field>
+            <Field name="mobileNumber">
+              {({ field }) => (
+                <input
+                  {...field}
+                  className="form-input"
+                  placeholder="Mobile Number"
+                  maxLength={10}
+                  onChange={(e) => {
+                    setFieldValue(
+                      "mobileNumber",
+                      allowOnlyNumbers(e.target.value)
+                    );
+                  }}
+                />
+              )}
+            </Field>
 
-              <ErrorMessage name="mobileNumber" component="div" className="error-text" />
+            <ErrorMessage name="mobileNumber" component="div" className="error-text" />
 
             <Field name="createPassword" className="form-input" placeholder="Create Password" />
             <ErrorMessage name="createPassword" component="div" className="error-text" />
@@ -1382,27 +1374,27 @@ const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
 
               {renderStep(values, setFieldValue, setTouched)}
 
-                {/* NAVIGATION BUTTONS */}
-                <div className="nav-buttons d-flex justify-content-evenly" style={{ marginTop: 25 }}>
-                  {step > 1 && (
-                    <button type="button" className="back-btn" onClick={prevStep}>
-                      Back
-                    </button>
-                  )}
-                  {step < totalSteps && (
-                    <button
-                      type="button"
-                      className="next-btn"
-                      disabled={
-                        (step === 8 && !emailVerified) || (step === 8 && !values.documentFile)
-                        || (step === 2 && Number(values.age) < 18)
-                      }
-                      onClick={() => nextStep(validateForm, setTouched)}
-                    >
-                      NEXT
-                    </button>
-                  )}
-                </div>
+              {/* NAVIGATION BUTTONS */}
+              <div className="nav-buttons d-flex justify-content-evenly" style={{ marginTop: 25 }}>
+                {step > 1 && (
+                  <button type="button" className="back-btn" onClick={prevStep}>
+                    Back
+                  </button>
+                )}
+                {step < totalSteps && (
+                  <button
+                    type="button"
+                    className="next-btn"
+                    disabled={
+                      (step === 8 && !emailVerified) || (step === 8 && !values.documentFile)
+                      || (step === 2 && Number(values.age) < 18)
+                    }
+                    onClick={() => nextStep(validateForm, setTouched)}
+                  >
+                    NEXT
+                  </button>
+                )}
+              </div>
 
             </Form>
           )}
