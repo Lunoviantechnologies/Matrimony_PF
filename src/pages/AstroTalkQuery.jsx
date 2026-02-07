@@ -17,8 +17,8 @@ const AstroTalkQuery = () => {
 
     useEffect(() => {
         api.get("astro-number/All").then(res => {
-            setAstroInfo(res.data);
-        });
+            setAstroInfo(Array.isArray(res?.data) ? res.data : []);
+        }).catch(() => setAstroInfo([]));
     }, []);
 
     useEffect(() => {
@@ -39,7 +39,8 @@ const AstroTalkQuery = () => {
     }, []);
 
     const now = new Date();
-    const activePayment = (myProfile?.payments || [])
+    const paymentsList = Array.isArray(myProfile?.payments) ? myProfile.payments : [];
+    const activePayment = paymentsList
         .filter(p => {
             if (p.status !== "PAID") return false;
             if (p.premiumEnd) {
@@ -48,7 +49,8 @@ const AstroTalkQuery = () => {
             return true;
         })
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
-    const activePlan = plans.find(
+    const plansList = Array.isArray(plans) ? plans : [];
+    const activePlan = plansList.find(
         plan => plan.planCode === activePayment?.planCode
     );
     const activePlanCode = activePayment?.planCode || "";
@@ -92,7 +94,7 @@ const AstroTalkQuery = () => {
                         </div>
                     ) : (
                         <div className="astro-grid">
-                            {astroInfo.map((astro) => (
+                            {(Array.isArray(astroInfo) ? astroInfo : []).map((astro) => (
                                 <div className="astro-card" key={astro.id}>
                                     <div className="astro-avatar">
                                         {astro.name.charAt(0)}
