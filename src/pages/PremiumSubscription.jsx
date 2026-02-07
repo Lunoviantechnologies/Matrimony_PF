@@ -58,8 +58,20 @@ function PremiumSubscription() {
       }
       );
 
-      const { razorpayOrderId, razorpayKey, amountRupees, currency } = res.data;
+      const { completedWithRewards, razorpayOrderId, razorpayKey, amountRupees, currency, planName } = res.data;
       console.log("response payment : ", res.data);
+
+      // Fully paid by referral rewards – no Razorpay
+      if (completedWithRewards) {
+        navigate("/payment-success", {
+          state: {
+            planId: plan.planCode,
+            planName: planName || plan.planName,
+            amount: 0
+          }
+        });
+        return;
+      }
 
       const options = {
         key: razorpayKey,
