@@ -21,7 +21,7 @@ const AstroScore = () => {
         if (!id) return;
 
         dispatch(fetchMyProfile(id));
-        if (role[0]?.toUpperCase() === "USER") {
+        if (role?.[0]?.toUpperCase() === "USER") {
             dispatch(fetchUserProfiles());
         }
     }, [id, role, dispatch]);
@@ -30,9 +30,10 @@ const AstroScore = () => {
         const fetchPlans = async () => {
             try {
                 const res = await api.get("/plans");
-                setPlans(res.data);
+                setPlans(Array.isArray(res?.data) ? res.data : []);
             } catch (err) {
                 console.error("Plans fetch error:", err);
+                setPlans([]);
             }
         };
 
@@ -47,7 +48,9 @@ const AstroScore = () => {
                 const received = await api.get(`/friends/accepted/received/${id}`);
                 const sent = await api.get(`/friends/accepted/sent/${id}`);
 
-                setAcceptedRequests([...received.data, ...sent.data]);
+                const recv = Array.isArray(received?.data) ? received.data : [];
+                const snt = Array.isArray(sent?.data) ? sent.data : [];
+                setAcceptedRequests([...recv, ...snt]);
             } catch (error) {
                 console.error("Accepted requests error:", error);
             }
@@ -66,7 +69,8 @@ const AstroScore = () => {
             return true;
         })
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
-    const activePlan = plans.find(plan => plan.planCode === activePayment?.planCode);
+    const plansList = Array.isArray(plans) ? plans : [];
+    const activePlan = plansList.find(plan => plan.planCode === activePayment?.planCode);
     const isAstroEnabled = activePlan?.astroSupport?.toLowerCase() !== "no";
     const isPlatinum = activePlan?.planCode?.startsWith("PLATINUM");
 
@@ -90,7 +94,8 @@ const AstroScore = () => {
     };
 
     const getProfileImage = userId => {
-        const profile = profiles?.find(p => p.id === userId);
+        const profilesArr = Array.isArray(profiles) ? profiles : [];
+        const profile = profilesArr.find(p => p.id === userId);
         return profile?.updatePhoto ? profile.updatePhoto : profile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
     };
 
@@ -106,7 +111,7 @@ const AstroScore = () => {
                 </div>
             )}
 
-            {acceptedRequests.map(req => {
+            {(Array.isArray(acceptedRequests) ? acceptedRequests : []).map(req => {
                 const friendId = req.senderId === id ? req.receiverId : req.senderId;
                 const friendName = req.senderId === id ? req.receiverName : req.senderName;
                 const score = scores[friendId];
