@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import "../styleSheets/requestCSS/profileRequest.css";
+import "../styleSheets/requests/profileRequest.css";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
@@ -12,16 +12,16 @@ const Received = () => {
   const dispatch = useDispatch();
   const { profiles } = useSelector(state => state.profiles);
   const [receivedRequests, setReceivedRequests] = useState([]);
-   const maskName = (name = "") => {
-  if (!name) return "-";
-  return name.charAt(0).toUpperCase() + "*****";
-};
+  const maskName = (name = "") => {
+    if (!name) return "-";
+    return name.charAt(0).toUpperCase() + "*****";
+  };
 
-const getDisplayName = (name) => {
-  if (myProfile?.premium) return name || "-";
-  return maskName(name);
-};
-  useEffect ( () => {
+  const getDisplayName = (name) => {
+    if (myProfile?.premium) return name || "-";
+    return maskName(name);
+  };
+  useEffect(() => {
     dispatch(fetchMyProfile(id));
   }, [id]);
 
@@ -68,17 +68,18 @@ const getDisplayName = (name) => {
     if (!receivedRequests.length || !profiles.length) return [];
 
     return receivedRequests.map(req => {
-      const otherUserId =
-        req.senderId === id ? req.receiverId : req.senderId;
-
+      const otherUserId = req.senderId === id ? req.receiverId : req.senderId;
       const profile = profiles.find(p => p.id === otherUserId);
 
       return {
         ...req,
+        hideProfilePhoto: profile.hideProfilePhoto,
         image: profile?.updatePhoto ? profile.updatePhoto : profile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png",
       };
     });
   }, [receivedRequests, profiles, id]);
+
+  console.log("receivedWithImages: ", receivedWithImages)
 
   return (
     <div className="received-container">
@@ -91,16 +92,16 @@ const getDisplayName = (name) => {
               <div className="left-section">
                 <div className="img-box">
                   <img src={user.image} alt="profile"
-                    className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
+                    className={`profile-img ${user?.hideProfilePhoto ? "blur-image" : ""}`}
                     draggable={false}
                     onContextMenu={(e) => e.preventDefault()}
                   />
                 </div>
 
                 <div className="text-section">
-                 <h3 className="name">
-  {getDisplayName(user.senderName)}
-</h3>
+                  <h3 className="name">
+                    {getDisplayName(user.senderName)}
+                  </h3>
                 </div>
               </div>
 

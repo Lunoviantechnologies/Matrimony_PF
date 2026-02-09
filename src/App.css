@@ -41,112 +41,33 @@ body::-webkit-scrollbar {
     transition: all 0.25s ease;
 }
 
-/* Search Filter */
+/* Sub Navbar */
 
-.searchfilter {
-    background-color: transparent;
-    border: 1px solid #9bcfb0;
-    width: 260px;
-    border-radius: 20px;
-    height: 38px;
-    padding: 0 14px;
-    display: flex;
-    align-items: center;
-    line-height: 38px;
-    box-sizing: border-box;
-    position: relative;
-    top: 6px;
-}
-
-/* Request Profiles */
-
-.request_nav {
+.sub_navbar {
+    background-color: #f8f9fa;
     padding: 14px 0;
+
+    position: sticky;
+    top: 50px;
+    z-index: 1000;
 }
 
-.request_link {
+.subnav_link {
     text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: 500;
-    color: #555;
-    background-color: #f2f2f2;
+    color: #025423;
+    font-weight: 600;
+    padding-bottom: 4px;
+    border-bottom: 2px solid transparent;
     transition: all 0.3s ease;
 }
 
-.request_link:hover {
-    background-color: #e0e0e0;
+.subnav_link:hover {
+    color: #025423;
 }
 
-.request_link.active {
-    background-color: #037430;
-    color: white;
-}
-
-/*  Matches Profiles */
-
-.matches_nav {
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.matches_link {
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: 500;
-    color: #555;
-    background-color: #f2f2f2;
-    transition: all 0.3s ease;
-}
-
-.matches_link:hover {
-    background-color: #e0e0e0;
-}
-
-.matches_link.active {
-    background-color: #037430;
-    color: white;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-.sort_div {
-    min-width: 180px;
-}
-
-.matches_sortby {
-    border-radius: 50px !important;
-    padding: 8px 16px !important;
-}
-
-@media (max-width: 768px) {
-    .matches_nav {
-        gap: 8px;
-    }
-
-    .matches_link {
-        padding: 6px 12px;
-        font-size: 14px;
-    }
-
-    .sort_div {
-        margin-top: 8px;
-        margin-bottom: 12px;
-    }
-
-    .matches_sortby {
-        width: 100%;
-        max-width: 220px;
-    }
-}
-
-@media (max-width: 480px) {
-    .matches_link {
-        font-size: 13px;
-        padding: 6px 10px;
-    }
+.subnav_link.active {
+    border-bottom: 2px solid #04c451;
+    color: #025423;
 }
 
 /* Admin Payments Page */

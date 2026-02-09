@@ -17,18 +17,18 @@ const Nearme = () => {
   const { profiles } = useSelector((state) => state.profiles);
   const { id, myProfile, role } = useSelector((state) => state.auth);
 
-const maskName = (name = "") => {
-  if (!name) return "-";
-  return name.charAt(0).toUpperCase() + "*****";
-};
+  const maskName = (name = "") => {
+    if (!name) return "-";
+    return name.charAt(0).toUpperCase() + "*****";
+  };
 
-const getDisplayName = (first, last) => {
-  if (myProfile?.premium) {
-    return `${first || ""} ${last || ""}`.trim();   // ✅ full name
-  }
+  const getDisplayName = (first, last) => {
+    if (myProfile?.premium) {
+      return `${first || ""} ${last || ""}`.trim();   // ✅ full name
+    }
 
-  return `${maskName(first)} ${maskName(last)}`.trim(); // ✅ masked
-};
+    return `${maskName(first)} ${maskName(last)}`.trim(); // ✅ masked
+  };
   const { filters, sortBy } = useOutletContext();
 
   const [sentRequests, setSentRequests] = useState([]);
@@ -125,6 +125,11 @@ const getDisplayName = (first, last) => {
         const matchAge =
           !filters.age.length ||
           filters.age.some(range => {
+            if (range.includes("+")) {
+              const min = parseInt(range);
+              return age >= min;
+            }
+
             const [min, max] = range.split("-").map(Number);
             return age >= min && age <= max;
           });
@@ -217,12 +222,12 @@ const getDisplayName = (first, last) => {
                   </div>
                 </div>
 
-                  <div className="profile-details">
-                    <h3 className="name">{getDisplayName (p.firstName , p.lastName)}</h3>
-                    <span className="meta">{p.age} yrs • {p.height}</span>
-                    <p className="line">{p.occupation} • {p.highestEducation}</p>
-                    <p className="line">{p.city}</p>
-                    <p className="line">{p.religion} | {p.subCaste}</p>
+                <div className="profile-details">
+                  <h3 className="name">{getDisplayName(p.firstName, p.lastName)}</h3>
+                  <span className="meta">{p.age} yrs • {p.height}</span>
+                  <p className="line">{p.occupation} • {p.highestEducation}</p>
+                  <p className="line">{p.city}</p>
+                  <p className="line">{p.religion} | {p.subCaste}</p>
 
                   <div className="btn-row">
                     <button

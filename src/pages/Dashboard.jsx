@@ -21,6 +21,8 @@ const Dashboard = () => {
   const { profiles } = useSelector(state => state.profiles);
   const dispatch = useDispatch();
 
+  console.log("profiles: ", profiles);
+
   useEffect(() => {
     dispatch(fetchMyProfile(id));
 
@@ -62,13 +64,13 @@ const Dashboard = () => {
     })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 5);
-  // console.log("filtered Profiles in Dashboard:", filteredProfiles);
+  console.log("filtered Profiles in Dashboard:", filteredProfiles);
 
   const premiumFilteredProfiles = profiles.filter(p => p.id !== id)
     .filter(p => p.gender !== myProfile?.gender)
     .filter(p => p.premium)
     .slice(0, 5);
-  // console.log("Premium filtered Profiles in Dashboard:", premiumFilteredProfiles);
+  console.log("Premium filtered Profiles in Dashboard:", premiumFilteredProfiles);
 
   // ---------- PREMIUM HELPERS ----------
   const sortedPayments = useMemo(() => {
@@ -96,15 +98,15 @@ const Dashboard = () => {
 
   const isPremiumActive = !!currentPlan;
   const maskName = (name = "") => {
-  if (!name) return "—";
-  return name.charAt(0).toUpperCase() + "*****";
-};
+    if (!name) return "—";
+    return name.charAt(0).toUpperCase() + "*****";
+  };
 
-const getDisplayName = (first, last) => {
-  if (isPremiumActive) return `${first || ""} ${last || ""}`.trim();
+  const getDisplayName = (first, last) => {
+    if (isPremiumActive) return `${first || ""} ${last || ""}`.trim();
 
-  return `${maskName(first)} ${maskName(last)}`.trim();
-};
+    return `${maskName(first)} ${maskName(last)}`.trim();
+  };
 
   useEffect(() => {
     const fetchAcceptedRequests = async () => {
@@ -188,6 +190,7 @@ const getDisplayName = (first, last) => {
 
       return {
         ...req,
+        hideProfilePhoto: profile.hideProfilePhoto,
         image: profile?.updatePhoto ? profile.updatePhoto : profile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png",
       };
     });
@@ -285,11 +288,10 @@ const getDisplayName = (first, last) => {
                 >
                   <div
                     style={{
-                      width: `${
-                        (referSummary.completedReferrals /
+                      width: `${(referSummary.completedReferrals /
                           referSummary.totalReferralsNeeded) *
                         100
-                      }%`,
+                        }%`,
                       height: "100%",
                       background:
                         "linear-gradient(90deg,#22c55e,#16a34a,#15803d)",
@@ -389,7 +391,7 @@ const getDisplayName = (first, last) => {
                   <img
                     src={i.updatePhoto ? i.updatePhoto : i.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"} alt={i.firstName}
                     style={{ objectFit: "cover", }}
-                    className={`profile-img ${!isPremiumActive ? "blur-image" : ""}`}
+                    className={`profile-img ${i.hideProfilePhoto ? "blur-image" : ""}`}
                     onError={(e) => {
                       e.target.src = i.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
                     }}
@@ -404,8 +406,8 @@ const getDisplayName = (first, last) => {
                   <div
                     style={{ position: "absolute", bottom: 15, left: 0, right: 0, textAlign: "center", color: "#fff", }}>
                     <div style={{ fontWeight: "bold", fontSize: 18, color: "#f7f6f6" }}>
-                          {getDisplayName(i.firstName, i.lastName)}
-                        </div>
+                      {getDisplayName(i.firstName, i.lastName)}
+                    </div>
                     <div style={{ fontSize: 14 }}>{i.city} • {i.age} Years old</div>
                   </div>
                   {/* Online Indicator */}
@@ -457,7 +459,7 @@ const getDisplayName = (first, last) => {
               <img
                 src={req.image}
                 alt={req.senderName}
-                className={`request-img ${!myProfile?.premium ? "requestblur-image" : ""}`}
+                className={`request-img ${req?.hideProfilePhoto ? "requestblur-image" : ""}`}
                 style={{ width: 110, height: 90, borderRadius: 15, marginRight: 22, objectFit: "cover", }}
                 onError={(e) => {
                   e.target.src = req.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
@@ -468,8 +470,8 @@ const getDisplayName = (first, last) => {
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ fontWeight: "bold", fontSize: 20 }}>
-                  {isPremiumActive ? req.senderName : maskName(req.senderName)}
-                </div>
+                {isPremiumActive ? req.senderName : maskName(req.senderName)}
+              </div>
             </div>
             <div>
               <button onClick={() => { handleAccept(req.requestId) }}
@@ -547,12 +549,12 @@ const getDisplayName = (first, last) => {
               <img
                 src={i.updatePhoto ? i.updatePhoto : i.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
                 alt={i.firstName}
-                className={`premium-img ${!isPremiumActive ? "premiumblur-image" : ""}`}
+                className={`premium-img ${i.hideProfilePhoto ? "premiumblur-image" : ""}`}
                 style={{ width: 60, height: 60, borderRadius: 15, objectFit: "cover", marginRight: 15, }} />
               <div>
                 <div style={{ fontWeight: "bold", fontSize: 18, color: "#5C4218" }}>
-                    {getDisplayName(i.firstName, i.lastName)}
-                  </div>
+                  {getDisplayName(i.firstName, i.lastName)}
+                </div>
                 <div style={{ color: "#8A6F47" }}>{i.city}, {i.country} || {i.age} years || {i.motherTongue}</div>
               </div>
             </div>

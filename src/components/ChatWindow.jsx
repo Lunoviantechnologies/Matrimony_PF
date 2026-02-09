@@ -12,6 +12,7 @@ import api from "../api/axiosInstance";
 import { TfiMenuAlt } from "react-icons/tfi";
 import { toast } from "react-toastify";
 import ReportUserModal from "./ReportUserModal";
+import ViewProfileModal from "./ViewProfileModal";
 
 const ChatWindow = () => {
   const [page, setPage] = useState(0);
@@ -22,7 +23,7 @@ const ChatWindow = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { profiles } = useSelector((state) => state.profiles);
-  const { id: myId, token, role } = useSelector((state) => state.auth);
+  const { id: myId, token, role, myProfile } = useSelector((state) => state.auth);
 
   const [acceptedList, setAcceptedList] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -47,6 +48,9 @@ const ChatWindow = () => {
   const chatScrollRef = useRef(null);
   const isInitialLoadRef = useRef(true);
   const prevScrollHeightRef = useRef(0);
+
+  const [selectedProfile, setSelectedProfile] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -690,6 +694,15 @@ const ChatWindow = () => {
 
               {open && (
                 <div className="chat-dropdown">
+                  <div className="dropdown-item" onClick={() => {
+                    const profile = Array.isArray(profiles) && !isNaN(userId) ? profiles.find(p => p.id === Number(userId)) || null : null;
+                    // console.log("profile: ", profile, typeof(userId), profiles)
+                    setSelectedProfile(profile);
+                    setShowModal(true);
+                  }}>
+                    View Profile
+                  </div>
+
                   <div className="dropdown-item" onClick={handleClearChat}>
                     Clear Chat
                   </div>
@@ -787,6 +800,14 @@ const ChatWindow = () => {
         </div>
 
       </div>
+
+      {showModal && (
+        <ViewProfileModal
+          premium={myProfile.premium}
+          profile={selectedProfile}
+          onClose={() => setShowModal(false)}
+        />
+      )}
 
       <ReportUserModal
         show={showReportModal}

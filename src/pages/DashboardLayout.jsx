@@ -7,7 +7,7 @@ import ContactSupport from "../components/settings/ContactSupport";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchNotifications } from "../redux/thunk/notificationThunk";
-import { startNotificationSocket, stopNotificationSocket } from "../hooks/NotificationSocket";
+import { startNotificationSocket, stopNotificationSocket } from "../hooks/notificationSocket";
 
 const DashboardLayout = () => {
 

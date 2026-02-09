@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../styleSheets/ContactUs.css";
-import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaTwitter, FaFacebookF, FaLinkedinIn, FaInstagram, } from "react-icons/fa";
+import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaTwitter, FaFacebookF, FaQuora, FaInstagram, } from "react-icons/fa";
 import backendIP from "../api/api";
 import { toast } from "react-toastify";
 
@@ -161,19 +161,23 @@ const ContactUs = () => {
             <ul className="social-list">
               <li>
                 <FaEnvelope className="social-icon email" />
-                <a href="mailto:support@vivahjeevan.com">support@vivahjeevan.com</a>
+                <a target="_blank" href="mailto:support@vivahjeevan.com">support@vivahjeevan.com</a>
               </li>
               <li>
                 <FaTwitter className="social-icon twitter" />
-                <a href="#">Twitter</a>
+                <a target="_blank" href="https://x.com/vivahjeewan">Twitter</a>
               </li>
               <li>
                 <FaFacebookF className="social-icon facebook" />
-                <a href="#">Facebook</a>
+                <a target="_blank" href="https://www.facebook.com/profile.php?id=61587939295674">Facebook</a>
               </li>
               <li>
                 <FaInstagram className="social-icon instagram" />
-                <a href="#">Instagram</a>
+                <a target="_blank" href="https://www.instagram.com/vivah_jeevan/">Instagram</a>
+              </li>
+               <li>
+                <FaQuora className="social-icon instagram" />
+                <a target="_blank" href="https://www.quora.com/profile/Vivah-Jeevan">Quora</a>
               </li>
             </ul>
           </div>

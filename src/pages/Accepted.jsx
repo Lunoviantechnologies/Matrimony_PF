@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import "../styleSheets/requestCSS/profileRequest.css";
+import "../styleSheets/requests/profileRequest.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
@@ -18,15 +18,15 @@ const Accepted = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // console.log("User ID in Accepted component:", profiles);
-   const maskName = (name = "") => {
-  if (!name) return "-";
-  return name.charAt(0).toUpperCase() + "*****";
-};
+  const maskName = (name = "") => {
+    if (!name) return "-";
+    return name.charAt(0).toUpperCase() + "*****";
+  };
 
-const getDisplayName = (name) => {
-  if (myProfile?.premium) return name || "-";
-  return maskName(name);
-};
+  const getDisplayName = (name) => {
+    if (myProfile?.premium) return name || "-";
+    return maskName(name);
+  };
   useEffect(() => {
     dispatch(fetchMyProfile(id));
   }, [id]);
@@ -67,6 +67,7 @@ const getDisplayName = (name) => {
       return {
         ...req,
         profile,
+        hideProfilePhoto: profile.hideProfilePhoto,
         image: profile?.updatePhoto ? profile.updatePhoto : profile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png",
       };
     });
@@ -91,7 +92,7 @@ const getDisplayName = (name) => {
             <div className="left-section">
               <div className="img-box">
                 <img src={user.image} alt="profile"
-                  className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
+                  className={`profile-img ${user?.hideProfilePhoto ? "blur-image" : ""}`}
                   draggable={false}
                   onContextMenu={(e) => e.preventDefault()}
                   onError={(e) => {
@@ -101,11 +102,11 @@ const getDisplayName = (name) => {
               </div>
 
               <div className="text-section">
-                              <h3 className="name">
-  {getDisplayName(
-    user.senderId === id ? user.receiverName : user.senderName
-  )}
-</h3>
+                <h3 className="name">
+                  {getDisplayName(
+                    user.senderId === id ? user.receiverName : user.senderName
+                  )}
+                </h3>
 
                 <p className="request-status">
                   {user.senderId === id ? "They accepted your request" : "You accepted their request"}
