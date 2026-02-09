@@ -7,7 +7,6 @@ import axios from "axios";
 import backendIP from "../api/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
 
 /* -------------------------------------------------------------
   INITIAL VALUES
