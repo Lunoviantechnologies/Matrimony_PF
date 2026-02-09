@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "../styleSheets/sidebar.css";
 
 const Sidebar = ({ filters, setFilters, onApply, onClear }) => {
@@ -12,16 +12,26 @@ const Sidebar = ({ filters, setFilters, onApply, onClear }) => {
             const updated = prev[category].includes(value)
                 ? prev[category].filter((v) => v !== value)
                 : [...prev[category], value];
+
             return { ...prev, [category]: updated };
         });
     };
 
-    const sections = [  
-        {
-            title:"CreatedBy",
-            category:"profileFor",
-            options:["Myself", "My Son","My Daughter","My Brother","My Sister","My Friend","My Relative"]
+    const handleOtherChange = (category, value) => {
+        setFilters((prev) => ({
+            ...prev,
+            otherValues: {
+                ...prev.otherValues,
+                [category]: value,
+            },
+        }));
+    };
 
+    const sections = [
+        {
+            title: "CreatedBy",
+            category: "profileFor",
+            options: [ "Myself", "My Son", "My Daughter", "My Brother", "My Sister", "My Friend", "My Relative",],
         },
         {
             title: "Age",
@@ -56,89 +66,104 @@ const Sidebar = ({ filters, setFilters, onApply, onClear }) => {
         {
             title: "Profession",
             category: "profession",
-            options: [
-                "Farmer",
-                "IT & Software",
-                "Doctor",
-                "Teacher",
-                "Business",
-                "Government",
-                "Other",
-            ],
+            options: [ "Farmer", "IT & Software",  "Doctor",  "Teacher", "Business", "Government", "Other",],
         },
         {
             title: "Lifestyle",
             category: "lifestyle",
-            options: ["Vegetarian", "Non-Vegetarian", "Occasionally Non-Vegetarian","Eggetarian"],
+            options: [ "Vegetarian", "Non-Vegetarian", "Occasionally Non-Vegetarian", "Eggetarian",],
         },
-         {
+        {
             title: "Habbits",
             category: "habbits",
-            options: ["Smoking","Drinking","Both","None"],
+            options: ["Smoking", "Drinking", "Both", "None"],
         },
     ];
 
-    const handleOtherChange = (category, value) => {
-        setFilters(prev => ({
-            ...prev,
-            otherValues: {
-                ...prev.otherValues,
-                [category]: value
-            }
-        }));
-    };
-
     return (
         <div className="sidebar">
-            <h5 className="sidebar-title text-center">Search Filters</h5>
 
-            <div className="d-flex justify-content-evenly">
-                <button className="btn btn-primary w-100 mb-2" disabled={!hasFilters} onClick={onApply}>
+            {/* HEADER */}
+            <div className="sidebar-header">
+                <h5 className="sidebar-title text-center">Search Filters</h5>
+            </div>
+
+            {/* SCROLLABLE CONTENT */}
+            <div className="sidebar-content">
+
+                {sections.map((section) => (
+                    <div key={section.category} className="filter-section">
+
+                        <h6>{section.title}</h6>
+
+                        {section.options.map((item) => (
+                            <div key={item} className="mb-2">
+
+                                <div className="form-check d-flex align-items-center">
+
+                                    <input
+                                        className="form-check-input"
+                                        type="checkbox"
+                                        id={`${section.category}-${item}`}
+                                        checked={filters[section.category].includes(item)}
+                                        onChange={() =>
+                                            handleCheckboxChange(section.category, item)
+                                        }
+                                    />
+
+                                    <label
+                                        className="form-check-label ms-1"
+                                        htmlFor={`${section.category}-${item}`}
+                                    >
+                                        {item}
+                                    </label>
+                                </div>
+
+                                {item === "Other" &&
+                                    filters[section.category].includes("Other") && (
+                                        <input
+                                            type="text"
+                                            className="form-control other-input"
+                                            placeholder={`Enter ${section.title}`}
+                                            value={
+                                                filters.otherValues?.[section.category] || ""
+                                            }
+                                            onChange={(e) =>
+                                                handleOtherChange(
+                                                    section.category,
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                    )}
+                            </div>
+                        ))}
+                    </div>
+                ))}
+
+            </div>
+
+            {/* FOOTER BUTTONS */}
+            <div className="sidebar-footer">
+
+                <button
+                    className="btn btn-primary w-100"
+                    disabled={!hasFilters}
+                    onClick={onApply}
+                >
                     Apply Filters
                 </button>
 
-                <button className="btn btn-outline-secondary w-100 mb-2" disabled={!hasFilters} onClick={onClear}>
+                <button
+                    className="btn btn-outline-secondary w-100 mt-2"
+                    disabled={!hasFilters}
+                    onClick={onClear}
+                >
                     Clear All
                 </button>
+
             </div>
 
-            {sections.map((section) => (
-                <div key={section.category} className="filter-section">
-                    <h6>{section.title}</h6>
-                    {section.options.map((item) => (
-                        <div key={item} className="mb-2">
-                            <div className="form-check d-flex align-items-center">
-                                <input
-                                    className="form-check-input"
-                                    type="checkbox"
-                                    id={`${section.category}-${item}`}
-                                    checked={filters[section.category].includes(item)}
-                                    onChange={() =>
-                                        handleCheckboxChange(section.category, item)
-                                    }
-                                />
-                                <label className="form-check-label ms-1" htmlFor={`${section.category}-${item}`}>
-                                    {item}
-                                </label>
-                            </div>
-
-                            {item === "Other" && filters[section.category].includes("Other") && (
-                                <div className="mt-1">
-                                    <input
-                                        type="text"
-                                        className="form-control other-input"
-                                        placeholder={`Enter ${section.title}`}
-                                        value={filters.otherValues?.[section.category] || ""}
-                                        onChange={(e) =>
-                                            handleOtherChange(section.category, e.target.value)
-                                        }
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                </div>
-            ))}
         </div>
     );
 };

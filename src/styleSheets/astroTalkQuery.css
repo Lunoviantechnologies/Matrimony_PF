@@ -1,48 +1,167 @@
-.blurred-text {
-    color: #999;
-    font-size: 14px;
-    font-style: italic;
+/* =========================
+   ASTRO DASHBOARD LAYOUT
+========================= */
+
+.astro-container {
+    padding: clamp(20px, 4vw, 40px);
+    max-width: 1300px;
+    margin: auto;
 }
 
-.astro-whatsapp {
-    display: block;
-    margin-top: 10px;
-    font-weight: 600;
-    color: #25D366;
-    text-decoration: none;
-}
-
-.astro-upgrade {
-    max-width: 420px;
-    margin: 40px auto;
-    padding: 28px 24px;
-    background: #fff7f9;
-    border: 1px solid #f2c6d3;
-    border-radius: 14px;
+.astro-title {
     text-align: center;
-}
-
-.astro-upgrade h3 {
-    color: #8b1538;
-    font-size: 20px;
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 700;
     margin-bottom: 10px;
 }
 
-.astro-upgrade p {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 18px;
+.astro-subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
 }
 
-.upgrade-btn {
-    background: #8b1538;
-    color: #fff;
-    padding: 10px 22px;
-    border: none;
-    border-radius: 8px;
+/* dashboard layout */
+
+.astro-dashboard {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 28px;
+    align-items: start;
+}
+
+@media (max-width: 1100px) {
+    .astro-dashboard {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================
+   ASTRO CARDS GRID
+========================= */
+
+.astro-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 380px));
+    justify-content: center;
+    gap: 22px;
+}
+
+
+/* =========================
+   ASTRO CARD
+========================= */
+
+.astro-card {
+    background: white;
+    border-radius: 20px;
+
+    padding: 26px 24px;
+    text-align: center;
+
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+
+    transition: all 0.25s ease;
+}
+
+.astro-card:hover {
+    transform: translateY(-6px);
+}
+
+
+/* avatar */
+
+.astro-avatar {
+    width: 86px;
+    height: 86px;
+    margin: auto;
+
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8b1538, #c0392b);
+
+    color: white;
+    font-size: 32px;
+    font-weight: 700;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+
+/* name */
+
+.astro-name {
+    margin-top: 14px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+
+/* info sections */
+
+.astro-info,
+.astro-number {
     font-size: 14px;
+    color: #555;
+    margin-top: 6px;
+}
+
+.astro-price {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #222;
+}
+
+.astro-rating {
+    margin-top: 8px;
+    font-size: 15px;
     font-weight: 600;
-    cursor: pointer;
+    color: #f4b400;
+}
+
+
+/* WhatsApp button */
+
+.astro-whatsapp {
+    display: inline-block;
+    margin-top: 16px;
+
+    background: #25D366;
+    color: white;
+
+    padding: 12px 18px;
+    border-radius: 12px;
+
+    font-weight: 600;
+    text-decoration: none;
+
+    transition: all 0.2s ease;
+}
+
+.astro-whatsapp:hover {
+    opacity: 0.9;
+}
+
+
+/* upgrade button */
+
+.upgrade-btn {
+    width: 100%;
+    margin-top: 14px;
+
+    padding: 12px;
+    border-radius: 12px;
+
+    background: #8b1538;
+    color: white;
+
+    border: none;
+    font-weight: 600;
 }
 
 .upgrade-btn:hover {
@@ -50,140 +169,37 @@
 }
 
 
-/* Container */
-.astro-container {
-    padding: 32px 16px;
-    text-align: center;
+/* blurred text */
+
+.blurred-text {
+    margin-top: 10px;
+    font-style: italic;
+    color: #999;
 }
 
-/* Title */
-.astro-title {
-    font-size: 26px;
-    font-weight: 700;
-    color: #8b1538;
-}
 
-/* Subtitle */
-.astro-subtitle {
-    margin: 8px 0 24px;
-    color: #555;
-    font-size: 14px;
-    line-height: 1.5;
-}
+/* =========================
+   MOBILE POLISH
+========================= */
 
-/* Grid */
-.astro-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
-    max-width: 510px;
-    margin: auto;
-    padding: 0 10px;
-}
-
-/* Card */
-.astro-card {
-    background: #fff;
-    border-radius: 14px;
-    padding: 22px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.astro-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
-}
-
-/* Avatar */
-.astro-avatar {
-    width: 64px;
-    height: 64px;
-    margin: auto;
-    background: #8b1538;
-    color: #fff;
-    font-size: 26px;
-    font-weight: bold;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Name */
-.astro-name {
-    margin: 12px 0 4px;
-    font-size: 17px;
-    font-weight: 600;
-}
-
-/* Info text */
-.astro-info {
-    font-size: 13px;
-    margin-top: 6px;
-    color: #555;
-}
-
-/* Rating */
-.astro-rating {
-    margin-top: 8px;
-    color: #f4b400;
-    font-weight: 600;
-    font-size: 14px;
-}
-
-/* Price */
-.astro-price {
-    margin: 10px 0;
-    font-size: 15px;
-    font-weight: 600;
-    color: #222;
-}
-
-/* Number */
-.astro-number {
-    font-size: 13px;
-    color: #666;
-}
-
-/* -------- Responsive Breakpoints -------- */
-
-/* Tablets */
-@media (max-width: 768px) {
-    .astro-title {
-        font-size: 24px;
-    }
-
-    .astro-grid {
-        gap: 18px;
-    }
-}
-
-/* Mobile */
 @media (max-width: 480px) {
-    .astro-container {
-        padding: 24px 12px;
-    }
-
-    .astro-title {
-        font-size: 22px;
-    }
-
-    .astro-subtitle {
-        font-size: 13px;
-    }
 
     .astro-card {
-        padding: 18px;
+        padding: 20px;
     }
 
     .astro-avatar {
-        width: 56px;
-        height: 56px;
-        font-size: 22px;
+        width: 72px;
+        height: 72px;
+        font-size: 26px;
     }
 
     .astro-name {
+        font-size: 18px;
+    }
+
+    .astro-price {
         font-size: 16px;
     }
+
 }

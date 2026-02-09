@@ -1,43 +1,68 @@
+/* ===============================
+   TICKET PAGE — RESPONSIVE UI
+=============================== */
+
 .ticket-container {
   width: 100%;
   min-height: 100vh;
-  background-color: #D9F5E4;
+
+  background: #D9F5E4;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40px 15px;
+
+  padding: clamp(20px, 4vw, 40px);
+
   font-family: "Poppins", sans-serif;
 }
 
+/* ===============================
+   CARD
+=============================== */
+
 .ticket-card {
   width: 100%;
-  max-width: 520px;
+  max-width: 560px;
+
   background: #fff;
-  border-radius: 18px;
-  padding: 28px 32px;
-  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.18);
+  border-radius: 20px;
+
+  padding: clamp(20px, 4vw, 32px);
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+
   animation: fadeIn 0.4s ease-in;
 }
 
-.ticket-title {  
-  font-size: 26px;
-  font-weight: 700; 
+/* ===============================
+   TITLES
+=============================== */
+
+.ticket-title {
+  font-size: clamp(20px, 4vw, 26px);
+  font-weight: 700;
   color: #ee225d;
+
   text-align: center;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .ticket-subtitle {
-  font-size: 14px;
+  font-size: clamp(13px, 2.5vw, 14px);
   text-align: center;
-  margin-bottom: 22px;
-  color: #444;
+  margin-bottom: 20px;
+  color: #555;
 }
+
+/* ===============================
+   FORM ELEMENTS
+=============================== */
 
 label {
   font-weight: 600;
-  font-size: 14px;
-  margin: 8px 0 5px;
+  font-size: clamp(13px, 2.5vw, 14px);
+  margin: 10px 0 6px;
   display: block;
 }
 
@@ -45,12 +70,16 @@ input,
 select,
 textarea {
   width: 100%;
-  padding: 14px;
+
+  padding: clamp(10px, 2.5vw, 14px);
+
   border-radius: 10px;
-  font-size: 14px;
+  font-size: clamp(13px, 2.5vw, 14px);
+
   border: 1.7px solid #ccc;
-  margin-bottom: 15px;
-  transition: 0.3s;
+  margin-bottom: 14px;
+
+  transition: 0.25s ease;
 }
 
 input:focus,
@@ -58,7 +87,7 @@ select:focus,
 textarea:focus {
   border-color: #ee225d;
   outline: none;
-  box-shadow: 0px 0px 6px rgba(238, 34, 93, 0.4);
+  box-shadow: 0 0 6px rgba(238, 34, 93, 0.35);
 }
 
 textarea {
@@ -66,42 +95,114 @@ textarea {
   resize: none;
 }
 
+/* ===============================
+   FILE UPLOAD SECTION
+=============================== */
+
+.upload-section {
+  margin-top: 8px;
+}
+
+.upload-section small {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #666;
+}
+
+/* file button */
+
+input[type="file"]::file-selector-button {
+  background: #1976d2;
+  color: #fff;
+
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: #125aa3;
+}
+
+/* ===============================
+   SUBMIT BUTTON
+=============================== */
+
 .ticket-btn {
   width: 100%;
-  padding: 14px;
+  margin-top: 12px;
+
+  padding: clamp(12px, 3vw, 14px);
+
   background: #ee225d;
   color: #fff;
-  font-weight: bold;
-  font-size: 15px;
+
+  font-weight: 700;
+  font-size: clamp(14px, 2.5vw, 15px);
+
   border: none;
   border-radius: 12px;
+
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.25s ease;
 }
 
 .ticket-btn:hover {
   background: #c30042;
 }
 
-/* ✅ ONLY ADDITION: Blue "Choose File" button */
-input[type="file"]::file-selector-button {
-  background-color: #1976d2;
-  color: #ffffff;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
+/* ===============================
+   TABLET ADJUSTMENTS
+=============================== */
+
+@media (max-width: 768px) {
+
+  .ticket-card {
+    max-width: 100%;
+  }
+
+  textarea {
+    min-height: 90px;
+  }
+
 }
 
-input[type="file"]::file-selector-button:hover {
-  background-color: #125aa3;
+/* ===============================
+   MOBILE OPTIMIZATION
+=============================== */
+
+@media (max-width: 480px) {
+
+  .ticket-container {
+    padding: 16px;
+  }
+
+  .ticket-card {
+    border-radius: 16px;
+  }
+
+  input,
+  select,
+  textarea {
+    margin-bottom: 12px;
+  }
+
 }
+
+/* ===============================
+   ANIMATION
+=============================== */
 
 @keyframes fadeIn {
   from {
     opacity: 0;
     transform: translateY(12px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
