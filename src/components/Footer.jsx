@@ -1,7 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styleSheets/Footer.css";
 import { FaFacebookF, FaInstagram, FaTwitter, FaQuora } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const FOOTER_LINKS = [
   {
@@ -92,15 +93,22 @@ const SOCIAL_LINKS = [
 
 const Footer = () => {
 
-  const getSlug = (text) =>
-    text.toLowerCase().replace(/ /g, "-").replace(/[&]/g, "");
+  const { role } = useSelector(state => state.auth);
+  const navigate = useNavigate();
+  const getSlug = (text) => text.toLowerCase().replace(/ /g, "-").replace(/[&]/g, "");
+
+  const handleRedirect = () => {
+    if (role?.[0] === "USER") navigate("/dashboard");
+    else if (role?.[0] === "ADMIN") navigate("/admin");
+    else navigate("/");
+  }
 
   return (
     <footer className="footer">
 
       <div className="footer-top">
 
-        <div className="footer-brand">
+        <div className="footer-brand" onClick={handleRedirect}>
           <img
             src="/vivahjeevan_logo.png"
             alt="Vivahjeevan_logo"
