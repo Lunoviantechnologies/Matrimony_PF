@@ -25,8 +25,6 @@ const initialValues = {
   religion: "",
   subCaste: "",
   subCasteOther: "",
-  gothram: "",
-  gothramOther: "",
   motherTongue: "",
   country: "",
   state: "",
@@ -463,8 +461,6 @@ const jainShwetambarCommunityList = [
   "Don’t wish to specify"
 ];
 
-
-
 const buddhistCommunityList = [
   "Theravada",
   "Mahayana",
@@ -505,20 +501,12 @@ const interReligionCommunityList = [
 /* ---------------- SUB COMMUNITY LIST ---------------- */
 const religionSubCommunityMap = {
   Hindu: HindusubCommunityList,
-
-
   Muslim: muslimCommunityList,
-
-
   Christian: christianCasteList,
-
   Sikh: sikhFullCommunityList,
-
   "Jain - Digambar": jainDigambarCommunityList,
   "Jain - Shwetambar": jainShwetambarCommunityList,
-
   Buddhist: buddhistCommunityList,
-
   Jewish: jewishCommunityList,
   Parsi: parsiCommunityList,
   "No Religion": noReligionCommunityList,

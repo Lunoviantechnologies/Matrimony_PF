@@ -6,8 +6,8 @@ import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import imageCompression from "browser-image-compression";
 import api from "../api/axiosInstance";
 import Cropper from "react-easy-crop";
-
 import { toast } from "react-toastify";
+import { gothramList } from "../data/dataList";
 
 export default function EditProfile() {
   const { id, myProfile } = useSelector(state => state.auth);
@@ -24,12 +24,12 @@ export default function EditProfile() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewOpen, setPreviewOpen] = useState(false);
 
-
-
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
+  const PHOTO_SLOTS = ["updatePhoto", "updatePhoto1", "updatePhoto2", "updatePhoto3", "updatePhoto4",];
+  const [activePhotoIndex, setActivePhotoIndex] = useState(0);
 
   const fileInputRef = useRef(null);
 
@@ -61,6 +61,12 @@ export default function EditProfile() {
       });
 
   }, [id, dispatch]);
+
+  useEffect(() => {
+    if (myProfile) {
+      setProfileData(myProfile);
+    }
+  }, [myProfile]);
 
   /* ------------------ Modal open ------------------ */
   const openSectionModal = (sectionKey) => {
@@ -160,6 +166,7 @@ export default function EditProfile() {
       const res = await api.put(`/admin/update/${id}`, updatedProfile);
 
       setProfileData(updatedProfile);
+      dispatch(fetchMyProfile(id));
       setOpenModal(null);
       setEditBuffer({});
       toast.success("Save updated successfully");
@@ -304,6 +311,27 @@ export default function EditProfile() {
 
   if (loading) return <div>Loading profile...</div>;
 
+  const currentSlot = PHOTO_SLOTS[activePhotoIndex];
+  const currentPhoto = profileData?.[currentSlot];
+
+  const nextPhoto = () => setActivePhotoIndex(i => (i + 1) % PHOTO_SLOTS.length);
+  const prevPhoto = () => setActivePhotoIndex(i => i === 0 ? PHOTO_SLOTS.length - 1 : i - 1);
+
+  const handlePhotoUpload = async (slot, file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    await api.put(`/profile-photos/${slot}/${id}`, formData);
+    dispatch(fetchMyProfile(id));
+    toast.success("Photo updated success");
+  };
+
+  const handleDeletePhoto = async (slot) => {
+    await api.delete(`/profile-photos/${slot}/${id}`);
+    dispatch(fetchMyProfile(id));
+    toast.success("Photo deleted success");
+  };
+
   return (
     <div className="edit-profile-page">
       <h3>Edit Profile</h3>
@@ -311,36 +339,61 @@ export default function EditProfile() {
       <main className="page-content">
         <aside className="left-column">
           <div className="photo-card">
-            <div className="photo-box"
-              style={{ "--bg-img": `url(${getProfileImage()})` }}>
-              <img
-                key={photo}
-                src={getProfileImage()}
-                alt="Profile"
-                className="photo-preview"
-                onClick={() => {
-                  if (selectedImage || photo) setPreviewOpen(true);
-                }}
-                style={{ cursor: "pointer" }}
-              />
 
-              <div
-                className="camera-action"
-                onClick={() => fileInputRef.current && fileInputRef.current.click()}
-              >
-                <FaCamera /> <span>Change</span>
+            {/* carousel nav */}
+            <button className="carousel-btn left" onClick={prevPhoto}>‹</button>
+            <button className="carousel-btn right" onClick={nextPhoto}>›</button>
+
+            <div className="photo-box" >
+
+              {currentPhoto ? (
+                <img
+                  src={currentPhoto}
+                  alt="profile"
+                  className="photo-preview"
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+              ) : (
+                <div className="photo-placeholder">+</div>
+              )}
+
+              <div className="photo-counter">
+                {activePhotoIndex + 1} / {PHOTO_SLOTS.length}
               </div>
 
-              <input ref={fileInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={handleFileChange} />
+              {activePhotoIndex !== 0 && currentPhoto && (
+                <button className="delete-icon" onClick={() => handleDeletePhoto(currentSlot)} >
+                  ✕
+                </button>
+              )}
 
-              {/* ✅ Show upload progress while uploading */}
-              {
-                uploadProgress > 0 && uploadProgress < 100 && (
-                  <div className="upload-progress">
-                    Uploading... {uploadProgress}%
-                  </div>
-                )
-              }
+              {/* action overlay */}
+              <div className="camera-action" onClick={() => fileInputRef.current.click()} >
+                <FaCamera />
+
+                <span>
+                  {activePhotoIndex === 0 ? "Update" : currentPhoto ? "Replace" : "Add"}
+                </span>
+              </div>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+
+                  if (activePhotoIndex === 0) {
+                    handleFileChange(e); // existing crop + upload flow
+                  } else {
+                    handlePhotoUpload(currentSlot, file);
+                  }
+                }}
+              />
+
             </div>
 
             <div className="photo-caption">
@@ -507,123 +560,127 @@ export default function EditProfile() {
         </section>
       </main>
       {/* ------------------ Crop Photo Modal ------------------ */}
-      {cropOpen && selectedImage && (
-        <div className="modal-overlay">
-          <div className="modal-card" style={{ width: 420 }}>
+      {
+        cropOpen && selectedImage && (
+          <div className="modal-overlay">
+            <div className="modal-card" style={{ width: 420 }}>
 
-            <div className="modal-header">
-              <h3>Adjust your photo</h3>
-              <button
-                className="modal-close"
-                onClick={() => setCropOpen(false)}
-              >
-                ✕
-              </button>
-            </div>
+              <div className="modal-header">
+                <h3>Adjust your photo</h3>
+                <button
+                  className="modal-close"
+                  onClick={() => setCropOpen(false)}
+                >
+                  ✕
+                </button>
+              </div>
 
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                height: 300,
-                background: "#000"
-              }}
-            >
-              <Cropper
-                image={selectedImage}
-                crop={crop}
-                zoom={zoom}
-                aspect={1}
-                cropShape="rect"
-                showGrid={false}
-                onCropChange={setCrop}
-                onZoomChange={(z) => setZoom(Number(z))}
-                onCropComplete={(c, pixels) =>
-                  setCroppedAreaPixels(pixels)
-                }
-              />
-            </div>
-
-            <div style={{ padding: 12 }}>
-              <input
-                type="range"
-                min={1}
-                max={3}
-                step={0.1}
-                value={zoom}
-                onChange={(e) => setZoom(Number(e.target.value))}
-                style={{ width: "100%" }}
-              />
-            </div>
-
-            <div className="modal-footer">
-              <button
-                className="btn-outline"
-                onClick={() => setCropOpen(false)}
-              >
-                Cancel
-              </button>
-
-              <button
-                className="btn-primary"
-                onClick={async () => {
-
-                  if (!croppedAreaPixels) {
-                    toast.error("Please adjust the photo");
-                    return;
-                  }
-
-                  const croppedFile = await getCroppedImg(
-                    selectedImage,
-                    croppedAreaPixels
-                  );
-
-                  const compressed = await imageCompression(croppedFile, {
-                    maxSizeMB: 1,
-                    maxWidthOrHeight: 1024,
-                    useWebWorker: true
-                  });
-
-                  const previewUrl = URL.createObjectURL(compressed);
-                  setPhoto(previewUrl);
-
-                  await uploadPhoto(compressed);
-
-                  setCropOpen(false);
+              <div
+                style={{
+                  position: "relative",
+                  width: "100%",
+                  height: 300,
+                  background: "#000"
                 }}
               >
-                Done
-              </button>
-            </div>
+                <Cropper
+                  image={selectedImage}
+                  crop={crop}
+                  zoom={zoom}
+                  aspect={1}
+                  cropShape="rect"
+                  showGrid={false}
+                  onCropChange={setCrop}
+                  onZoomChange={(z) => setZoom(Number(z))}
+                  onCropComplete={(c, pixels) =>
+                    setCroppedAreaPixels(pixels)
+                  }
+                />
+              </div>
 
+              <div style={{ padding: 12 }}>
+                <input
+                  type="range"
+                  min={1}
+                  max={3}
+                  step={0.1}
+                  value={zoom}
+                  onChange={(e) => setZoom(Number(e.target.value))}
+                  style={{ width: "100%" }}
+                />
+              </div>
+
+              <div className="modal-footer">
+                <button
+                  className="btn-outline"
+                  onClick={() => setCropOpen(false)}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  className="btn-primary"
+                  onClick={async () => {
+
+                    if (!croppedAreaPixels) {
+                      toast.error("Please adjust the photo");
+                      return;
+                    }
+
+                    const croppedFile = await getCroppedImg(
+                      selectedImage,
+                      croppedAreaPixels
+                    );
+
+                    const compressed = await imageCompression(croppedFile, {
+                      maxSizeMB: 1,
+                      maxWidthOrHeight: 1024,
+                      useWebWorker: true
+                    });
+
+                    const previewUrl = URL.createObjectURL(compressed);
+                    setPhoto(previewUrl);
+
+                    await uploadPhoto(compressed);
+                    dispatch(fetchMyProfile(id));
+                    setCropOpen(false);
+                  }}
+                >
+                  Done
+                </button>
+              </div>
+
+            </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
 
 
       {/* ------------------ Modal ------------------ */}
-      {openModal && (
-        <div className="modal-overlay" onMouseDown={(e) => e.target === e.currentTarget && cancelEdit()}>
-          <div className="modal-card">
-            <div className="modal-header">
-              <h3>Edit {modalTitleForKey(openModal)}</h3>
-              <button className="modal-close" onClick={cancelEdit}>✕</button>
-            </div>
+      {
+        openModal && (
+          <div className="modal-overlay" onMouseDown={(e) => e.target === e.currentTarget && cancelEdit()}>
+            <div className="modal-card">
+              <div className="modal-header">
+                <h3>Edit {modalTitleForKey(openModal)}</h3>
+                <button className="modal-close" onClick={cancelEdit}>✕</button>
+              </div>
 
-            <div className="modal-body">
-              {renderModalForm(openModal, editBuffer, handleEditInput)}
-            </div>
+              <div className="modal-body">
+                {renderModalForm(openModal, editBuffer, handleEditInput)}
+              </div>
 
-            <div className="modal-footer">
-              <button className="btn-outline" onClick={cancelEdit}>Cancel</button>
-              <button className="btn-primary" onClick={saveSection}>Save</button>
+              <div className="modal-footer">
+                <button className="btn-outline" onClick={cancelEdit}>Cancel</button>
+                <button className="btn-primary" onClick={saveSection}>Save</button>
+              </div>
             </div>
           </div>
-        </div>
 
-      )}
-    </div>
+        )
+      }
+    </div >
   );
 
 
@@ -796,8 +853,20 @@ export default function EditProfile() {
             <label className="field"><div className="field-label">Basic planetary position</div>
               <textarea rows="3" value={buffer.basicPlanetaryPosition || ""} onChange={(e) => handleEditInputLocal("basicPlanetaryPosition", e.target.value)} />
             </label>
-            <label className="field"><div className="field-label">Gothram</div>
-              <input value={buffer.gothram || ""} onChange={(e) => handleEditInputLocal("gothram", e.target.value)} />
+            <label className="field">
+              <div className="field-label">Gothram</div>
+              <select
+                value={buffer.gothram || ""}
+                onChange={(e) => handleEditInputLocal("gothram", e.target.value)}
+              >
+                <option value="">Select Gothram</option>
+
+                {gothramList.map((g) => (
+                  <option key={g} value={g}>
+                    {g}
+                  </option>
+                ))}
+              </select>
             </label>
           </div>
         );

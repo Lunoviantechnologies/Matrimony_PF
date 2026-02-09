@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, Typography, TextField, MenuItem, Switch, FormControlLabel, Button, Box, Stack,} from "@mui/material";
 import api from "../../api/axiosInstance";
+import { toast } from "react-toastify";
 
 export default function PrivacySettings({ userId }) {
     const [profileVisibility, setProfileVisibility] = useState("Everyone");
@@ -31,10 +32,10 @@ export default function PrivacySettings({ userId }) {
                 profileVisibility,
                 hideProfilePhoto,
             });
-            alert("Privacy settings saved successfully!");
+            toast.success("Privacy settings saved successfully!");
         } catch (error) {
             console.error("Failed to save privacy settings:", error);
-            alert("Failed to save settings.");
+            toast.error("Failed to save settings.");
         } finally {
             setSaving(false);
         }

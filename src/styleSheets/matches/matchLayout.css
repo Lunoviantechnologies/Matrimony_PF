@@ -1,0 +1,128 @@
+/* ===============================
+   MATCHES LAYOUT — BASE
+=============================== */
+
+.matches_nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Pills */
+
+.matches_link {
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-weight: 500;
+    color: #555;
+    background: #f2f2f2;
+    white-space: nowrap;
+    transition: all 0.25s ease;
+}
+
+.matches_link:hover {
+    background: #e0e0e0;
+}
+
+.matches_link.active {
+    background: #037430;
+    color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Sort area */
+
+.sort_div {
+    min-width: 200px;
+}
+
+.matches_sortby {
+    border-radius: 999px !important;
+    padding: 8px 16px !important;
+    width: 100%;
+}
+
+
+/* ===============================
+   DESKTOP EXPERIENCE
+=============================== */
+
+@media (min-width: 1200px) {
+
+    .matches_nav {
+        justify-content: flex-start;
+    }
+
+}
+
+
+/* ===============================
+   TABLET EXPERIENCE
+=============================== */
+
+@media (max-width: 992px) {
+
+    .matches_nav {
+        justify-content: center;
+    }
+
+    .sort_div {
+        min-width: 160px;
+    }
+
+}
+
+
+/* ===============================
+   MOBILE EXPERIENCE
+=============================== */
+
+@media (max-width: 768px) {
+
+    /* nav becomes horizontal scroll tabs */
+
+    .matches_nav {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        scrollbar-width: none;
+    }
+
+    .matches_nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .matches_link {
+        font-size: 14px;
+        padding: 6px 14px;
+        flex: 0 0 auto;
+    }
+
+    .sort_div {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .matches_sortby {
+        max-width: 260px;
+        margin: auto;
+        display: block;
+    }
+
+}
+
+
+/* ===============================
+   SMALL PHONES
+=============================== */
+
+@media (max-width: 480px) {
+
+    .matches_link {
+        font-size: 13px;
+        padding: 6px 12px;
+    }
+
+}

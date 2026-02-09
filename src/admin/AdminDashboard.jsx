@@ -95,7 +95,12 @@ const AdminDashboard = () => {
           <div className="stat-card blue">
             <div className="icon"><FaRupeeSign /></div>
             <h5>Daily Revenue</h5>
-            <p>₹{revenue}</p>
+            <p>
+              ₹{revenue.toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </p>
           </div>
         </section>
 
@@ -124,7 +129,10 @@ const AdminDashboard = () => {
                       {p.payments?.length
                         ? p.payments.map(pay => (
                           <div key={pay.id}>
-                            ₹ {pay.amount}
+                            ₹{Number(pay.amount).toLocaleString("en-IN", {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}
                           </div>
                         ))
                         : "Not Paid"}
@@ -149,8 +157,8 @@ const AdminDashboard = () => {
         <section className="quick-actions">
           <h2>Quick Actions</h2>
           <div className="actions w-50 mx-auto">
-            <button className="action-btn" onClick={ () => navigate("/admin/aprovals")}><FaCheckCircle /> Approvals</button>
-            <button className="action-btn" onClick={ () => navigate("/admin/admin_support")}><FaHeadset /> Support</button>
+            <button className="action-btn" onClick={() => navigate("/admin/aprovals")}><FaCheckCircle /> Approvals</button>
+            <button className="action-btn" onClick={() => navigate("/admin/admin_support")}><FaHeadset /> Support</button>
           </div>
         </section>
 

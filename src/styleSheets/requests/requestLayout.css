@@ -1,0 +1,72 @@
+/* Request Profiles */
+
+.request_nav {
+    padding: 14px 0;
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Base button */
+.request_link {
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 500;
+    color: #555;
+    background-color: #f2f2f2;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.request_link:hover {
+    background-color: #e0e0e0;
+}
+
+.request_link.active {
+    background-color: #037430;
+    color: white;
+}
+
+
+/* =========================
+   Tablet View
+========================= */
+
+@media (max-width: 992px) {
+    .request_nav {
+        justify-content: center;
+    }
+
+    .request_link {
+        font-size: 14px;
+        padding: 7px 14px;
+    }
+}
+
+
+/* =========================
+   Mobile View
+========================= */
+
+@media (max-width: 576px) {
+
+    .request_nav {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-bottom: 6px;
+        scrollbar-width: none;
+    }
+
+    .request_nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .request_link {
+        flex: 0 0 auto;
+        font-size: 13px;
+        padding: 6px 14px;
+    }
+}

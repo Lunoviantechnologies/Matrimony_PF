@@ -27,17 +27,17 @@ const NewMatches = () => {
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [anchorRect, setAnchorRect] = useState(null);
-const maskName = (name = "") => {
-  if (!name) return "—";
-  return name.charAt(0).toUpperCase() + "*****";
-};
+  const maskName = (name = "") => {
+    if (!name) return "—";
+    return name.charAt(0).toUpperCase() + "*****";
+  };
   const PAGE_SIZE = 10;
   const [page, setPage] = useState(1);
 
-const getDisplayName = (first, last) => {
-  if (myProfile?.premium) return `${first || ""} ${last || ""}`.trim();
-  return `${maskName(first)} ${maskName(last || "")}`.trim();
-};
+  const getDisplayName = (first, last) => {
+    if (myProfile?.premium) return `${first || ""} ${last || ""}`.trim();
+    return `${maskName(first)} ${maskName(last || "")}`.trim();
+  };
   useEffect(() => {
     const loadRequests = async () => {
       try {
@@ -129,10 +129,17 @@ const getDisplayName = (first, last) => {
       .filter(p => {
         const age = getAge(p.dateOfBirth);
 
-        const matchAge = !filters.age.length || filters.age.some(range => {
-          const [min, max] = range.split("-").map(Number);
-          return age >= min && age <= max;
-        });
+        const matchAge =
+          !filters.age.length ||
+          filters.age.some(range => {
+            if (range.includes("+")) {
+              const min = parseInt(range);
+              return age >= min;
+            }
+
+            const [min, max] = range.split("-").map(Number);
+            return age >= min && age <= max;
+          });
 
         const matchprofileFor = !filters.profileFor.length || filters.profileFor.includes(p.profileFor || "");
         const matchMaritalStatus = !filters.maritalStatus.length || filters.maritalStatus.includes(p.maritalStatus || "");
@@ -227,14 +234,14 @@ const getDisplayName = (first, last) => {
                         </div>
                       </div>
 
-              <div className="profile-details">
-                <h3 className="name">
-  {getDisplayName(p.firstName, p.lastName)}
-</h3>
-                <span className="meta">{getAge(p.dateOfBirth)} yrs • {p.height || "-"}</span>
-                <p className="line">{p.occupation || "-"} • {p.highestEducation || "-"}</p>
-                <p className="line">{p.city || "-"}</p>
-                <p className="line">{p.religion || "-"} | {p.subCaste || "-"}</p>
+                      <div className="profile-details">
+                        <h3 className="name">
+                          {getDisplayName(p.firstName, p.lastName)}
+                        </h3>
+                        <span className="meta">{getAge(p.dateOfBirth)} yrs • {p.height || "-"}</span>
+                        <p className="line">{p.occupation || "-"} • {p.highestEducation || "-"}</p>
+                        <p className="line">{p.city || "-"}</p>
+                        <p className="line">{p.religion || "-"} | {p.subCaste || "-"}</p>
 
                         <div className="btn-row">
                           <button

@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import "../styleSheets/requestCSS/profileRequest.css";
-import backendIP from "../api/api";
+import "../styleSheets/requests/profileRequest.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
@@ -13,16 +12,16 @@ const SentRequests = () => {
   const { id, role, myProfile } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const { profiles } = useSelector(state => state.profiles);
-   const maskName = (name = "") => {
-  if (!name) return "-";
-  return name.charAt(0).toUpperCase() + "*****";
-};
+  const maskName = (name = "") => {
+    if (!name) return "-";
+    return name.charAt(0).toUpperCase() + "*****";
+  };
 
-const getDisplayName = (name) => {
-  if (myProfile?.premium) return name || "-";
-  return maskName(name);
-};
-  useEffect( () => {
+  const getDisplayName = (name) => {
+    if (myProfile?.premium) return name || "-";
+    return maskName(name);
+  };
+  useEffect(() => {
     dispatch(fetchMyProfile(id));
   }, [id]);
 
@@ -66,6 +65,7 @@ const getDisplayName = (name) => {
 
       return {
         ...req,
+        hideProfilePhoto: profile.hideProfilePhoto,
         image: profile?.updatePhoto ? profile.updatePhoto : profile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png",
       };
     });
@@ -83,7 +83,7 @@ const getDisplayName = (name) => {
               <div className="left-section">
                 <div className="img-box">
                   <img src={user.image} alt="profile"
-                    className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
+                    className={`profile-img ${user?.hideProfilePhoto ? "blur-image" : ""}`}
                     draggable={false}
                     onContextMenu={(e) => e.preventDefault()}
                   />

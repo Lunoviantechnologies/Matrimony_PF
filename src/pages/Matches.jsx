@@ -3,6 +3,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import MatchesSort from "./MatchesSort";
 import { useSelector } from "react-redux";
+import "../styleSheets/matches/matchLayout.css";
 
 const EMPTY_FILTERS = {
     profileFor:[],

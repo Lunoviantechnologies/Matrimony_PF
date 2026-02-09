@@ -4,6 +4,8 @@ import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import ViewProfileModal from "./ViewProfileModal";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import api from "../api/axiosInstance";
+import "../styleSheets/searchpage.css";
+// import "../styleSheets/ProfileCard.css";
 
 const SearchProfiles = () => {
 

@@ -1,108 +1,323 @@
+/* ================================
+   SIDEBAR ROOT
+================================ */
+
 .sidebar {
     width: 280px;
-    background-color: #ffffff;
+    background: #ffffff;
     border-right: 1px solid #ddd;
-    height: 100vh;
+
+    height: calc(100vh - 70px);
     position: sticky;
     top: 70px;
-    padding: 20px;
+
+    padding: 16px;
     overflow-y: auto;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
+
     display: flex;
     flex-direction: column;
 }
 
+
+/* ================================
+   SIDEBAR TITLE
+================================ */
+
 .sidebar-title {
-    color: #5c4218;
-    margin-bottom: 15px;
-    font-weight: 600;
-    font-size: 1.1rem;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #5c3a00;
+    margin-bottom: 12px;
 }
 
-.apply-btn {
-    background-color: #3d05e7 !important;
-    color: white !important;
-    margin-bottom: 20px;
-    font-weight: 500;
+
+/* ================================
+   BUTTON ROW
+================================ */
+
+.sidebar button {
+    font-size: 14px;
     border-radius: 6px;
+    padding: 6px 10px;
 }
 
-.apply-btn:hover {
-    color: white !important;
-    background-color: #4417c8 !important;
-}
+
+/* ================================
+   FILTER SECTIONS
+================================ */
 
 .filter-section {
-    margin-bottom: 22px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
     border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
+}
+
+.filter-section:last-child {
+    border-bottom: none;
 }
 
 .filter-section h6 {
-    margin: 0 0 10px 0;
-    color: #333;
-    font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 15px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 6px;
 }
 
-.form-check {
+
+/* ================================
+   CHECKBOX ROW — COMPACT
+================================ */
+
+.sidebar .form-check {
     display: flex;
     align-items: center;
+
     gap: 6px;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
+    padding: 2px 0;
 }
 
-.form-check-input {
-    border-color: #b0ada7;
+/* ===============================
+   Compact checkbox override
+=============================== */
+
+.sidebar .form-check-input {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+
+    width: 14px !important;
+    height: 14px !important;
+
+    border: 1.5px solid #bdbdbd;
+    border-radius: 3px;
+
+    background: white;
     cursor: pointer;
-    transform: scale(0.85);
-    accent-color: #452b02;
-    margin: 0;
+
+    display: inline-block;
     vertical-align: middle;
+
+    margin: 0;
+    padding: 0;
 }
 
-.form-check-label {
-    cursor: pointer;
-    font-size: 0.88rem;
-    color: #444;
-    margin: 0;
-    line-height: 1;
+/* checked state */
+.sidebar .form-check-input:checked {
+    background-color: #4f7fe3;
+    border-color: #4f7fe3;
 }
+
+/* small checkmark */
+.sidebar .form-check-input:checked::after {
+    content: "";
+    position: relative;
+    display: block;
+    width: 3px;
+    height: 7px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    margin: 1px auto;
+}
+
+/* remove Bootstrap focus glow */
+.sidebar .form-check-input:focus {
+    outline: none;
+    box-shadow: none !important;
+}
+
+/* checkbox label */
+.sidebar .form-check-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    line-height: 1.1;
+    cursor: pointer;
+}
+
+/* ===============================
+   Compact checkbox spacing
+=============================== */
+.sidebar .filter-section {
+    margin-bottom: 14px;
+    padding-bottom: 6px;
+}
+
+.sidebar .filter-section h6 {
+    margin-bottom: 6px;
+}
+
+/* reduce checkbox row spacing */
+.sidebar .form-check {
+    margin-bottom: 4px !important;
+    gap: 8px;
+}
+
+/* override Bootstrap mb spacing */
+.sidebar .mb-2 {
+    margin-bottom: 4px !important;
+}
+
+/* tighter label */
+.sidebar .form-check-label {
+    line-height: 1.1;
+}
+
+/* ================================
+   OTHER TEXT INPUT
+================================ */
 
 .other-input {
     width: 100%;
-    font-size: 0.85rem;
+    margin-top: 4px;
+
+    font-size: 13px;
+    padding: 4px 6px;
+
     border-radius: 6px;
 }
 
-@media (max-width: 768px) {
-    .other-input {
-        font-size: 0.8rem;
-    }
-}
 
-/* Scrollbar styling */
+/* ================================
+   SCROLLBAR STYLE
+================================ */
+
 .sidebar::-webkit-scrollbar {
     width: 6px;
 }
 
 .sidebar::-webkit-scrollbar-thumb {
-    background-color: #ccc;
+    background: #ccc;
     border-radius: 4px;
 }
 
 .sidebar::-webkit-scrollbar-thumb:hover {
-    background-color: #aaa;
+    background: #aaa;
 }
 
+
+/* =================================
+   TABLET RESPONSIVE
+================================= */
+
+@media (max-width: 1024px) {
+
+    .sidebar {
+        width: 240px;
+        padding: 12px;
+    }
+
+    .filter-section h6 {
+        font-size: 14px;
+    }
+
+    .sidebar .form-check-label {
+        font-size: 13px;
+    }
+
+}
+
+
+/* =================================
+   MOBILE RESPONSIVE
+================================= */
+
 @media (max-width: 768px) {
+
     .sidebar {
         width: 100%;
         height: auto;
         position: relative;
         top: 0;
+
         border-right: none;
         border-bottom: 1px solid #ddd;
+
         box-shadow: none;
+        overflow: visible;
+
+        padding: 12px;
     }
+
+    .sidebar-title {
+        font-size: 16px;
+    }
+
+    .filter-section {
+        border-bottom: none;
+        margin-bottom: 10px;
+    }
+
+    .sidebar .form-check-input {
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    .sidebar .form-check-label {
+        font-size: 14px;
+    }
+
+}
+
+
+/* =================================
+   SMALL PHONES
+================================= */
+
+@media (max-width: 480px) {
+
+    .sidebar {
+        padding: 10px;
+    }
+
+    .sidebar-title {
+        font-size: 15px;
+    }
+
+    .sidebar .form-check-label {
+        font-size: 13px;
+    }
+
+}
+
+/* ===============================
+   ULTRA COMPACT FILTER SPACING
+=============================== */
+
+/* tighten section spacing */
+.sidebar .filter-section {
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+}
+
+/* section title spacing */
+.sidebar .filter-section h6 {
+    margin: 4px 0;
+    font-size: 0.95rem;
+}
+
+/* remove bootstrap spacing wrapper */
+.sidebar .mb-2 {
+    margin-bottom: 2px !important;
+}
+
+/* compact checkbox row */
+.sidebar .form-check {
+    margin-bottom: 2px !important;
+    padding: 2px 0;
+    gap: 6px;
+}
+
+/* compact label */
+.sidebar .form-check-label {
+    font-size: 0.9rem;
+    line-height: 1;
+}
+
+/* compact checkbox */
+.sidebar .form-check-input {
+    margin: 0;
 }

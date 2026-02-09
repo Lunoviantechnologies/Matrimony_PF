@@ -10,7 +10,7 @@ import api from "../api/axiosInstance";
 import { toast } from "react-toastify";
 import "../styleSheets/navbar.css";
 
-const UserNavbar = () => {
+const UserNavbar = ({closeMenu }) => {
 
     const { myProfile } = useSelector(state => state.auth);
     const { id, role } = useSelector(state => state.auth);
@@ -59,12 +59,17 @@ const UserNavbar = () => {
         navigate("/");
     };
 
+    const goTo = (path) => {
+        closeMenu?.();
+        navigate(path);
+    };
+
     return (
         <>
-            <Link className="navLink" to="/dashboard/astroTalkQuery">Astrology</Link>
-            <Link className="navLink" to="/dashboard/help">Help</Link>
+            <Link className="navLink" to="/dashboard/astroTalkQuery" onClick={() => goTo("/dashboard/astroTalkQuery")}>Astrology</Link>
+            <Link className="navLink" to="/dashboard/help" onClick={() => goTo("/dashboard/help")}>Help</Link>
             {festivalActive && (
-                <Link className="navLink upgrade-marquee glow-border" to="/dashboard/premium">
+                <Link className="navLink upgrade-marquee glow-border" to="/dashboard/premium" onClick={() => goTo("/dashboard/premium")}>
                     <div className="marquee-track">
                         <span className="festival-glow">
                             Festival {festivalPlan.discountValue}% OFF
@@ -78,7 +83,7 @@ const UserNavbar = () => {
                 </Link>
             )}
             {!festivalActive && (
-                <Link className="navLink" to="/dashboard/premium">Upgrade</Link>
+                <Link className="navLink" to="/dashboard/premium" onClick={() => goTo("/dashboard/premium")}>Upgrade</Link>
             )}
 
             <Notification />
@@ -90,9 +95,9 @@ const UserNavbar = () => {
                 </button>
 
                 <ul className="dropdown-menu dropdown-menu-end">
-                    <li><Link className="dropdown-item" to="editProfile">Profile</Link></li>
-                    <li><Link className="dropdown-item" to="settings">Settings</Link></li>
-                    <li><Link className="dropdown-item" to="settings?tab=refer">Rewards</Link></li>
+                    <li><Link className="dropdown-item" to="editProfile" onClick={() => goTo("/dashboard/editProfile")}>Profile</Link></li>
+                    <li><Link className="dropdown-item" to="settings" onClick={() => goTo("/dashboard/settings")}>Settings</Link></li>
+                    <li><Link className="dropdown-item" to="settings?tab=refer" onClick={() => goTo("/dashboard/settings?tab=refer")}>Rewards</Link></li>
                     <li><hr className="dropdown-divider" /></li>
                     <li><button className="dropdown-item text-danger" onClick={handleLogout}>Logout</button></li>
                 </ul>

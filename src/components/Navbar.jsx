@@ -18,6 +18,12 @@ const Navbar = () => {
         else navigate("/");
     };
 
+    const goTo = (path) => {
+        setMenuOpen(false);
+        setResourceOpen(false);
+        navigate(path);
+    };
+
     return (
         <nav className="navBody container w-75">
             <div className="navInner">
@@ -46,27 +52,27 @@ const Navbar = () => {
                                 Home
                             </Link>
 
-                                        {/* 🔽 Resources Dropdown */}
-                                        <div className="navDropdown">
-                                        <span
-                                            className="navLink dropdownTitle"
-                                            onClick={() => setResourceOpen(prev => !prev)}
-                                        >
-                                            Resources ▾
-                                        </span>
+                            {/* 🔽 Resources Dropdown */}
+                            <div className="navDropdown">
+                                <span
+                                    className="navLink dropdownTitle"
+                                    onClick={() => setResourceOpen(prev => !prev)}
+                                >
+                                    Resources ▾
+                                </span>
 
-                                        <div className={`dropdownMenu ${resourceOpen ? "open" : ""}`}>
-                                            <Link
-                                            to="/resources/blog"
-                                            onClick={() => {
-                                                setMenuOpen(false);
-                                                setResourceOpen(false);
-                                            }}
-                                            >
-                                            Blog
-                                            </Link>
-                                        </div>
-                                        </div>
+                                <div className={`dropdownMenu ${resourceOpen ? "open" : ""}`}>
+                                    <Link
+                                        to="/resources/blog"
+                                        onClick={() => {
+                                            setMenuOpen(false);
+                                            setResourceOpen(false);
+                                        }}
+                                    >
+                                        Blog
+                                    </Link>
+                                </div>
+                            </div>
 
 
                             <Link className="navLink" to="/aboutUs" onClick={() => setMenuOpen(false)}>
@@ -77,17 +83,17 @@ const Navbar = () => {
                                 Contact Us
                             </Link>
 
-                            <button className="navAuthBtn" onClick={() => navigate("/login")}>
+                            <button className="navAuthBtn" onClick={() => goTo("/login")}>
                                 Login
                             </button>
 
-                            <button className="navAuthBtn" onClick={() => navigate("/register")}>
+                            <button className="navAuthBtn" onClick={() => goTo("/register")}>
                                 Sign Up
                             </button>
                         </>
                     )}
 
-                    {isLoggedIn && role?.[0] === "USER" && <UserNavbar />}
+                    {isLoggedIn && role?.[0] === "USER" && <UserNavbar closeMenu={() => setMenuOpen(false)} />}
                     {isLoggedIn && role?.[0] === "ADMIN" && <AdminNavbar />}
                 </div>
             </div>
