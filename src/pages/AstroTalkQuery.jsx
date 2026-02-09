@@ -64,7 +64,7 @@ const AstroTalkQuery = () => {
                 Get accurate guidance for marriage, compatibility & future life
             </p>
 
-            <div className="astro-content d-flex justify-content-center align-items-center">
+            <div className="astro-dashboard">
                 <div>
                     <AstroScore />
                 </div>

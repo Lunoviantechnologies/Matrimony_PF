@@ -2,15 +2,15 @@
    MATCHES LAYOUT — BASE
 =============================== */
 
-.matches_nav {
+/* Tabs container */
+.matches-tabs {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
     gap: 10px;
+    white-space: nowrap;
+    padding-bottom: 4px;
 }
 
 /* Pills */
-
 .matches_link {
     text-decoration: none;
     padding: 8px 16px;
@@ -18,8 +18,8 @@
     font-weight: 500;
     color: #555;
     background: #f2f2f2;
-    white-space: nowrap;
     transition: all 0.25s ease;
+    flex: 0 0 auto;
 }
 
 .matches_link:hover {
@@ -32,16 +32,26 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-/* Sort area */
-
-.sort_div {
-    min-width: 200px;
+/* Controls row */
+.matches-controls {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
 }
 
+/* Sort dropdown */
 .matches_sortby {
     border-radius: 999px !important;
     padding: 8px 16px !important;
-    width: 100%;
+    min-width: 180px;
+}
+
+/* Header layout */
+.matches-header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 
@@ -49,27 +59,12 @@
    DESKTOP EXPERIENCE
 =============================== */
 
-@media (min-width: 1200px) {
+@media (min-width: 768px) {
 
-    .matches_nav {
-        justify-content: flex-start;
-    }
-
-}
-
-
-/* ===============================
-   TABLET EXPERIENCE
-=============================== */
-
-@media (max-width: 992px) {
-
-    .matches_nav {
-        justify-content: center;
-    }
-
-    .sort_div {
-        min-width: 160px;
+    /* evenly spread tabs */
+    .matches-tabs {
+        justify-content: space-evenly;
+        overflow: visible;
     }
 
 }
@@ -78,41 +73,50 @@
 /* ===============================
    MOBILE EXPERIENCE
 =============================== */
-
 @media (max-width: 768px) {
 
-    /* nav becomes horizontal scroll tabs */
-
-    .matches_nav {
-        flex-wrap: nowrap;
+    /* horizontal scroll tabs */
+    .matches-tabs {
         overflow-x: auto;
-        padding-bottom: 6px;
         scrollbar-width: none;
     }
 
-    .matches_nav::-webkit-scrollbar {
+    .matches-tabs::-webkit-scrollbar {
         display: none;
     }
 
+    /* compact pills */
     .matches_link {
         font-size: 14px;
-        padding: 6px 14px;
-        flex: 0 0 auto;
+        padding: 6px 12px;
     }
 
-    .sort_div {
-        width: 100%;
-        margin-top: 10px;
+    /* ===== FILTER BUTTON — FORCE COMPACT ===== */
+
+    .matches-controls .btn {
+        width: fit-content !important;
+        min-width: unset !important;
+
+        padding: 4px 8px !important;
+        font-size: 12px !important;
+
+        border-radius: 14px;
     }
+
+    /* ===== SORT DROPDOWN — FORCE COMPACT ===== */
 
     .matches_sortby {
-        max-width: 260px;
-        margin: auto;
-        display: block;
+        width: fit-content !important;
+        min-width: unset !important;
+        max-width: 120px;
+
+        padding: 4px 22px 4px 8px !important;
+        font-size: 12px !important;
+
+        border-radius: 14px;
     }
 
 }
-
 
 /* ===============================
    SMALL PHONES
@@ -122,7 +126,11 @@
 
     .matches_link {
         font-size: 13px;
-        padding: 6px 12px;
+        padding: 5px 12px;
+    }
+
+    .matches_sortby {
+        font-size: 12px !important;
     }
 
 }

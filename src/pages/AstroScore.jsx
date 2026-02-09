@@ -100,7 +100,7 @@ const AstroScore = () => {
     };
 
     return (
-        <div className="container py-4">
+        <div className="container py-4 astro-score-wrapper">
             <h3 className="fw-bold mb-4 text-center">
                 Astro Compatibility
             </h3>
@@ -118,66 +118,46 @@ const AstroScore = () => {
 
                 return (
                     <div key={req.requestId} className="card shadow-sm border-0 mb-4" >
-                        <div className="card-body">
-                            <div className="row align-items-center text-center">
+                        <div className="card-body astro-score-body">
 
-                                {/* YOU */}
-                                <div className="col-md-4 mb-3 mb-md-0">
-                                    <img
-                                        src={getProfileImage(id)}
-                                        alt="You"
-                                        width="80"
-                                        height="80"
-                                        className="rounded-circle mb-2"
-                                        style={{ objectFit: "cover" }}
-                                        draggable={false}
-                                        onContextMenu={e =>
-                                            e.preventDefault()
-                                        }
-                                    />
-                                    <h6>You</h6>
-                                </div>
+                            {/* LEFT — YOU */}
+                            <div className="astro-user">
+                                <img src={getProfileImage(id)} alt="You" />
+                                <span>You</span>
+                            </div>
 
-                                {/* CENTER */}
-                                <div className="col-md-4">
+                            {/* CENTER — SCORE */}
+                            <div className="astro-score-center">
 
-                                    <button
-                                        className="btn btn-outline-primary btn-sm px-4"
-                                        disabled={!isAstroEnabled || loadingId === friendId}
-                                        onClick={() => handleGetScore(friendId)}
+                                <button
+                                    className="astro-score-btn"
+                                    disabled={!isAstroEnabled || loadingId === friendId}
+                                    onClick={() => handleGetScore(friendId)}
+                                >
+                                    {loadingId === friendId
+                                        ? "Calculating..."
+                                        : score !== undefined
+                                            ? `${score}% Match`
+                                            : "Check Score"}
+                                </button>
+
+                                {!isAstroEnabled && (
+                                    <div
+                                        className="astro-upgrade-text"
+                                        onClick={() => navigate("/dashboard/premium")}
                                     >
-                                        {loadingId === friendId ? "Calculating..." : "Check Score"}
-                                    </button>
-
-                                    {!isAstroEnabled && (
-                                        <div className="mt-2 text-danger small" onClick={() => navigate("/dashboard/premium")}>
-                                            Upgrade your plan for astro support
-                                        </div>
-                                    )}
-
-                                    {score !== undefined && (
-                                        <div className="mt-3">
-                                            <span className="badge bg-success fs-6 px-3 py-2">
-                                                {score}% Match
-                                            </span>
-                                        </div>
-                                    )}  
-                                </div>
-
-                                {/* FRIEND */}
-                                <div className="col-md-4 mt-3 mt-md-0">
-                                    <img
-                                        src={getProfileImage(friendId)}
-                                        alt={friendName}
-                                        width="80"
-                                        height="80"
-                                        className="rounded-circle mb-2"
-                                        style={{ objectFit: "cover" }}
-                                    />
-                                    <h6>{friendName}</h6>
-                                </div>
+                                        Upgrade plan for astro score
+                                    </div>
+                                )}
 
                             </div>
+
+                            {/* RIGHT — FRIEND */}
+                            <div className="astro-user">
+                                <img src={getProfileImage(friendId)} alt={friendName} />
+                                <span>{friendName}</span>
+                            </div>
+
                         </div>
 
                         <div className="sys-message">

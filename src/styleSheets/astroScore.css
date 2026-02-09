@@ -1,38 +1,140 @@
+/* ===============================
+   ASTRO SCORE CARD
+=============================== */
+
+.astro-score-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* card container */
+
+.astro-score-wrapper .card {
+    width: 100%;
+    max-width: 480px;
+    border-radius: 20px;
+    border: none;
+    background: #ffffff;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* card layout */
+
+.astro-score-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+    padding: 20px;
+}
+
+/* user blocks */
+
+.astro-user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.astro-user img {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.astro-user span {
+    margin-top: 6px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* center score area */
+
+.astro-score-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* score button */
+
+.astro-score-btn {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+
+    border: none;
+    border-radius: 40px;
+
+    padding: 10px 22px;
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.astro-score-btn:hover {
+    transform: scale(1.05);
+}
+
+/* upgrade text */
+
+.astro-upgrade-text {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #c0392b;
+    cursor: pointer;
+}
+
+/* system footer */
+
 .sys-message {
-    border-top: 1px solid #e9e9e9;
-    margin-top: 12px;
-    padding: 10px 14px;
+    border-top: 1px solid #eee;
+    padding: 10px;
     text-align: center;
     background: #fafafa;
-    border-radius: 0 0 12px 12px;
+
+    border-radius: 0 0 20px 20px;
 }
 
 .sys-message p {
     margin: 0;
     font-size: 12px;
-    opacity: 0.8;
-    color: #666;
-    line-height: 1.4;
+    color: #777;
 }
 
-/* Tablet */
+/* ===============================
+   RESPONSIVE
+=============================== */
+
 @media (max-width: 768px) {
-    .sys-message {
-        padding: 8px 10px;
+
+    .astro-score-body {
+        flex-direction: column;
     }
 
-    .sys-message p {
-        font-size: 13px;
+    .astro-score-btn {
+        width: 100%;
     }
+
 }
 
-/* Mobile */
 @media (max-width: 480px) {
-    .sys-message {
-        padding: 6px 8px;
+
+    .astro-user img {
+        width: 64px;
+        height: 64px;
     }
 
-    .sys-message p {
-        font-size: 12px;
+    .astro-score-btn {
+        font-size: 14px;
     }
+
 }
