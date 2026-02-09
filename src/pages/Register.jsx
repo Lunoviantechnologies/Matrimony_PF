@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { FaUser, FaUserFriends, FaMapMarkerAlt, FaBriefcase, FaGraduationCap, FaRing, FaBookOpen, FaUserCheck } from "react-icons/fa";
@@ -45,6 +45,7 @@ const initialValues = {
   createPassword: "",
   documentFile: null,
   role: "USER",
+  signupReferralCode: "",
 };
 
 /* -------------------------------------------------------------
@@ -641,7 +642,8 @@ const Register = () => {
       emailId: values.emailId,
       mobileNumber: values.mobileNumber,
       createPassword: values.createPassword,
-      role: values.role
+      role: values.role,
+      signupReferralCode: values.signupReferralCode || null,
     };
 
     const formData = new FormData();
@@ -720,6 +722,13 @@ const Register = () => {
           <>
             <div className="step-icon"><FaUserFriends /></div>
             <h2>This profile is for</h2>
+
+            {/* Optional referral code at registration */}
+            <Field
+              name="signupReferralCode"
+              className="form-input mt-3"
+              placeholder="Referral code (optional)"
+            />
 
             {/* PROFILE FOR OPTIONS */}
             <div className="option-group">
