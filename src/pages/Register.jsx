@@ -15,6 +15,7 @@ import { useEffect } from "react";
   const initialValues = {
     profileFor: "",
     gender: "",
+    referralCode: "",
     firstName: "",
     lastName: "",
     dobDay: "",
@@ -70,32 +71,76 @@ const validationSchemas = [
       }),
   }),
 
-  // STEP 2
-  Yup.object({
-    firstName: Yup.string()
-      .matches(/^[A-Za-z\s]+$/, "Only letters allowed")
-      .required("First name is Required"),
+// STEP 2
+Yup.object({
 
-    lastName: Yup.string()
-      .matches(/^[A-Za-z\s]+$/, "Only letters allowed")
-      .required("Last name is Required"),
+  firstName: Yup.string()
+    .matches(/^[A-Za-z\s]+$/, "Only letters allowed")
+    .required("First name is Required"),
 
-    age: Yup.number()
-      .typeError("Age must be a number")
-      .when(["dobDay", "dobMonth", "dobYear"], {
-        is: (day, month, year) => !day || !month || !year,
-        then: (schema) =>
-          schema
-            .required("Age is required")
-            .min(18, "Minimum age is 18")
-            .max(60, "Maximum age is 60"),
-        otherwise: (schema) => schema.notRequired(),
-      }),
+  lastName: Yup.string()
+    .matches(/^[A-Za-z\s]+$/, "Only letters allowed")
+    .required("Last name is Required"),
 
-    dobDay: Yup.number().nullable(),
-    dobMonth: Yup.number().nullable(),
-    dobYear: Yup.number().nullable(),
-  }),
+  dobDay: Yup.number().nullable().typeError("Invalid day"),
+  dobMonth: Yup.number().nullable().typeError("Invalid month"),
+  dobYear: Yup.number().nullable().typeError("Invalid year"),
+
+  age: Yup.number()
+    .nullable()
+    .test(
+      "dob-required",
+      "Please enter complete Date of Birth",
+      function (value) {
+
+        const { dobDay, dobMonth, dobYear } = this.parent;
+
+        // ❌ If age is typed but DOB is missing → block
+        if (value && (!dobDay || !dobMonth || !dobYear)) {
+          return false;
+        }
+
+        return true;
+      }
+    )
+    .test(
+      "valid-dob",
+      "Please enter a valid Date of Birth",
+      function () {
+
+        const { dobDay, dobMonth, dobYear } = this.parent;
+
+        if (!dobDay && !dobMonth && !dobYear) return false;
+
+        if (!dobDay || !dobMonth || !dobYear) return false;
+
+        const day = Number(dobDay);
+        const month = Number(dobMonth);
+        const year = Number(dobYear);
+
+        if (month < 1 || month > 12) return false;
+        if (day < 1 || day > 31) return false;
+        if (year < 1900 || year > new Date().getFullYear()) return false;
+
+        const dob = new Date(year, month - 1, day);
+
+        if (
+          dob.getFullYear() !== year ||
+          dob.getMonth() !== month - 1 ||
+          dob.getDate() !== day
+        ) return false;
+
+        const today = new Date();
+        let age = today.getFullYear() - year;
+        const m = today.getMonth() - (month - 1);
+
+        if (m < 0 || (m === 0 && today.getDate() < day)) age--;
+
+        return age >= 18 && age <= 60;
+      }
+    )
+}),
+
 
   // STEP 3
   Yup.object({
@@ -126,19 +171,15 @@ Yup.object({
   }),
 }),
 
-  // STEP 6  ✅ Education
+  // STEP 6  ✅ Career
   Yup.object({
     highestEducation: Yup.string().required("Education required"),
-  }),
-
-  // STEP 7  ✅ Career
-  Yup.object({
     sector: Yup.string().required("Required"),
     occupation: Yup.string().required("Required"),
     companyName: Yup.string().required("Required"),
   }),
 
-  // STEP 8  ✅ Contact
+  // STEP 7  ✅ Contact
   Yup.object({
     emailId: Yup.string().email("Invalid emailId").required("Email is Required"),
     mobileNumber: Yup.string()
@@ -154,7 +195,7 @@ Yup.object({
     documentFile: Yup.mixed().required("Document is required"),
   }),
 
-  // STEP 9
+  // STEP 8
   Yup.object({}),
 ];
 const calculateAge = (day, month, year) => {
@@ -554,7 +595,7 @@ const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
 
   const Register = () => {
     const [step, setStep] = useState(1);
-    const totalSteps = 9;
+    const totalSteps = 8;
     const [statesList, setStatesList] = useState([]);
     const [countriesList, setCountriesList] = useState([]);
     const [districtsList, setDistrictsList] = useState([]);
@@ -566,6 +607,7 @@ const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
+  const [initialReferral, setInitialReferral] = useState("");
   /* -------------------------------------------------------------
     NEXT STEP HANDLER
   ------------------------------------------------------------- */
@@ -605,6 +647,13 @@ const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
   };
 
   loadCountries();
+}, []);
+
+useEffect(() => {
+  const ref = localStorage.getItem("referralCode");
+  if (ref) {
+    setInitialReferral(ref);
+  }
 }, []);
 
   /* -------------------------------------------------------------
@@ -944,9 +993,8 @@ const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
 </Field>
 
 
-            <ErrorMessage name="dobDay" component="div" className="error-text" />
-            <ErrorMessage name="dobMonth" component="div" className="error-text" />
-            <ErrorMessage name="dobYear" component="div" className="error-text" />
+            <ErrorMessage name="age" component="div" className="error-text" />
+
           </>
         );
 
@@ -1015,25 +1063,23 @@ const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
                     <option key={sc} value={sc}>{sc}</option>
                   ))}
                 </Field>
-                <div>
-                        <input
-                      type="checkbox"
-                      checked={values.subCaste === "No particular caste"}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setFieldValue("subCaste", "No particular caste");
-                          setFieldValue("subCasteOther", "");
-                        } else {
-                          setFieldValue("subCaste", "");
-                        }
-                      }}
-                    />
-                    &nbsp; No particular caste
-
-
-
+              <div className="no-caste-row">
+                  <input
+                    className="checkbox"
+                    type="checkbox"
+                    checked={values.subCaste === "No particular caste"}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setFieldValue("subCaste", "No particular caste");
+                        setFieldValue("subCasteOther", "");
+                      } else {
+                        setFieldValue("subCaste", "");
+                      }
+                    }}
+                  />
+                  No particular caste
                 </div>
-
+                
               <ErrorMessage name="subCaste" component="div" className="error-text" />
 
               {/* Sub Community Other */}
@@ -1171,11 +1217,12 @@ const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
 )}
           </>
         )
+         /* ---------------------- STEP 5 ----------------------- */
            case 6:
         return (
           <>
             <div className="step-icon"><FaGraduationCap /></div>
-            <h2>Education</h2>
+            <h2>Education & Career Details</h2>
 
             <Field as="select" name="highestEducation" className="form-select">
               <option value={""} disabled>Select your higher Qualification</option>
@@ -1199,16 +1246,6 @@ const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
               <option value="ICWA">ICWA</option>
               <option value="PhD">PhD</option>
             </Field>
-
-          </>
-        );
-      /* ---------------------- STEP 6 ----------------------- */
-      case 7:
-        return (
-          <>
-            <div className="step-icon"><FaBriefcase /></div>
-            <h2>Career Details</h2>
-
             <Field as="select" name="sector" placeholder="Sector" className="form-select">
               <option value={""} disabled>Select your sector</option>
               <option value="Government">Government / PSU</option>
@@ -1239,11 +1276,12 @@ const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
               <option value={"₹ 20 to 30 Lakh yearly"}>₹ 20 to 30 Lakh yearly</option>
               <option value={"Above ₹ 30 Lakh yearly"}>Above ₹ 30 Lakh yearly</option>
             </Field>
+
           </>
         );
-
+     
       /* ---------------------- STEP 7 ----------------------- */
-      case 8:
+      case 7:
         return (
           <>
             <div className="step-icon"><FaUser /></div>
@@ -1339,7 +1377,7 @@ const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
         );
 
       /* ---------------------- STEP 8----------------------- */
-      case 9:
+      case 8:
         return (
           <>
             <div className="step-icon"><FaRing /></div>
@@ -1372,18 +1410,24 @@ const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
           ></div>
         </div>
 
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchemas[step - 1]}
-          onSubmit={handleSubmit}
-        >
+                  <Formik
+                  initialValues={{
+    ...initialValues,
+    referralCode: initialReferral
+  }}
+  enableReinitialize
+              validationSchema={validationSchemas[step - 1]}
+              validateOnChange={true}
+              validateOnBlur={true}
+              onSubmit={handleSubmit}
+            >
           {({ values, validateForm, setTouched, setFieldValue }) => (
             <Form className="fade-in">
 
               {renderStep(values, setFieldValue, setTouched)}
 
                 {/* NAVIGATION BUTTONS */}
-                <div className="nav-buttons d-flex justify-content-evenly" style={{ marginTop: 25 }}>
+                <div className="nav-buttons">
                   {step > 1 && (
                     <button type="button" className="back-btn" onClick={prevStep}>
                       Back

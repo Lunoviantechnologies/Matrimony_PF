@@ -197,6 +197,7 @@ const getDisplayName = (first, last) => {
     <div className="dashboard_body">
       {showReferBanner && referSummary && (
         <div
+        className="refer-banner"
           style={{
             background:
               "linear-gradient(90deg, rgba(254,249,195,1) 0%, rgba(254,243,199,1) 35%, rgba(255,255,255,1) 100%)",
@@ -373,7 +374,7 @@ const getDisplayName = (first, last) => {
           New Profile Matches
         </h2>
 
-        <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+        <div className="matchGrid">
           {
             filteredProfiles.length === 0 ? (
               <div className="no-profiles">
@@ -429,7 +430,7 @@ const getDisplayName = (first, last) => {
         style={{ background: "#fff", borderRadius: 15, padding: 24, marginBottom: 32, boxShadow: "0 1px 6px #ddd", }}>
         <h2 style={{ color: "#695019", marginBottom: 15 }}>Interest Requests</h2>
 
-        <div style={{ display: "flex", gap: 15, marginBottom: 20 }}>
+        <div   className="interest-tabs" style={{ display: "flex", gap: 15, marginBottom: 20 }}>
           <button onClick={() => { navigate('/dashboard/requests/received') }}
             style={{ fontWeight: "bold", color: "green", background: "#e8fff2", border: "none", padding: "10px 20px", borderRadius: 25, }}>
             New Requests <span style={{ backgroundColor: 'red', color: "white", borderRadius: '50%', padding: '2px 5px' }}>{receivedRequests.length}</span>
@@ -449,6 +450,7 @@ const getDisplayName = (first, last) => {
         {receivedWithImages.map((req) => (
           <div
             key={req.requestId}
+             className="request-row"
             style={{ display: "flex", alignItems: "center", marginBottom: 22, background: "#fff", padding: 10, borderRadius: 10, boxShadow: "0 1px 6px #ddd", }}
           >
             <div>

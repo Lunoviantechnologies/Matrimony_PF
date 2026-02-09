@@ -88,10 +88,15 @@
     margin-bottom: 32px;
     box-shadow: 0 1px 6px #ddd;
 }
-
+.matchGrid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px,1fr));
+  gap: 16px;
+}
 .matchSection_map {
-    width: 180px;
-    height: 220px;
+    width: 100%;
+    max-width: 200px;
+    aspect-ratio: 4 / 5;
     border-radius: 18px;
     overflow: hidden;
     position: relative;
@@ -125,3 +130,70 @@
     border-bottom: 1px solid #eee;
     padding-bottom: 15px;
 }
+@media (max-width: 768px){
+
+  .dashboard_body{
+    padding: 12px;
+  }
+
+  .matchSection{
+    padding: 16px;
+  }
+  .planSection,
+  .chatList{
+    padding: 16px;
+  }
+
+  /* request row */
+  .request-row{
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 10px;
+  }
+    .matchGrid{
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 160px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 8px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .matchSection_map{
+    scroll-snap-align: start;
+    max-width: unset;
+  }
+
+  .matchGrid::-webkit-scrollbar{
+    display: none;
+  }
+
+
+  .refer-banner{
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+
+}
+@media (min-width: 769px) and (max-width: 1024px){
+
+  .matchGrid{
+    grid-template-columns: repeat(auto-fill, minmax(180px,1fr));
+  }
+
+}
+.interest-tabs{
+  flex-wrap: wrap;
+}
+
+@media (max-width: 480px){
+
+  .interest-tabs button{
+    flex: 1 1 100%;
+    text-align: center;
+  }
+
+}
+
+

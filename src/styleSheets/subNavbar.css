@@ -1,0 +1,62 @@
+.sub_navbar {
+  background-color: #f8f9fa;
+  padding: 10px 0;
+  position: sticky;
+  top: 50px;
+  z-index: 1000;
+}
+
+/* container */
+.subnav_container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  align-items: center;
+}
+
+/* links */
+.subnav_link {
+  text-decoration: none;
+  text-align: center;
+  color: #025423;
+  font-weight: 600;
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.subnav_link.active {
+  border-bottom: 2px solid #04c451;
+  
+  color: #025423;
+}
+
+/* ---------------- MOBILE TAP VIEW ---------------- */
+@media (max-width: 768px) {
+
+  .subnav_container{
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+
+    gap: 12px;
+
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .subnav_container::-webkit-scrollbar{
+    display: none;
+  }
+
+  .subnav_link{
+    flex: 0 0 auto;
+    min-width: 62px;
+    padding: 4px 2px;
+    font-size: 11px;
+  }
+}

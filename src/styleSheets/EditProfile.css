@@ -255,7 +255,8 @@
 
 .box-header {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.02));
-  color: var(--red);
+   color:#d32f2f;
+  font-weight:700;
   padding: 12px 14px;
   font-weight: 700;
   display: flex;
@@ -281,33 +282,31 @@
 }
 
 /* Row style for two-column list - scoped to edit profile page to avoid overriding Bootstrap's .row globally */
-.edit-profile-page .row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid transparent;
+.edit-profile-page .row{
+  display:grid;
+  grid-template-columns: 180px 1fr;
+  gap:12px;
+  align-items:start;
+  padding:10px 0;
 }
 
-.label {
-  font-weight: 700;
-  color: #222;
-  width: 46%;
-  font-size: 14px;
+.label{
+  font-weight:700;
+  color:#222;
+  font-size:13px;
 }
 
-.value {
-  width: 54%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
+.value{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:12px;
 }
 
-.value-text {
-  text-align: right;
-  font-size: 14px;
-  color: #222;
+.value-text{
+  text-align:right;
+  font-size:13px;
+  color:#222;
 }
 
 .muted {
@@ -343,7 +342,10 @@
 .right-col {
   flex: 1;
 }
-
+.left-col .row,
+.right-col .row{
+  grid-template-columns: 150px 1fr;
+}
 .underlined-block {
   border-radius: 6px;
   background: #fff;
@@ -493,4 +495,45 @@
 
 .small-box .box-body {
   padding: 12px;
+}
+@media (max-width:576px){
+
+  /* keep label and value in same row */
+  .edit-profile-page .row{
+    grid-template-columns: 120px 1fr;
+    gap:10px;
+  }
+
+  .left-col .row,
+  .right-col .row{
+    grid-template-columns: 120px 1fr;
+  }
+
+  .value{
+    justify-content:flex-end;
+  }
+
+  .value-text{
+    text-align:right;
+  }
+}
+@media (max-width: 880px){
+
+  /* make cards use full screen width */
+  .page-content{
+    max-width: 100%;
+    margin: 0;
+    padding: 10px;
+  }
+
+  .boxed,
+  .photo-card{
+    width: 100%;
+  }
+
+  .right-column,
+  .left-column{
+    width: 100%;
+  }
+
 }

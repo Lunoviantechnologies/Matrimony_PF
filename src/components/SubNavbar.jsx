@@ -2,11 +2,12 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { FiGrid, FiUser, FiEdit, FiInbox, FiHeart, FiMessageSquare } from "react-icons/fi";
 import { MdPersonSearch } from "react-icons/md";
+import "../styleSheets/subNavbar.css";
 
 const SubNavbar = () => {
     return (
         <div className="sticky-top sub_navbar">
-            <div className="container d-flex justify-content-around">
+           <div className="container-fluid subnav_container">
                 <NavLink className="subnav_link" to="" end>
                     <FiGrid size={18} color="#6B7280"/> Dashboard
                 </NavLink>
