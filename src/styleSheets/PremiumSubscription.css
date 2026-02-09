@@ -957,7 +957,7 @@
 @media (max-width: 768px) {
     .plans-section {
         padding: 20px 15px;
-         overflow-x: auto !important;
+        overflow-x: auto !important;
     }
 
     .plans-container-compact {
@@ -1099,166 +1099,266 @@
     color: #b71c1c;
     line-height: 1.4;
 }
+
 /* ==============================
    MOBILE + TABLET VIEW FIX
    (like app screen, no sideways scroll)
    ============================== */
 
-@media (max-width: 1024px){
+@media (max-width: 1024px) {
 
-  /* stop huge horizontal layout */
-  .plans-section{
-    overflow-x: hidden;
-  }
+    /* stop huge horizontal layout */
+    .plans-section {
+        overflow-x: hidden;
+    }
 
-  .plans-container-compact{
-    min-width: 0;
-    width: 100%;
-    flex-wrap: wrap;              /* stack cards */
-    justify-content: center;
-  }
+    .plans-container-compact {
+        min-width: 0;
+        width: 100%;
+        flex-wrap: wrap;
+        /* stack cards */
+        justify-content: center;
+    }
 
-  .plan-card-compact{
-    min-width: 260px;
-    max-width: 320px;
-    width: 100%;
-  }
+    .plan-card-compact {
+        min-width: 260px;
+        max-width: 320px;
+        width: 100%;
+    }
 
 }
 
 /* phone layout */
-@media (max-width: 600px){
-  .plans-section{
-    overflow-x: auto !important;
-  }
+@media (max-width: 600px) {
+    .plans-section {
+        overflow-x: auto !important;
+    }
 
-  .plans-container-compact{
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
+    .plans-container-compact {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
 
-    min-width: 0 !important;
-    width: 100% !important;
+        min-width: 0 !important;
+        width: 100% !important;
 
-    justify-content: flex-start !important;
+        justify-content: flex-start !important;
 
-    overflow-x: auto !important;
-    scroll-snap-type: x mandatory;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory;
 
-    gap: 14px;
-    padding-bottom: 10px;
+        gap: 14px;
+        padding-bottom: 10px;
 
-    -webkit-overflow-scrolling: touch;
-  }
+        -webkit-overflow-scrolling: touch;
+    }
 
-  .plans-container-compact::-webkit-scrollbar{
-    display: none;
-  }
+    .plans-container-compact::-webkit-scrollbar {
+        display: none;
+    }
 
-  .plan-card-compact{
-    flex: 0 0 88% !important;
-    min-width: 88% !important;
-    max-width: 88% !important;
+    .plan-card-compact {
+        flex: 0 0 88% !important;
+        min-width: 88% !important;
+        max-width: 88% !important;
 
-    scroll-snap-align: center;
-  }
-
-
-
-  .plan-card-compact{
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .banner-section h1{
-    font-size: 18px;
-  }
-
-  .banner-section p{
-    font-size: 13px;
-  }
-
-  .logo{
-    font-size: 26px;
-  }
-
-  .v-logo{
-    width: 60px;
-    height: 60px;
-  }
+        scroll-snap-align: center;
+    }
 
 
-  .subscription-header{
-    padding: 8px 12px;
-  }
- .vip-section-compact{
-    padding-top: 75px;   /* space for badge */
-    padding-left: 20px;
-    text-size-adjust: 30px;
-    padding-right: 20px;
-  }
 
-  .vip-badge-compact{
-    position: absolute;
-    top: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 3;
-  }
+    .plan-card-compact {
+        width: 100%;
+        max-width: 100%;
+    }
 
-  .vip-section-compact h2{
-    position: relative;
-    z-index: 2;
-  }
+    .banner-section h1 {
+        font-size: 18px;
+    }
+
+    .banner-section p {
+        font-size: 13px;
+    }
+
+    .logo {
+        font-size: 26px;
+    }
+
+    .v-logo {
+        width: 60px;
+        height: 60px;
+    }
+
+
+    .subscription-header {
+        padding: 8px 12px;
+    }
+
+    .vip-section-compact {
+        padding-top: 75px;
+        /* space for badge */
+        padding-left: 20px;
+        text-size-adjust: 30px;
+        padding-right: 20px;
+    }
+
+    .vip-badge-compact {
+        position: absolute;
+        top: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 3;
+    }
+
+    .vip-section-compact h2 {
+        position: relative;
+        z-index: 2;
+    }
 }
+
 /* your existing last rule here ... */
 
-@media (max-width:600px){
-  .vip-section-compact h2{
-    position: relative;
-    z-index: 2;
-  }
+@media (max-width:600px) {
+    .vip-section-compact h2 {
+        position: relative;
+        z-index: 2;
+    }
 }
 
 /* 👇 PASTE THIS AFTER THAT — LAST PART OF FILE */
 
 /* FORCE SLIDER ON LAPTOP + DESKTOP ALSO */
 
-.plans-section{
-  overflow-x: auto !important;
+.plans-section {
+    overflow-x: auto !important;
 }
 
-.plans-container-compact{
-  display: flex !important;
-  flex-wrap: nowrap !important;
-  justify-content: flex-start !important;
+.plans-container-compact {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
 
-  width: 100% !important;
-  min-width: 0 !important;
+    width: 100% !important;
+    min-width: 0 !important;
 
-  overflow-x: auto !important;
-  scroll-snap-type: x mandatory;
-  gap: 16px;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory;
+    gap: 16px;
 
-  -webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch;
 }
 
-.plans-container-compact::-webkit-scrollbar{
-  display: none;
+.plans-container-compact::-webkit-scrollbar {
+    display: none;
 }
 
-.plan-card-compact{
-  flex: 0 0 320px !important;
-  min-width: 320px !important;
-  max-width: 320px !important;
-  scroll-snap-align: center;
+.plan-card-compact {
+    flex: 0 0 320px !important;
+    min-width: 320px !important;
+    max-width: 320px !important;
+    scroll-snap-align: center;
 }
 
-@media (max-width:600px){
-  .plan-card-compact{
-    flex: 0 0 88% !important;
-    min-width: 88% !important;
-    max-width: 88% !important;
-  }
+@media (max-width:600px) {
+    .plan-card-compact {
+        flex: 0 0 88% !important;
+        min-width: 88% !important;
+        max-width: 88% !important;
+    }
 }
 
+/* =======================================================
+   FINAL RESPONSIVE PLAN CARD SLIDER + WIDTH CONTROL
+   (desktop + tablet + mobile — premium layout)
+======================================================= */
+
+/* Slider container — works everywhere */
+
+.plans-section {
+    overflow-x: auto !important;
+}
+
+.plans-container-compact {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+
+    width: 100% !important;
+    min-width: 0 !important;
+
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory;
+
+    gap: 16px;
+    padding-bottom: 10px;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+.plans-container-compact::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* ================================
+   DESKTOP — slim premium cards
+================================ */
+
+@media (min-width: 1200px) {
+
+    .plan-card-compact {
+        flex: 0 0 250px !important;
+        min-width: 250px !important;
+        max-width: 250px !important;
+        scroll-snap-align: center;
+    }
+
+}
+
+
+/* ================================
+   LAPTOP — balanced cards
+================================ */
+
+@media (max-width: 1199px) and (min-width: 900px) {
+
+    .plan-card-compact {
+        flex: 0 0 240px !important;
+        min-width: 240px !important;
+        max-width: 240px !important;
+        scroll-snap-align: center;
+    }
+
+}
+
+
+/* ================================
+   TABLET — compact cards
+================================ */
+
+@media (max-width: 899px) and (min-width: 601px) {
+
+    .plan-card-compact {
+        flex: 0 0 220px !important;
+        min-width: 220px !important;
+        max-width: 220px !important;
+        scroll-snap-align: center;
+    }
+
+}
+
+
+/* ================================
+   MOBILE — swipe cards
+================================ */
+
+@media (max-width: 600px) {
+
+    .plan-card-compact {
+        flex: 0 0 88% !important;
+        min-width: 88% !important;
+        max-width: 88% !important;
+        scroll-snap-align: center;
+    }
+
+}
