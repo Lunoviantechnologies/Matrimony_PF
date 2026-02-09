@@ -680,7 +680,6 @@ const res = await api.get(
         onClick={() => {
           setShowChat(false);
           setSelectedUser(null);
-          navigate(-1);;
         }}
       >
         ←
