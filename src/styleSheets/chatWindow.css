@@ -542,7 +542,7 @@
 @media (max-width: 600px){
 
   .chatpage-container{
-    flex-direction: row;      /* IMPORTANT */
+    /* flex-direction: row;      IMPORTANT */
     height: 80vh;
   }
 
@@ -557,6 +557,50 @@
 
   .chat-bubble{
     max-width: 70%;  /* slightly wider on small screens */
+  }
+
+}
+/* ==============================
+   WhatsApp style mobile layout
+   ============================== */
+
+.mobile-back-btn{
+  display: none;
+  background: none;
+  border: none;
+  font-size: 22px;
+  margin-right: 6px;
+  cursor: pointer;
+}
+
+/* mobile & tablet */
+@media (max-width: 768px){
+
+  .chatpage-container{
+    flex-direction: row;
+    height: 100vh;
+  }
+
+  /* hide list when chat is open */
+  .chatpage-container.show-chat .chatlist-container{
+    display: none;
+  }
+
+  /* hide chat when list is open */
+  .chatpage-container:not(.show-chat) .chatwindow-container{
+    display: none;
+  }
+
+  .chatlist-container,
+  .chatwindow-container{
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .mobile-back-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
 }

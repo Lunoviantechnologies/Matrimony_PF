@@ -38,6 +38,7 @@ const ChatWindow = () => {
   const [reportReason, setReportReason] = useState("");
   const [reportCategory, setReportCategory] = useState("");
   const [isReported, setIsReported] = useState(false);
+  const [showChat, setShowChat] = useState(false);
 
   const messagesEndRef = useRef(null);
   const stompClientRef = useRef(null);
@@ -62,23 +63,29 @@ const ChatWindow = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+  useEffect(() => {
+  if (userId && selectedUser) {
+    setShowChat(true);
+  }
+}, [userId, selectedUser]);
 
   useEffect(() => {
     activeChatUserRef.current = Number(userId);
   }, [userId]);
 
   // reset pagination
-  useEffect(() => {
-    if (!myId || !userId) return;
+ useEffect(() => {
+  const uid = Number(userId);
 
-    setMessages([]);
-    setPage(0);
-    setHasMore(true);
-    isInitialLoadRef.current = true;
+  if (!myId || !userId || isNaN(uid)) return;
 
-    loadMessages(0, true);
-  }, [userId, myId]);
+  setMessages([]);
+  setPage(0);
+  setHasMore(true);
+  isInitialLoadRef.current = true;
 
+  loadMessages(0, true);
+}, [userId, myId]);
   useEffect(() => {
     if (role[0].toUpperCase() === "USER") {
       dispatch(fetchUserProfiles());
@@ -180,7 +187,12 @@ const ChatWindow = () => {
     setLoadingHistory(true);
 
     try {
-      const res = await api.get(`/chat/conversation/${myId}/${Number(userId)}?page=${pageNo}&size=20`);
+      const uid = Number(userId);
+if (isNaN(uid)) return;
+
+const res = await api.get(
+  `/chat/conversation/${myId}/${uid}?page=${pageNo}&size=20`
+);
       // console.log("chat data : ", res);
       // 🔁 Backend gives DESC → convert to ASC
       const newMessages = (res.data.content || []).reverse(); // ✅ ASC order
@@ -591,7 +603,7 @@ const ChatWindow = () => {
   }, [userId]);
 
   return (
-    <div className="chatpage-container">
+    <div className={`chatpage-container ${showChat ? "show-chat" : ""}`}>
       {/* LEFT PANEL */}
       <div className="chatlist-container">
         <div className="chatlist-header d-flex justify-content-center align-items-center">
@@ -633,9 +645,10 @@ const ChatWindow = () => {
                     ? "active-contact"
                     : ""
                     }`}
-                  onClick={() =>
-                    navigate(`/dashboard/messages/${otherId}`)
-                  }
+                 onClick={() => {
+  setShowChat(true);
+  navigate(`/dashboard/messages/${otherId}`);
+}}
                 >
                   <img
                     src={getUserImageById(otherId)}
@@ -658,39 +671,53 @@ const ChatWindow = () => {
 
       {/* RIGHT PANEL */}
       <div className="chatwindow-container">
-        {selectedUser ? (
-          <div className="chatwindow-header">
-            <div className="chatwindow-user">
-              <img
-                src={getUserImageById(
-                  Number(selectedUser.senderId) === Number(myId) ? selectedUser.receiverId : selectedUser.senderId
-                )}
-                alt="User"
-                className="chatwindow-avatar"
-                onError={(e) => (e.target.src = "/placeholder_boy.png")}
-              />
+  {selectedUser ? (
+    <div className="chatwindow-header">
 
-              <div>
-                <h4>
-                  {Number(selectedUser.senderId) === Number(myId)
-                    ? selectedUser.receiverName
-                    : selectedUser.senderName}
-                </h4>
-                <span
-                  className={`active-status ${onlineStatus ? "online" : "offline"}`}
-                >
-                  {onlineStatus ? "Online" : "Offline"}
-                </span>
-                {/* <span className="active-status">Active now</span> */}
-              </div>
-            </div>
+      {/* ✅ Mobile back button (WhatsApp style) */}
+      <button
+        className="mobile-back-btn"
+        onClick={() => {
+          setShowChat(false);
+          setSelectedUser(null);
+          navigate(-1);;
+        }}
+      >
+        ←
+      </button>
 
-            <div className="chatwindow-menu" ref={menuRef}>
-              <TfiMenuAlt
-                size={25}
-                className="menu-icon"
-                onClick={() => setOpen(!open)}
-              />
+      <div className="chatwindow-user">
+        <img
+          src={getUserImageById(
+            Number(selectedUser.senderId) === Number(myId)
+              ? selectedUser.receiverId
+              : selectedUser.senderId
+          )}
+          alt="User"
+          className="chatwindow-avatar"
+          onError={(e) => (e.target.src = "/placeholder_boy.png")}
+        />
+
+        <div>
+          <h4>
+            {Number(selectedUser.senderId) === Number(myId)
+              ? selectedUser.receiverName
+              : selectedUser.senderName}
+          </h4>
+          <span
+            className={`active-status ${onlineStatus ? "online" : "offline"}`}
+          >
+            {onlineStatus ? "Online" : "Offline"}
+          </span>
+        </div>
+      </div>
+
+      <div className="chatwindow-menu" ref={menuRef}>
+        <TfiMenuAlt
+          size={25}
+          className="menu-icon"
+          onClick={() => setOpen(!open)}
+        />
 
               {open && (
                 <div className="chat-dropdown">

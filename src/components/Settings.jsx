@@ -52,18 +52,49 @@ export default function Settings() {
       </Typography>
 
       {/* 🔹 BUTTON TABS */}
-      <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: 3, }}>
+      <Box
+  sx={{
+    display: "flex",
+    gap: 1.2,
+    mb: 3,
+
+    /* mobile & tablet → horizontal slider */
+    overflowX: { xs: "auto", sm: "auto", md: "visible" },
+    flexWrap: { xs: "nowrap", sm: "nowrap", md: "wrap" },
+
+    WebkitOverflowScrolling: "touch",
+
+    "&::-webkit-scrollbar": {
+      display: "none",
+    },
+  }}
+>
         {tabs.map((t) => (
           <Button
             key={t.index}
             onClick={() => setTab(t.index)}
             variant={tab === t.index ? "contained" : "outlined"}
-            sx={{
-              textTransform: "none", fontWeight: 600, borderRadius: "12px", px: 3, py: 1,
-              backgroundColor: tab === t.index ? "#0a6817ff" : "transparent",
-              color: tab === t.index ? "#efeaeaff" : "#089226ff", borderColor: "#0a6817ff",
-              "&:hover": { backgroundColor: tab === t.index ? "#089226ff" : "rgba(25, 118, 210, 0.08)", },
-            }}
+         sx={{
+  textTransform: "none",
+  fontWeight: 600,
+  borderRadius: "12px",
+  px: 2.5,
+  py: 1,
+
+  whiteSpace: "nowrap",         // 🔥 important
+  flexShrink: 0,                // 🔥 important
+
+  minWidth: { xs: "auto", md: 120 },
+
+  backgroundColor: tab === t.index ? "#0a6817ff" : "transparent",
+  color: tab === t.index ? "#efeaeaff" : "#089226ff",
+  borderColor: "#0a6817ff",
+
+  "&:hover": {
+    backgroundColor:
+      tab === t.index ? "#089226ff" : "rgba(25, 118, 210, 0.08)",
+  },
+}}
           >
             {t.label}
           </Button>
