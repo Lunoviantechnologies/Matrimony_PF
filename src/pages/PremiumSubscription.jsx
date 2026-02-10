@@ -302,23 +302,23 @@ function PremiumSubscription() {
                     <div className="plan-below-continue">
 
                       <div className="plan-info-line">
-                        <FiPhone /> Contacts: {renderFeatureValue(plan.contacts)} / month
+                        <FiPhone /> Contacts: {renderFeatureValue(plan.planFeature.contacts)} / month
                       </div>
 
                       <div className="plan-info-line">
-                        <BsChatDots /> Chat: {renderFeatureValue(plan.chat)}
+                        <BsChatDots /> Chat: {renderFeatureValue(plan.planFeature.chat)}
                       </div>
 
                       <div className="plan-info-line">
-                        <GiCrystalBall /> Astro Support: {renderFeatureValue(plan.astroSupport)}
+                        <GiCrystalBall /> Astro Support: {renderFeatureValue(plan.planFeature.astroSupport)}
                       </div>
 
                       <div className="plan-info-line">
-                        <FaUserTie /> Relationship Manager: {renderFeatureValue(plan.relationshipManager)}
+                        <FaUserTie /> Relationship Manager: {renderFeatureValue(plan.planFeature.relationshipManager)}
                       </div>
 
                       <div className="plan-benefit-text">
-                        <FaStar /> {renderFeatureValue(plan.benefit)}
+                        <FaStar /> {renderFeatureValue(plan.planFeature.benefit)}
                       </div>
 
                       <div className="plan-warning-text">

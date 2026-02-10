@@ -190,12 +190,18 @@ export default function EditProfile() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const imageUrl = URL.createObjectURL(file);
+    const MAX_SIZE = 50 * 1024; // 50 KB
 
+    if (file.size > MAX_SIZE) {
+      toast.error("Photo size must not exceed 50 KB. Please upload a smaller image.");
+      e.target.value = "";
+      return;
+    }
+
+    const imageUrl = URL.createObjectURL(file);
     setSelectedImage(imageUrl);
     setCropOpen(true);
   };
-
 
   const uploadPhoto = async (file) => {
     if (!file || !id) return;
@@ -318,12 +324,19 @@ export default function EditProfile() {
   const prevPhoto = () => setActivePhotoIndex(i => i === 0 ? PHOTO_SLOTS.length - 1 : i - 1);
 
   const handlePhotoUpload = async (slot, file) => {
+    const MAX_SIZE = 50 * 1024; // 50 KB
+
+    if (file.size > MAX_SIZE) {
+      toast.error("Photo size must not exceed 50 KB. Please upload a smaller image.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("file", file);
 
     await api.put(`/profile-photos/${slot}/${id}`, formData);
     dispatch(fetchMyProfile(id));
-    toast.success("Photo updated success");
+    toast.success("Photo updated successfully");
   };
 
   const handleDeletePhoto = async (slot) => {

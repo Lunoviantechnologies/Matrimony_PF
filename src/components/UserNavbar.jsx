@@ -55,7 +55,7 @@ const UserNavbar = ({closeMenu }) => {
 
     const handleLogout = () => {
         dispatch(logout());
-        toast.success("Logged out successfully!");
+        // toast.success("Logged out successfully!");
         navigate("/");
     };
 
