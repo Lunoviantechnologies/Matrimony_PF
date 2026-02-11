@@ -4,10 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
-import { FaCrown } from "react-icons/fa";
+import { FaCrown, FaUser } from "react-icons/fa";
 import { RiSecurePaymentFill } from "react-icons/ri";
 import api from "../api/axiosInstance";
 import DashboardAds from "./DashboardAds";
+import { FaGift } from "react-icons/fa6";
 
 const Dashboard = () => {
 
@@ -196,179 +197,82 @@ const Dashboard = () => {
     });
   }, [receivedRequests, profiles, id]);
 
+  const isRecentlyActive = (lastActive) => {
+    if (!lastActive) return false;
+
+    const last = new Date(lastActive.replace(" ", "T"));
+    const now = new Date();
+
+    const diffMinutes = (now - last) / 1000 / 60;
+
+    return diffMinutes <= 5; // change threshold if needed
+  };
+
   return (
     <div className="dashboard_body">
       {showReferBanner && referSummary && (
-        <div
-        className="refer-banner"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(254,249,195,1) 0%, rgba(254,243,199,1) 35%, rgba(255,255,255,1) 100%)",
-            borderRadius: 18,
-            padding: "18px 22px",
-            marginBottom: 22,
-            boxShadow: "0 10px 25px rgba(0,0,0,0.06)",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: 18,
-            border: "1px solid #fde68a",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div
-              style={{
-                width: 44,
-                height: 44,
-                borderRadius: "50%",
-                background:
-                  "radial-gradient(circle at 30% 30%, #facc15, #eab308)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 6px 14px rgba(234,179,8,0.45)",
-              }}
-            >
-              <span style={{ fontSize: 24 }}>🎁</span>
+        <div className="refer-banner">
+          <div className="refer-left">
+            <div className="refer-icon">
+              <FaGift />
             </div>
-            <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <h3
-                  style={{
-                    margin: 0,
-                    color: "#78350f",
-                    fontSize: 18,
-                    fontWeight: 800,
-                  }}
-                >
-                  Refer &amp; Earn
-                </h3>
-                <span
-                  style={{
-                    fontSize: 11,
-                    padding: "3px 8px",
-                    borderRadius: 999,
-                    backgroundColor: "#22c55e",
-                    color: "#fefce8",
-                    fontWeight: 700,
-                    letterSpacing: 0.3,
-                  }}
-                >
-                  NEW
-                </span>
+
+            <div className="refer-content">
+              <div className="refer-title-row">
+                <h3>Refer & Earn</h3>
+                <span className="refer-badge">NEW</span>
               </div>
-              <p
-                style={{
-                  margin: "4px 0 6px",
-                  color: "#7c2d12",
-                  fontSize: 13,
-                }}
-              >
-                Invite 2 friends and get{" "}
-                <b style={{ fontWeight: 800 }}>₹100 instant reward</b> on your
-                next upgrade.
+
+              <p>
+                Invite 2 friends and get <b>₹100 instant reward</b> on your next upgrade.
               </p>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  marginTop: 4,
-                }}
-              >
-                <div
-                  style={{
-                    flex: 1,
-                    height: 8,
-                    borderRadius: 999,
-                    backgroundColor: "#fef9c3",
-                    overflow: "hidden",
-                    border: "1px solid #facc15",
-                  }}
-                >
+
+              <div className="refer-progress-row">
+                <div className="refer-progress-bar">
                   <div
+                    className="refer-progress-fill"
                     style={{
                       width: `${(referSummary.completedReferrals /
-                          referSummary.totalReferralsNeeded) *
+                        referSummary.totalReferralsNeeded) *
                         100
                         }%`,
-                      height: "100%",
-                      background:
-                        "linear-gradient(90deg,#22c55e,#16a34a,#15803d)",
                     }}
                   />
                 </div>
-                <span
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 700,
-                    color: "#78350f",
-                    minWidth: 60,
-                    textAlign: "right",
-                  }}
-                >
+
+                <span className="refer-progress-text">
                   {referSummary.completedReferrals}/
                   {referSummary.totalReferralsNeeded} done
                 </span>
               </div>
             </div>
           </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-end",
-              gap: 6,
-              minWidth: 150,
-            }}
-          >
+
+          <div className="refer-actions">
             <button
+              className="refer-primary-btn"
               onClick={() => {
                 setShowReferBanner(false);
                 navigate("/dashboard/settings?tab=refer");
               }}
-              style={{
-                background:
-                  "linear-gradient(90deg,#166534,#16a34a,#22c55e)",
-                color: "#fefce8",
-                border: "none",
-                padding: "9px 20px",
-                borderRadius: 999,
-                fontWeight: 800,
-                cursor: "pointer",
-                fontSize: 13,
-                boxShadow: "0 8px 18px rgba(21,128,61,0.45)",
-                whiteSpace: "nowrap",
-              }}
             >
               Invite Now
             </button>
+
             <button
+              className="refer-secondary-btn"
               onClick={() => setShowReferBanner(false)}
-              style={{
-                background: "transparent",
-                color: "#7c6f42",
-                border: "none",
-                cursor: "pointer",
-                fontSize: 12,
-                textDecoration: "underline",
-              }}
             >
               Maybe later
             </button>
-            <span
-              style={{
-                fontSize: 11,
-                color: "#854d0e",
-                marginTop: 2,
-              }}
-            >
-              Reward balance:{" "}
-              <b>₹{referSummary.rewardBalance ?? 0}</b>
+
+            <span className="refer-balance">
+              Reward balance: <b>₹{referSummary.rewardBalance ?? 0}</b>
             </span>
           </div>
         </div>
       )}
+
       {/* ====== Matches Section ====== */}
 
       <section className="matchSection">
@@ -398,11 +302,13 @@ const Dashboard = () => {
                     draggable={false}
                     onContextMenu={(e) => e.preventDefault()}
                   />
-                  {!isPremiumActive && (
-                    <div className="premium-overlay" onClick={() => navigate("/dashboard/premium")}>
-                      🔒 Upgrade to Premium
-                    </div>
-                  )}
+                  <div className="premium-badge">
+                    {i.premium ? (
+                      <span className="premium-icon"><FaCrown /></span>
+                    ) : (
+                      <span className="free-icon"><FaUser /> free</span>
+                    )}
+                  </div>
                   <div
                     style={{ position: "absolute", bottom: 15, left: 0, right: 0, textAlign: "center", color: "#fff", }}>
                     <div style={{ fontWeight: "bold", fontSize: 18, color: "#f7f6f6" }}>
@@ -411,12 +317,7 @@ const Dashboard = () => {
                     <div style={{ fontSize: 14 }}>{i.city} • {i.age} Years old</div>
                   </div>
                   {/* Online Indicator */}
-                  <div
-                    style={{
-                      position: "absolute", top: 10, right: 10, width: 14, height: 14, borderRadius: "50%", background: "#2ECC71",
-                      border: "2px solid #fff",
-                    }}
-                  ></div>
+                  <div className={`status-dot ${isRecentlyActive(i.lastActive) ? "online" : "offline"}`} />
                 </div>
               ))
             )
@@ -432,7 +333,7 @@ const Dashboard = () => {
         style={{ background: "#fff", borderRadius: 15, padding: 24, marginBottom: 32, boxShadow: "0 1px 6px #ddd", }}>
         <h2 style={{ color: "#695019", marginBottom: 15 }}>Interest Requests</h2>
 
-        <div   className="interest-tabs" style={{ display: "flex", gap: 15, marginBottom: 20 }}>
+        <div className="interest-tabs" style={{ display: "flex", gap: 15, marginBottom: 20 }}>
           <button onClick={() => { navigate('/dashboard/requests/received') }}
             style={{ fontWeight: "bold", color: "green", background: "#e8fff2", border: "none", padding: "10px 20px", borderRadius: 25, }}>
             New Requests <span style={{ backgroundColor: 'red', color: "white", borderRadius: '50%', padding: '2px 5px' }}>{receivedRequests.length}</span>
@@ -450,38 +351,37 @@ const Dashboard = () => {
         </div>
 
         {receivedWithImages.map((req) => (
-          <div
-            key={req.requestId}
-             className="request-row"
-            style={{ display: "flex", alignItems: "center", marginBottom: 22, background: "#fff", padding: 10, borderRadius: 10, boxShadow: "0 1px 6px #ddd", }}
-          >
-            <div>
+          <div key={req.requestId} className="request-row">
+            <div className="request-left">
               <img
                 src={req.image}
                 alt={req.senderName}
                 className={`request-img ${req?.hideProfilePhoto ? "requestblur-image" : ""}`}
-                style={{ width: 110, height: 90, borderRadius: 15, marginRight: 22, objectFit: "cover", }}
                 onError={(e) => {
-                  e.target.src = req.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+                  e.target.src =
+                    req.gender === "Female"
+                      ? "/placeholder_girl.png"
+                      : "/placeholder_boy.png";
                 }}
                 draggable={false}
                 onContextMenu={(e) => e.preventDefault()}
               />
-            </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: "bold", fontSize: 20 }}>
-                {isPremiumActive ? req.senderName : maskName(req.senderName)}
+
+              <div className="request-info">
+                <div className="request-name">
+                  {isPremiumActive ? req.senderName : maskName(req.senderName)}
+                </div>
+
+                <div className="request-actions">
+                  <button className="accept-btn" onClick={() => handleAccept(req.requestId)}>
+                    Accept
+                  </button>
+
+                  <button className="deny-btn" onClick={() => handleReject(req.requestId)}>
+                    Deny
+                  </button>
+                </div>
               </div>
-            </div>
-            <div>
-              <button onClick={() => { handleAccept(req.requestId) }}
-                style={{ marginRight: 8, background: "#117A65", color: "#fff", border: "none", borderRadius: 8, padding: "7px 18px", }}>
-                Accept
-              </button>
-              <button onClick={() => { handleReject(req.requestId) }}
-                style={{ background: "#F25C5C", color: "#fff", border: "none", borderRadius: 8, padding: "7px 18px", }}>
-                Deny
-              </button>
             </div>
           </div>
         ))}

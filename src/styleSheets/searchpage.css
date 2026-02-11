@@ -4,6 +4,12 @@
 
 .search-page {
     min-height: 100vh;
+
+    /* allow grid to breathe */
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+
     padding: 24px clamp(16px, 4vw, 60px);
 }
 
@@ -31,16 +37,14 @@
 
 
 /* ===============================
-   CARD GRID — DESKTOP ENGINE
+   CARD GRID — TRUE 4 COLUMN
 =============================== */
-
 .profile-cards-wrapper {
     display: grid;
     gap: 20px;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 340px));
-    justify-content: center;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    width: 100%;
 }
-
 
 /* ===============================
    PROFILE CARD
@@ -48,12 +52,15 @@
 
 .profile-card {
     background: white;
-    max-width: 340px;
     border-radius: 14px;
     overflow: hidden;
+
     display: flex;
     flex-direction: column;
-    max-width: 420px;
+
+    width: 100%;
+    min-width: 0;
+
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -84,7 +91,6 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    /* prevents cropping */
 }
 
 
@@ -170,30 +176,21 @@
 
 
 /* ===============================
-   TABLET VIEW
+   RESPONSIVE BREAKPOINTS
 =============================== */
 
-@media (max-width: 900px) {
-
+/* Tablet */
+@media (max-width: 1100px) {
     .profile-cards-wrapper {
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .image-box {
         height: 180px;
     }
-
-    .profile-details .name {
-        font-size: 18px;
-    }
-
 }
 
-
-/* ===============================
-   MOBILE VIEW
-=============================== */
-
+/* Mobile */
 @media (max-width: 600px) {
 
     .search-page {
@@ -215,22 +212,12 @@
     .btn {
         width: 100%;
     }
-
 }
 
-
-/* ===============================
-   EXTRA SMALL DEVICES
-=============================== */
-
+/* Extra small */
 @media (max-width: 380px) {
-
-    .image-box {
-        height: 170px;
-    }
 
     .profile-details .name {
         font-size: 16px;
     }
-
 }

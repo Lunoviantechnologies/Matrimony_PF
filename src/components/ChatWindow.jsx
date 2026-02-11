@@ -39,6 +39,7 @@ const ChatWindow = () => {
   const [reportCategory, setReportCategory] = useState("");
   const [isReported, setIsReported] = useState(false);
   const [showChat, setShowChat] = useState(false);
+  const [freeMessageSent, setFreeMessageSent] = useState(false);
 
   const messagesEndRef = useRef(null);
   const stompClientRef = useRef(null);
@@ -64,28 +65,26 @@ const ChatWindow = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   useEffect(() => {
-  if (userId && selectedUser) {
-    setShowChat(true);
-  }
-}, [userId, selectedUser]);
+    setShowChat(!!selectedUser);
+  }, [selectedUser]);
 
   useEffect(() => {
     activeChatUserRef.current = Number(userId);
   }, [userId]);
 
   // reset pagination
- useEffect(() => {
-  const uid = Number(userId);
+  useEffect(() => {
+    const uid = Number(userId);
 
-  if (!myId || !userId || isNaN(uid)) return;
+    if (!myId || !userId || isNaN(uid)) return;
 
-  setMessages([]);
-  setPage(0);
-  setHasMore(true);
-  isInitialLoadRef.current = true;
+    setMessages([]);
+    setPage(0);
+    setHasMore(true);
+    isInitialLoadRef.current = true;
 
-  loadMessages(0, true);
-}, [userId, myId]);
+    loadMessages(0, true);
+  }, [userId, myId]);
   useEffect(() => {
     if (role[0].toUpperCase() === "USER") {
       dispatch(fetchUserProfiles());
@@ -149,29 +148,24 @@ const ChatWindow = () => {
         const merged = [...received.data, ...sent.data];
         setAcceptedList(merged);
 
-        if (merged.length > 0 && (!userId || isNaN(Number(userId)))) {
-          const first = merged[0];
-          const otherId =
-            Number(first.senderId) === Number(myId)
-              ? first.receiverId
-              : first.senderId;
+        // ✅ Only select chat if URL has a valid userId
+        if (userId && !isNaN(Number(userId))) {
+          const selected = merged.find(
+            (c) => Number(c.senderId) === Number(userId) || Number(c.receiverId) === Number(userId)
+          );
 
-          navigate(`/dashboard/messages/${otherId}`);
+          setSelectedUser(selected || null);
+        } else {
+          setSelectedUser(null);
         }
 
-        const selected = merged.find(
-          (c) =>
-            Number(c.senderId) === Number(userId) ||
-            Number(c.receiverId) === Number(userId)
-        );
-        setSelectedUser(selected || null);
       } catch (err) {
         console.error("Error fetching accepted list:", err);
       }
     };
 
     fetchAcceptedRequests();
-  }, [myId, userId, navigate]);
+  }, [myId, userId]);
 
   /* LOAD CHAT HISTORY with pagination */
   const loadMessages = async (pageNo, reset = false) => {
@@ -188,11 +182,11 @@ const ChatWindow = () => {
 
     try {
       const uid = Number(userId);
-if (isNaN(uid)) return;
+      if (isNaN(uid)) return;
 
-const res = await api.get(
-  `/chat/conversation/${myId}/${uid}?page=${pageNo}&size=20`
-);
+      const res = await api.get(
+        `/chat/conversation/${myId}/${uid}?page=${pageNo}&size=20`
+      );
       // console.log("chat data : ", res);
       // 🔁 Backend gives DESC → convert to ASC
       const newMessages = (res.data.content || []).reverse(); // ✅ ASC order
@@ -208,19 +202,6 @@ const res = await api.get(
       setLoadingHistory(false);
     }
   };
-
-  // LOAD DEFAULT MESSAGES FOR FREE USERS
-  useEffect(() => {
-    if (!selectedUser || isPremium) return;
-    if (messages.length > 0) return;
-
-    const receiverId =
-      Number(selectedUser.senderId) === Number(myId)
-        ? selectedUser.receiverId
-        : selectedUser.senderId;
-
-    sendDefaultFreeMessages(receiverId);
-  }, [selectedUser, isPremium]);
 
   /* CHECK PREMIUM */
   useEffect(() => {
@@ -369,12 +350,32 @@ const res = await api.get(
   /* SEND MESSAGE */
   const handleSend = () => {
     if (blockedByMe || blockedByOther) return;
-    if (!message.trim() || !selectedUser) return;
+    if (!selectedUser) return;
 
-    const receiverId =
-      Number(selectedUser.senderId) === Number(myId)
-        ? selectedUser.receiverId
-        : selectedUser.senderId;
+    const receiverId = Number(selectedUser.senderId) === Number(myId)
+      ? selectedUser.receiverId : selectedUser.senderId;
+
+    //FREE USER → send default message
+    if (!isPremium) {
+
+      const text = "Hello, I find your profile appealing and would like to know more about you. . I would like to initiate a conversation.";
+      const msgBody = {
+        senderId: myId,
+        receiverId,
+        message: text,
+        timestamp: new Date().toISOString(),
+        seen: false,
+        tempId: Date.now()
+      };
+      setMessages(prev => [...prev, msgBody]);
+      sendDefaultFreeMessages(receiverId);
+      localStorage.setItem(`freeSent_${myId}_${receiverId}`, "true");
+      setFreeMessageSent(true);
+      return;
+    }
+
+    //PREMIUM USER → send typed message
+    if (!message.trim()) return;
 
     const msgBody = {
       senderId: myId,
@@ -400,6 +401,26 @@ const res = await api.get(
       console.error("❌ Cannot send — STOMP is NOT connected");
     }
   };
+
+  useEffect(() => {
+    setFreeMessageSent(false);
+  }, [selectedUser]);
+
+  useEffect(() => {
+    if (!selectedUser) return;
+
+    const receiverId = Number(selectedUser.senderId) === Number(myId) ? selectedUser.receiverId : selectedUser.senderId;
+
+    // ⭐ Premium users are never restricted
+    if (isPremium) {
+      setFreeMessageSent(false);
+      localStorage.removeItem(`freeSent_${myId}_${receiverId}`);
+      return;
+    }
+
+    const sent = localStorage.getItem(`freeSent_${myId}_${receiverId}`);
+    setFreeMessageSent(sent === "true");
+  }, [selectedUser, myId, isPremium]);
 
   /* FILTER CONTACTS */
   const filteredContacts = acceptedList.filter((c) => {
@@ -464,10 +485,7 @@ const res = await api.get(
   };
 
   const sendDefaultFreeMessages = (receiverId) => {
-    const defaults = [
-      "I came across your profile and felt we might be compatible. I would like to initiate a conversation.",
-      "Hello, I find your profile appealing and would like to learn more about you.",
-    ];
+    const defaults = ["Hello, I find your profile appealing and would like to know more about you. . I would like to initiate a conversation."];
 
     defaults.forEach(text => {
       const msgBody = {
@@ -645,10 +663,10 @@ const res = await api.get(
                     ? "active-contact"
                     : ""
                     }`}
-                 onClick={() => {
-  setShowChat(true);
-  navigate(`/dashboard/messages/${otherId}`);
-}}
+                  onClick={() => {
+                    setShowChat(true);
+                    navigate(`/dashboard/messages/${otherId}`);
+                  }}
                 >
                   <img
                     src={getUserImageById(otherId)}
@@ -671,52 +689,52 @@ const res = await api.get(
 
       {/* RIGHT PANEL */}
       <div className="chatwindow-container">
-  {selectedUser ? (
-    <div className="chatwindow-header">
+        {selectedUser ? (
+          <div className="chatwindow-header">
 
-      {/* ✅ Mobile back button (WhatsApp style) */}
-      <button
-        className="mobile-back-btn"
-        onClick={() => {
-          setShowChat(false);
-          setSelectedUser(null);
-        }}
-      >
-        ←
-      </button>
+            {/* ✅ Mobile back button (WhatsApp style) */}
+            <button
+              className="mobile-back-btn"
+              onClick={() => {
+                setShowChat(false);
+                setSelectedUser(null);
+              }}
+            >
+              ←
+            </button>
 
-      <div className="chatwindow-user">
-        <img
-          src={getUserImageById(
-            Number(selectedUser.senderId) === Number(myId)
-              ? selectedUser.receiverId
-              : selectedUser.senderId
-          )}
-          alt="User"
-          className="chatwindow-avatar"
-          onError={(e) => (e.target.src = "/placeholder_boy.png")}
-        />
+            <div className="chatwindow-user">
+              <img
+                src={getUserImageById(
+                  Number(selectedUser.senderId) === Number(myId)
+                    ? selectedUser.receiverId
+                    : selectedUser.senderId
+                )}
+                alt="User"
+                className="chatwindow-avatar"
+                onError={(e) => (e.target.src = "/placeholder_boy.png")}
+              />
 
-        <div>
-          <h4>
-            {Number(selectedUser.senderId) === Number(myId)
-              ? selectedUser.receiverName
-              : selectedUser.senderName}
-          </h4>
-          <span
-            className={`active-status ${onlineStatus ? "online" : "offline"}`}
-          >
-            {onlineStatus ? "Online" : "Offline"}
-          </span>
-        </div>
-      </div>
+              <div>
+                <h4>
+                  {Number(selectedUser.senderId) === Number(myId)
+                    ? selectedUser.receiverName
+                    : selectedUser.senderName}
+                </h4>
+                <span
+                  className={`active-status ${onlineStatus ? "online" : "offline"}`}
+                >
+                  {onlineStatus ? "Online" : "Offline"}
+                </span>
+              </div>
+            </div>
 
-      <div className="chatwindow-menu" ref={menuRef}>
-        <TfiMenuAlt
-          size={25}
-          className="menu-icon"
-          onClick={() => setOpen(!open)}
-        />
+            <div className="chatwindow-menu" ref={menuRef}>
+              <TfiMenuAlt
+                size={25}
+                className="menu-icon"
+                onClick={() => setOpen(!open)}
+              />
 
               {open && (
                 <div className="chat-dropdown">
@@ -797,30 +815,34 @@ const res = await api.get(
 
         <div className="chatwindow-input">
           {isReported ? (
-            <div className="blocked-warning">
-              This account is reported
-            </div>
+            <div className="blocked-warning"> This account is reported </div>
           ) : blockedByMe ? (
-            <div className="blocked-warning">You have blocked this user</div>
+            <div className="blocked-warning"> You have blocked this user </div>
           ) : blockedByOther ? (
-            <div className="blocked-warning">You are blocked by this user</div>
-          ) : isPremium ? (
+            <div className="blocked-warning"> You are blocked by this user </div>
+          ) : !isPremium && freeMessageSent ? (
+            <div className="premium-warning" onClick={() => navigate("dashboard/premium")}> Upgrade to Premium to continue chatting </div>
+          ) : (
             <div className="chat-input-box">
+
               <input
                 type="text"
-                placeholder="Write a message..."
-                value={message}
+                placeholder={isPremium ? "Write a message..." : "Click send to send default message"}
+                value={
+                  isPremium
+                    ? message
+                    : "Hello, I find your profile appealing and would like to know more about you. . I would like to initiate a conversation."
+                }
+                readOnly={!isPremium}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSend()}
                 className="msg-input"
               />
+
               <button onClick={handleSend} className="send-button">
                 <FiSend size={18} />
               </button>
-            </div>
-          ) : (
-            <div className="premium-warning">
-              You need a Premium Subscription to send messages.
+
             </div>
           )}
         </div>

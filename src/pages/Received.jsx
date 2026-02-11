@@ -5,6 +5,7 @@ import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
 import { toast } from "react-toastify";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
+import ViewProfileModal from "../components/ViewProfileModal";
 
 const Received = () => {
 
@@ -12,6 +13,9 @@ const Received = () => {
   const dispatch = useDispatch();
   const { profiles } = useSelector(state => state.profiles);
   const [receivedRequests, setReceivedRequests] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState(null);
+
   const maskName = (name = "") => {
     if (!name) return "-";
     return name.charAt(0).toUpperCase() + "*****";
@@ -73,13 +77,20 @@ const Received = () => {
 
       return {
         ...req,
+        profile,
         hideProfilePhoto: profile.hideProfilePhoto,
         image: profile?.updatePhoto ? profile.updatePhoto : profile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png",
       };
     });
   }, [receivedRequests, profiles, id]);
 
-  console.log("receivedWithImages: ", receivedWithImages)
+  console.log("receivedWithImages: ", receivedWithImages);
+
+  const handleProfile = (user) => {
+    // console.log("user: ", user);
+    setSelectedProfile(user.profile)
+    setShowModal(true);
+  };
 
   return (
     <div className="received-container">
@@ -106,6 +117,9 @@ const Received = () => {
               </div>
 
               <div className="btn-section">
+                <button className="accept" onClick={() => handleProfile(user)} >
+                  View Profile
+                </button>
                 <button className="accept" onClick={() => { handleAccept(user.requestId) }}>Accept</button>
                 <button className="reject" onClick={() => { handleReject(user.requestId) }}>Reject</button>
               </div>
@@ -113,6 +127,15 @@ const Received = () => {
           ))
         )
       }
+
+      {showModal && selectedProfile && (
+        <ViewProfileModal
+          premium={myProfile.premium}
+          profile={selectedProfile}
+          // anchorRect={anchorRect}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 };

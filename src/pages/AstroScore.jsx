@@ -47,7 +47,6 @@ const AstroScore = () => {
             try {
                 const received = await api.get(`/friends/accepted/received/${id}`);
                 const sent = await api.get(`/friends/accepted/sent/${id}`);
-
                 const recv = Array.isArray(received?.data) ? received.data : [];
                 const snt = Array.isArray(sent?.data) ? sent.data : [];
                 setAcceptedRequests([...recv, ...snt]);
@@ -70,14 +69,15 @@ const AstroScore = () => {
         })
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
     const plansList = Array.isArray(plans) ? plans : [];
-    const activePlan = plansList.find(plan => plan.planCode === activePayment?.planCode);
-    const isAstroEnabled = activePlan?.astroSupport?.toLowerCase() !== "no";
+    const activePlan = plansList.find(plan => plan.planFeature.planCode === activePayment?.planCode);
+    const isAstroEnabled = activePlan?.planFeature.astroSupport?.toLowerCase() !== "no";
     const isPlatinum = activePlan?.planCode?.startsWith("PLATINUM");
 
     // console.log("activePayment: ", activePayment)
-    // console.log("activePlan: ", activePlan)
+    console.log("activePlan: ", activePlan)
     // console.log("isAstroEnabled: ", isAstroEnabled)
     // console.log("isPlatinum: ", isPlatinum)
+    console.log("isPlatinum: ", myProfile)
 
     const handleGetScore = async friendId => {
         try {
@@ -117,7 +117,7 @@ const AstroScore = () => {
                 const score = scores[friendId];
 
                 return (
-                    <div key={req.requestId} className="card shadow-sm border-0 mb-4" >
+                    <div key={req.requestId} className="card shadow-m border-0 mb-4" >
                         <div className="card-body astro-score-body">
 
                             {/* LEFT — YOU */}

@@ -5,13 +5,18 @@ import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
 import { toast } from "react-toastify";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
+import ViewProfileModal from "../components/ViewProfileModal";
 
 const SentRequests = () => {
 
   const [sentRequests, setSentRequests] = useState([]);
   const { id, role, myProfile } = useSelector(state => state.auth);
-  const dispatch = useDispatch();
   const { profiles } = useSelector(state => state.profiles);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState(null);
+
+  const dispatch = useDispatch();
+
   const maskName = (name = "") => {
     if (!name) return "-";
     return name.charAt(0).toUpperCase() + "*****";
@@ -65,11 +70,18 @@ const SentRequests = () => {
 
       return {
         ...req,
+        profile,
         hideProfilePhoto: profile.hideProfilePhoto,
         image: profile?.updatePhoto ? profile.updatePhoto : profile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png",
       };
     });
   }, [filteredSent, profiles, id]);
+
+  const handleProfile = (user) => {
+    // console.log("user: ", user);
+    setSelectedProfile(user.profile)
+    setShowModal(true);
+  };
 
   return (
     <div className="received-container">
@@ -95,6 +107,9 @@ const SentRequests = () => {
               </div>
 
               <div className="btn-section">
+                <button className="accept" onClick={() => handleProfile(user)} >
+                  View Profile
+                </button>
                 <button className="reject" onClick={() => { handleCancelRequest(user.requestId) }}>Cancel</button>
               </div>
 
@@ -102,6 +117,15 @@ const SentRequests = () => {
           ))
         )
       }
+
+      {showModal && selectedProfile && (
+        <ViewProfileModal
+          premium={myProfile.premium}
+          profile={selectedProfile}
+          // anchorRect={anchorRect}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 };

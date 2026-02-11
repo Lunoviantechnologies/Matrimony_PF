@@ -30,8 +30,9 @@ const Login = () => {
                 else if (role === "USER") navigate("/dashboard");
                 else navigate("/");
             })
-            .catch(() => {
-                toast.error("Login failed. Please check your credentials.");
+            .catch((err) => {
+                // toast.error("Login failed. Please check your credentials.");
+                console.log(err);
             });
     };
 

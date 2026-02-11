@@ -37,9 +37,7 @@ const Accepted = () => {
     const fetchAcceptedRequests = async () => {
       try {
         const receivedAccepted = await api.get(`/friends/accepted/received/${id}`);
-
         const sentAccepted = await api.get(`/friends/accepted/sent/${id}`);
-
         const merged = [...receivedAccepted.data, ...sentAccepted.data];
 
         setAcceptedRequests(merged);

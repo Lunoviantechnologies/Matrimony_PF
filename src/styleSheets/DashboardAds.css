@@ -1,12 +1,12 @@
 .promo-card {
   max-width: 400px;
+  width: 100%;
   display: flex;
   overflow: hidden;
   border-radius: 16px;
   background: #ffffff;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-  min-height: 120px;
-  animation: fadePromo .4s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  height: 130px;
 }
 
 .promo-left {
@@ -20,6 +20,10 @@
 .promo-right {
   flex: 1;
   padding: 14px 18px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .promo-right h4 {
@@ -36,8 +40,9 @@
 }
 
 .promo-right button {
-  background: linear-gradient(90deg,#2ecc71,#27ae60);
+  background: linear-gradient(90deg, #2ecc71, #27ae60);
   border: none;
+  max-width: 70%;
   color: white;
   padding: 6px 14px;
   border-radius: 18px;
@@ -46,15 +51,15 @@
 }
 
 .promo-premium .promo-left {
-  background: linear-gradient(135deg,#f39c12,#f1c40f);
+  background: linear-gradient(135deg, #f39c12, #f1c40f);
 }
 
 .promo-profile .promo-left {
-  background: linear-gradient(135deg,#1abc9c,#16a085);
+  background: linear-gradient(135deg, #1abc9c, #16a085);
 }
 
 .promo-boost .promo-left {
-  background: linear-gradient(135deg,#3498db,#2980b9);
+  background: linear-gradient(135deg, #3498db, #2980b9);
 }
 
 @keyframes fadePromo {
@@ -62,8 +67,15 @@
     opacity: 0;
     transform: translateY(6px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (min-width: 768px) {
+  .promo-card {
+    height: 140px;
   }
 }

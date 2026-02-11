@@ -23,10 +23,6 @@
 /* ===============================
    GRID — FORCE RESPONSIVE LAYOUT
 =============================== */
-/* =========================
-   FORCE 3-COLUMN GRID
-========================= */
-
 .profile-cards-wrapper {
   display: grid !important;
   gap: 20px !important;

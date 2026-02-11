@@ -5,7 +5,8 @@ import ViewProfileModal from "./ViewProfileModal";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import api from "../api/axiosInstance";
 import "../styleSheets/searchpage.css";
-// import "../styleSheets/ProfileCard.css";
+import { FaCrown, FaUser } from "react-icons/fa";
+import MatchesImageCarousel from "../pages/MatchesImageCarousel";
 
 const SearchProfiles = () => {
 
@@ -131,8 +132,17 @@ const SearchProfiles = () => {
         })
     };
 
+    const maskName = (name = "") => {
+        if (!name) return "—";
+        return name.charAt(0).toUpperCase() + "*****";
+    };
+    const getDisplayName = (first, last) => {
+        if (myProfile?.premium) return `${first || ""} ${last || ""}`.trim();
+        return `${maskName(first)} ${maskName(last)}`.trim();
+    };
+
     return (
-        <div>
+        <div className="search-page">
             <h1>Search Profiles</h1>
 
             <div>
@@ -147,25 +157,23 @@ const SearchProfiles = () => {
                                 return (
                                     <article className="profile-card" key={p.id}>
                                         <div className="image-box">
-                                            <img src={p.updatePhoto ? p.updatePhoto : p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
-                                                alt={`${p.firstName} ${p.lastName}`}
-                                                className={`profile-img ${!myProfile?.premium ? "blur-image" : ""}`}
-                                                onError={(e) => {
-                                                    e.target.src = p.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
-                                                }}
-                                                draggable={false}
-                                                onContextMenu={(e) => e.preventDefault()}
+                                            <MatchesImageCarousel
+                                                profile={p}
+                                                isPremiumUser={myProfile?.premium}
+                                                onUpgrade={() => navigate("/dashboard/premium")}
                                             />
 
-                                            {!myProfile?.premium && (
-                                                <div className="premium-overlay" onClick={() => navigate("/dashboard/premium")}>
-                                                    🔒 Upgrade to Premium
-                                                </div>
-                                            )}
+                                            <div className="premium-badge">
+                                                {p.premium ? (
+                                                    <span className="premium-icon"><FaCrown /></span>
+                                                ) : (
+                                                    <span className="free-icon"><FaUser /> free</span>
+                                                )}
+                                            </div>
                                         </div>
 
                                         <div className="profile-details">
-                                            <h3 className="name">{p.firstName + " " + p.lastName}</h3>
+                                            <h3 className="name">{getDisplayName(p.firstName, p.lastName)}</h3>
                                             <span className="meta">{p.age} yrs • {p.height}</span>
                                             <p className="line">{p.occupation} • {p.highestEducation}</p>
                                             <p className="line">{p.city}</p>
