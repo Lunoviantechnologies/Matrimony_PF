@@ -106,6 +106,18 @@ const MoreMatches = () => {
     return selected.includes(profileValue);
   };
 
+  const heightToInches = (height) => {
+    if (!height) return null;
+
+    const match = height.match(/(\d+)'(\d+)"/);
+    if (!match) return null;
+
+    const feet = parseInt(match[1]);
+    const inches = parseInt(match[2]);
+
+    return feet * 12 + inches;
+  };
+
   // ---- Filter profiles ----
   const filteredProfiles = useMemo(() => {
     if (!requestsLoaded) return [];
@@ -130,14 +142,20 @@ const MoreMatches = () => {
         const matchprofileFor = !filters.profileFor.length || filters.profileFor.includes(p.profileFor || "");
         const matchMaritalStatus = !filters.maritalStatus.length || filters.maritalStatus.includes(p.maritalStatus || "");
         const matchReligion = matchWithOther(filters.religion, filters.otherValues?.religion, p.religion);
-        const matchCaste = matchWithOther(filters.caste, filters.otherValues?.caste, p.subCaste);
         const matchCountry = matchWithOther(filters.country, filters.otherValues?.country, p.country);
         const matchProfession = matchWithOther(filters.profession, filters.otherValues?.profession, p.occupation);
         const matchEducation = matchWithOther(filters.education, filters.otherValues?.education, p.highestEducation);
         const matchLifestyle = !filters.lifestyle.length || filters.lifestyle.includes(p.vegiterian || "");
         const matchhabbits = !filters.habbits.length || filters.habbits.includes(p.habbits || "");
 
-        return matchprofileFor && matchAge && matchMaritalStatus && matchReligion && matchCaste && matchCountry && matchEducation && matchProfession && matchLifestyle && matchhabbits;
+        const selectedHeight = filters.otherValues?.height;
+        const matchHeight = !selectedHeight || heightToInches(p.height) === heightToInches(selectedHeight);
+
+        const selectedCaste = filters.otherValues?.caste;
+        const customCaste = filters.customCaste;
+        const matchCaste = !selectedCaste || ( selectedCaste === "Other" ? p.subCaste?.toLowerCase().includes(customCaste?.toLowerCase() || "") : p.subCaste === selectedCaste);
+
+        return matchprofileFor && matchAge && matchMaritalStatus && matchReligion && matchCaste && matchCountry && matchEducation && matchProfession && matchLifestyle && matchhabbits && matchHeight;
       });
   }, [profiles, filters, allHiddenIds, myProfile, id, requestsLoaded]);
 
@@ -227,7 +245,7 @@ const MoreMatches = () => {
                         <h3 className="name">
                           {getDisplayName(p.firstName, p.lastName)}
                         </h3>
-                        <span className="meta">{p.age} yrs • {p.height}</span>
+                        <span className="meta">{p.age} yrs • {p.height} ft height</span>
                         <p className="line">{p.occupation} • {p.highestEducation}</p>
                         <p className="line">{p.city}</p>
                         <p className="line">{p.religion} | {p.subCaste}</p>

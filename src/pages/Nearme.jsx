@@ -111,6 +111,18 @@ const Nearme = () => {
     return selected.includes(profileValue);
   };
 
+  const heightToInches = (height) => {
+    if (!height) return null;
+
+    const match = height.match(/(\d+)'(\d+)"/);
+    if (!match) return null;
+
+    const feet = parseInt(match[1]);
+    const inches = parseInt(match[2]);
+
+    return feet * 12 + inches;
+  };
+
   // ---- Filter profiles ----
   const filteredProfiles = useMemo(() => {
     if (!requestsLoaded || !myProfile?.city) return [];
@@ -143,7 +155,10 @@ const Nearme = () => {
         const matchLifestyle = !filters.lifestyle.length || filters.lifestyle.includes(p.vegiterian || "");
         const matchhabbits = !filters.habbits.length || filters.habbits.includes(p.habbits || "");
 
-        return (matchprofileFor && matchAge && matchMaritalStatus && matchReligion && matchCaste && matchCountry && matchEducation && matchProfession && matchLifestyle && matchhabbits);
+        const selectedHeight = filters.otherValues?.height;
+        const matchHeight = !selectedHeight || heightToInches(p.height) === heightToInches(selectedHeight);
+
+        return (matchprofileFor && matchAge && matchMaritalStatus && matchReligion && matchCaste && matchCountry && matchEducation && matchProfession && matchLifestyle && matchhabbits && matchHeight);
       });
   }, [profiles, filters, allHiddenIds, myProfile, id, requestsLoaded]);
 
@@ -224,7 +239,7 @@ const Nearme = () => {
 
                 <div className="profile-details">
                   <h3 className="name">{getDisplayName(p.firstName, p.lastName)}</h3>
-                  <span className="meta">{p.age} yrs • {p.height}</span>
+                  <span className="meta">{p.age} yrs • {p.height} ft height</span>
                   <p className="line">{p.occupation} • {p.highestEducation}</p>
                   <p className="line">{p.city}</p>
                   <p className="line">{p.religion} | {p.subCaste}</p>

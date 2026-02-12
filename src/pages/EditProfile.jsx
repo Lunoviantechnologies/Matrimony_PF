@@ -35,6 +35,14 @@ export default function EditProfile() {
 
   console.log("profileData, id : ", profileData, id);
 
+  const heightOptions = [];
+  for (let ft = 4; ft <= 7; ft++) {
+    for (let inch = 0; inch < 12; inch++) {
+      if (ft === 7 && inch > 0) break;
+      heightOptions.push(`${ft}'${inch}"`);
+    }
+  };
+
   /* ------------------ GET PROFILE ------------------ */
   useEffect(() => {
     if (!id) return;
@@ -189,15 +197,6 @@ export default function EditProfile() {
   const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    const MAX_SIZE = 50 * 1024; // 50 KB
-
-    if (file.size > MAX_SIZE) {
-      toast.error("Photo size must not exceed 50 KB. Please upload a smaller image.");
-      e.target.value = "";
-      return;
-    }
-
     const imageUrl = URL.createObjectURL(file);
     setSelectedImage(imageUrl);
     setCropOpen(true);
@@ -324,19 +323,35 @@ export default function EditProfile() {
   const prevPhoto = () => setActivePhotoIndex(i => i === 0 ? PHOTO_SLOTS.length - 1 : i - 1);
 
   const handlePhotoUpload = async (slot, file) => {
-    const MAX_SIZE = 50 * 1024; // 50 KB
+    try {
+      // ✅ auto compress to ~300 KB
+      let compressed = await imageCompression(file, {
+        maxSizeMB: 0.3,          // 🎯 target 300 KB
+        maxWidthOrHeight: 1024,
+        useWebWorker: true
+      });
 
-    if (file.size > MAX_SIZE) {
-      toast.error("Photo size must not exceed 50 KB. Please upload a smaller image.");
-      return;
+      // ✅ hard cap enforcement (optional but recommended)
+      while (compressed.size > 300 * 1024) {
+        compressed = await imageCompression(compressed, {
+          maxSizeMB: 0.25,
+          maxWidthOrHeight: 900,
+          useWebWorker: true
+        });
+      }
+
+      const formData = new FormData();
+      formData.append("file", compressed);
+
+      await api.put(`/profile-photos/${slot}/${id}`, formData);
+
+      dispatch(fetchMyProfile(id));
+      toast.success("Photo uploaded successfully");
+
+    } catch (err) {
+      console.error(err);
+      toast.error("Photo upload failed");
     }
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    await api.put(`/profile-photos/${slot}/${id}`, formData);
-    dispatch(fetchMyProfile(id));
-    toast.success("Photo updated successfully");
   };
 
   const handleDeletePhoto = async (slot) => {
@@ -645,11 +660,19 @@ export default function EditProfile() {
                       croppedAreaPixels
                     );
 
-                    const compressed = await imageCompression(croppedFile, {
-                      maxSizeMB: 1,
+                    let compressed = await imageCompression(croppedFile, {
+                      maxSizeMB: 0.3,
                       maxWidthOrHeight: 1024,
                       useWebWorker: true
                     });
+
+                    while (compressed.size > 300 * 1024) {
+                      compressed = await imageCompression(compressed, {
+                        maxSizeMB: 0.25,
+                        maxWidthOrHeight: 900,
+                        useWebWorker: true
+                      });
+                    };
 
                     const previewUrl = URL.createObjectURL(compressed);
                     setPhoto(previewUrl);
@@ -712,17 +735,17 @@ export default function EditProfile() {
       partnerPrefs: "Partner Preferences",
     };
     return titles[key] || "Details";
-  }
+  };
 
   function addHobbyToBuffer(field = "hobbies") {
     setEditBuffer((p) => ({ ...p, [field]: [...(p[field] || []), ""] }));
-  }
+  };
 
   function updateHobbyInBuffer(field, idx, val) {
     const arr = [...(editBuffer[field] || [])];
     arr[idx] = val;
     setEditBuffer((p) => ({ ...p, [field]: arr }));
-  }
+  };
 
   function renderModalForm(key, buffer, handleEditInputLocal) {
     // Use buffer to render, handleEditInputLocal to update single key
@@ -730,8 +753,16 @@ export default function EditProfile() {
       case "basics":
         return (
           <div className="modal-form">
-            <label className="field"><div className="field-label">Height</div>
-              <input value={buffer.height || ""} onChange={(e) => handleEditInputLocal("height", e.target.value)} />
+            <label className="field">
+              <div className="field-label">Height</div>
+              <select value={buffer.height || ""} onChange={(e) => handleEditInputLocal("height", e.target.value)} >
+                <option value="">Select Height</option>
+                {heightOptions.map((h) => (
+                  <option key={h} value={h}>
+                    {h}
+                  </option>
+                ))}
+              </select>
             </label>
             <label className="field"><div className="field-label">Weight</div>
               <input value={buffer.weight || ""} onChange={(e) => handleEditInputLocal("weight", e.target.value)} />

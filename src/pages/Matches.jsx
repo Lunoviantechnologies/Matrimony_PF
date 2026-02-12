@@ -4,6 +4,7 @@ import Sidebar from "../components/Sidebar";
 import MatchesSort from "./MatchesSort";
 import { useSelector } from "react-redux";
 import "../styleSheets/matches/matchLayout.css";
+import * as bootstrap from "bootstrap";
 
 const EMPTY_FILTERS = {
     profileFor: [],
@@ -22,7 +23,9 @@ const EMPTY_FILTERS = {
         profession: "",
         religion: "",
         education: "",
+        height: "",
     },
+    customCaste: "",
 };
 
 const Matches = () => {
@@ -32,12 +35,10 @@ const Matches = () => {
 
     const handleApplyFilters = () => {
         setFilters(filtersDraft);
-
-        // close mobile offcanvas
-        const offcanvas = document.getElementById("mobileFilters");
-        if (offcanvas) {
-            const bs = window.bootstrap.Offcanvas.getInstance(offcanvas);
-            bs?.hide();
+        const offcanvasEl = document.getElementById("mobileFilters");
+        if (offcanvasEl) {
+            const instance = bootstrap.Offcanvas.getInstance(offcanvasEl) || new bootstrap.Offcanvas(offcanvasEl);
+            instance.hide();
         }
     };
 
