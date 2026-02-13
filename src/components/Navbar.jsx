@@ -25,7 +25,7 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="navBody container w-75">
+        <nav className="navBody container">
             <div className="navInner">
 
                 <div className="navBrand" onClick={handleDashboard}>

@@ -1,13 +1,18 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addBlog } from "../../redux/thunk/blogThunk";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateBlog } from "../../redux/thunk/blogThunk";
+import { useNavigate, useParams } from "react-router-dom";
 import "../../styleSheets/blog/blogForm.css";
 
-export default function BlogForm() {
+export default function EditBlog() {
 
+    const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const blog = useSelector(state =>
+        state.blog.blogs.find(b => b.id === Number(id))
+    );
 
     const [loading, setLoading] = useState(false);
     const [preview, setPreview] = useState(null);
@@ -19,15 +24,25 @@ export default function BlogForm() {
         image: null,
     });
 
+    useEffect(() => {
+        if (blog) {
+            setForm({
+                title: blog.title,
+                content: blog.content,
+                category: blog.category,
+                image: null,
+            });
+
+            setPreview(blog.imageUrl || null);
+        }
+    }, [blog]);
+
     const handleChange = (key, value) =>
         setForm(prev => ({ ...prev, [key]: value }));
 
     const handleImage = file => {
         handleChange("image", file);
-
-        if (file) {
-            setPreview(URL.createObjectURL(file));
-        }
+        if (file) setPreview(URL.createObjectURL(file));
     };
 
     const submit = async e => {
@@ -36,21 +51,23 @@ export default function BlogForm() {
 
         setLoading(true);
 
-        const data = new FormData();
-        Object.entries(form).forEach(([k, v]) => v && data.append(k, v));
+        const formData = new FormData();
+        Object.entries(form).forEach(([k, v]) => v && formData.append(k, v));
 
-        await dispatch(addBlog(data));
+        await dispatch(updateBlog({ id, formData }));
 
         setLoading(false);
         navigate("/admin/blogs");
     };
+
+    if (!blog) return <p className="status">Loading blog...</p>;
 
     return (
         <div className="blog-form-page">
 
             <form className="blog-form-card" onSubmit={submit}>
 
-                <h2>Create Blog</h2>
+                <h2>Edit Blog</h2>
 
                 <div className="form-group">
                     <label>Title</label>
@@ -81,13 +98,12 @@ export default function BlogForm() {
                 </div>
 
                 <div className="form-group">
-                    <label>Image</label>
+                    <label>Replace Image (optional)</label>
 
                     <input
                         type="file"
                         accept="image/*"
                         onChange={e => handleImage(e.target.files[0])}
-                        required
                     />
 
                     {preview && (
@@ -100,7 +116,7 @@ export default function BlogForm() {
                 </div>
 
                 <button disabled={loading}>
-                    {loading ? "Creating..." : "Create Blog"}
+                    {loading ? "Updating..." : "Update Blog"}
                 </button>
 
             </form>

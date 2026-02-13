@@ -1,0 +1,81 @@
+.blog-form-page {
+    min-height: 100vh;
+    background: #f6f7fb;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.blog-form-card {
+    width: 100%;
+    max-width: 720px;
+    background: white;
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.blog-form-card h2 {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #dcdcdc;
+    font-size: 15px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #4caf50;
+}
+
+.image-preview {
+    margin-top: 12px;
+    width: 100%;
+    max-height: 260px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    background: #4caf50;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+    .blog-form-card {
+        padding: 18px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+}

@@ -115,12 +115,16 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: nowrap;
 }
 
 .navMenu {
     display: flex;
     gap: 1.5rem;
     align-items: center;
+
+    flex-wrap: nowrap;
+    white-space: nowrap;
 }
 
 .hamburger {

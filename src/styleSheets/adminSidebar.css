@@ -1,94 +1,99 @@
 .admin-sidebar {
-    width: 225px;
-    background: #00695C;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 25px 10px;
-    gap: 30px;
-    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.08);
+  width: 225px;
+  background: #00695C;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 25px 10px;
+  gap: 30px;
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.08);
 
-    /* ADD THIS ↓ */
-    position: fixed;
-    top: 70px;
-    left: 0;
-    height: calc(100vh - 70px);
-    overflow-y: auto;  
+  /* ADD THIS ↓ */
+  position: fixed;
+  top: 70px;
+  left: 0;
+  height: calc(100vh - 70px);
+  overflow-y: auto;
 }
 
 .sidebar-logo {
-    font-size: 25px;
-    font-weight: bold;
-    text-align: center;
-    font-family: 'Lucida Handwriting', cursive;
-    color: rgb(211, 175, 55);
+  font-size: 25px;
+  font-weight: bold;
+  text-align: center;
+  font-family: 'Lucida Handwriting', cursive;
+  color: rgb(211, 175, 55);
 }
 
 .sidebar-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .sidebar-nav button {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 15px;
-    width: 100%;
-    border: none;
-    background: none;
-    cursor: pointer;
-    border-radius: 8px;
-    font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  width: 100%;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 15px;
 }
 
 .sidebar-nav button:hover {
-    background: #eafaf0;
-    color: #00b36b;
-    font-weight: 500;
+  background: #eafaf0;
+  color: #00b36b;
+  font-weight: 500;
 }
 
 
-/* .admin-sidebar {
-    width: 220px;
-    background: #00695C;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 25px 20px;
-    gap: 30px;
-    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.08);
-  }
-  
-  .sidebar-logo {
-    font-size: 24px;
-    font-weight: 700; 
-    color: white;
-    letter-spacing: 1px;
-  }
-  
-  .sidebar-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-  
-  .sidebar-nav button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    padding: 8px 5px;
-    width: 100%;
-    border-radius: 6px;
-    transition: 0.25s;
-  }
-  
-  .sidebar-nav button:hover {
-    background: #004D44;
-  } */
+/* ===== BLOG DROPDOWN ===== */
+.sidebar-dropdown {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-dropdown>button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  width: 100%;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+.sidebar-dropdown>button:hover {
+  background: #eafaf0;
+  color: #00b36b;
+  font-weight: 500;
+}
+
+/* nested items */
+
+.dropdown-items {
+  display: flex;
+  flex-direction: column;
+  margin-left: 30px;
+  margin-top: 4px;
+  gap: 4px;
+}
+
+.dropdown-items button {
+  padding: 8px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  background: transparent;
+}
+
+.dropdown-items button:hover {
+  background: #dff5e8;
+  color: #00b36b;
+}

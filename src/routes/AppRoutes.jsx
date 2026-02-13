@@ -55,6 +55,9 @@ import DashboardAds from "../pages/DashboardAds";
 import RelationshipManager from "../admin/RelationshipManager";
 import AdminSettings from "../admin/adminSettings/AdminSettings";
 import Login from "../pages/Login";
+import BlogDashboard from "../admin/createBlog/BlogDashboard";
+import BlogForm from "../admin/createBlog/BlogForm";
+import EditBlog from "../admin/createBlog/EditBlog";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -299,6 +302,18 @@ const AppRoutes = createBrowserRouter([
                 path: "admin_settings",
                 element: <AdminSettings />
             },
+            {
+                path: "blogs",
+                element: <BlogDashboard />
+            },
+            {
+                path: "blog/create",
+                element: <BlogForm />
+            },
+            {
+                path: "/admin/blog/edit/:id",
+                element: <EditBlog />
+            }
         ]
 
     }

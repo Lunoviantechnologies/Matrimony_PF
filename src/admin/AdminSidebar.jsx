@@ -1,10 +1,11 @@
-import React from "react";
-import { FaHeart, FaUserPlus, FaRupeeSign, FaChartLine, FaFileAlt, FaCheckCircle, FaHeadset, FaStar, FaMoneyCheckAlt, FaComments, FaUserShield } from "react-icons/fa";
+import React, { useState } from "react";
+import { FaHeart, FaUserPlus, FaRupeeSign, FaChartLine, FaFileAlt, FaCheckCircle, FaHeadset, FaStar, FaMoneyCheckAlt, FaComments, FaUserShield, FaBlog, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "../styleSheets/adminSidebar.css";
 import { MdConnectWithoutContact } from "react-icons/md";
 
 export default function AdminSidebar() {
+    const [blogOpen, setBlogOpen] = useState(false);
     const navigate = useNavigate();
 
     const handleReport = () => {
@@ -58,6 +59,14 @@ export default function AdminSidebar() {
         navigate('/admin/relationship_manager');
     };
 
+    const handleBlogDashboard = () => {
+        navigate("/admin/blogs");
+    };
+
+    const handleCreateBlog = () => {
+        navigate("/admin/blog/create");
+    };
+
     return (
         <aside className="admin-sidebar">
             <div className="sidebar-logo" onClick={() => (navigate("/admin"))}>VivahJeevan</div>
@@ -73,9 +82,27 @@ export default function AdminSidebar() {
                 <button onClick={handleUserTicket}><FaHeadset /><span>User Support</span></button>
                 <button onClick={handlePaymentDisplay}><FaMoneyCheckAlt /><span>Payment Display</span></button>
                 <button onClick={handleAstroTalk}><FaStar /><span>Astrology Service</span></button>
-                <button onClick={handleAdminSupport}><FaUserShield  /><span>Admin Support</span></button>
-                <button onClick={handleUserChatReport}><FaComments  /><span>User Chat Report</span></button>
+                <button onClick={handleAdminSupport}><FaUserShield /><span>Admin Support</span></button>
+                <button onClick={handleUserChatReport}><FaComments /><span>User Chat Report</span></button>
                 <button onClick={handleRelationshipManager}><MdConnectWithoutContact size={20} /><span>Relationship Manager</span></button>
+
+                {/* BLOG DROPDOWN */}
+                <div className="sidebar-dropdown">
+
+                    <button onClick={() => setBlogOpen(!blogOpen)}>
+                        <FaBlog />
+                        <span>Blogs</span>
+                        {blogOpen ? <FaChevronUp /> : <FaChevronDown />}
+                    </button>
+
+                    {blogOpen && (
+                        <div className="dropdown-items">
+                            <button onClick={handleBlogDashboard}> Blog Dashboard </button>
+                            <button onClick={handleCreateBlog}> Create Blog </button>
+                        </div>
+                    )}
+
+                </div>
             </nav>
         </aside>
     );
