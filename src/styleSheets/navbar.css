@@ -15,6 +15,31 @@
     text-decoration: none;
 }
 
+/* Resources Dropdown Wrapper */
+.navDropdown {
+    position: relative;
+}
+
+/* Dropdown Menu (Hidden by default) */
+.dropdownMenu {
+    position: absolute;
+    top: 42px;
+    left: 0;
+    background: #ffffff;
+    border-radius: 18px;
+    min-width: 200px;
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.18);
+    z-index: 3000;
+
+    /* Hidden state */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    pointer-events: none;
+
+    transition: all 0.25s ease;
+}
+
 /* Hover effect only for items */
 .dropdownMenu a:hover {
     background-color: #D9F5E4;
@@ -27,6 +52,10 @@
 }
 
 /* Navbar */
+
+.dropdown-menu {
+    z-index: 9999 !important;
+}
 
 .navBody {
     background-color: #D9F5E4;
