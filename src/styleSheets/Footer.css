@@ -6,6 +6,12 @@
   margin-top: 30px;
 }
 
+.footer-brand-text {
+  font-family: 'Lucida Handwriting', cursive;
+  font-weight: 700;
+  color: rgb(139, 69, 19);
+}
+
 .footer-heading {
   text-align: center;
   color: #023114;
@@ -95,6 +101,26 @@
   transform: scale(1.1);
 }
 
+/* App Section */
+.store-logos {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.store-icon {
+  font-size: 25px;
+  color: #035f3f;
+  transition: 0.3s ease;
+  cursor: pointer;
+}
+
+.store-icon:hover {
+  color: #035f3f;
+  transform: scale(1.1);
+}
+
 @media (max-width: 480px) {
 
   .footer {
@@ -160,7 +186,7 @@
 
   .footer-brand-text {
     margin: 0;
-    font-family: 'Lucida Handwriting', cursive;
+    font-family: 'Lucida Handwriting', cursive !important;
     font-weight: 700;
     color: rgb(139, 69, 19);
   }

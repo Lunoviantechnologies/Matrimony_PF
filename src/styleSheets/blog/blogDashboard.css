@@ -100,6 +100,7 @@
     border-radius: 6px;
     font-weight: 600;
 }
+
 .edit-btn {
     background: #2d8cff;
     color: white;
@@ -111,20 +112,35 @@
 }
 
 .pagination {
-    margin-top: 20px;
     display: flex;
     justify-content: center;
-    gap: 8px;
+    align-items: center;
+    gap: 5px;
+    margin: 40px auto;
+    width: fit-content;
 }
 
 .pagination button {
-    padding: 6px 10px;
-    border-radius: 6px;
     border: 1px solid #ddd;
+    background: #0d6efd;
     cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
 }
 
-.pagination .active {
-    background: #2563eb;
+.pagination button:hover:not(:disabled) {
+    background: #0a4aab;
     color: white;
+}
+
+.pagination button.active {
+    background: #0a4aab;
+    color: white;
+    border-color: #0a4aab;
+    font-weight: 600;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }

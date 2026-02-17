@@ -12,8 +12,7 @@ export default function BlogDashboard() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { blogs, page, totalPages, loading } =
-        useSelector(state => state.blog);
+    const { blogs, page, totalPages, loading } = useSelector(state => state.blog);
 
     useEffect(() => {
         dispatch(fetchBlogs(page));
@@ -27,9 +26,30 @@ export default function BlogDashboard() {
 
     const getImageUrl = (blog) => {
         if (!blog.imageUrl) return "/placeholder.png";
+
+        // If image is Base64
+        if (blog.imageUrl.startsWith("data:image")) {
+            return blog.imageUrl;
+        }
+
+        // If image is stored as file path from server
         const serverRoot = backendIP.replace("/api", "");
         return `${serverRoot}${blog.imageUrl}`;
-    }
+    };
+
+    const getPaginationRange = (currentPage, totalPages) => {
+        const visiblePages = 5; // show 5 numbers
+        const half = Math.floor(visiblePages / 2);
+
+        let start = Math.max(currentPage - half, 0);
+        let end = Math.min(start + visiblePages, totalPages);
+
+        if (end - start < visiblePages) {
+            start = Math.max(end - visiblePages, 0);
+        }
+
+        return Array.from({ length: end - start }, (_, i) => start + i);
+    };
 
     return (
         <div className="blog-dashboard">
@@ -70,7 +90,7 @@ export default function BlogDashboard() {
                             </div>
 
                             <p className="snippet">
-                                {blog.content.slice(0, 90)}…
+                                {blog.content?.slice(0, 90) || "No content available"}…
                             </p>
 
                             <div className="stats">
@@ -96,18 +116,53 @@ export default function BlogDashboard() {
             {/* Pagination */}
             {totalPages > 1 && (
                 <div className="pagination">
-                    {[...Array(totalPages)].map((_, i) => (
+
+                    {/* FIRST */}
+                    <button
+                        disabled={page === 0}
+                        onClick={() => dispatch(setPage(0))}
+                    >
+                        «
+                    </button>
+
+                    {/* PREVIOUS */}
+                    <button
+                        disabled={page === 0}
+                        onClick={() => dispatch(setPage(page - 1))}
+                    >
+                        ‹
+                    </button>
+
+                    {/* PAGE NUMBERS */}
+                    {getPaginationRange(page, totalPages).map((p) => (
                         <button
-                            key={i}
-                            className={page === i ? "active" : ""}
-                            onClick={() => dispatch(setPage(i))}
+                            key={p}
+                            className={page === p ? "active" : ""}
+                            onClick={() => dispatch(setPage(p))}
                         >
-                            {i + 1}
+                            {p + 1}
                         </button>
                     ))}
+
+                    {/* NEXT */}
+                    <button
+                        disabled={page === totalPages - 1}
+                        onClick={() => dispatch(setPage(page + 1))}
+                    >
+                        ›
+                    </button>
+
+                    {/* LAST */}
+                    <button
+                        disabled={page === totalPages - 1}
+                        onClick={() => dispatch(setPage(totalPages - 1))}
+                    >
+                        »
+                    </button>
+
                 </div>
             )}
 
         </div>
     );
-}
+};

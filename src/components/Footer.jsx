@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styleSheets/Footer.css";
-import { FaFacebookF, FaInstagram, FaTwitter, FaQuora } from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaTwitter, FaQuora, FaGooglePlay, FaApple } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
 const FOOTER_LINKS = [
@@ -144,7 +144,11 @@ const Footer = () => {
 
                 return (
                   <li key={link}>
-                    <Link to={route} className="footer-link">
+                    <Link
+                      to={route}
+                      className="footer-link"
+                      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                    >
                       {link}
                     </Link>
                   </li>
@@ -155,18 +159,39 @@ const Footer = () => {
         ))}
       </div>
 
-      <div className="footer-social">
-        {SOCIAL_LINKS.map((social, i) => (
+      <div className="d-flex justify-content-evenly">
+        <div className="footer-social">
+          {SOCIAL_LINKS.map((social, i) => (
+            <a
+              key={i}
+              href={social.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="social-icon"
+            >
+              {social.icon}
+            </a>
+          ))}
+        </div>
+
+        <div className="store-logos">
+          <h5>Download Our App</h5>
           <a
-            key={i}
-            href={social.url}
+            href="https://play.google.com/store/apps/details?id=your.package.name"
             target="_blank"
             rel="noopener noreferrer"
-            className="social-icon"
           >
-            {social.icon}
+            <FaGooglePlay className="store-icon" />
           </a>
-        ))}
+
+          <a
+            href="https://apps.apple.com/app/id000000000"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FaApple className="store-icon" />
+          </a>
+        </div>
       </div>
 
       <div className="footer-copyright">

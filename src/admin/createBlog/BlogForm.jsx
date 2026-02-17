@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { addBlog } from "../../redux/thunk/blogThunk";
 import { useNavigate } from "react-router-dom";
 import "../../styleSheets/blog/blogForm.css";
+import { toast } from "react-toastify";
 
 export default function BlogForm() {
 
@@ -16,6 +17,7 @@ export default function BlogForm() {
         title: "",
         content: "",
         category: "",
+        keyword: "",
         image: null,
     });
 
@@ -30,19 +32,23 @@ export default function BlogForm() {
         }
     };
 
-    const submit = async e => {
+    const submit = async (e) => {
         e.preventDefault();
         if (loading) return;
-
         setLoading(true);
 
-        const data = new FormData();
-        Object.entries(form).forEach(([k, v]) => v && data.append(k, v));
-
-        await dispatch(addBlog(data));
-
-        setLoading(false);
-        navigate("/admin/blogs");
+        try {
+            const data = new FormData();
+            Object.entries(form).forEach(([k, v]) => v && data.append(k, v));
+            await dispatch(addBlog(data)).unwrap();
+            toast.success("Blog created successfully");
+            navigate("/admin/blogs");
+        } catch (error) {
+            console.error("Blog creation failed:", error);
+            toast.error("Failed to create blog");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -76,6 +82,16 @@ export default function BlogForm() {
                     <input
                         value={form.category}
                         onChange={e => handleChange("category", e.target.value)}
+                        required
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label>Keywords (comma separated)</label>
+                    <input
+                        value={form.keyword}
+                        onChange={e => handleChange("keyword", e.target.value)}
+                        placeholder="matrimony, marriage tips, life partner"
                         required
                     />
                 </div>

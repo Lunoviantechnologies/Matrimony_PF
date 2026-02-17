@@ -9,12 +9,15 @@ import { Provider } from 'react-redux';
 import store from './redux/store/store';
 import AppRoutes from './routes/AppRoutes';
 import { ToastContainer } from 'react-toastify';
+import { HelmetProvider } from 'react-helmet-async';
 
 createRoot(document.getElementById('root')).render(
-    <Provider store={store}>
-        <RouterProvider router={AppRoutes} />
+    <HelmetProvider>
+        <Provider store={store}>
+            <RouterProvider router={AppRoutes} />
 
-        {/* ✅ Toast lives at ROOT */}
-        <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover draggable />
-    </Provider>
+            {/* ✅ Toast lives at ROOT */}
+            <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover draggable />
+        </Provider>
+    </HelmetProvider>
 );

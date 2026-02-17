@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/slices/authSlice";
 import AdminNotification from "./AdminNotifications";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import "../styleSheets/navbar.css";
 
 const AdminNavbar = ({ closeMenu }) => {
@@ -43,7 +43,7 @@ const AdminNavbar = ({ closeMenu }) => {
 
     const handleLogout = () => {
         dispatch(logout());
-        toast.success("Logged out successfully!");
+        // toast.success("Logged out successfully!");
         navigate("/");
     };
 

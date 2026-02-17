@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateBlog } from "../../redux/thunk/blogThunk";
 import { useNavigate, useParams } from "react-router-dom";
 import "../../styleSheets/blog/blogForm.css";
+import { toast } from "react-toastify";
 
 export default function EditBlog() {
 
@@ -21,6 +22,7 @@ export default function EditBlog() {
         title: "",
         content: "",
         category: "",
+        keyword: "",
         image: null,
     });
 
@@ -30,6 +32,7 @@ export default function EditBlog() {
                 title: blog.title,
                 content: blog.content,
                 category: blog.category,
+                keyword: blog.keyword,
                 image: null,
             });
 
@@ -48,16 +51,20 @@ export default function EditBlog() {
     const submit = async e => {
         e.preventDefault();
         if (loading) return;
-
         setLoading(true);
 
-        const formData = new FormData();
-        Object.entries(form).forEach(([k, v]) => v && formData.append(k, v));
-
-        await dispatch(updateBlog({ id, formData }));
-
-        setLoading(false);
-        navigate("/admin/blogs");
+        try {
+            const data = new FormData();
+            Object.entries(form).forEach(([k, v]) => v && data.append(k, v));
+            await dispatch(updateBlog({ id, formData: data })).unwrap();
+            toast.success("Blog updated successfully");
+            navigate("/admin/blogs");
+        } catch (error) {
+            console.error("Blog update failed:", error);
+            toast.error("Failed to update blog");
+        } finally {
+            setLoading(false);
+        }
     };
 
     if (!blog) return <p className="status">Loading blog...</p>;
@@ -93,6 +100,16 @@ export default function EditBlog() {
                     <input
                         value={form.category}
                         onChange={e => handleChange("category", e.target.value)}
+                        required
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label>Keywords (comma separated)</label>
+                    <input
+                        value={form.keyword || ""}
+                        onChange={e => handleChange("keyword", e.target.value)}
+                        placeholder="matrimony, marriage tips, life partner"
                         required
                     />
                 </div>

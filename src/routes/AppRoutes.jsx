@@ -49,7 +49,6 @@ import Disclaimer from "../components/privacyInfo/Disclaimer";
 import CommunityGuidelines from "../components/privacyInfo/CommunityGuidelines";
 import ChatReport from "../admin/ChatReport";
 import Resourses from "../components/Resources";
-import Blog from "../components/Blog";
 import ReferralLanding from "../components/ReferralLanding";
 import DashboardAds from "../pages/DashboardAds";
 import RelationshipManager from "../admin/RelationshipManager";
@@ -58,6 +57,8 @@ import Login from "../pages/Login";
 import BlogDashboard from "../admin/createBlog/BlogDashboard";
 import BlogForm from "../admin/createBlog/BlogForm";
 import EditBlog from "../admin/createBlog/EditBlog";
+import BlogList from "../components/blogDisplay/BlogList";
+import BlogDetails from "../components/blogDisplay/BlogDetails";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -80,7 +81,8 @@ const AppRoutes = createBrowserRouter([
                 path: "/resources",
                 element: <Resourses />,
                 children: [
-                    { path: "blog", element: <Blog /> },
+                    { path: "blog", element: <BlogList /> },
+                    { path: "blog/:slug", element: <BlogDetails /> },
                 ]
             },
             {
