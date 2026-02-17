@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "../styleSheets/Footer.css";
 import { FaFacebookF, FaInstagram, FaTwitter, FaQuora, FaGooglePlay, FaApple } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const FOOTER_LINKS = [
   {
@@ -103,6 +104,11 @@ const Footer = () => {
     else navigate("/");
   }
 
+  const handleComingSoon = (e) => {
+    e.preventDefault();
+    toast.info("Our mobile app is coming soon! Stay tuned.");
+  };
+
   return (
     <footer className="footer">
 
@@ -176,18 +182,19 @@ const Footer = () => {
 
         <div className="store-logos">
           <h5>Download Our App</h5>
+
           <a
-            href="https://play.google.com/store/apps/details?id=your.package.name"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#"
+            onClick={handleComingSoon}
+            className="store-link"
           >
             <FaGooglePlay className="store-icon" />
           </a>
 
           <a
-            href="https://apps.apple.com/app/id000000000"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#"
+            onClick={handleComingSoon}
+            className="store-link"
           >
             <FaApple className="store-icon" />
           </a>
