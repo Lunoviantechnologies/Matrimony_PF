@@ -165,7 +165,7 @@ const Footer = () => {
         ))}
       </div>
 
-      <div className="d-flex justify-content-evenly">
+      <div className="footer-bottom">
         <div className="footer-social">
           {SOCIAL_LINKS.map((social, i) => (
             <a
