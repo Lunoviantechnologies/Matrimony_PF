@@ -50,7 +50,7 @@ const FOOTER_LINKS = [
 ];
 
 const ROUTE_MAP = {
-  "Member Login": "/",
+  "Member Login": "/login",
   "Sign Up": "/register",
   "Partner Search": "/",
   "How to Use Vivahjeevan.com": "/",
@@ -58,7 +58,7 @@ const ROUTE_MAP = {
   "Vivahjeevan Blog": "/resources/blog",
   "Careers": "/",
   "Awards & Recognition": "/",
-  "Site Map": "/",
+  "Site Map": "/sitemap",
   "About Us": "/aboutus",
   "Contact Us": "/contactus",
   "Terms & Conditions": "/terms&conditions",
@@ -71,6 +71,9 @@ const ROUTE_MAP = {
   "Success Stories": "/",
   "Vivahjeevan Centres": "/",
   "Elite Matrimony": "/",
+  "Dashboard": "/dashboard",
+  "My Profile": "/matches",
+  "Membership Plans": "/dashboard/premium",
 };
 
 const SOCIAL_LINKS = [
@@ -96,6 +99,8 @@ const Footer = () => {
 
   const { role } = useSelector(state => state.auth);
   const navigate = useNavigate();
+  const isUser = role?.[0] === "USER";
+
   const getSlug = (text) => text.toLowerCase().replace(/ /g, "-").replace(/[&]/g, "");
 
   const handleRedirect = () => {
@@ -108,6 +113,21 @@ const Footer = () => {
     e.preventDefault();
     toast.info("Our mobile app is coming soon! Stay tuned.");
   };
+
+  const dynamicFooterLinks = isUser
+    ? [
+      {
+        title: "My Account",
+        links: [
+          "Dashboard",
+          "My Profile",
+          "Partner Search",
+          "Membership Plans",
+        ],
+      },
+      ...FOOTER_LINKS.filter(col => col.title !== "Need Help?")
+    ]
+    : FOOTER_LINKS;
 
   return (
     <footer className="footer">
@@ -140,7 +160,7 @@ const Footer = () => {
       </div>
 
       <div className="footer-content">
-        {FOOTER_LINKS.map((column) => (
+        {dynamicFooterLinks.map((column) => (
           <div key={column.title} className="footer-column">
             <h3 className="footer-column-title">{column.title}</h3>
 

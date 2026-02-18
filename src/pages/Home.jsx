@@ -1,9 +1,9 @@
-import React from "react";
-import { MdLocalFlorist } from "react-icons/md";
+import React, { lazy } from "react";
+import { MdLocalFlorist, MdPsychology, MdTaskAlt } from "react-icons/md";
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import '../styleSheets/homePage.css';
-import FAQ from "../components/FAQ";
+const FAQ = lazy(() => import("../components/FAQ"));
 
 const Home = () => {
 
@@ -13,13 +13,13 @@ const Home = () => {
             <div className="homeBanner">
                 <div className="bannerInner container">
                     <div className="bannerText">
-                        <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" height={'200px'} />
+                        <img src="/vivahjeevan_logo.png" alt="vivahjeevan_logo" height="200" width="200" />
                         <h1>Vivahjeevan</h1>
                         <h4>Bond for Seven Lifetimes...</h4>
                     </div>
 
                     <div className="bannerImage">
-                        <img src="banner2.png" alt="homeBanner" loading="lazy" />
+                        <img src="banner2.webp" alt="homeBanner" width="520" height="450"/>
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@ const Home = () => {
                     <div className="col-sm-4">
                         <div className="card homeCard">
                             <div className="card-body">
-                                <TaskAltIcon sx={{ fontSize: 70, color: 'blue', mb: 1, }} />
+                                <MdTaskAlt  size={70} color="blue" />
                                 <h6 className="card-title" style={{ fontWeight: 'bold' }}>Blue Tick to find your Green Flag</h6>
                                 <p className="card-text opacity-75">Did you know our blue-tick profiles get 40% more connection requests than others?.</p>
                             </div>
@@ -51,7 +51,7 @@ const Home = () => {
                     <div className="col-sm-4">
                         <div className="card homeCard">
                             <div className="card-body">
-                                <PsychologyIcon sx={{ fontSize: 70, color: '#00eaffff', mb: 1, }} />
+                                <MdPsychology size={70} color="#00eaffff" />
                                 <h6 className="card-title" style={{ fontWeight: 'bold' }}>Matchmaking Powered by AI</h6>
                                 <p className="card-text opacity-75">Cutting-edge technology with two decades of matchmaking expertise to help you find "the one".</p>
                             </div>

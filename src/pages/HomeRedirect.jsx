@@ -1,7 +1,7 @@
-import React from "react";
+import React, { lazy } from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import Home from "./Home";
+const Home = lazy(() => import("./Home"));
 
 const HomeRedirect = () => {
 

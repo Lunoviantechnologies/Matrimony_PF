@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -14,7 +14,9 @@ import { HelmetProvider } from 'react-helmet-async';
 createRoot(document.getElementById('root')).render(
     <HelmetProvider>
         <Provider store={store}>
-            <RouterProvider router={AppRoutes} />
+            <Suspense fallback={<div style={{ textAlign: "center", marginTop: "100px" }}>Loading...</div>}>
+                <RouterProvider router={AppRoutes} />
+            </Suspense>
 
             {/* ✅ Toast lives at ROOT */}
             <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover draggable />

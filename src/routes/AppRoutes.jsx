@@ -1,8 +1,11 @@
+import React, { lazy } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import App from "../App";
-import Register from "../pages/Register";
+// import Register from "../pages/Register";
+const Register = lazy(() => import("../pages/Register"));
 import PremiumSubscription from '../pages/PremiumSubscription';
-import Dashboard from "../pages/Dashboard";
+// import Dashboard from "../pages/Dashboard";
+const Dashboard = lazy(() => import("../pages/Dashboard"));
 import EditProfile from "../pages/EditProfile";
 import ProfileView from "../pages/ProfileView";
 import AboutUs from "../components/AboutUs";
@@ -59,6 +62,7 @@ import BlogForm from "../admin/createBlog/BlogForm";
 import EditBlog from "../admin/createBlog/EditBlog";
 import BlogList from "../components/blogDisplay/BlogList";
 import BlogDetails from "../components/blogDisplay/BlogDetails";
+import SiteMap from "../pages/SiteMap";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -124,6 +128,10 @@ const AppRoutes = createBrowserRouter([
             {
                 path: "/community-guidelines",
                 element: <CommunityGuidelines />
+            },
+            {
+                path: "sitemap",
+                element: <SiteMap />
             }
         ],
     },

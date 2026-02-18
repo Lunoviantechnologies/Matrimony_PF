@@ -18,10 +18,10 @@
     position: absolute;
     inset: 0;
     background:
-        url('/01.png') top left no-repeat,
-        url('/02.png') bottom left no-repeat,
-        url('/03.png') bottom right no-repeat,
-        url('/04.png') top right no-repeat;
+        url('/ex1.png') top left no-repeat,
+        url('/ex2.png') bottom left no-repeat,
+        url('/ex3.png') bottom right no-repeat,
+        url('/ex4.png') top right no-repeat;
 
     background-size: clamp(180px, 18vw, 320px);
     opacity: 0.5;

@@ -1,0 +1,97 @@
+.sitemap-container {
+    padding: 80px 8%;
+    background-color: #D9F5E4;
+    min-height: 80vh;
+    font-family: Arial, sans-serif;
+}
+
+/* Header */
+.sitemap-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.sitemap-header h1 {
+    font-size: 2.5rem;
+    color: #023114;
+    margin-bottom: 15px;
+}
+
+.sitemap-header p {
+    font-size: 1.1rem;
+    color: #555;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Grid Layout */
+.sitemap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+}
+
+/* Card */
+.sitemap-card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    transition: 0.3s ease;
+}
+
+.sitemap-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Section Title */
+.sitemap-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: #035f3f;
+}
+
+/* Links */
+.sitemap-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sitemap-card li {
+    margin-bottom: 12px;
+}
+
+.sitemap-card a {
+    text-decoration: none;
+    color: #444;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+.sitemap-card a:hover {
+    color: #039f3e;
+    padding-left: 5px;
+}
+
+/* ===========================
+   RESPONSIVENESS
+=========================== */
+
+@media (max-width: 768px) {
+    .sitemap-container {
+        padding: 60px 5%;
+    }
+
+    .sitemap-header h1 {
+        font-size: 2rem;
+    }
+
+    .sitemap-header p {
+        font-size: 1rem;
+    }
+
+    .sitemap-card {
+        padding: 20px;
+    }
+}
