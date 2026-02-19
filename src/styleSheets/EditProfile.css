@@ -251,8 +251,8 @@
 
 .box-header {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.02));
-   color:#d32f2f;
-  font-weight:700;
+  color: #d32f2f;
+  font-weight: 700;
   padding: 12px 14px;
   font-weight: 700;
   display: flex;
@@ -260,6 +260,7 @@
   align-items: center;
   font-size: 15px;
   border-bottom: 1px solid var(--border-gray);
+  white-space: nowrap;
 }
 
 .box-body {
@@ -268,41 +269,43 @@
 
 .edit-inline {
   background: transparent;
+  width: 100px;
   border: none;
   color: var(--blue);
   font-weight: 600;
   cursor: pointer;
   display: flex;
+  justify-content: end;
   gap: 8px;
   align-items: center;
 }
 
 /* Row style for two-column list - scoped to edit profile page to avoid overriding Bootstrap's .row globally */
-.edit-profile-page .row{
-  display:grid;
+.profile-row {
+  display: grid;
   grid-template-columns: 180px 1fr;
-  gap:12px;
-  align-items:start;
-  padding:10px 0;
+  gap: 12px;
+  align-items: start;
+  padding: 10px 0;
 }
 
-.label{
-  font-weight:700;
-  color:#222;
-  font-size:13px;
+.label {
+  font-weight: 700;
+  color: #222;
+  font-size: 13px;
 }
 
-.value{
-  display:flex;
-  justify-content:flex-end;
-  align-items:center;
-  gap:12px;
+.value {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
 }
 
-.value-text{
-  text-align:right;
-  font-size:13px;
-  color:#222;
+.value-text {
+  text-align: right;
+  font-size: 13px;
+  color: #222;
 }
 
 .muted {
@@ -338,10 +341,12 @@
 .right-col {
   flex: 1;
 }
+
 .left-col .row,
-.right-col .row{
+.right-col .row {
   grid-template-columns: 150px 1fr;
 }
+
 .underlined-block {
   border-radius: 6px;
   background: #fff;
@@ -409,6 +414,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  white-space: nowrap;
 }
 
 .modal-title {
@@ -418,6 +424,7 @@
 
 .modal-close {
   background: transparent;
+  width: 32px;
   border: none;
   font-size: 20px;
   cursor: pointer;
@@ -431,6 +438,19 @@
 }
 
 .modal-footer {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border-gray);
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.btn-cancel, .btn-save {
+  width: 200px;
+  padding: 10px 0;
+}
+
+.modal-footer-crop {
   padding: 12px 20px;
   border-top: 1px solid var(--border-gray);
   display: flex;
@@ -472,8 +492,8 @@
 }
 
 .btn-outline {
-  background: white;
-  color: var(--muted);
+  background: rgb(166, 166, 166);
+  color: white;
   border: 1px solid var(--border-gray);
   padding: 8px 14px;
   border-radius: 6px;
@@ -572,43 +592,45 @@
 
   z-index: 10;
 }
-@media (max-width:576px){
+
+@media (max-width:576px) {
 
   /* keep label and value in same row */
-  .edit-profile-page .row{
+  .profile-row {
     grid-template-columns: 120px 1fr;
-    gap:10px;
+    gap: 10px;
   }
 
-  .left-col .row,
-  .right-col .row{
+  .left-col .profile-row,
+  .right-col .profile-row {
     grid-template-columns: 120px 1fr;
   }
 
-  .value{
-    justify-content:flex-end;
+  .value {
+    justify-content: flex-end;
   }
 
-  .value-text{
-    text-align:right;
+  .value-text {
+    text-align: right;
   }
 }
-@media (max-width: 880px){
+
+@media (max-width: 880px) {
 
   /* make cards use full screen width */
-  .page-content{
+  .page-content {
     max-width: 100%;
     margin: 0;
     padding: 10px;
   }
 
   .boxed,
-  .photo-card{
+  .photo-card {
     width: 100%;
   }
 
   .right-column,
-  .left-column{
+  .left-column {
     width: 100%;
   }
 

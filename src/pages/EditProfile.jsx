@@ -264,7 +264,7 @@ export default function EditProfile() {
   };
 
   const Row = ({ label, value, onAction, actionText }) => (
-    <div className="row">
+    <div className="profile-row">
       <div className="label">{label}</div>
       <div className="value">
         <div className="value-text">
@@ -638,11 +638,8 @@ export default function EditProfile() {
                 />
               </div>
 
-              <div className="modal-footer">
-                <button
-                  className="btn-outline"
-                  onClick={() => setCropOpen(false)}
-                >
+              <div className="modal-footer-crop">
+                <button className="btn-outline" onClick={() => setCropOpen(false)}>
                   Cancel
                 </button>
 
@@ -708,8 +705,8 @@ export default function EditProfile() {
               </div>
 
               <div className="modal-footer">
-                <button className="btn-outline" onClick={cancelEdit}>Cancel</button>
-                <button className="btn-primary" onClick={saveSection}>Save</button>
+                <button className="btn-outline btn-cancel" onClick={cancelEdit}>Cancel</button>
+                <button className="btn-outline-primary btn-save" onClick={saveSection}>Save</button>
               </div>
             </div>
           </div>

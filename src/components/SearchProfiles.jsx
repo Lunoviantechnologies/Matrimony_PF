@@ -122,6 +122,7 @@ const SearchProfiles = () => {
                 p.religion?.toLowerCase().includes(search) ||
                 p.motherTongue?.toLowerCase().includes(search) ||
                 p.annualIncome?.toLowerCase().includes(search) ||
+                p.spiritualPath?.toLowerCase().includes(search) ||
                 String(p.age).includes(search)
             );
     }, [profiles, searchText, myProfile, id, allHiddenIds]);
