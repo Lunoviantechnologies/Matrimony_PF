@@ -168,8 +168,17 @@ const AppRoutes = createBrowserRouter([
                 element: <ProfileView />
             },
             {
-                path: "messages/:userId",
-                element: <ChatWindow />
+                path: "messages",
+                children: [
+                    {
+                        index: true,
+                        element: <ChatWindow />
+                    },
+                    {
+                        path: ":userId",
+                        element: <ChatWindow />
+                    }
+                ]
             },
             {
                 path: "matches",

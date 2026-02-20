@@ -714,7 +714,7 @@ useEffect(() => {
       })
       .catch((error) => {
         console.error("Upload error:", error.response?.data || error.message);
-        toast.error("Registration failed");
+        toast.error(error.response?.data || error.message);
       });
   };
 

@@ -53,48 +53,38 @@ export default function Settings() {
 
       {/* 🔹 BUTTON TABS */}
       <Box
-  sx={{
-    display: "flex",
-    gap: 1.2,
-    mb: 3,
-
-    /* mobile & tablet → horizontal slider */
-    overflowX: { xs: "auto", sm: "auto", md: "visible" },
-    flexWrap: { xs: "nowrap", sm: "nowrap", md: "wrap" },
-
-    WebkitOverflowScrolling: "touch",
-
-    "&::-webkit-scrollbar": {
-      display: "none",
-    },
-  }}
->
+        sx={{
+          display: "flex",
+          gap: 2,
+          mb: 3,
+          flexWrap: "nowrap",
+          overflowX: "hidden",   // 🔥 remove scroll completely
+        }}
+      >
         {tabs.map((t) => (
           <Button
             key={t.index}
             onClick={() => setTab(t.index)}
             variant={tab === t.index ? "contained" : "outlined"}
-         sx={{
-  textTransform: "none",
-  fontWeight: 600,
-  borderRadius: "12px",
-  px: 2.5,
-  py: 1,
+            disableRipple
+            sx={{
+              whiteSpace: "nowrap",
+              textTransform: "none",
+              fontWeight: 600,
+              borderRadius: "12px",
+              px: 3,
+              py: 1,
+              minWidth: "auto",     // 🔥 important
+              width: "auto",        // 🔥 important
 
-  whiteSpace: "nowrap",         // 🔥 important
-  flexShrink: 0,                // 🔥 important
+              backgroundColor: tab === t.index ? "#0a6817" : "transparent",
+              color: tab === t.index ? "#fff" : "#089226",
+              borderColor: "#0a6817",
 
-  minWidth: { xs: "auto", md: 120 },
-
-  backgroundColor: tab === t.index ? "#0a6817ff" : "transparent",
-  color: tab === t.index ? "#efeaeaff" : "#089226ff",
-  borderColor: "#0a6817ff",
-
-  "&:hover": {
-    backgroundColor:
-      tab === t.index ? "#089226ff" : "rgba(25, 118, 210, 0.08)",
-  },
-}}
+              "&:hover": {
+                backgroundColor: tab === t.index ? "#089226" : "rgba(0,0,0,0.04)",
+              },
+            }}
           >
             {t.label}
           </Button>

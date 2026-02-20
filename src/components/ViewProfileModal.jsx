@@ -77,13 +77,12 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
     }
   };
   const maskName = (name = "") => {
-  if (!name) return "—";
-  return name.charAt(0).toUpperCase() + "*****";
-};
+    if (!name) return "—";
+    return name.charAt(0).toUpperCase() + "*****";
+  };
 
-const displayName = premium
-  ? fullName
-  : `${maskName(firstName)} ${maskName(lastName)}`;
+  const displayName = premium ? fullName : `${maskName(firstName)} ${maskName(lastName)}`;
+
   const renderCentered = () => (
     <div className="vp-backdrop" onClick={handleBackdrop}>
       <div className="vp-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
@@ -96,7 +95,7 @@ const displayName = premium
               <img
                 src={images[imgIndex] ? images[imgIndex] : profile.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
                 alt={fullName}
-                className={locked ? "blur-image" : ""}
+                className={locked || profile?.hideProfilePhoto ? "blur-image" : ""}
                 draggable={false}
                 onContextMenu={(e) => e.preventDefault()}
               />
@@ -110,13 +109,13 @@ const displayName = premium
 
               {images.length > 1 && (
                 <>
-                  <button className="nav left" onClick={prevImage}>‹</button>
-                  <button className="nav right" onClick={nextImage}>›</button>
+                  <button className="nav left" onClick={prevImage}> <span>‹</span> </button>
+                  <button className="nav right" onClick={nextImage}> <span>›</span> </button>
                 </>
               )}
 
             </div>
-
+              
             {photos && photos.length > 1 && (
               <div className="vp-photos-row">
                 {photos.slice(0, 6).map((p, i) => <img key={i} src={p} alt={`${fullName}-${i}`} className="vp-thumb" />)}
@@ -126,10 +125,10 @@ const displayName = premium
 
           <div className="vp-right">
             <div className="vp-header-row">
-             <h2 className="vp-name">
-  {displayName}
-  <span className="vp-age"><br />{age ? `${age} yrs` : ""}</span>
-</h2>
+              <h2 className="vp-name">
+                {displayName}
+                <span className="vp-age"><br />{age ? `${age} yrs` : ""}</span>
+              </h2>
 
               <div className="vp-match-circle">
                 <div className="vp-match-percent">{matchPercent}%</div>

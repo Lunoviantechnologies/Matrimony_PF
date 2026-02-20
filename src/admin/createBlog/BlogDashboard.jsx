@@ -73,7 +73,7 @@ export default function BlogDashboard() {
             {/* Blog Grid */}
             <div className="blog-grid">
 
-                {blogs.map(blog => (
+                {Array.isArray(blogs) && blogs.map(blog => (
                     <div key={blog.id} className="blog-card">
 
                         <div className="image-wrapper">

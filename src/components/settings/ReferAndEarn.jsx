@@ -65,7 +65,7 @@ export default function ReferAndEarn() {
   const totalNeeded = summary.totalReferralsNeeded ?? 2;
 
   return (
-    <Box sx={{ p: 2, maxWidth: 600 }}>
+    <Box sx={{ p: 2, maxWidth: 600, margin: "0 auto" }}>
       <Typography variant="h5" fontWeight="bold" gutterBottom>
         Refer &amp; Earn
       </Typography>
@@ -92,7 +92,7 @@ export default function ReferAndEarn() {
             InputProps={{ readOnly: true }}
             sx={{ flex: 1 }}
           />
-          <Button variant="contained" onClick={handleCopy}>
+          <Button variant="contained" sx={{width: "150px"}} onClick={handleCopy}>
             {copyDone ? "Copied" : "Copy"}
           </Button>
         </Stack>

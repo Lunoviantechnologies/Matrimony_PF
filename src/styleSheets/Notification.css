@@ -35,9 +35,11 @@
   position: absolute;
   right: 0;
   margin-top: 10px;
-  width: 360px;
+  width: 400px;
   max-height: 300px;
+
   overflow-y: auto;
+  overflow-x: hidden;
 
   background: #ffffff;
   border-radius: 8px;
@@ -71,6 +73,8 @@
 .notif-title {
   font-size: 14px;
   color: #333;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .notif-time {
@@ -81,9 +85,11 @@
 
 /* mark-all-read */
 .notif-actions {
-  padding: 8px;
+  padding: 8px 12px;
+  ;
   border-bottom: 1px solid #eee;
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .mark-all-btn {

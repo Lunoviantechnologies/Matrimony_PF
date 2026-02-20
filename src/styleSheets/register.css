@@ -288,6 +288,7 @@ h2 {
   display: flex;
   gap: 10px;
   align-items: center;
+  width: auto;
 }
 
 .email-verify-box .form-input {
@@ -313,6 +314,7 @@ h2 {
 
   padding: 0 16px;
   min-height: 44px;
+  width: auto;
 
   font-size: 14px;
   font-weight: 500;
@@ -365,12 +367,6 @@ h2 {
     width: 100%;
   }
 } */
-
-.email-verify-box {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
 
 .otp-box {
   display: flex;

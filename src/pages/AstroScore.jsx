@@ -17,6 +17,16 @@ const AstroScore = () => {
     const [loadingId, setLoadingId] = useState(null);
     const [plans, setPlans] = useState([]);
 
+    const maskName = (name = "") => {
+        if (!name) return "-";
+        return name.charAt(0).toUpperCase() + "*****";
+    };
+
+    const getDisplayName = (name) => {
+        if (myProfile?.premium) return name || "-";
+        return maskName(name);
+    };
+
     useEffect(() => {
         if (!id) return;
 
@@ -155,7 +165,7 @@ const AstroScore = () => {
                             {/* RIGHT — FRIEND */}
                             <div className="astro-user">
                                 <img src={getProfileImage(friendId)} alt={friendName} />
-                                <span>{friendName}</span>
+                                <span>{getDisplayName(friendName)}</span>
                             </div>
 
                         </div>

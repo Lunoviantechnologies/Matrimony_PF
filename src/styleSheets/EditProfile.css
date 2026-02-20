@@ -96,12 +96,12 @@
 }
 
 .photo-card {
-  background: var(--box-bg);
+  background: #8FA7B8;
   border: 1px solid var(--border-gray);
   border-radius: var(--radius);
   padding: 16px;
   box-shadow: var(--shadow);
-  position: relative;
+  /* position: relative; */
 }
 
 /* =========================
@@ -176,12 +176,12 @@
 .photo-name {
   font-weight: 700;
   font-size: 16px;
-  color: #222;
+  color: #D9F5E4;
 }
 
 .photo-sub {
   font-size: 13px;
-  color: var(--muted);
+  color: #D9F5E4;
   margin-top: 3px;
 }
 
@@ -250,8 +250,8 @@
 }
 
 .box-header {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.02));
-  color: #d32f2f;
+  background-color: #8FA7B8;
+  color: #D9F5E4;
   font-weight: 700;
   padding: 12px 14px;
   font-weight: 700;
@@ -271,7 +271,7 @@
   background: transparent;
   width: 100px;
   border: none;
-  color: var(--blue);
+  color: #090909;
   font-weight: 600;
   cursor: pointer;
   display: flex;
@@ -445,7 +445,8 @@
   gap: 10px;
 }
 
-.btn-cancel, .btn-save {
+.btn-cancel,
+.btn-save {
   width: 200px;
   padding: 10px 0;
 }
@@ -530,6 +531,9 @@
   cursor: pointer;
 
   z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .carousel-btn.left {
@@ -634,4 +638,27 @@
     width: 100%;
   }
 
+}
+
+.spiritual-suggestions {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.spiritual-chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: #f3f3f3;
+  border: 1px solid #ddd;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.spiritual-chip:hover {
+  background: #0b6efd;
+  color: white;
+  border-color: #0b6efd;
 }

@@ -47,12 +47,15 @@ const MoreMatches = () => {
 
         dispatch(fetchMyProfile(id));
 
-        const sent = await api.get(`/friends/sent/${id}`);
-        const received = await api.get(`/friends/received/${id}`);
-        const receivedAccepted = await api.get(`/friends/accepted/received/${id}`);
-        const sentAccepted = await api.get(`/friends/accepted/sent/${id}`);
-        const receivedRejected = await api.get(`/friends/rejected/received/${id}`);
-        const sentRejected = await api.get(`/friends/rejected/sent/${id}`);
+        const [sent, received, receivedAccepted, sentAccepted, receivedRejected, sentRejected] =
+          await Promise.all([
+            api.get(`/friends/sent/${id}`),
+            api.get(`/friends/received/${id}`),
+            api.get(`/friends/accepted/received/${id}`),
+            api.get(`/friends/accepted/sent/${id}`),
+            api.get(`/friends/rejected/received/${id}`),
+            api.get(`/friends/rejected/sent/${id}`)
+          ]);
 
         setSentRequests(sent.data);
         setReceivedRequests(received.data);
@@ -83,7 +86,9 @@ const MoreMatches = () => {
   const acceptedIds = acceptedList.map(r => r.receiverId === id ? r.senderId : r.receiverId);
   const rejectedIds = rejectedList.map(r => r.receiverId === id ? r.senderId : r.receiverId);
 
-  const allHiddenIds = [...sentIds, ...receivedIds, ...acceptedIds, ...rejectedIds];
+  const hiddenSet = useMemo(() => {
+    return new Set([...sentIds, ...receivedIds, ...acceptedIds, ...rejectedIds]);
+  }, [sentIds, receivedIds, acceptedIds, rejectedIds]);
 
   // Helper to calculate age from dateOfBirth
   const getAge = (dob) => {
@@ -120,44 +125,57 @@ const MoreMatches = () => {
 
   // ---- Filter profiles ----
   const filteredProfiles = useMemo(() => {
-    if (!requestsLoaded) return [];
-    return profiles
-      .filter(p => p.id !== id)
-      .filter(p => p.gender !== myProfile?.gender)
-      .filter(p => !allHiddenIds.includes(p.id))
-      .filter(p => {
-        const age = getAge(p.dateOfBirth);
+    if (!requestsLoaded || !profiles?.length) return [];
 
-        const matchAge =
-          !filters.age.length ||
-          filters.age.some(range => {
-            if (range.includes("+")) {
-              const min = parseInt(range);
-              return age >= min;
-            }
+    return profiles.filter((p) => {
+      if (p.id === id) return false;
+      if (p.gender === myProfile?.gender) return false;
+      if (hiddenSet.has(p.id)) return false;
 
-            const [min, max] = range.split("-").map(Number);
-            return age >= min && age <= max;
-          });
-        const matchprofileFor = !filters.profileFor.length || filters.profileFor.includes(p.profileFor || "");
-        const matchMaritalStatus = !filters.maritalStatus.length || filters.maritalStatus.includes(p.maritalStatus || "");
-        const matchReligion = matchWithOther(filters.religion, filters.otherValues?.religion, p.religion);
-        const matchCountry = matchWithOther(filters.country, filters.otherValues?.country, p.country);
-        const matchProfession = matchWithOther(filters.profession, filters.otherValues?.profession, p.occupation);
-        const matchEducation = matchWithOther(filters.education, filters.otherValues?.education, p.highestEducation);
-        const matchLifestyle = !filters.lifestyle.length || filters.lifestyle.includes(p.vegiterian || "");
-        const matchhabbits = !filters.habbits.length || filters.habbits.includes(p.habbits || "");
+      const age = getAge(p.dateOfBirth);
+      if (filters.age?.length) {
+        const matchAge = filters.age.some((range) => {
+          if (range.includes("+")) {
+            return age >= parseInt(range);
+          }
 
-        const selectedHeight = filters.otherValues?.height;
-        const matchHeight = !selectedHeight || heightToInches(p.height) === heightToInches(selectedHeight);
+          const [min, max] = range.split("-").map(Number);
+          return age >= min && age <= max;
+        });
 
-        const selectedCaste = filters.otherValues?.caste;
-        const customCaste = filters.customCaste;
-        const matchCaste = !selectedCaste || ( selectedCaste === "Other" ? p.subCaste?.toLowerCase().includes(customCaste?.toLowerCase() || "") : p.subCaste === selectedCaste);
+        if (!matchAge) return false;
+      }
 
-        return matchprofileFor && matchAge && matchMaritalStatus && matchReligion && matchCaste && matchCountry && matchEducation && matchProfession && matchLifestyle && matchhabbits && matchHeight;
-      });
-  }, [profiles, filters, allHiddenIds, myProfile, id, requestsLoaded]);
+      if (filters.profileFor?.length && !filters.profileFor.includes(p.profileFor || "")) return false;
+      if (filters.maritalStatus?.length && !filters.maritalStatus.includes(p.maritalStatus || "")) return false;
+      if (filters.religion?.length && !matchWithOther(filters.religion, filters.otherValues?.religion, p.religion)) return false;
+      if (filters.country?.length && !matchWithOther(filters.country, filters.otherValues?.country, p.country)) return false;
+      if (filters.profession?.length && !matchWithOther(filters.profession, filters.otherValues?.profession, p.occupation)) return false;
+      if (filters.education?.length && !matchWithOther(filters.education, filters.otherValues?.education, p.highestEducation)) return false;
+      if (filters.lifestyle?.length && !filters.lifestyle.includes(p.vegiterian || "")) return false;
+      if (filters.habbits?.length && !filters.habbits.includes(p.habbits || "")) return false;
+
+      const selectedHeight = filters.otherValues?.height;
+      if (selectedHeight && heightToInches(p.height) !== heightToInches(selectedHeight)) return false;
+
+      const selectedCaste = filters.otherValues?.caste;
+      const customCaste = filters.customCaste;
+
+      if (selectedCaste) {
+        if (selectedCaste === "Other") {
+          if (!p.subCaste?.toLowerCase().includes(customCaste?.toLowerCase() || "")) {
+            return false;
+          }
+        } else {
+          if (p.subCaste !== selectedCaste) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    });
+  }, [profiles, filters, hiddenSet, myProfile?.gender, id, requestsLoaded]);
 
   // console.log("Filters:", filters);
 

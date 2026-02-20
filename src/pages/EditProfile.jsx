@@ -360,6 +360,13 @@ export default function EditProfile() {
     toast.success("Photo deleted success");
   };
 
+  const spiritualSuggestions = [
+    "ISKCON",
+    "Vaishnav traditions",
+    "Gaudiya Vaishnav",
+    "Isha Foundation followers"
+  ];
+
   return (
     <div className="edit-profile-page">
       <h3>Edit Profile</h3>
@@ -367,12 +374,11 @@ export default function EditProfile() {
       <main className="page-content">
         <aside className="left-column">
           <div className="photo-card">
-
-            {/* carousel nav */}
-            <button className="carousel-btn left" onClick={prevPhoto}>‹</button>
-            <button className="carousel-btn right" onClick={nextPhoto}>›</button>
-
             <div className="photo-box" >
+
+              {/* carousel nav */}
+              <button className="carousel-btn left" onClick={prevPhoto}>‹</button>
+              <button className="carousel-btn right" onClick={nextPhoto}>›</button>
 
               {currentPhoto ? (
                 <img
@@ -431,7 +437,7 @@ export default function EditProfile() {
           </div>
 
           <div className="boxed small-box">
-            <div className="box-header red">
+            <div className="box-header">
               Basics & Lifestyle
               <button className="edit-inline" onClick={() => openSectionModal("basics")}>
                 <FaEdit /> Edit
@@ -448,7 +454,7 @@ export default function EditProfile() {
           </div>
 
           <div className="boxed small-box">
-            <div className="box-header red">
+            <div className="box-header">
               Astrology
               <button className="edit-inline" onClick={() => openSectionModal("astro")}><FaEdit /> Edit</button>
             </div>
@@ -463,7 +469,7 @@ export default function EditProfile() {
           </div>
 
           <div className="boxed small-box">
-            <div className="box-header red">
+            <div className="box-header">
               Family Details
               <button className="edit-inline" onClick={() => openSectionModal("family")}><FaEdit /> Edit</button>
             </div>
@@ -480,7 +486,7 @@ export default function EditProfile() {
 
         <section className="right-column">
           <div className="main-card boxed">
-            <div className="box-header red">
+            <div className="box-header">
               Personal Details
               <button className="edit-inline" onClick={() => openSectionModal("personal")}><FaEdit /> Edit</button>
             </div>
@@ -508,7 +514,17 @@ export default function EditProfile() {
           </div>
 
           <div className="boxed">
-            <div className="box-header red">
+            <div className="box-header">
+              Spiritual Path
+              <button className="edit-inline" onClick={() => openSectionModal("spiritualPath")}><FaEdit /> Edit</button>
+            </div>
+            <div className="box-body underlined-block">
+              <Row label="Your spiritual Path" value={profileData.spiritualPath} />
+            </div>
+          </div>
+
+          <div className="boxed">
+            <div className="box-header">
               Education & Career
               <button className="edit-inline" onClick={() => openSectionModal("educationCareer")}><FaEdit /> Edit</button>
             </div>
@@ -531,7 +547,7 @@ export default function EditProfile() {
           </div>
 
           <div className="boxed">
-            <div className="box-header red">
+            <div className="box-header">
               Address
               <button className="edit-inline" onClick={() => openSectionModal("address")}><FaEdit /> Edit</button>
             </div>
@@ -549,7 +565,7 @@ export default function EditProfile() {
           </div>
 
           <div className="boxed">
-            <div className="box-header red">
+            <div className="box-header">
               Hobbies
               <button className="edit-inline" onClick={() => openSectionModal("hobbies")}><FaEdit /> Edit</button>
             </div>
@@ -559,17 +575,7 @@ export default function EditProfile() {
           </div>
 
           <div className="boxed">
-            <div className="box-header red">
-              Spiritual Path
-              <button className="edit-inline" onClick={() => openSectionModal("spiritualPath")}><FaEdit /> Edit</button>
-            </div>
-            <div className="box-body underlined-block">
-              <Row label="Your spiritual Path" value={profileData.spiritualPath} />
-            </div>
-          </div>
-
-          <div className="boxed">
-            <div className="box-header red">
+            <div className="box-header">
               Partner Preferences
               <button className="edit-inline" onClick={() => openSectionModal("partnerPrefs")}><FaEdit /> Edit</button>
             </div>
@@ -979,16 +985,32 @@ export default function EditProfile() {
       case "spiritualPath":
         return (
           <div className="modal-form">
-            <label className="field"><div className="field-label">Spiritual Path</div>
+            <label className="field">
+              <div className="field-label">Spiritual Path</div>
+
               <input
                 value={buffer.spiritualPath || ""}
                 onChange={(e) => {
                   const val = e.target.value;
-                  const onlyText = val.replace(/[0-9]/g, ""); // remove digits
+                  const onlyText = val.replace(/[0-9]/g, "");
                   handleEditInputLocal("spiritualPath", onlyText);
                 }}
+                placeholder="Type your spiritual path"
               />
             </label>
+
+            {/* Suggestions */}
+            <div className="spiritual-suggestions">
+              {spiritualSuggestions.map((item, index) => (
+                <span
+                  key={index}
+                  className="spiritual-chip"
+                  onClick={() => handleEditInputLocal("spiritualPath", item)}
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
           </div>
         );
 
