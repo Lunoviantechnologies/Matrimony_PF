@@ -63,6 +63,7 @@ import EditBlog from "../admin/createBlog/EditBlog";
 import BlogList from "../components/blogDisplay/BlogList";
 import BlogDetails from "../components/blogDisplay/BlogDetails";
 import SiteMap from "../pages/SiteMap";
+import RequestsList from "../pages/RequestsList";
 
 const AppRoutes = createBrowserRouter([
     {
@@ -203,32 +204,51 @@ const AppRoutes = createBrowserRouter([
                     },
                 ]
             },
+            // {
+            //     path: "requests",
+            //     element: <Requests />,
+            //     children: [
+            //         { index: true, element: <Navigate to="received" replace /> },
+            //         {
+            //             path: "accepted",
+            //             element: <Accepted />
+            //         },
+            //         {
+            //             path: "sent",
+            //             element: <Sent />
+            //         },
+            //         {
+            //             path: "received",
+            //             element: <Received />
+            //         },
+            //         {
+            //             path: "rejected",
+            //             element: <Rejected />
+            //         },
+            //     ]
+            // },
             {
                 path: "requests",
                 element: <Requests />,
                 children: [
                     { index: true, element: <Navigate to="received" replace /> },
                     {
-                        path: "accepted",
-                        element: <Accepted />
+                        path: "received",
+                        element: <RequestsList type="received" />
                     },
                     {
                         path: "sent",
-                        element: <Sent />
+                        element: <RequestsList type="sent" />
                     },
                     {
-                        path: "received",
-                        element: <Received />
+                        path: "accepted",
+                        element: <RequestsList type="accepted" />
                     },
                     {
                         path: "rejected",
-                        element: <Rejected />
+                        element: <RequestsList type="rejected" />
                     },
                 ]
-            },
-            {
-                path: "requests",
-                element: <Requests />
             },
             {
                 path: "search",

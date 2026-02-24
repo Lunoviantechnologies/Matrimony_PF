@@ -7,67 +7,49 @@ import { toast } from "react-toastify";
 export default function AdminApprovals() {
   const dispatch = useDispatch();
   const { role } = useSelector(state => state.auth);
-  const { profiles = [], loading } = useSelector((state) => state.profiles);
+  const { adminProfiles = [], totalPages = 1, adminloading } = useSelector((state) => state.profiles);
 
+  const [actionLoading, setActionLoading] = useState({ id: null, type: null, });
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
-  // Local UI state for only pending profiles
-  const [visibleProfiles, setVisibleProfiles] = useState([]);
-
   // Fetch profiles on mount
   useEffect(() => {
-    if (role[0].toUpperCase() === "ADMIN") {
-      dispatch(fetchAdminProfiles());
-    };
-  }, [dispatch, role]);
-
-  // Filter pending profiles
-  useEffect(() => {
-    const pendingOnly = profiles.filter((p) => {
-      return (
-        p.accountStatus?.toUpperCase() === "PENDING VERIFICATION" ||
-        p.accountStatus === null ||
-        p.accountStatus === undefined ||
-        p.approved === false ||
-        p.isApproved === false
+    if (role?.[0]?.toUpperCase() === "ADMIN") {
+      dispatch(
+        fetchAdminProfiles({ page: page - 1, size: pageSize, accountStatus: "PENDING VERIFICATION" })
       );
-    });
-    setVisibleProfiles(pendingOnly);
-    setPage(1);
-  }, [profiles]);
+    }
+  }, [dispatch, role, page]);
 
   // Approve
   const handleActionApproved = async (userId) => {
     console.log("approving userId :", typeof userId);
     try {
-      setVisibleProfiles((prev) => prev.filter((u) => u.id !== userId));
-
+      setActionLoading({ id: userId, type: "approve" });
       await api.post(`/admin/profiles/approve/${userId}`);
 
       toast.success("User profile approved successfully!");
-      dispatch(fetchAdminProfiles());
+      dispatch(fetchAdminProfiles({ page: page - 1, size: pageSize, accountStatus: "PENDING VERIFICATION" }));
     } catch (error) {
-      console.error("Approve error:", error);
       toast.error("Approval failed!");
-      dispatch(fetchAdminProfiles());
-    }
+    } finally {
+      setActionLoading({ id: null, type: null });
+    };
   };
 
   // Reject
   const handleActionReject = async (userId) => {
     try {
-      setVisibleProfiles((prev) => prev.filter((u) => u.id !== userId));
-
+      setActionLoading({ id: userId, type: "reject" });
       await api.post(`/admin/profiles/reject/${userId}`);
-
       toast.success("User profile rejected successfully!");
-      dispatch(fetchAdminProfiles());
+      dispatch(fetchAdminProfiles({ page: page - 1, size: pageSize, accountStatus: "PENDING VERIFICATION" }));
     } catch (error) {
-      console.error("Reject error:", error);
       toast.error("Rejection failed!");
-      dispatch(fetchAdminProfiles());
-    }
+    } finally {
+      setActionLoading({ id: null, type: null });
+    };
   };
 
   const openDocument = async (fileName) => {
@@ -80,14 +62,14 @@ export default function AdminApprovals() {
   };
 
   // Pagination
-  const totalPages = Math.max(1, Math.ceil(visibleProfiles.length / pageSize));
-  const paginatedData = visibleProfiles.slice((page - 1) * pageSize, page * pageSize);
+  const totalPagesCount = totalPages || 1;
+  const paginatedData = adminProfiles;
 
   useEffect(() => {
-    if (page > totalPages) {
-      setPage(totalPages);
+    if (page > totalPagesCount) {
+      setPage(totalPagesCount);
     }
-  }, [totalPages, page]);
+  }, [totalPagesCount, page]);
 
   return (
     <div className="container mt-4">
@@ -109,7 +91,7 @@ export default function AdminApprovals() {
         </thead>
 
         <tbody>
-          {!loading && paginatedData.map((u, index) => {
+          {!adminloading && paginatedData.map((u, index) => {
             return (
               <tr key={u.id} className="text-center">
                 <td>{(page - 1) * pageSize + index + 1}</td>
@@ -127,9 +109,27 @@ export default function AdminApprovals() {
                 </td>
 
                 <td>{u.createdAt ? new Date(u.createdAt).toLocaleString() : "-"}</td>
+                
                 <td>
-                  <button className="btn btn-success btn-sm me-2" onClick={() => handleActionApproved(u.id)}>Approve</button>
-                  <button className="btn btn-danger btn-sm" onClick={() => handleActionReject(u.id)}>Reject</button>
+                  <button
+                    className="btn btn-success btn-sm me-2"
+                    disabled={actionLoading.id === u.id && actionLoading.type === "approve"}
+                    onClick={() => handleActionApproved(u.id)}
+                  >
+                    {actionLoading.id === u.id && actionLoading.type === "approve"
+                      ? "Processing..."
+                      : "Approve"}
+                  </button>
+
+                  <button
+                    className="btn btn-danger btn-sm"
+                    disabled={actionLoading.id === u.id && actionLoading.type === "reject"}
+                    onClick={() => handleActionReject(u.id)}
+                  >
+                    {actionLoading.id === u.id && actionLoading.type === "reject"
+                      ? "Processing..."
+                      : "Reject"}
+                  </button>
                 </td>
               </tr>
             );
@@ -139,7 +139,7 @@ export default function AdminApprovals() {
 
       <div className="d-flex justify-content-between align-items-center mt-3">
         <span className="text-muted">
-          Showing {visibleProfiles.length === 0 ? 0 : (page - 1) * pageSize + 1}–{Math.min(page * pageSize, visibleProfiles.length)} of {visibleProfiles.length}
+          Page {page} of {totalPages}
         </span>
 
         <div className="mu-pagination mt-3">
@@ -155,7 +155,7 @@ export default function AdminApprovals() {
 
           <button
             className="pagination_btn"
-            disabled={page === totalPages}
+            disabled={page === totalPagesCount}
             onClick={() => setPage((p) => p + 1)}
           >
             Next

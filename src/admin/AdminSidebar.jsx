@@ -73,12 +73,12 @@ export default function AdminSidebar() {
 
             <nav className="sidebar-nav">
                 <button onClick={handleAdminDashboard}><FaChartLine /><span>Dashboard</span></button>
+                <button onClick={handleaprovals}><FaCheckCircle /><span>Approvals</span></button>
                 <button onClick={handleMatches}><FaHeart /><span>Matches</span></button>
                 <button onClick={handleProfiles}><FaUserPlus /><span>New Profiles</span></button>
                 <button onClick={handleManageUser}><FaUserPlus /><span>Manage Users</span></button>
                 <button onClick={handlepayments}><FaRupeeSign /><span>Payments</span></button>
                 <button onClick={handleReport}><FaFileAlt /><span>Reports</span></button>
-                <button onClick={handleaprovals}><FaCheckCircle /><span>Approvals</span></button>
                 <button onClick={handleUserTicket}><FaHeadset /><span>User Support</span></button>
                 <button onClick={handlePaymentDisplay}><FaMoneyCheckAlt /><span>Payment Display</span></button>
                 <button onClick={handleAstroTalk}><FaStar /><span>Astrology Service</span></button>

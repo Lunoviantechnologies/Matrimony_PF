@@ -96,7 +96,7 @@
 }
 
 .photo-card {
-  background: #8FA7B8;
+  background: #68FFD2;
   border: 1px solid var(--border-gray);
   border-radius: var(--radius);
   padding: 16px;
@@ -176,12 +176,12 @@
 .photo-name {
   font-weight: 700;
   font-size: 16px;
-  color: #D9F5E4;
+  color: #000000;
 }
 
 .photo-sub {
   font-size: 13px;
-  color: #D9F5E4;
+  color: #000000;
   margin-top: 3px;
 }
 
@@ -250,8 +250,8 @@
 }
 
 .box-header {
-  background-color: #8FA7B8;
-  color: #D9F5E4;
+  background-color: #68FFD2;
+  color: #000000;
   font-weight: 700;
   padding: 12px 14px;
   font-weight: 700;

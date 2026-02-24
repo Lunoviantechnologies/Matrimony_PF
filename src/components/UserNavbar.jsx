@@ -167,10 +167,7 @@ const UserNavbar = ({ closeMenu }) => {
                     </span>
                 </button>
 
-                <ul
-                    className={`dropdown-menu dropdown-menu-end ${dropdownOpen ? "show" : ""
-                        }`}
-                >
+                <ul className={`dropdown-menu dropdown-menu-end ${dropdownOpen ? "show" : ""}`}>
                     <li>
                         <button
                             className="dropdown-item"

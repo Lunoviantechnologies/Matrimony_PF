@@ -156,6 +156,15 @@
   color: #0f766e;
 }
 
+.mu-status.inactive {
+  color: #766f0f;
+}
+
+.mu-banned.banned {
+  font-weight: 600;
+  color: #760f0f;
+}
+
 /* actions cell: right aligned under header */
 .mu-actions {
   display: flex;

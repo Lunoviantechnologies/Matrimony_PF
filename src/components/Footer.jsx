@@ -21,7 +21,7 @@ const FOOTER_LINKS = [
     title: "Company",
     links: [
       "About Us",
-      "Vivahjeevan Blog",
+      "Blog",
       "Careers",
       "Awards & Recognition",
       "Contact Us",

@@ -5,7 +5,7 @@ import api from "../api/axiosInstance";
 
 const RelationshipManager = () => {
 
-    const { profiles } = useSelector((state) => state.profiles);
+    const { adminProfiles } = useSelector((state) => state.profiles);
     const dispatch = useDispatch();
     const { role } = useSelector((state) => state.auth);
     const [successpayments, setSuccessPayments] = useState([]);
@@ -31,7 +31,7 @@ const RelationshipManager = () => {
         fetchPayments();
 
         if (role[0].toUpperCase() === "ADMIN") {
-            dispatch(fetchAdminProfiles());
+            dispatch(fetchAdminProfiles({ accountStatus: "APPROVED"}));
         };
     }, [dispatch, role]);
 
@@ -43,7 +43,7 @@ const RelationshipManager = () => {
     });
 
     const matchedUsers = activePremiumPayments.map(payment => {
-        const profile = profiles.find(p => p.userId === payment.userId || p.id === payment.userId);
+        const profile = adminProfiles.find(p => p.userId === payment.userId || p.id === payment.userId);
         return {
             ...payment,
             profile

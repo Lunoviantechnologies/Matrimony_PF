@@ -89,7 +89,7 @@
   border-radius: 15px;
   padding: 24px;
   margin-bottom: 32px;
-  box-shadow: 0 1px 6px #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .matchGrid {
@@ -105,7 +105,12 @@
   border-radius: 18px;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.matchSection_map:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 /* Premium / Free badge — top left corner */
@@ -166,7 +171,7 @@
   border-radius: 15px;
   padding: 24px;
   min-width: 280px;
-  box-shadow: 0 1px 6px #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
 }
 
@@ -176,7 +181,12 @@
   background: #fff;
   border-radius: 15px;
   padding: 24px;
-  box-shadow: 0 1px 6px #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.chatList h3 {
+  align-items: center;
+  text-align: center;
 }
 
 .chatList_map {
@@ -254,6 +264,12 @@
   flex: 1;
   min-width: 0;
   white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.interest-tabs button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 @media (max-width: 768px) {
@@ -282,7 +298,7 @@
   border-radius: 18px;
   padding: 18px 22px;
   margin-bottom: 22px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   border: 1px solid #fde68a;
 
   display: flex;
@@ -439,7 +455,7 @@
   padding: 14px;
   border-radius: 12px;
   background: #fff;
-  box-shadow: 0 1px 6px #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .request-left {

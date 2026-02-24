@@ -67,16 +67,11 @@ const AdminNavbar = ({ closeMenu }) => {
                     Admin <i className="bi bi-chevron-down"></i>
                 </button>
 
-                <ul
-                    className={`dropdown-menu dropdown-menu-end ${dropdownOpen ? "show" : ""
-                        }`}
-                >
+                <ul className={`dropdown-menu dropdown-menu-end ${dropdownOpen ? "show" : ""}`}>
                     <li>
                         <button
                             className="dropdown-item"
-                            onClick={() =>
-                                goTo("/admin/admin_settings")
-                            }
+                            onClick={() => goTo("/admin/admin_settings")}
                         >
                             Settings
                         </button>

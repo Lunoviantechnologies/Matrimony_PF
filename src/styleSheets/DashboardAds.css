@@ -1,3 +1,23 @@
+.dashboard-ads-wrapper {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: stretch
+}
+
+.dashboard-ads-wrapper .promo-card {
+  flex: 1;
+  max-width: 420px;
+}
+
+.promo-photo .promo-left {
+  background: linear-gradient(135deg, #8e44ad, #6c3483);
+}
+
+.promo-photo .promo-right button {
+  background: linear-gradient(90deg, #8e44ad, #6c3483);
+}
+
 .promo-card {
   max-width: 400px;
   width: 100%;
@@ -5,8 +25,13 @@
   overflow: hidden;
   border-radius: 16px;
   background: #ffffff;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-  height: 130px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  min-height: 160px;
+}
+
+.promo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
 }
 
 .promo-left {
@@ -23,7 +48,10 @@
 
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+}
+
+.promo-right button {
+  margin-top: auto;
 }
 
 .promo-right h4 {

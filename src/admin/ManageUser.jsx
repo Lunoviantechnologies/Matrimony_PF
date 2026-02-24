@@ -7,22 +7,39 @@ import api from "../api/axiosInstance";
 
 export default function ManageUser() {
   const dispatch = useDispatch();
-  const { token, role } = useSelector((state) => state.auth);
-  const { profiles, loading } = useSelector((state) => state.profiles);
+  const { role } = useSelector((state) => state.auth);
+  const { adminProfiles, totalPages, adminloading } = useSelector((state) => state.profiles);
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [detailUser, setDetailUser] = useState(null);
   const [confirm, setConfirm] = useState({ open: false, user: null });
   const [page, setPage] = useState(1);
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
   const pageSize = 10;
 
   useEffect(() => {
-    if (role[0].toUpperCase() === "ADMIN") {
-      dispatch(fetchAdminProfiles());
-    };
-  }, [dispatch, role]);
-  console.log("profiles :", profiles);
+    if (role?.[0]?.toUpperCase() === "ADMIN") {
+
+      let params = { page: page - 1, size: pageSize, accountStatus: "APPROVED", search: debouncedSearch, };
+
+      if (statusFilter === "active") {
+        params.active = true;
+        params.banned = false;
+      }
+      else if (statusFilter === "inactive") {
+        params.active = false;
+        params.banned = false;
+      }
+      else if (statusFilter === "banned") {
+        params.banned = true;
+      }
+
+      dispatch(fetchAdminProfiles(params));
+    }
+  }, [dispatch, role, page, debouncedSearch, statusFilter]);
+  console.log("profiles :", adminProfiles);
 
   const getUserId = (u) => u?.userId || u?.id || u?.profileId;
 
@@ -31,7 +48,7 @@ export default function ManageUser() {
       await api.delete(`/admin/delete/${id}`);
 
       toast.success("User deleted successfully");
-      dispatch(fetchAdminProfiles());
+      dispatch(fetchAdminProfiles({ page: page - 1, size: pageSize, accountStatus: "APPROVED" }));
       setDetailUser(false);
       setConfirm({ open: false, user: null });
     } catch (error) {
@@ -40,30 +57,46 @@ export default function ManageUser() {
     }
   };
 
-  const filteredUsers = useMemo(() => {
-    const safeSearch = String(search || "").toLowerCase();
+  // const filteredUsers = useMemo(() => {
+  //   const safeSearch = String(search || "").toLowerCase();
 
-    return profiles
-      .filter(u => u.accountStatus && u.accountStatus.toUpperCase() === "APPROVED" )
-      .filter((u) => {
-        const name = `${u.firstName || ""} ${u.lastName || ""}`.toLowerCase();
-        const matchSearch = name.includes(safeSearch);
-        const matchStatus = statusFilter ? u.profileStatus === statusFilter : true;
-        return matchSearch && matchStatus;
-      });
-  }, [profiles, search, statusFilter]);
+  //   return adminProfiles.filter((u) => {
+  //     const name = `${u.firstName || ""} ${u.lastName || ""}`.toLowerCase();
+  //     const matchSearch = name.includes(safeSearch);
 
-  const totalPages = Math.max(1, Math.ceil(filteredUsers.length / pageSize));
-  const paginatedUsers = filteredUsers.slice(
-    (page - 1) * pageSize,
-    page * pageSize
-  );
+  //     let matchStatus = true;
+  //     if (statusFilter === "active") {
+  //       matchStatus = u.active === true && u.banned !== true;
+  //     } else if (statusFilter === "inactive") {
+  //       matchStatus = u.active === false && u.banned !== true;
+  //     } else if (statusFilter === "banned") {
+  //       matchStatus = u.banned === true;
+  //     }
+
+  //     return matchSearch && matchStatus;
+  //   });
+  // }, [adminProfiles, search, statusFilter]);
+
+  const totalPagesCount = totalPages || 1;
+  const paginatedUsers = adminProfiles;
 
   useEffect(() => {
-    if (page > totalPages) {
-      setPage(totalPages);
+    if (page > totalPagesCount) {
+      setPage(totalPagesCount);
     }
-  }, [totalPages, page]);
+  }, [totalPagesCount, page]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [search, statusFilter]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [search]);
 
   const openDetail = (user) => setDetailUser(user);
   const closeDetail = () => setDetailUser(null);
@@ -88,10 +121,9 @@ export default function ManageUser() {
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
-            <option value="">All Status</option>
+            <option value="">All</option>
             <option value="active">Active</option>
-            <option value="pending_verification">Pending</option>
-            <option value="suspended">Suspended</option>
+            <option value="inactive">Inactive</option>
             <option value="banned">Banned</option>
           </select>
         </div>
@@ -108,12 +140,13 @@ export default function ManageUser() {
               <th>City</th>
               <th>Membership</th>
               <th>Status</th>
+              <th>Banned</th>
               <th>Actions</th>
             </tr>
           </thead>
 
           <tbody>
-            {loading ? (
+            {adminloading ? (
               <tr>
                 <td colSpan={7} className="mu-loading">
                   Loading users...
@@ -159,8 +192,14 @@ export default function ManageUser() {
                     </td>
 
                     <td>
-                      <span className={`mu-status ${u.active || "active"}`}>
+                      <span className={`mu-status ${u.active ? "active" : "inactive"}`}>
                         {u.active ? "Active" : "Inactive"}
+                      </span>
+                    </td>
+
+                    <td>
+                      <span className={`mu-banned ${u.banned ? "banned" : "active"}`}>
+                        {u.banned ? "Banned" : "Active"}
                       </span>
                     </td>
 
@@ -185,7 +224,7 @@ export default function ManageUser() {
       </div>
 
       {/* PAGINATION */}
-      <div className="mu-pagination mt-3">
+      <div className="mm-pagination mt-3">
         <button
           className="pagination_btn"
           disabled={page === 1}
@@ -198,7 +237,7 @@ export default function ManageUser() {
 
         <button
           className="pagination_btn"
-          disabled={page === totalPages}
+          disabled={page === totalPagesCount}
           onClick={() => setPage((p) => p + 1)}
         >
           Next

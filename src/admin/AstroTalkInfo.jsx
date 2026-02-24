@@ -33,10 +33,7 @@ const AstroTalkInfo = () => {
                 <h2>Astro Talk – Admin Panel</h2>
 
                 {/* ✅ Navigate instead of modal */}
-                <button
-                    className="add-btn"
-                    onClick={() => setShowAddModal(true)}
-                >
+                <button className="add-btn" onClick={() => setShowAddModal(true)} style={{width: "200px"}}>
                     <FaPlus /> Add Astrologer
                 </button>
             </div>
@@ -62,7 +59,7 @@ const AstroTalkInfo = () => {
                             <td>₹{astro.price}</td>
                             <td className="actions">
                                 <button className="icon-btn" onClick={() => handleEditAstro(astro)}>
-                                    <FaEdit />
+                                    <FaEdit color="orange"/>
                                 </button>
                             </td>
                         </tr>

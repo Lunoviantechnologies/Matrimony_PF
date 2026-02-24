@@ -176,6 +176,7 @@
 
 .pagination-controls button {
   padding: 8px 18px;
+  width: 150px;
   border: none;
   background-color: #4b7bec;
   color: #fff;

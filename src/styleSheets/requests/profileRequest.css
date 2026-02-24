@@ -110,6 +110,7 @@
 .accept,
 .reject {
   padding: 9px 18px;
+  width: 110px;
   border: none;
   color: white;
   border-radius: 8px;

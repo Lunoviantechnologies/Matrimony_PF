@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import "../styleSheets/ViewReport.css";
-import { FaUsers, FaRupeeSign, FaChartPie, FaChartLine, FaEnvelope, FaTwitter, FaFacebookF, FaLinkedinIn, FaInstagram,} from "react-icons/fa";
+import { FaUsers, FaRupeeSign, FaChartPie, FaChartLine, FaEnvelope, FaTwitter, FaFacebookF, FaLinkedinIn, FaInstagram, } from "react-icons/fa";
 import axios from "axios";
 import backendIP from "../api/api";
+import api from "../api/axiosInstance";
 
 const ViewReport = () => {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(false);
+  const currentYear = new Date().getFullYear();
+  const [selectedYear, setSelectedYear] = useState(currentYear);
 
   // Fetch payments
   const fetchProfiles = async () => {
@@ -14,12 +17,11 @@ const ViewReport = () => {
       setLoading(true);
       const res = await axios.get(`${backendIP}/payment/successful`);
       const data = res.data || [];
-      console.log("Fetched profiles:", data);
 
       // Convert backend → UI model
       const converted = data.map((p) => ({
         userId: p.userId,          // IMPORTANT FOR UNIQUE COUNT
-        planCode: p.planCode,      
+        planCode: p.planCode,
         amount: p.amount,          // paise
         status: p.status,
         name: p.name || "",
@@ -41,6 +43,19 @@ const ViewReport = () => {
     fetchProfiles();
   }, []);
 
+  useEffect(() => {
+    const reportYearly = async () => {
+      try {
+        const res = await api.get(`/admin/yearly-dashboard?year=${selectedYear}`);
+        console.log("Yearly report:", res.data);
+      } catch (err) {
+        console.error("Error fetching yearly report:", err);
+      }
+    };
+
+    reportYearly();
+  }, [selectedYear]);
+
   // Count plans
   const GOLD_3M = profiles.filter((p) => p.planCode === "GOLD_3").length;
   const GOLD_PLUS_3M = profiles.filter((p) => p.planCode === "GOLDPLUS_3").length;
@@ -49,20 +64,30 @@ const ViewReport = () => {
   const PLATINUM_12M = profiles.filter((p) => p.planCode === "PLATINUM_12").length;
 
   const revenue = profiles
-  .reduce((sum, p) => sum + p.amount, 0).toFixed(2);
+    .reduce((sum, p) => sum + p.amount, 0).toFixed(2);
 
   const activeMembers = profiles.filter((p) => p.isActive).length;
 
   const topCities = ["Hyderabad", "Bangalore", "Mumbai"];
-  console.log(profiles)
 
   return (
     <div className="viewreport-container">
       <div className="banner">
         <div className="overlay">
-          <h1>Vivahjeevan Matrimony Report - 2025</h1>
+          <h1>Vivahjeevan Matrimony Report - {currentYear}</h1>
           <p>Bringing hearts together through love and trust </p>
         </div>
+      </div>
+
+      <div>
+        <label>Select Year:</label>
+        <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} style={{width: "100px"}}>
+          {Array.from({ length: 10 }, (_, i) => currentYear - i).map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Stats */}
@@ -81,7 +106,7 @@ const ViewReport = () => {
 
         <div className="card yellow">
           <FaUsers className="icon" />
-          <h2>{loading ? "Loading..." :  DIAMOND_6M}</h2>
+          <h2>{loading ? "Loading..." : DIAMOND_6M}</h2>
           <p>Diamond Members</p>
         </div>
 

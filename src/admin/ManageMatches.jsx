@@ -1,20 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import "../styleSheets/ManageMatches.css";
 import { TbHeartHandshake } from "react-icons/tb";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchAdminProfiles } from "../redux/thunk/profileThunk";
 import api from "../api/axiosInstance";
 
 export default function ManageMatches() {
-  const dispatch = useDispatch();
-
-  const { profiles } = useSelector((state) => state.profiles);
-  const { id: myId, role } = useSelector((state) => state.auth);
-
   const [matches, setMatches] = useState([]);
-  const [activeProfile, setActiveProfile] = useState(null);
-  const [anchorRect, setAnchorRect] = useState(null);
-  const [viewport, setViewport] = useState({ w: 0, h: 0 });
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
@@ -25,12 +15,7 @@ export default function ManageMatches() {
     const fetchMatches = async () => {
       try {
         const res = await api.get(`/friends/all`);
-
-        const accepted = res.data.filter(
-          (m) => m.status?.toUpperCase() === "ACCEPTED"
-        );
-
-        setMatches(accepted || []);
+        setMatches(res.data || []);
       } catch (err) {
         console.error("Error fetching matches", err);
       }
@@ -40,49 +25,37 @@ export default function ManageMatches() {
   }, []);
 
   /* -----------------------------------
-     Fetch all profiles
+     Transform Data
   ----------------------------------- */
-  useEffect(() => {
-    if (role[0].toUpperCase() === "ADMIN") {
-      dispatch(fetchAdminProfiles());
-    };
-  }, [dispatch, role]);
+  const friendPairs = useMemo(() => {
+    return matches
+      .filter((m) => m.status?.toUpperCase() === "ACCEPTED")
+      .map((m) => ({
+        id: m.requestId,
+        a: {
+          id: m.senderId,
+          name: m.senderName,
+          age: m.senderAge,
+          city: m.senderCity,
+          photo: m.senderPhoto,
+          gender: m.senderGender,
+        },
+        b: {
+          id: m.receiverId,
+          name: m.receiverName,
+          age: m.receiverAge,
+          city: m.receiverCity,
+          photo: m.receiverPhoto,
+          gender: m.receiverGender,
+        },
+      }));
+  }, [matches]);
 
   /* -----------------------------------
-     Viewport for popover positioning
+     Pagination
   ----------------------------------- */
-  useEffect(() => {
-    const update = () =>
-      setViewport({ w: window.innerWidth, h: window.innerHeight });
-
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
-
-  /* -----------------------------------
-     Helpers
-  ----------------------------------- */
-  const getProfileById = (id) =>
-    profiles.find((p) => p.id === id);
-
-  const friendPairs = matches
-    .map((m) => {
-      const userA = getProfileById(m.senderId);
-      const userB = getProfileById(m.receiverId);
-
-      if (!userA || !userB) return null;
-
-      return {
-        id: m.id,
-        a: userA,
-        b: userB,
-      };
-    })
-    .filter(Boolean);
-  // console.log("friendPairs : ", friendPairs);
-
   const totalPages = Math.max(1, Math.ceil(friendPairs.length / pageSize));
+
   const paginatedPairs = friendPairs.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
@@ -92,50 +65,14 @@ export default function ManageMatches() {
     if (currentPage > totalPages) {
       setCurrentPage(totalPages);
     }
-  }, [totalPages, currentPage]);
+  }, [totalPages]);
 
   /* -----------------------------------
-     Popover handlers
+     Image Helper
   ----------------------------------- */
-  const openAt = (profile, e) => {
-    e.stopPropagation();
-    const rect = e.currentTarget.getBoundingClientRect();
-    setAnchorRect(rect);
-    setActiveProfile(profile);
-  };
-
-  const closePopover = () => {
-    setActiveProfile(null);
-    setAnchorRect(null);
-  };
-
-  const getPopoverStyle = () => {
-    if (!anchorRect) return { display: "none" };
-
-    const popupW = 380;
-    const popupH = 320;
-    const pad = 8;
-
-    let left = anchorRect.right + pad;
-    let top = anchorRect.top;
-
-    if (left + popupW > viewport.w)
-      left = anchorRect.left - popupW - pad;
-
-    if (top + popupH > viewport.h)
-      top = viewport.h - popupH - pad;
-
-    return {
-      position: "fixed",
-      left,
-      top,
-      width: popupW,
-      zIndex: 3000,
-      background: "#fff",
-      borderRadius: 10,
-      padding: 12,
-      boxShadow: "0 12px 30px rgba(0,0,0,0.14)",
-    };
+  const getImage = (photo, gender) => {
+    if (photo) return photo; // add base URL if required
+    return gender === "Female" ? "placeholder_girl.png" : "placeholder_boy.png";
   };
 
   return (
@@ -143,19 +80,18 @@ export default function ManageMatches() {
       <h2 className="mm-title">Matched Profiles</h2>
 
       <div className="mm-list">
-        {paginatedPairs.map((m, index) => (
-          <div key={index} className="mm-pair-card">
+        {paginatedPairs.map((m) => (
+          <div key={m.id} className="mm-pair-card">
 
             {/* Left user */}
             <div className="mm-user">
               <img
-                src={m.a.updatePhoto ? m.a.updatePhoto : m.a.gender === "Female" ? "placeholder_girl.png" : "placeholder_boy.png"}
-                alt={m.a.firstName}
+                src={getImage(m.a.photo, m.a.gender)}
+                alt={m.a.name}
                 className="mm-img"
-                onClick={(e) => openAt(m.a, e)}
               />
               <div className="mm-info">
-                <h4>{m.a.firstName} {m.a.lastName}</h4>
+                <h4>{m.a.name}</h4>
                 <p>{m.a.age} yrs</p>
                 <p>{m.a.city}</p>
               </div>
@@ -172,55 +108,26 @@ export default function ManageMatches() {
             {/* Right user */}
             <div className="mm-user mm-user-right">
               <div className="mm-info">
-                <h4>{m.b.firstName} {m.b.lastName}</h4>
+                <h4>{m.b.name}</h4>
                 <p>{m.b.age} yrs</p>
                 <p>{m.b.city}</p>
               </div>
               <img
-                src={m.b.updatePhoto ? m.b.updatePhoto : m.b.gender === "Female" ? "placeholder_girl.png" : "placeholder_boy.png"}
-                alt={m.b.firstName}
+                src={getImage(m.b.photo, m.b.gender)}
+                alt={m.b.name}
                 className="mm-img"
-                onClick={(e) => openAt(m.b, e)}
               />
             </div>
+
           </div>
         ))}
       </div>
 
-      {/* Popover */}
-      {activeProfile && (
-        <>
-          <div
-            onClick={closePopover}
-            style={{ position: "fixed", inset: 0, zIndex: 2500 }}
-          />
-
-          <div style={getPopoverStyle()} onClick={(e) => e.stopPropagation()}>
-            <div style={{ textAlign: "right" }}>
-              <button onClick={closePopover}>✕</button>
-            </div>
-
-            <img
-              src={activeProfile.profileImage}
-              style={{ width: "100%", borderRadius: 8 }}
-              alt=""
-            />
-
-            <h3>{activeProfile.firstName} {activeProfile.lastName}</h3>
-            <p>{activeProfile.age} yrs • {activeProfile.city}</p>
-            <p><b>Gender:</b> {activeProfile.gender}</p>
-            <p><b>Education:</b> {activeProfile.education}</p>
-            <p><b>Occupation:</b> {activeProfile.occupation}</p>
-
-            <button className="mm-message-btn">Message</button>
-          </div>
-        </>
-      )}
-
+      {/* Pagination */}
       <div className="mm-pagination">
         <button
           disabled={currentPage === 1}
-          onClick={() => setCurrentPage(prev => prev - 1)}
+          onClick={() => setCurrentPage((prev) => prev - 1)}
           className="pagination_btn"
         >
           Prev
@@ -230,7 +137,7 @@ export default function ManageMatches() {
 
         <button
           disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage(prev => prev + 1)}
+          onClick={() => setCurrentPage((prev) => prev + 1)}
           className="pagination_btn"
         >
           Next
@@ -238,4 +145,4 @@ export default function ManageMatches() {
       </div>
     </div>
   );
-};
+}
