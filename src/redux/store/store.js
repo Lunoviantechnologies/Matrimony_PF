@@ -5,6 +5,7 @@ import profilesReducer from "../slices/profileSlice";
 import notificationReducer from "../slices/notificationSlice";
 import blogReducer from "../slices/blogSlice";
 import friendRequestsReducer from "../slices/friendRequestsSlice";
+import matchesReducer from "../slices/matchesSlice";
 
 const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
         notifications : notificationReducer,
         blog : blogReducer,
         friendRequests: friendRequestsReducer,
+        matches: matchesReducer,
     },
 });
 

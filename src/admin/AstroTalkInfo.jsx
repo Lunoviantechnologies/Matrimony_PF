@@ -10,14 +10,16 @@ const AstroTalkInfo = () => {
     const [showAddModal, setShowAddModal] = useState(false);
 
     useEffect(() => {
-        api.get("astro-number/admin/All").then(res => {
+        api.get("astro-number/admin/all").then(res => {
             setAstros(res.data);
             console.log("astro info : ", res.data);
-        });
+        }).catch((err) => {
+            console.log("astro info error: ", err)
+        })
     }, []);
 
     const refreshAstros = () => {
-        api.get("astro-number/admin/All").then(res => {
+        api.get("astro-number/admin/all").then(res => {
             setAstros(res.data);
         });
     };

@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 export default function Admin_UserTickets() {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [resolvingId, setResolvingId] = useState(null);
 
   // Pagination State
   const [page, setPage] = useState(1);
@@ -29,11 +30,17 @@ export default function Admin_UserTickets() {
 
   const resolveTicket = async (ticketId) => {
     try {
+      setResolvingId(ticketId);
+
       await api.delete(`/tickets/${ticketId}/resolve`);
-      fetchTickets();
+
       toast.success("Ticket resolved successfully!");
+      await fetchTickets();
+
     } catch (error) {
       toast.error("Failed to resolve ticket!");
+    } finally {
+      setResolvingId(null);
     }
   };
 
@@ -88,8 +95,19 @@ export default function Admin_UserTickets() {
                 <button
                   className="btn btn-success btn-sm"
                   onClick={() => resolveTicket(t.id)}
+                  disabled={resolvingId === t.id}
                 >
-                  Mark as Resolved
+                  {resolvingId === t.id ? (
+                    <>
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        role="status"
+                      ></span>
+                      Resolving...
+                    </>
+                  ) : (
+                    "Mark as Resolved"
+                  )}
                 </button>
               </td>
             </tr>

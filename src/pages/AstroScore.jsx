@@ -1,113 +1,52 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
-import { fetchUserProfiles } from "../redux/thunk/profileThunk";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import api from "../api/axiosInstance";
-import "../styleSheets/astroScore.css";
 import { useNavigate } from "react-router-dom";
+import "../styleSheets/astroScore.css";
 
 const AstroScore = () => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { id, role, myProfile } = useSelector(state => state.auth);
-    const { profiles } = useSelector(state => state.profiles);
+    const { myProfile, id } = useSelector(state => state.auth);
 
-    const [acceptedRequests, setAcceptedRequests] = useState([]);
+    const [friends, setFriends] = useState([]);
     const [scores, setScores] = useState({});
     const [loadingId, setLoadingId] = useState(null);
-    const [plans, setPlans] = useState([]);
 
-    const maskName = (name = "") => {
-        if (!name) return "-";
-        return name.charAt(0).toUpperCase() + "*****";
-    };
-
-    const getDisplayName = (name) => {
-        if (myProfile?.premium) return name || "-";
-        return maskName(name);
-    };
+    // ⭐ PLAN CHECK
+    const canUseAstroScore =
+        myProfile?.membershipType.toUpperCase() === "PLATINUM" ||
+        myProfile?.membershipType.toUpperCase() === "DIAMOND" ||
+        myProfile?.membershipType.toUpperCase() === "DIAMOND PLUS";
 
     useEffect(() => {
-        if (!id) return;
-
-        dispatch(fetchMyProfile(id));
-        if (role?.[0]?.toUpperCase() === "USER") {
-            dispatch(fetchUserProfiles());
-        }
-    }, [id, role, dispatch]);
-
-    useEffect(() => {
-        const fetchPlans = async () => {
+        const fetchAcceptedFriends = async () => {
             try {
-                const res = await api.get("/plans");
-                setPlans(Array.isArray(res?.data) ? res.data : []);
+                const res = await api.get(`/friends/accepted/all/${id}`);
+                console.log("Accepted friends response: ", res.data);
+                setFriends(Array.isArray(res?.data) ? res.data : []);
             } catch (err) {
-                console.error("Plans fetch error:", err);
-                setPlans([]);
+                console.error("Friends fetch error:", err);
+                setFriends([]);
             }
         };
 
-        fetchPlans();
+        fetchAcceptedFriends();
     }, []);
 
-    useEffect(() => {
-        if (!id) return;
-
-        const fetchAcceptedRequests = async () => {
-            try {
-                const received = await api.get(`/friends/accepted/received/${id}`);
-                const sent = await api.get(`/friends/accepted/sent/${id}`);
-                const recv = Array.isArray(received?.data) ? received.data : [];
-                const snt = Array.isArray(sent?.data) ? sent.data : [];
-                setAcceptedRequests([...recv, ...snt]);
-            } catch (error) {
-                console.error("Accepted requests error:", error);
-            }
-        };
-
-        fetchAcceptedRequests();
-    }, [id]);
-
-    const now = new Date();
-    const activePayment = (myProfile?.payments || [])
-        .filter(p => {
-            if (p.status !== "PAID") return false;
-            if (p.premiumEnd) {
-                return new Date(p.premiumEnd) > now;
-            }
-            return true;
-        })
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
-    const plansList = Array.isArray(plans) ? plans : [];
-    const activePlan = plansList.find(plan => plan.planFeature.planCode === activePayment?.planCode);
-    const isAstroEnabled = activePlan?.planFeature.astroSupport?.toLowerCase() !== "no";
-    const isPlatinum = activePlan?.planCode?.startsWith("PLATINUM");
-
-    // console.log("activePayment: ", activePayment)
-    console.log("activePlan: ", activePlan)
-    // console.log("isAstroEnabled: ", isAstroEnabled)
-    // console.log("isPlatinum: ", isPlatinum)
-    console.log("isPlatinum: ", myProfile)
-
-    const handleGetScore = async friendId => {
+    const handleGetScore = async (friendId) => {
         try {
             setLoadingId(friendId);
 
             const res = await api.post(`/astrology/match/${id}/${friendId}`);
-
-            setScores(prev => ({ ...prev, [friendId]: res.data.score }));
+            setScores(prev => ({ ...prev, [friendId]: res.data.score, message: res.data.message }));
+            console.log(`Astro score for friendId ${friendId}: `, res.data);
         } catch (err) {
             console.error("Astro score error:", err);
         } finally {
             setLoadingId(null);
         }
     };
-
-    const getProfileImage = userId => {
-        const profilesArr = Array.isArray(profiles) ? profiles : [];
-        const profile = profilesArr.find(p => p.id === userId);
-        return profile?.updatePhoto ? profile.updatePhoto : profile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
-    };
+    console.log("myProfile : ", myProfile, scores);
 
     return (
         <div className="container py-4 astro-score-wrapper">
@@ -115,24 +54,25 @@ const AstroScore = () => {
                 Astro Compatibility
             </h3>
 
-            {acceptedRequests.length === 0 && (
+            {friends.length === 0 && (
                 <div className="alert alert-info text-center">
                     No accepted matches found.
                 </div>
             )}
 
-            {(Array.isArray(acceptedRequests) ? acceptedRequests : []).map(req => {
-                const friendId = req.senderId === id ? req.receiverId : req.senderId;
-                const friendName = req.senderId === id ? req.receiverName : req.senderName;
-                const score = scores[friendId];
+            {friends.map(friend => {
+                const score = scores[friend.friendId];
 
                 return (
-                    <div key={req.requestId} className="card shadow-m border-0 mb-4" >
+                    <div key={friend.friendId} className="card shadow-sm border-0 mb-4">
                         <div className="card-body astro-score-body">
 
                             {/* LEFT — YOU */}
                             <div className="astro-user">
-                                <img src={getProfileImage(id)} alt="You" />
+                                <img
+                                    src={myProfile?.updatePhoto ? myProfile.updatePhoto : myProfile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
+                                    alt="You"
+                                />
                                 <span>You</span>
                             </div>
 
@@ -141,17 +81,14 @@ const AstroScore = () => {
 
                                 <button
                                     className="astro-score-btn"
-                                    disabled={!isAstroEnabled || loadingId === friendId}
-                                    onClick={() => handleGetScore(friendId)}
+                                    disabled={!canUseAstroScore || loadingId === friend.friendId}
+                                    onClick={() => handleGetScore(friend.friendId)}
                                 >
-                                    {loadingId === friendId
-                                        ? "Calculating..."
-                                        : score !== undefined
-                                            ? `${score}% Match`
-                                            : "Check Score"}
+                                    {loadingId === friend.friendId ?
+                                        "Calculating..." : score !== undefined ? `${score}% Match` : "Check Score"}
                                 </button>
 
-                                {!isAstroEnabled && (
+                                {!canUseAstroScore && (
                                     <div
                                         className="astro-upgrade-text"
                                         onClick={() => navigate("/dashboard/premium")}
@@ -160,12 +97,18 @@ const AstroScore = () => {
                                     </div>
                                 )}
 
+                                <div>
+                                    <b>{scores.message}</b>
+                                </div>
                             </div>
 
                             {/* RIGHT — FRIEND */}
                             <div className="astro-user">
-                                <img src={getProfileImage(friendId)} alt={friendName} />
-                                <span>{getDisplayName(friendName)}</span>
+                                <img
+                                    src={friend.friendPhoto ? friend.friendPhoto : friend.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
+                                    alt={friend.friendId}
+                                />
+                                <span>{friend.friendName}</span>
                             </div>
 
                         </div>

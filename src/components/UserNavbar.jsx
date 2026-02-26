@@ -18,11 +18,7 @@ const UserNavbar = ({ closeMenu }) => {
     const dropdownRef = useRef(null);
 
     const userName = myProfile?.firstName || "Loading...";
-    const userPhoto =
-        myProfile?.updatePhoto ||
-        (myProfile?.gender === "Female"
-            ? "/placeholder_girl.png"
-            : "/placeholder_boy.png");
+    const userPhoto = myProfile?.updatePhoto || (myProfile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png");
 
     /* ================= PROFILE FETCH ================= */
 

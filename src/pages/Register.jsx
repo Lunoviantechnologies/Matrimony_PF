@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { FaUser, FaUserFriends, FaMapMarkerAlt, FaBriefcase, FaGraduationCap, FaRing, FaBookOpen, FaUserCheck } from "react-icons/fa";
+import { FaUser, FaUserFriends, FaMapMarkerAlt, FaBriefcase, FaGraduationCap, FaRing, FaBookOpen, FaUserCheck, FaAddressCard } from "react-icons/fa";
 import "../styleSheets/register.css";
 import axios from "axios";
 import backendIP from "../api/api";
@@ -68,75 +68,75 @@ const validationSchemas = [
       }),
   }),
 
-// STEP 2
-Yup.object({
+  // STEP 2
+  Yup.object({
 
-  firstName: Yup.string()
-    .matches(/^[A-Za-z\s]+$/, "Only letters allowed")
-    .required("First name is Required"),
+    firstName: Yup.string()
+      .matches(/^[A-Za-z\s]+$/, "Only letters allowed")
+      .required("First name is Required"),
 
-  lastName: Yup.string()
-    .matches(/^[A-Za-z\s]+$/, "Only letters allowed")
-    .required("Last name is Required"),
+    lastName: Yup.string()
+      .matches(/^[A-Za-z\s]+$/, "Only letters allowed")
+      .required("Last name is Required"),
 
-  dobDay: Yup.number().nullable().typeError("Invalid day"),
-  dobMonth: Yup.number().nullable().typeError("Invalid month"),
-  dobYear: Yup.number().nullable().typeError("Invalid year"),
+    dobDay: Yup.number().nullable().typeError("Invalid day"),
+    dobMonth: Yup.number().nullable().typeError("Invalid month"),
+    dobYear: Yup.number().nullable().typeError("Invalid year"),
 
-  age: Yup.number()
-    .nullable()
-    .test(
-      "dob-required",
-      "Please enter complete Date of Birth",
-      function (value) {
+    age: Yup.number()
+      .nullable()
+      .test(
+        "dob-required",
+        "Please enter complete Date of Birth",
+        function (value) {
 
-        const { dobDay, dobMonth, dobYear } = this.parent;
+          const { dobDay, dobMonth, dobYear } = this.parent;
 
-        // ❌ If age is typed but DOB is missing → block
-        if (value && (!dobDay || !dobMonth || !dobYear)) {
-          return false;
+          // ❌ If age is typed but DOB is missing → block
+          if (value && (!dobDay || !dobMonth || !dobYear)) {
+            return false;
+          }
+
+          return true;
         }
+      )
+      .test(
+        "valid-dob",
+        "Please enter a valid Date of Birth",
+        function () {
 
-        return true;
-      }
-    )
-    .test(
-      "valid-dob",
-      "Please enter a valid Date of Birth",
-      function () {
+          const { dobDay, dobMonth, dobYear } = this.parent;
 
-        const { dobDay, dobMonth, dobYear } = this.parent;
+          if (!dobDay && !dobMonth && !dobYear) return false;
 
-        if (!dobDay && !dobMonth && !dobYear) return false;
+          if (!dobDay || !dobMonth || !dobYear) return false;
 
-        if (!dobDay || !dobMonth || !dobYear) return false;
+          const day = Number(dobDay);
+          const month = Number(dobMonth);
+          const year = Number(dobYear);
 
-        const day = Number(dobDay);
-        const month = Number(dobMonth);
-        const year = Number(dobYear);
+          if (month < 1 || month > 12) return false;
+          if (day < 1 || day > 31) return false;
+          if (year < 1900 || year > new Date().getFullYear()) return false;
 
-        if (month < 1 || month > 12) return false;
-        if (day < 1 || day > 31) return false;
-        if (year < 1900 || year > new Date().getFullYear()) return false;
+          const dob = new Date(year, month - 1, day);
 
-        const dob = new Date(year, month - 1, day);
+          if (
+            dob.getFullYear() !== year ||
+            dob.getMonth() !== month - 1 ||
+            dob.getDate() !== day
+          ) return false;
 
-        if (
-          dob.getFullYear() !== year ||
-          dob.getMonth() !== month - 1 ||
-          dob.getDate() !== day
-        ) return false;
+          const today = new Date();
+          let age = today.getFullYear() - year;
+          const m = today.getMonth() - (month - 1);
 
-        const today = new Date();
-        let age = today.getFullYear() - year;
-        const m = today.getMonth() - (month - 1);
+          if (m < 0 || (m === 0 && today.getDate() < day)) age--;
 
-        if (m < 0 || (m === 0 && today.getDate() < day)) age--;
-
-        return age >= 18 && age <= 60;
-      }
-    )
-}),
+          return age >= 18 && age <= 60;
+        }
+      )
+  }),
 
 
   // STEP 3
@@ -581,13 +581,14 @@ const fetchCitiesByDistrictId = async (districtId) => {
 const allowOnlyLetters = (value) => value.replace(/[^a-zA-Z\s]/g, "");
 const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
 
-  const Register = () => {
-    const [step, setStep] = useState(1);
-    const totalSteps = 8;
-    const [statesList, setStatesList] = useState([]);
-    const [countriesList, setCountriesList] = useState([]);
-    const [districtsList, setDistrictsList] = useState([]);
-    const [citiesList, setCitiesList] = useState([]);
+const Register = () => {
+
+  const [step, setStep] = useState(1);
+  const totalSteps = 7;
+  const [statesList, setStatesList] = useState([]);
+  const [countriesList, setCountriesList] = useState([]);
+  const [districtsList, setDistrictsList] = useState([]);
+  const [citiesList, setCitiesList] = useState([]);
 
   const navigate = useNavigate();
 
@@ -634,15 +635,15 @@ const allowOnlyNumbers = (value) => value.replace(/[^0-9]/g, "");
       }
     };
 
-  loadCountries();
-}, []);
+    loadCountries();
+  }, []);
 
-useEffect(() => {
-  const ref = localStorage.getItem("referralCode");
-  if (ref) {
-    setInitialReferral(ref);
-  }
-}, []);
+  useEffect(() => {
+    const ref = localStorage.getItem("referralCode");
+    if (ref) {
+      setInitialReferral(ref);
+    }
+  }, []);
 
   /* -------------------------------------------------------------
     PREVIOUS STEP
@@ -1000,6 +1001,7 @@ useEffect(() => {
         return (
           <>
             <div className="step-icon"><FaBookOpen /></div>
+            <h2>Community</h2>
             <Field as="select" name="religion" className="form-select">
               <option value="" disabled>Select Religion</option>
 
@@ -1043,40 +1045,40 @@ useEffect(() => {
 
             {/* ---------------- SUB COMMUNITY ---------------- */}
             <Field
-                  as="select"
-                  name="subCaste"
-                  className="form-select"
-                  onChange={(e) => {
-                    setFieldValue("subCaste", e.target.value);
-                    if (e.target.value !== "Others") {
-                      setFieldValue("subCasteOther", "");
-                    }
-                  }}
-                >
-                  <option value="" disabled>Select Sub-Community</option>
-                    <option value="No particular caste">No particular caste</option>
-                  {(religionSubCommunityMap[values.religion] || []).map((sc) => (
-                    <option key={sc} value={sc}>{sc}</option>
-                  ))}
-                </Field>
-              <div className="no-caste-row">
-                  <input
-                    className="checkbox"
-                    type="checkbox"
-                    checked={values.subCaste === "No particular caste"}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setFieldValue("subCaste", "No particular caste");
-                        setFieldValue("subCasteOther", "");
-                      } else {
-                        setFieldValue("subCaste", "");
-                      }
-                    }}
-                  />
-                  No particular caste
-                </div>
-                
-              <ErrorMessage name="subCaste" component="div" className="error-text" />
+              as="select"
+              name="subCaste"
+              className="form-select"
+              onChange={(e) => {
+                setFieldValue("subCaste", e.target.value);
+                if (e.target.value !== "Others") {
+                  setFieldValue("subCasteOther", "");
+                }
+              }}
+            >
+              <option value="" disabled>Select Sub-Community</option>
+              <option value="No particular caste">No particular caste</option>
+              {(religionSubCommunityMap[values.religion] || []).map((sc) => (
+                <option key={sc} value={sc}>{sc}</option>
+              ))}
+            </Field>
+            <div className="no-caste-row">
+              <input
+                className="checkbox"
+                type="checkbox"
+                checked={values.subCaste === "No particular caste"}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setFieldValue("subCaste", "No particular caste");
+                    setFieldValue("subCasteOther", "");
+                  } else {
+                    setFieldValue("subCaste", "");
+                  }
+                }}
+              />
+              No particular caste
+            </div>
+
+            <ErrorMessage name="subCaste" component="div" className="error-text" />
 
             {/* Sub Community Other */}
             {values.subCaste === "Others" && (
@@ -1094,8 +1096,8 @@ useEffect(() => {
       case 4:
         return (
           <>
-            <div className="step-icon"><FaMapMarkerAlt /></div>
-            <h2>Where do you live?</h2>
+            <div className="step-icon"><FaAddressCard /></div>
+            <h2>Location & Marital Status</h2>
 
             {/* Country */}
             <Field
@@ -1161,16 +1163,9 @@ useEffect(() => {
               </Field>
             )}
             <ErrorMessage name="residenceStatus" component="div" className="error-text" />
-          </>
-        );
 
-
-      /* ---------------------- STEP 5 ----------------------- */
-      case 5:
-        return (
-          <>
-            <div className="step-icon"><FaUserCheck /></div>
-            <h2>Marital Status</h2>
+            {/* <div className="step-icon"><FaUserCheck /></div> */}
+            {/* <h2>Marital Status</h2> */}
             <Field as="select" name="maritalStatus" className="form-select">
               <option value="" disabled>Select your Marital Status</option>
               <option value="Single">Single</option>
@@ -1204,9 +1199,51 @@ useEffect(() => {
               </Field>
             )}
           </>
-        )
-         /* ---------------------- STEP 5 ----------------------- */
-           case 6:
+        );
+
+
+      /* ---------------------- STEP 5 ----------------------- */
+      // case 5:
+      //   return (
+      //     <>
+      //       <div className="step-icon"><FaUserCheck /></div>
+      //       <h2>Marital Status</h2>
+      //       <Field as="select" name="maritalStatus" className="form-select">
+      //         <option value="" disabled>Select your Marital Status</option>
+      //         <option value="Single">Single</option>
+      //         <option value="Divorced">Divorced</option>
+      //         <option value="Separated">Separated</option>
+      //         <option value="Widowed">Widowed</option>
+      //       </Field>
+      //       {["Divorced", "Widowed", "Separated"].includes(values.maritalStatus) && (
+      //         <Field as="select" name="livingStatus" className="form-select">
+      //           <option value="" disabled>Living status</option>
+      //           <option value="Staying with parents">Staying with parents</option>
+      //           <option value="Living separately">Living separately</option>
+      //         </Field>
+      //       )}
+
+      //       {values.maritalStatus && values.maritalStatus !== "Single" && (
+      //         <Field name="noOfChildren">
+      //           {({ field }) => (
+      //             <input
+      //               {...field}
+      //               className="form-input"
+      //               placeholder="Number Of Children"
+      //               onChange={(e) => {
+      //                 setFieldValue(
+      //                   "noOfChildren",
+      //                   allowOnlyNumbers(e.target.value)
+      //                 );
+      //               }}
+      //             />
+      //           )}
+      //         </Field>
+      //       )}
+      //     </>
+      //   )
+      /* ---------------------- STEP 5 ----------------------- */
+      case 5:
         return (
           <>
             <div className="step-icon"><FaGraduationCap /></div>
@@ -1267,9 +1304,9 @@ useEffect(() => {
 
           </>
         );
-     
-      /* ---------------------- STEP 7 ----------------------- */
-      case 7:
+
+      /* ---------------------- STEP 6 ----------------------- */
+      case 6:
         return (
           <>
             <div className="step-icon"><FaUser /></div>
@@ -1364,8 +1401,8 @@ useEffect(() => {
           </>
         );
 
-      /* ---------------------- STEP 8----------------------- */
-      case 8:
+      /* ---------------------- STEP 7----------------------- */
+      case 7:
         return (
           <>
             <div className="step-icon"><FaRing /></div>
@@ -1398,43 +1435,43 @@ useEffect(() => {
           ></div>
         </div>
 
-                  <Formik
-                  initialValues={{
-    ...initialValues,
-    referralCode: initialReferral
-  }}
-  enableReinitialize
-              validationSchema={validationSchemas[step - 1]}
-              validateOnChange={true}
-              validateOnBlur={true}
-              onSubmit={handleSubmit}
-            >
+        <Formik
+          initialValues={{
+            ...initialValues,
+            referralCode: initialReferral
+          }}
+          enableReinitialize
+          validationSchema={validationSchemas[step - 1]}
+          validateOnChange={true}
+          validateOnBlur={true}
+          onSubmit={handleSubmit}
+        >
           {({ values, validateForm, setTouched, setFieldValue }) => (
             <Form className="fade-in">
 
               {renderStep(values, setFieldValue, setTouched)}
 
-                {/* NAVIGATION BUTTONS */}
-                <div className="nav-buttons">
-                  {step > 1 && (
-                    <button type="button" className="back-btn" onClick={prevStep}>
-                      Back
-                    </button>
-                  )}
-                  {step < totalSteps && (
-                    <button
-                      type="button"
-                      className="next-btn"
-                      disabled={
-                        (step === 8 && !emailVerified) || (step === 8 && !values.documentFile)
-                        || (step === 2 && Number(values.age) < 18)
-                      }
-                      onClick={() => nextStep(validateForm, setTouched)}
-                    >
-                      NEXT
-                    </button>
-                  )}
-                </div>
+              {/* NAVIGATION BUTTONS */}
+              <div className="nav-buttons">
+                {step > 1 && (
+                  <button type="button" className="back-btn" onClick={prevStep}>
+                    Back
+                  </button>
+                )}
+                {step < totalSteps && (
+                  <button
+                    type="button"
+                    className="next-btn"
+                    disabled={
+                      (step === 6 && !emailVerified) || (step === 6 && !values.documentFile)
+                      || (step === 2 && Number(values.age) < 18)
+                    }
+                    onClick={() => nextStep(validateForm, setTouched)}
+                  >
+                    NEXT
+                  </button>
+                )}
+              </div>
 
             </Form>
           )}

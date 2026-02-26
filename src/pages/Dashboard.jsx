@@ -228,7 +228,7 @@ const Dashboard = () => {
               <p style={{ color: "#999", fontStyle: "italic" }}>
                 No active subscription plan
               </p>
-              <button onClick={() => navigate("/dashboard/premium")}>Upgrade</button>
+              <button className="planBtn" onClick={() => navigate("/dashboard/premium")}>Upgrade</button>
             </div>
           ) : (
             <div className="planSection">

@@ -19,7 +19,7 @@ const SearchFilters = () => {
     };
 
     useEffect(() => {
-        if(id){
+        if (id) {
             dispatch(fetchMyProfile(id));
         }
     }, [id, dispatch]);
@@ -27,7 +27,7 @@ const SearchFilters = () => {
     // debounce
     useEffect(() => {
         const timer = setTimeout(() => {
-            setDebouncedSearch(searchText);
+            setDebouncedSearch(searchText.trim());
             dispatch(setPage(0));
         }, 500);
 
@@ -37,7 +37,12 @@ const SearchFilters = () => {
     // call backend
     useEffect(() => {
         if (!id || !myProfile?.gender) return;
-        dispatch(searchProfiles({filters: { myId: id, myGender: myProfile?.gender, search: debouncedSearch, }, page, size,}));
+        if (!debouncedSearch || debouncedSearch.trim().length === 0) {
+            dispatch(clearSearchResults());
+            return;
+        };
+
+        dispatch(searchProfiles({ filters: { myId: id, myGender: myProfile?.gender, search: debouncedSearch, }, page, size, }));
     }, [debouncedSearch, page, size, id, myProfile?.gender, dispatch]);
 
     // cleanup

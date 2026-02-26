@@ -16,7 +16,6 @@ const RequestsList = ({ type }) => {
     const { selectedProfile, profileLoading } = useSelector(state => state.profiles);
 
     const [showModal, setShowModal] = useState(false);
-    // const [selectedProfile, setSelectedProfile] = useState(null);
 
     const requests = requestsByType[type] || [];
 

@@ -4,15 +4,15 @@ import { fetchUserProfiles, fetchAdminProfiles, fetchProfileById } from "../thun
 const initialState = {
     // profiles: [],
     userProfiles: [],
+    profileMap: {},   // for quick lookup by ID
     adminProfiles: [],
     totalPages: 0,
     totalElements: 0,
-    // loading: false,
     adminloading: false,
     userloading: false,
-    profileLoading: false,      // 👈 for view profile modal
-    selectedProfile: null,      // 👈 full profile details
-    profileCache: {},     // 👈 cache for viewed profiles to avoid refetching
+    profileLoading: false,      // for view profile modal
+    selectedProfile: null,      // full profile details
+    profileCache: {},     // cache for viewed profiles to avoid refetching
     error: null,
 };
 
@@ -45,16 +45,20 @@ const profileSlice = createSlice({
                 state.userloading = true;
                 state.error = null;
             })
-            // .addCase(fetchUserProfiles.fulfilled, (state, action) => {
-            //     state.loading = false;
-            //     state.profiles = action.payload;
-            // })
             .addCase(fetchUserProfiles.fulfilled, (state, action) => {
                 state.userloading = false;
                 const payload = action.payload || {};
-                state.userProfiles = payload.content || [];
+                const list = payload.content || [];
+
+                state.userProfiles = list;
                 state.totalPages = payload.totalPages ?? 0;
                 state.totalElements = payload.totalElements ?? 0;
+
+                list.forEach(p => {
+                    if (p?.id) {
+                        state.profileMap[p.id] = p;
+                    }
+                });
             })
             .addCase(fetchUserProfiles.rejected, (state, action) => {
                 state.userloading = false;

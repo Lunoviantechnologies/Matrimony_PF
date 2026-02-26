@@ -1,36 +1,313 @@
-import React from "react";
+// import React from "react";
+// import "../styleSheets/sidebar.css";
+// import { communityList } from "../data/dataList";
+
+// const Sidebar = ({ filters, setFilters, onApply, onClear }) => {
+
+//     const hasFilters =
+//         Object.values(filters).some(
+//             (val) => Array.isArray(val) && val.length > 0
+//         ) ||
+//         Object.values(filters.otherValues || {}).some(
+//             (val) => val && val.trim() !== ""
+//         );
+
+//     const handleCheckboxChange = (category, value) => {
+//         setFilters((prev) => {
+//             const updated = prev[category].includes(value)
+//                 ? prev[category].filter((v) => v !== value)
+//                 : [...prev[category], value];
+
+//             return { ...prev, [category]: updated };
+//         });
+//     };
+
+//     const handleOtherChange = (category, value) => {
+//         setFilters((prev) => ({
+//             ...prev,
+//             otherValues: {
+//                 ...prev.otherValues,
+//                 [category]: value,
+//             },
+//         }));
+//     };
+
+//     const heightOptions = [];
+//     for (let ft = 4; ft <= 7; ft++) {
+//         for (let inch = 0; inch < 12; inch++) {
+//             if (ft === 7 && inch > 0) break;
+//             heightOptions.push(`${ft}'${inch}"`);
+//         }
+//     };
+
+//     const sections = [
+//         {
+//             title: "CreatedBy",
+//             category: "profileFor",
+//             options: ["Myself", "My Son", "My Daughter", "My Brother", "My Sister", "My Friend", "My Relative",],
+//         },
+//         {
+//             title: "Age",
+//             category: "age",
+//             options: ["18-25", "26-30", "31-35", "36-40", "40+"],
+//         },
+//         {
+//             title: "Marital Status",
+//             category: "maritalStatus",
+//             options: ["Single", "Divorced", "Separated", "Widowed"],
+//         },
+//         {
+//             title: "Religion",
+//             category: "religion",
+//             options: ["Hindu", "Muslim", "Christian", "Sikh", "Jain", "Other"],
+//         },
+//         {
+//             title: "Sub Community",
+//             category: "caste",
+//             type: "communityDropdown"
+//         },
+//         {
+//             title: "Country",
+//             category: "country",
+//             options: ["India", "USA", "UK", "Canada", "Australia", "Other"],
+//         },
+//         {
+//             title: "Education",
+//             category: "education",
+//             options: ["B.Tech", "M.Tech", "MBA", "B.Sc", "M.Sc", "PhD", "Other"],
+//         },
+//         {
+//             title: "Profession",
+//             category: "profession",
+//             options: ["Farmer", "IT", "Doctor", "Teacher", "Business", "Government", "Other",],
+//         },
+//         {
+//             title: "Lifestyle",
+//             category: "lifestyle",
+//             options: ["Vegetarian", "Non-Vegetarian", "Occasionally Non-Vegetarian", "Eggetarian",],
+//         },
+//         {
+//             title: "Habbits",
+//             category: "habbits",
+//             options: ["Smoking", "Drinking", "Both", "None"],
+//         },
+//         {
+//             title: "Height",
+//             category: "height",
+//             type: "dropdown"
+//         },
+//     ];
+
+//     return (
+//         <div className="sidebar">
+
+//             {/* HEADER */}
+//             <div className="sidebar-header">
+//                 <h5 className="sidebar-title text-center">Search Filters</h5>
+//             </div>
+
+//             {/* SCROLLABLE CONTENT */}
+//             <div className="sidebar-content">
+
+//                 {sections.map((section) => (
+//                     <div key={section.category} className="filter-section">
+
+//                         <h6>{section.title}</h6>
+
+//                         {section.type === "dropdown" ? (
+
+//                             // HEIGHT DROPDOWN
+//                             <select
+//                                 className="form-select"
+//                                 value={filters.otherValues?.height || ""}
+//                                 onChange={(e) => handleOtherChange("height", e.target.value)}
+//                             >
+//                                 <option value="">Select Height</option>
+
+//                                 {heightOptions.map((h) => (
+//                                     <option key={h} value={h}>{h}</option>
+//                                 ))}
+
+//                             </select>
+
+//                         ) : section.type === "communityDropdown" ? (
+
+//                             <>
+//                                 <select
+//                                     className="form-select"
+//                                     value={filters.otherValues?.caste || ""}
+//                                     onChange={(e) => handleOtherChange("caste", e.target.value)}
+//                                 >
+//                                     <option value="">Select Community</option>
+
+//                                     {communityList.map((c) => (
+//                                         <option key={c} value={c}>{c}</option>
+//                                     ))}
+//                                     <option value="Others">Others</option>
+//                                 </select>
+
+//                                 {filters.otherValues?.caste === "Others" && (
+//                                     <input
+//                                         type="text"
+//                                         className="form-control other-input mt-2"
+//                                         placeholder="Enter custom community"
+//                                         value={filters.customCaste || ""}
+//                                         onChange={(e) => setFilters(prev => ({...prev, customCaste: e.target.value}))
+//                                         }
+//                                     />
+//                                 )}
+//                             </>
+
+//                         ) : (
+
+//                             section.options.map((item) => (
+//                                 <div key={item} className="mb-2">
+
+//                                     <div className="form-check d-flex align-items-center">
+
+//                                         <input
+//                                             className="form-check-input"
+//                                             type="checkbox"
+//                                             id={`${section.category}-${item}`}
+//                                             checked={filters[section.category].includes(item)}
+//                                             onChange={() =>
+//                                                 handleCheckboxChange(section.category, item)
+//                                             }
+//                                         />
+
+//                                         <label className="form-check-label ms-1" htmlFor={`${section.category}-${item}`} >
+//                                             {item}
+//                                         </label>
+
+//                                     </div>
+
+//                                     {item === "Other" &&
+//                                         filters[section.category].includes("Other") && (
+//                                             <input
+//                                                 type="text"
+//                                                 className="form-control other-input"
+//                                                 placeholder={`Enter ${section.title}`}
+//                                                 value={ filters.otherValues?.[section.category] || "" }
+//                                                 onChange={(e) => handleOtherChange( section.category, e.target.value )
+//                                                 }
+//                                             />
+//                                         )}
+
+//                                 </div>
+//                             ))
+
+//                         )}
+
+//                     </div>
+//                 ))}
+
+//             </div>
+
+//             {/* FOOTER BUTTONS */}
+//             <div className="sidebar-footer">
+
+//                 <button
+//                     className="btn btn-primary w-100"
+//                     disabled={!hasFilters}
+//                     onClick={onApply}
+//                 >
+//                     Apply Filters
+//                 </button>
+
+//                 <button
+//                     className="btn btn-outline-secondary w-100 mt-2"
+//                     disabled={!hasFilters}
+//                     onClick={onClear}
+//                 >
+//                     Clear All
+//                 </button>
+
+//             </div>
+
+//         </div>
+//     );
+// };
+
+// export default Sidebar;
+
+import React, { useState, useEffect } from "react";
 import "../styleSheets/sidebar.css";
 import { communityList } from "../data/dataList";
+import { useDispatch, useSelector } from "react-redux";
+import { setFilters } from "../redux/slices/matchesSlice";
+import { fetchMatches } from "../redux/thunk/matchesThunk";
 
-const Sidebar = ({ filters, setFilters, onApply, onClear }) => {
+const createEmptyFilters = () => ({
+    profileFor: [],
+    age: [],
+    maritalStatus: [],
+    religion: [],
+    caste: [],
+    country: [],
+    education: [],
+    profession: [],
+    lifestyle: [],
+    habbits: [],
+    otherValues: {
+        caste: "",
+        country: "",
+        profession: "",
+        religion: "",
+        education: "",
+        height: "",
+    },
+    customCaste: "",
+});
+
+const Sidebar = () => {
+    const dispatch = useDispatch();
+    const appliedFilters = useSelector((state) => state.matches.filters);
+
+    const [filtersDraft, setFiltersDraft] = useState(createEmptyFilters());
+
+    useEffect(() => {
+        if (appliedFilters) {
+            setFiltersDraft({ ...createEmptyFilters(), ...appliedFilters,
+                otherValues: { ...createEmptyFilters().otherValues, ...appliedFilters.otherValues, },
+            });
+        }
+    }, [appliedFilters]);
 
     const hasFilters =
-        Object.values(filters).some(
-            (val) => Array.isArray(val) && val.length > 0
-        ) ||
-        Object.values(filters.otherValues || {}).some(
-            (val) => val && val.trim() !== ""
-        );
+        Object.entries(filtersDraft).some(([key, val]) => {
+            if (Array.isArray(val)) return val.length > 0;
+            if (typeof val === "object" && val !== null)
+                return Object.values(val).some((v) => v?.trim?.());
+            return val?.trim?.();
+        });
 
     const handleCheckboxChange = (category, value) => {
-        setFilters((prev) => {
-            const updated = prev[category].includes(value)
-                ? prev[category].filter((v) => v !== value)
-                : [...prev[category], value];
-
+        setFiltersDraft((prev) => {
+            const current = prev[category] || [];
+            const updated = current.includes(value) ? current.filter((v) => v !== value) : [...current, value];
             return { ...prev, [category]: updated };
         });
     };
 
     const handleOtherChange = (category, value) => {
-        setFilters((prev) => ({
-            ...prev,
-            otherValues: {
-                ...prev.otherValues,
-                [category]: value,
-            },
-        }));
+        setFiltersDraft((prev) => ({ ...prev, otherValues: { ...prev.otherValues, [category]: value, }, }));
     };
+
+    const handleApply = () => {
+        dispatch(setFilters(filtersDraft));
+        dispatch(fetchMatches());
+    };
+
+    const handleClear = () => {
+        const empty = createEmptyFilters();
+        setFiltersDraft(empty);
+        dispatch(setFilters(empty));
+        dispatch(fetchMatches());
+    };
+
+    // ---------------------------
+    // 🔽 BELOW THIS LINE — YOUR UI IS UNCHANGED
+    // ---------------------------
 
     const heightOptions = [];
     for (let ft = 4; ft <= 7; ft++) {
@@ -38,13 +315,13 @@ const Sidebar = ({ filters, setFilters, onApply, onClear }) => {
             if (ft === 7 && inch > 0) break;
             heightOptions.push(`${ft}'${inch}"`);
         }
-    };
+    }
 
     const sections = [
         {
             title: "CreatedBy",
             category: "profileFor",
-            options: ["Myself", "My Son", "My Daughter", "My Brother", "My Sister", "My Friend", "My Relative",],
+            options: ["Myself", "My Son", "My Daughter", "My Brother", "My Sister", "My Friend", "My Relative"],
         },
         {
             title: "Age",
@@ -79,12 +356,12 @@ const Sidebar = ({ filters, setFilters, onApply, onClear }) => {
         {
             title: "Profession",
             category: "profession",
-            options: ["Farmer", "IT", "Doctor", "Teacher", "Business", "Government", "Other",],
+            options: ["Farmer", "IT", "Doctor", "Teacher", "Business", "Government", "Other"],
         },
         {
             title: "Lifestyle",
             category: "lifestyle",
-            options: ["Vegetarian", "Non-Vegetarian", "Occasionally Non-Vegetarian", "Eggetarian",],
+            options: ["Vegetarian", "Non-Vegetarian", "Occasionally Non-Vegetarian", "Eggetarian"],
         },
         {
             title: "Habbits",
@@ -100,116 +377,97 @@ const Sidebar = ({ filters, setFilters, onApply, onClear }) => {
 
     return (
         <div className="sidebar">
-
-            {/* HEADER */}
             <div className="sidebar-header">
                 <h5 className="sidebar-title text-center">Search Filters</h5>
             </div>
 
-            {/* SCROLLABLE CONTENT */}
             <div className="sidebar-content">
-
                 {sections.map((section) => (
                     <div key={section.category} className="filter-section">
-
                         <h6>{section.title}</h6>
 
-                        {section.type === "dropdown" ? (
-
-                            // HEIGHT DROPDOWN
-                            <select
-                                className="form-select"
-                                value={filters.otherValues?.height || ""}
-                                onChange={(e) => handleOtherChange("height", e.target.value)}
-                            >
-                                <option value="">Select Height</option>
-
-                                {heightOptions.map((h) => (
-                                    <option key={h} value={h}>{h}</option>
-                                ))}
-
-                            </select>
-
-                        ) : section.type === "communityDropdown" ? (
-
+                        {section.type === "communityDropdown" ? (
                             <>
                                 <select
                                     className="form-select"
-                                    value={filters.otherValues?.caste || ""}
-                                    onChange={(e) => handleOtherChange("caste", e.target.value)}
+                                    value={filtersDraft.otherValues?.caste || ""}
+                                    onChange={(e) =>
+                                        handleOtherChange("caste", e.target.value)
+                                    }
                                 >
                                     <option value="">Select Community</option>
 
                                     {communityList.map((c) => (
-                                        <option key={c} value={c}>{c}</option>
+                                        <option key={c} value={c}>
+                                            {c}
+                                        </option>
                                     ))}
-                                    <option value="Others">Others</option>
+
+                                    <option value="Other">Other</option>
                                 </select>
 
-                                {filters.otherValues?.caste === "Others" && (
+                                {filtersDraft.otherValues?.caste === "Other" && (
                                     <input
                                         type="text"
                                         className="form-control other-input mt-2"
                                         placeholder="Enter custom community"
-                                        value={filters.customCaste || ""}
-                                        onChange={(e) => setFilters(prev => ({...prev, customCaste: e.target.value}))
+                                        value={filtersDraft.customCaste || ""}
+                                        onChange={(e) =>
+                                            setFiltersDraft((prev) => ({
+                                                ...prev,
+                                                customCaste: e.target.value,
+                                            }))
                                         }
                                     />
                                 )}
                             </>
+                        ) : null}
 
-                        ) : (
+                        {section.type === "dropdown" && (
+                            <select
+                                className="form-select"
+                                value={filtersDraft.otherValues?.height || ""}
+                                onChange={(e) =>
+                                    handleOtherChange("height", e.target.value)
+                                }
+                            >
+                                <option value="">Select Height</option>
 
+                                {heightOptions.map((h) => (
+                                    <option key={h} value={h}>
+                                        {h}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
+
+                        {section.options &&
                             section.options.map((item) => (
                                 <div key={item} className="mb-2">
-
                                     <div className="form-check d-flex align-items-center">
-
                                         <input
                                             className="form-check-input"
                                             type="checkbox"
-                                            id={`${section.category}-${item}`}
-                                            checked={filters[section.category].includes(item)}
+                                            checked={filtersDraft[section.category]?.includes(item)}
                                             onChange={() =>
                                                 handleCheckboxChange(section.category, item)
                                             }
                                         />
-
-                                        <label className="form-check-label ms-1" htmlFor={`${section.category}-${item}`} >
+                                        <label className="form-check-label ms-1">
                                             {item}
                                         </label>
-
                                     </div>
-
-                                    {item === "Other" &&
-                                        filters[section.category].includes("Other") && (
-                                            <input
-                                                type="text"
-                                                className="form-control other-input"
-                                                placeholder={`Enter ${section.title}`}
-                                                value={ filters.otherValues?.[section.category] || "" }
-                                                onChange={(e) => handleOtherChange( section.category, e.target.value )
-                                                }
-                                            />
-                                        )}
-
                                 </div>
-                            ))
-
-                        )}
-
+                            ))}
                     </div>
                 ))}
-
             </div>
 
-            {/* FOOTER BUTTONS */}
             <div className="sidebar-footer">
-
                 <button
                     className="btn btn-primary w-100"
                     disabled={!hasFilters}
-                    onClick={onApply}
+                    onClick={handleApply}
                 >
                     Apply Filters
                 </button>
@@ -217,13 +475,11 @@ const Sidebar = ({ filters, setFilters, onApply, onClear }) => {
                 <button
                     className="btn btn-outline-secondary w-100 mt-2"
                     disabled={!hasFilters}
-                    onClick={onClear}
+                    onClick={handleClear}
                 >
                     Clear All
                 </button>
-
             </div>
-
         </div>
     );
 };

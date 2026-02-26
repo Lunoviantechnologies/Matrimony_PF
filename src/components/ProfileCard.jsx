@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "../styleSheets/profileCard.css";
 import ViewProfileModal from "../components/ViewProfileModal";
 
-
 const profiles = [
   {
     id: 1,
@@ -116,7 +115,7 @@ const profiles = [
   }
 ];
 
-const ProfileCards = () => {
+const ProfileCard = () => {
   const [activeProfile, setActiveProfile] = useState(null);
   const [anchorRect, setAnchorRect] = useState(null);
 

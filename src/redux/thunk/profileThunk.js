@@ -17,19 +17,6 @@ export const fetchAdminProfiles = createAsyncThunk(
     }
 );
 
-// USER
-// export const fetchUserProfiles = createAsyncThunk(
-//     "profile/fetchUserProfiles",
-//     async (_, { rejectWithValue }) => {
-//         try {
-//             const res = await api.get("/profiles/Allprofiles");
-//             return res.data;
-//         } catch (err) {
-//             return rejectWithValue(err.response?.data || "User profiles failed to fetch");
-//         }
-//     }
-// );
-
 export const fetchUserProfiles = createAsyncThunk(
     "profile/fetchUserProfiles",
     async (params = {}, { rejectWithValue }) => {

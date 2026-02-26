@@ -1,180 +1,137 @@
 import React, { useEffect, useState } from "react";
 import "../styleSheets/ViewReport.css";
-import { FaUsers, FaRupeeSign, FaChartPie, FaChartLine, FaEnvelope, FaTwitter, FaFacebookF, FaLinkedinIn, FaInstagram, } from "react-icons/fa";
-import axios from "axios";
-import backendIP from "../api/api";
+import { FaUsers, FaRupeeSign, } from "react-icons/fa";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, } from "recharts";
 import api from "../api/axiosInstance";
 
+const COLORS = ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"];
+
+const ALL_PLANS = ["Gold", "Gold Plus", "Diamond", "Diamond Plus", "Platinum"];
+
 const ViewReport = () => {
-  const [profiles, setProfiles] = useState([]);
-  const [loading, setLoading] = useState(false);
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [yearlyReport, setYearlyReport] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  // Fetch payments
-  const fetchProfiles = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get(`${backendIP}/payment/successful`);
-      const data = res.data || [];
-
-      // Convert backend → UI model
-      const converted = data.map((p) => ({
-        userId: p.userId,          // IMPORTANT FOR UNIQUE COUNT
-        planCode: p.planCode,
-        amount: p.amount,          // paise
-        status: p.status,
-        name: p.name || "",
-        city: p.city || "N/A",
-        isActive: p.status?.toUpperCase() === "PAID",
-        createdAt: new Date(p.createdAt),
-      }));
-
-      setProfiles(converted);
-
-    } catch (error) {
-      console.error("Error while loading profiles:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Fetch Yearly Report
   useEffect(() => {
-    fetchProfiles();
-  }, []);
-
-  useEffect(() => {
-    const reportYearly = async () => {
+    const fetchYearlyReport = async () => {
       try {
-        const res = await api.get(`/admin/yearly-dashboard?year=${selectedYear}`);
-        console.log("Yearly report:", res.data);
+        setLoading(true);
+        const res = await api.get(
+          `/admin/yearly-dashboard?year=${selectedYear}`
+        );
+        setYearlyReport(res.data);
       } catch (err) {
         console.error("Error fetching yearly report:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    reportYearly();
+    fetchYearlyReport();
   }, [selectedYear]);
 
-  // Count plans
-  const GOLD_3M = profiles.filter((p) => p.planCode === "GOLD_3").length;
-  const GOLD_PLUS_3M = profiles.filter((p) => p.planCode === "GOLDPLUS_3").length;
-  const DIAMOND_6M = profiles.filter((p) => p.planCode === "DIAMOND_6").length;
-  const DIAMOND_PLUS_6M = profiles.filter((p) => p.planCode === "DIAMONDPLUS_6").length;
-  const PLATINUM_12M = profiles.filter((p) => p.planCode === "PLATINUM_12").length;
+  const normalizedPlans = ALL_PLANS.map((planName) => {
+    const existingPlan = yearlyReport?.plans?.find(
+      (p) => p.planType.toLowerCase() === planName.toLowerCase()
+    );
 
-  const revenue = profiles
-    .reduce((sum, p) => sum + p.amount, 0).toFixed(2);
-
-  const activeMembers = profiles.filter((p) => p.isActive).length;
-
-  const topCities = ["Hyderabad", "Bangalore", "Mumbai"];
+    return {
+      planType: planName,
+      totalMembers: existingPlan?.totalMembers || 0,
+      totalRevenue: existingPlan?.totalRevenue || 0,
+    };
+  });
 
   return (
     <div className="viewreport-container">
       <div className="banner">
         <div className="overlay">
-          <h1>Vivahjeevan Matrimony Report - {currentYear}</h1>
-          <p>Bringing hearts together through love and trust </p>
+          <h1>Vivahjeevan Matrimony Report - {selectedYear}</h1>
+          <p>Bringing hearts together through love and trust</p>
         </div>
       </div>
 
-      <div>
-        <label>Select Year:</label>
-        <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} style={{width: "100px"}}>
-          {Array.from({ length: 10 }, (_, i) => currentYear - i).map((year) => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
+      {/* Year Selector */}
+      <div className="year-select" style={{width: "150px"}}>
+        <label>Select Year: </label>
+        <select
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(Number(e.target.value))}
+        >
+          {Array.from({ length: 10 }, (_, i) => currentYear - i).map(
+            (year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            )
+          )}
         </select>
       </div>
 
       {/* Stats */}
       <div className="stats-grid">
-        <div className="card pink">
-          <FaUsers className="icon" />
-          <h2>{loading ? "Loading..." : GOLD_3M}</h2>
-          <p>Gold Members</p>
-        </div>
-
-        <div className="card green">
-          <FaUsers className="icon" />
-          <h2>{loading ? "Loading..." : GOLD_PLUS_3M}</h2>
-          <p>Gold Plus Members</p>
-        </div>
-
-        <div className="card yellow">
-          <FaUsers className="icon" />
-          <h2>{loading ? "Loading..." : DIAMOND_6M}</h2>
-          <p>Diamond Members</p>
-        </div>
-
-        <div className="card green">
-          <FaUsers className="icon" />
-          <h2>{loading ? "Loading..." : DIAMOND_PLUS_6M}</h2>
-          <p>Diamond Plus Members</p>
-        </div>
-
-        <div className="card yellow">
-          <FaUsers className="icon" />
-          <h2>{loading ? "Loading..." : PLATINUM_12M}</h2>
-          <p>Platinum Members</p>
-        </div>
-
         <div className="card blue">
           <FaRupeeSign className="icon" />
-          <h2>{loading ? "Loading..." : `₹${revenue}`}</h2>
+          <h2>
+            {loading ? "Loading..." : `₹${(yearlyReport?.totalRevenue || 0).toLocaleString("en-IN")}`}
+          </h2>
           <p>Total Revenue</p>
         </div>
+
+        {normalizedPlans.map((plan) => (
+          <div key={plan.planType} className="card pink">
+            <FaUsers className="icon" />
+            <h2>{loading ? "Loading..." : plan.totalMembers}</h2>
+            <p>{plan.planType} Members</p>
+          </div>
+        ))}
       </div>
 
       {/* Charts Section */}
       <div className="charts-section">
-        <div className="chart-box">
-          <FaChartLine className="chart-icon" />
-          <h3>Monthly Growth</h3>
-          <p>Track new joins & successful matches.</p>
-        </div>
-        <div className="chart-box">
-          <FaChartPie className="chart-icon" />
-          <h3>Gender Ratio</h3>
-          <p>60% Male • 40% Female</p>
-        </div>
-        <div className="chart-box">
-          <FaChartPie className="chart-icon" />
-          <h3>Membership Plans</h3>
-          <p>Free / Premium / Elite</p>
-        </div>
-      </div>
 
-      {/* Summary */}
-      <div className="summary">
-        <h2>Overall Engagement Insights</h2>
-        <ul>
-          <li>✅ Active Members: {activeMembers}</li>
-          <li>💬 72% Response Rate</li>
-          <li>📅 Avg 3 logins/day</li>
-          <li>🌍 Top Cities:</li>
-          {topCities.map((city, i) => (
-            <li key={i}>🏙 {city}</li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Contact */}
-      <div className="contact-info">
-        <h2>Get in Touch</h2>
-        <p>Have questions or suggestions? Reach us anytime!</p>
-        <div className="social-links">
-          <a href="mailto:support@Vivahjeevan.com">
-            <FaEnvelope /> support@Vivahjeevan.com
-          </a>
-          <a href="#"><FaTwitter /> Twitter</a>
-          <a href="#"><FaFacebookF /> Facebook</a>
-          <a href="#"><FaLinkedinIn /> LinkedIn</a>
-          <a href="#"><FaInstagram /> Instagram</a>
+        {/* Membership Distribution Pie */}
+        <div className="chart-box">
+          <h3>Membership Distribution</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={normalizedPlans}
+                dataKey="totalMembers"
+                nameKey="planType"
+                outerRadius={100}
+                label
+              >
+                {normalizedPlans.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
         </div>
+
+        {/* Revenue by Plan Bar */}
+        <div className="chart-box">
+          <h3>Revenue by Plan</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={normalizedPlans}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="planType" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="totalRevenue" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
       </div>
     </div>
   );

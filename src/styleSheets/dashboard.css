@@ -175,6 +175,11 @@
   text-align: center;
 }
 
+.planBtn {
+  width: 250px;
+  background-color: #78350f;
+}
+
 /* chat list */
 .chatList {
   flex: 1;

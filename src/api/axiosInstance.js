@@ -30,6 +30,11 @@ api.interceptors.response.use(
         if (error.response?.status === 401) {
             store.dispatch(logout());
         }
+        if (error.response?.status === 403 &&
+            error.response?.data?.error === "PREMIUM_REQUIRED") {
+            toast.error("Upgrade to Premium to continue chatting");
+            window.location.href = "/dashboard/premium";
+        }
         return Promise.reject(error);
     }
 );

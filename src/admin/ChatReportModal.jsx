@@ -14,14 +14,15 @@ const ChatReportModal = ({ report }) => {
     }, [chatData]);
 
     useEffect(() => {
-        if (report?.reporter && report?.reportedUser) {
-            api.get(`/admin/conversation/${report.reporter.id}/${report.reportedUser.id}?page=${pageNo}&size=20`)
+        if (report?.reporterId && report?.reportedUserId) {
+            api.get(`/admin/conversation/${report.reporterId}/${report.reportedUserId}?page=${pageNo}&size=20`)
                 .then(response => setChatData(response.data))
                 .catch(error => console.error("Error fetching chat data:", error));
         }
     }, [report, pageNo]);
 
-    // console.log("Fetched chat data:", chatData);
+    console.log("Fetched chat data:", chatData);
+    console.log("Fetched report data:", report);
 
     return (
         <div className="modal fade" id="viewModal" tabIndex="-1">
@@ -49,10 +50,10 @@ const ChatReportModal = ({ report }) => {
                                         [...chatData.content].reverse().map(msg => (
                                             <div
                                                 key={msg.id}
-                                                className={`d-flex mb-2 ${msg.senderId === report.reporter.id ? "justify-content-end" : "justify-content-start"}`}
+                                                className={`d-flex mb-2 ${msg.senderId === report.reporterId ? "justify-content-end" : "justify-content-start"}`}
                                             >
                                                 <div
-                                                    className={`p-2 rounded ${msg.senderId === report.reporter.id
+                                                    className={`p-2 rounded ${msg.senderId === report.reporteId
                                                         ? "bg-primary text-white"
                                                         : "bg-secondary text-white"
                                                         }`}

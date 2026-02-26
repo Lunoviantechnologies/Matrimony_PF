@@ -27,6 +27,7 @@ const RaiseTicket = () => {
     "Payment Issue",
     "Profile Privacy & Safety",
     "Matchmaking Assistance",
+    "Technical",
     "Other Queries"
   ];
 
@@ -38,6 +39,7 @@ const RaiseTicket = () => {
     "Payment Issue": "Payment_Issue",
     "Profile Privacy & Safety": "Profile_Privacy_Safety",
     "Matchmaking Assistance": "Matchmaking_Assistance",
+    "Technical": "TECHNICAL",
     "Other Queries": "OTHER"
   };
 

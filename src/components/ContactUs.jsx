@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../styleSheets/ContactUs.css";
-import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaTwitter, FaFacebookF, FaQuora, FaInstagram, } from "react-icons/fa";
+import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaFacebookF, FaQuora, FaInstagram, } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import backendIP from "../api/api";
 import { toast } from "react-toastify";
 
@@ -164,7 +165,7 @@ const ContactUs = () => {
                 <a target="_blank" href="mailto:support@vivahjeevan.com">support@vivahjeevan.com</a>
               </li>
               <li>
-                <FaTwitter className="social-icon twitter" />
+                <FaXTwitter className="social-icon twitter" />
                 <a target="_blank" href="https://x.com/vivahjeewan">Twitter</a>
               </li>
               <li>

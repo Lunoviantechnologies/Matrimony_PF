@@ -1,7 +1,8 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styleSheets/Footer.css";
-import { FaFacebookF, FaInstagram, FaTwitter, FaQuora, FaGooglePlay, FaApple } from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaQuora, FaGooglePlay, FaApple } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -86,7 +87,7 @@ const SOCIAL_LINKS = [
     url: "https://www.instagram.com/vivah_jeevan/",
   },
   {
-    icon: <FaTwitter />,
+    icon: <FaXTwitter  />,
     url: "https://x.com/vivahjeewan",
   },
   {

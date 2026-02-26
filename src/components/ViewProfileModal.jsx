@@ -5,13 +5,15 @@ import { IoIosLock } from "react-icons/io";
 
 export default function ViewProfileModal({ premium, profile = {}, onClose = () => { } }) {
 
-  const images = [profile.updatePhoto, profile.updatePhoto1, profile.updatePhoto2, profile.updatePhoto3, profile.updatePhoto4].filter(Boolean);
+  const images = [profile?.updatePhoto, profile?.updatePhoto1, profile?.updatePhoto2, profile?.updatePhoto3, profile?.updatePhoto4].filter(Boolean);
   const [imgIndex, setImgIndex] = useState(0);
   const [matchPercent, setMatchPercent] = useState(0);
 
   const locked = !premium && imgIndex > 0;
   const nextImage = () => { setImgIndex(i => (i + 1) % images.length); };
   const prevImage = () => { setImgIndex(i => (i - 1 + images.length) % images.length); };
+
+  console.log("profile view modal: ", profile);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -64,7 +66,7 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
     rashi = "—",
     nakshatra = "—",
     dosham = "—",
-    spituralPath = "—",
+    spiritualPath = "—",
     updatePhoto: image,
   } = profile;
 
@@ -217,7 +219,7 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
                     <div><strong>Rashi:</strong> {rashi}</div>
                     <div><strong>Nakshatra:</strong> {nakshatra}</div>
                     <div><strong>Dosham:</strong> {dosham}</div>
-                    <div><strong>Spiritual Path:</strong> {spituralPath}</div>
+                    <div><strong>Spiritual Path:</strong> {spiritualPath}</div>
                   </div>
                 ) : (
                   <p className="vp-horoscope-text vp-blur-text">

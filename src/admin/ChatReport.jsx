@@ -23,10 +23,10 @@ const ChatReport = () => {
             .catch((err) => console.error(err));
     };
 
+    console.log("chat report: ", chatReport);
+
     const pendingReports = chatReport.filter((r) => r.status === "PENDING");
-    const bannedReports = chatReport.filter(
-        (r) => r.status === "APPROVED" || r.status === "BANNED"
-    );
+    const bannedReports = chatReport.filter( (r) => r.status === "APPROVED" || r.status === "BANNED" );
     const rejectedReports = chatReport.filter((r) => r.status === "REJECTED");
 
     const activeData =
@@ -86,6 +86,8 @@ const ChatReport = () => {
             setCurrentPage(totalPages);
         }
     }, [totalPages, currentPage]);
+
+    console.log("selected chat: ", selectedReport);
 
     return (
         <div className="container mt-4">
@@ -155,19 +157,18 @@ const ChatReport = () => {
                                     <td>{item.description}</td>
 
                                     <td>
-                                        {item.reportedUser.firstName}{" "}
-                                        {item.reportedUser.lastName}
+                                        {item?.reportedUserName || "N/A"}
                                         <br />
                                         <small className="text-muted">
-                                            id: {item.reportedUser.id}
+                                            id: {item?.reportedUserId || "-"}
                                         </small>
                                     </td>
 
                                     <td>
-                                        {item.reporter.firstName} {item.reporter.lastName}
+                                        {item?.reporterName || "N/A"}
                                         <br />
                                         <small className="text-muted">
-                                            id: {item.reporter.id}
+                                            id: {item?.reporterId || "-"}
                                         </small>
                                     </td>
 
@@ -208,7 +209,7 @@ const ChatReport = () => {
                                             <button
                                                 className="btn btn-sm btn-outline-success me-2"
                                                 onClick={() =>
-                                                    handleApprove(item.reportedUser.id, item.reason)
+                                                    item.reportedUser?.id &&  handleApprove(item.reportedUser.id, item.reason)
                                                 }
                                             >
                                                 Approve

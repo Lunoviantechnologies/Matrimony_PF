@@ -6,7 +6,7 @@
     margin: 20px auto 40px;
     border-radius: 20px;
     background: linear-gradient(to top, #D9F5E4 40%, #f9f9f7 100%);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
     position: relative;
     overflow: hidden;
 }
@@ -76,6 +76,7 @@
 .homeCard {
     width: 100%;
     height: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .homeCard .card-body {

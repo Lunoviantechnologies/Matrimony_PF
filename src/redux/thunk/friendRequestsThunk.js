@@ -47,3 +47,19 @@ export const cancelFriendRequest = createAsyncThunk(
         }
     }
 );
+
+// send request api
+
+export const sendFriendRequest = createAsyncThunk(
+    "friend/sendFriendRequest",
+    async ({ senderId, receiverId }, { rejectWithValue }) => {
+        try {
+            await api.post(`/friends/send/${senderId}/${receiverId}`);
+            toast.success("Request sent successfully");
+            return receiverId;
+        } catch (error) {
+            toast.error("Failed to send request");
+            return rejectWithValue(error.response?.data || "Failed to send request");
+        }
+    }
+);
