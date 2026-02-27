@@ -3,12 +3,14 @@ import "../styleSheets/dashboard.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
-import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import { FaCrown, FaUser } from "react-icons/fa";
 import { RiSecurePaymentFill } from "react-icons/ri";
 import api from "../api/axiosInstance";
 import DashboardAds from "./DashboardAds";
 import { FaGift } from "react-icons/fa6";
+import AssistedService from "../components/assistedService/AssistedService";
+// import serverURL from "../api/server";
+import { getProfileImage } from "../utils/profileImage";
 
 const Dashboard = () => {
 
@@ -76,6 +78,18 @@ const Dashboard = () => {
   const isPremiumActive = !!currentPlan;
 
   console.log("Dashboard Summary:", summary);
+
+  // const getProfileImage = (profile) => {
+  //   const photo = profile?.updatePhoto;
+
+  //   // Valid real image filename check
+  //   if (photo && typeof photo === "string" && photo.trim() !== "" && !photo.includes("placeholder")) {
+  //     return `${serverURL}/profile-photos/${photo.replace(/^\/+/, "")}`;
+  //   }
+
+  //   // Fallback to frontend placeholder
+  //   return profile.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+  // };
 
   return (
     <div className="dashboard_body">
@@ -156,16 +170,26 @@ const Dashboard = () => {
             ) : (
               filteredProfiles.map((i) => (
                 <div className="matchSection_map" key={i.id}>
-                  <img
-                    src={i.updatePhoto ? i.updatePhoto : i.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"} alt={i.id}
-                    style={{ objectFit: "cover", }}
-                    className={`profile-img ${i.hideProfilePhoto ? "blur-image" : ""}`}
-                    onError={(e) => {
-                      e.target.src = i.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
-                    }}
-                    draggable={false}
-                    onContextMenu={(e) => e.preventDefault()}
-                  />
+                  {
+                    i ? (
+                      <img
+                        src={getProfileImage(i)}
+                        style={{ objectFit: "cover", }}
+                        className={`profile-img ${i.hideProfilePhoto ? "blur-image" : ""}`}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src =
+                            i.gender === "Female"
+                              ? `${window.location.origin}/placeholder_girl.png`
+                              : `${window.location.origin}/placeholder_boy.png`;
+                        }}
+                        draggable={false}
+                        onContextMenu={(e) => e.preventDefault()}
+                      />
+                    ) : (
+                      <img src={`${i.gender} === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";`} />
+                    )
+                  }
                   <div className="premium-badge">
                     {i.premium ? (
                       <span className="premium-icon"><FaCrown /></span>
@@ -214,6 +238,10 @@ const Dashboard = () => {
           </button>
         </div>
       </section>
+
+      <div>
+        <AssistedService />
+      </div>
 
       {/* ====== Plan and Chat Section ====== */}
       <section style={{ display: "flex", gap: 32, flexWrap: "wrap" }}>
@@ -278,7 +306,7 @@ const Dashboard = () => {
           {premiumFilteredProfiles.map((i) => (
             <div className="chatList_map" key={i.id}>
               <img
-                src={i.updatePhoto ? i.updatePhoto : i.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
+                src={getProfileImage(i)}
                 alt={i.id}
                 className={`premium-img ${i.hideProfilePhoto ? "premiumblur-image" : ""}`}
                 style={{ width: 60, height: 60, borderRadius: 15, objectFit: "cover", marginRight: 15, }} />

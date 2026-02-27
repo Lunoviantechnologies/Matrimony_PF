@@ -1,10 +1,8 @@
 import React, { lazy } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import App from "../App";
-// import Register from "../pages/Register";
 const Register = lazy(() => import("../pages/Register"));
 import PremiumSubscription from '../pages/PremiumSubscription';
-// import Dashboard from "../pages/Dashboard";
 const Dashboard = lazy(() => import("../pages/Dashboard"));
 import EditProfile from "../pages/EditProfile";
 import ProfileView from "../pages/ProfileView";
@@ -28,10 +26,6 @@ import MyMatches from "../pages/Mymatches";
 import NearMe from "../pages/Nearme";
 import MoreMatches from "../pages/MoreMatches";
 import NewMatches from "../pages/Newmatches";
-import Accepted from "../pages/Accepted";
-import Sent from "../pages/Sent";
-import Rejected from "../pages/Rejected";
-import Received from "../pages/Received";
 import ProtectedRoute from "./ProtectedRoute";
 import ManageMatches from "../admin/ManageMatches";
 import HomeRedirect from "../pages/HomeRedirect";
@@ -204,29 +198,6 @@ const AppRoutes = createBrowserRouter([
                     },
                 ]
             },
-            // {
-            //     path: "requests",
-            //     element: <Requests />,
-            //     children: [
-            //         { index: true, element: <Navigate to="received" replace /> },
-            //         {
-            //             path: "accepted",
-            //             element: <Accepted />
-            //         },
-            //         {
-            //             path: "sent",
-            //             element: <Sent />
-            //         },
-            //         {
-            //             path: "received",
-            //             element: <Received />
-            //         },
-            //         {
-            //             path: "rejected",
-            //             element: <Rejected />
-            //         },
-            //     ]
-            // },
             {
                 path: "requests",
                 element: <Requests />,

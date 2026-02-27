@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import api from "../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import "../styleSheets/astroScore.css";
+import { getProfileImage } from "../utils/profileImage";
 
 const AstroScore = () => {
     const navigate = useNavigate();
@@ -70,7 +71,7 @@ const AstroScore = () => {
                             {/* LEFT — YOU */}
                             <div className="astro-user">
                                 <img
-                                    src={myProfile?.updatePhoto ? myProfile.updatePhoto : myProfile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
+                                    src={getProfileImage(myProfile)}
                                     alt="You"
                                 />
                                 <span>You</span>
@@ -97,15 +98,15 @@ const AstroScore = () => {
                                     </div>
                                 )}
 
-                                <div>
+                                {/* <div>
                                     <b>{scores.message}</b>
-                                </div>
+                                </div> */}
                             </div>
 
                             {/* RIGHT — FRIEND */}
                             <div className="astro-user">
                                 <img
-                                    src={friend.friendPhoto ? friend.friendPhoto : friend.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
+                                    src={getProfileImage(friend)}
                                     alt={friend.friendId}
                                 />
                                 <span>{friend.friendName}</span>

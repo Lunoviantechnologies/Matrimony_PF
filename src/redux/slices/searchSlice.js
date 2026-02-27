@@ -42,8 +42,6 @@ const searchSlice = createSlice({
                 state.results = payload.content || [];
                 state.totalPages = payload.totalPages ?? 0;
                 state.totalElements = payload.totalElements ?? 0;
-
-                state.page = payload.number ?? state.page;
                 state.size = payload.size ?? state.size;
             })
             .addCase(searchProfiles.rejected, (state, action) => {

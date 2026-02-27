@@ -6,6 +6,8 @@ import { fetchMyProfile } from "../redux/thunk/myProfileThunk";
 import { logout } from "../redux/slices/authSlice";
 import api from "../api/axiosInstance";
 import "../styleSheets/navbar.css";
+import serverURL from "../api/server";
+import { getProfileImage } from "../utils/profileImage";
 
 const UserNavbar = ({ closeMenu }) => {
     const { myProfile, id, role } = useSelector(state => state.auth);
@@ -18,7 +20,6 @@ const UserNavbar = ({ closeMenu }) => {
     const dropdownRef = useRef(null);
 
     const userName = myProfile?.firstName || "Loading...";
-    const userPhoto = myProfile?.updatePhoto || (myProfile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png");
 
     /* ================= PROFILE FETCH ================= */
 
@@ -151,7 +152,7 @@ const UserNavbar = ({ closeMenu }) => {
                     }
                 >
                     <img
-                        src={userPhoto}
+                        src={getProfileImage(myProfile)}
                         width="35"
                         height="35"
                         className="rounded-circle"

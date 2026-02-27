@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axiosInstance";
 import { fetchUserProfiles } from "../redux/thunk/profileThunk";
 import { toast } from "react-toastify";
+import { getProfileImage } from "../utils/profileImage";
 
 const PROFILE_FIELDS = [
   "firstName",
@@ -176,7 +177,7 @@ export default function ProfileView() {
               {myProfile?.updatePhoto ? (
                 // blurred photo for privacy in main card
                 <img
-                  src={myProfile?.updatePhoto ? myProfile.updatePhoto : myProfile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
+                  src={getProfileImage(myProfile)}
                   alt={myProfile?.firstName}
                   className="pv-profile-photo"
                   onError={(e) => {

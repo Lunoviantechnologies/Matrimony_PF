@@ -20,8 +20,6 @@ const MatchesList = ({ type, title }) => {
     const { sentRequestIds, sendingRequestIds } = useSelector((state) => state.matches);
     const { selectedProfile, profileLoading } = useSelector(state => state.profiles);
 
-
-    // const [selectedProfile, setSelectedProfile] = React.useState(null);
     const [showModal, setShowModal] = React.useState(false);
 
     // Set match type when component mounts or type changes

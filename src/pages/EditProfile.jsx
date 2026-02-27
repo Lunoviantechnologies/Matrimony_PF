@@ -8,6 +8,7 @@ import api from "../api/axiosInstance";
 import Cropper from "react-easy-crop";
 import { toast } from "react-toastify";
 import { gothramList } from "../data/dataList";
+import serverURL from "../api/server";
 
 export default function EditProfile() {
   const { id, myProfile } = useSelector(state => state.auth);
@@ -211,7 +212,7 @@ export default function EditProfile() {
     try {
       setUploadProgress(0);
 
-      const res = await api.put(`/admin/photo/${id}`, formData, {
+      const res = await api.put(`/profile-photos/updatePhoto/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
         onUploadProgress: (progressEvent) => {
           if (!progressEvent.lengthComputable) return;
@@ -255,12 +256,21 @@ export default function EditProfile() {
   };
   // console.log("updatePhoto : ", profileData.updatePhoto);
 
-  const getProfileImage = () => {
-    if (photo) return photo;
+  const getImageUrl = (photo) => {
+    if (!photo) return null;
 
-    if (profileData?.updatePhoto) return profileData.updatePhoto;
+    if (photo && typeof photo === "string" && photo.trim() !== "") {
+      photo = photo.trim();
 
-    return profileData?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+      if (photo.includes("/profile-photos/")) {
+        return `${serverURL}${photo}`;
+      }
+
+      return `${serverURL}/profile-photos/${photo}`;
+    }
+
+    // Fallback to frontend placeholder
+    return myProfile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
   };
 
   const Row = ({ label, value, onAction, actionText }) => (
@@ -317,7 +327,9 @@ export default function EditProfile() {
   if (loading) return <div>Loading profile...</div>;
 
   const currentSlot = PHOTO_SLOTS[activePhotoIndex];
+  console.log("Current Slot:", currentSlot);
   const currentPhoto = profileData?.[currentSlot];
+  console.log("Current Photo:", currentPhoto);
 
   const nextPhoto = () => setActivePhotoIndex(i => (i + 1) % PHOTO_SLOTS.length);
   const prevPhoto = () => setActivePhotoIndex(i => i === 0 ? PHOTO_SLOTS.length - 1 : i - 1);
@@ -326,7 +338,7 @@ export default function EditProfile() {
     try {
       // ✅ auto compress to ~300 KB
       let compressed = await imageCompression(file, {
-        maxSizeMB: 0.3,          // 🎯 target 300 KB
+        maxSizeMB: 0.3,
         maxWidthOrHeight: 1024,
         useWebWorker: true
       });
@@ -382,7 +394,7 @@ export default function EditProfile() {
 
               {currentPhoto ? (
                 <img
-                  src={currentPhoto}
+                  src={getImageUrl(currentPhoto)}
                   alt="profile"
                   className="photo-preview"
                   draggable={false}

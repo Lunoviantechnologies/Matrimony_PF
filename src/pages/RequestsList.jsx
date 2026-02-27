@@ -5,6 +5,7 @@ import { fetchFriendRequests, respondToRequest, cancelFriendRequest } from "../r
 import { fetchProfileById } from "../redux/thunk/profileThunk";
 import ViewProfileModal from "../components/ViewProfileModal";
 import { useNavigate } from "react-router-dom";
+import { getProfileImage } from "../utils/profileImage";
 
 const RequestsList = ({ type }) => {
 
@@ -62,7 +63,7 @@ const RequestsList = ({ type }) => {
                 requests.map((user) => {
                     const profile = user.profile;
                     const displayName = profile?.name;
-                    const imageSrc = profile?.updatePhoto ? profile.updatePhoto : profile?.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
+                    const imageSrc = getProfileImage(profile);
                     return (
                         <div className="received-card" key={user.requestId}>
 

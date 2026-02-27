@@ -124,24 +124,30 @@ const SearchProfiles = () => {
             </div>
 
             {totalPages > 1 && (
-                <div className="pagination-container">
-                    <button
-                        disabled={page === 0}
-                        onClick={() => handlePageChange(page - 1)}
-                    >
-                        Previous
-                    </button>
+                <div className="pagination-wrapper mt-3">
+                    <div className="pagination-container">
 
-                    <span>
-                        Page {page + 1} of {totalPages}
-                    </span>
+                        <button
+                            className="btn btn-outline-primary"
+                            disabled={page === 0}
+                            onClick={() => handlePageChange(page - 1)}
+                        >
+                            Previous
+                        </button>
 
-                    <button
-                        disabled={page === totalPages - 1}
-                        onClick={() => handlePageChange(page + 1)}
-                    >
-                        Next
-                    </button>
+                        <span className="page-text">
+                            Page {page + 1} of {totalPages}
+                        </span>
+
+                        <button
+                            className="btn btn-outline-primary"
+                            disabled={page === totalPages - 1}
+                            onClick={() => handlePageChange(page + 1)}
+                        >
+                            Next
+                        </button>
+
+                    </div>
                 </div>
             )}
 

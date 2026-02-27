@@ -209,7 +209,7 @@ const ChatReport = () => {
                                             <button
                                                 className="btn btn-sm btn-outline-success me-2"
                                                 onClick={() =>
-                                                    item.reportedUser?.id &&  handleApprove(item.reportedUser.id, item.reason)
+                                                    item?.reportedUserId &&  handleApprove(item.reportedUserId, item.reason)
                                                 }
                                             >
                                                 Approve

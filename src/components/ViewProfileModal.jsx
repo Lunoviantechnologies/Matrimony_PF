@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../styleSheets/viewProfileModal.css";
 import MatchPreferences from "./MatchPreferences";
 import { IoIosLock } from "react-icons/io";
+import { getProfileImage } from "../utils/profileImage";
 
 export default function ViewProfileModal({ premium, profile = {}, onClose = () => { } }) {
 
@@ -9,9 +10,23 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
   const [imgIndex, setImgIndex] = useState(0);
   const [matchPercent, setMatchPercent] = useState(0);
 
+  console.log("Images array:", images);
+  console.log("Images length:", images.length);
+
   const locked = !premium && imgIndex > 0;
-  const nextImage = () => { setImgIndex(i => (i + 1) % images.length); };
-  const prevImage = () => { setImgIndex(i => (i - 1 + images.length) % images.length); };
+  const nextImage = () => {
+    if (images.length <= 1) return;
+    setImgIndex(i => (i + 1) % images.length);
+  };
+
+  const prevImage = () => {
+    if (images.length <= 1) return;
+    setImgIndex(i => (i - 1 + images.length) % images.length);
+  };
+
+  useEffect(() => {
+    setImgIndex(0);
+  }, [profile]);
 
   console.log("profile view modal: ", profile);
 
@@ -71,7 +86,7 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
   } = profile;
 
   const imgSrc = image ? image : (gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png");
-  console.log("ViewProfileModal :", profile);
+  // console.log("ViewProfileModal :", profile);
 
   const handleBackdrop = (e) => {
     if (e.target.classList && (e.target.classList.contains("vp-backdrop") || e.target.classList.contains("vp-pop-backdrop"))) {
@@ -95,7 +110,11 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
             <div className="vp-main-image carousel">
 
               <img
-                src={images[imgIndex] ? images[imgIndex] : profile.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png"}
+                src={
+                  images.length > 0
+                    ? getProfileImage({ ...profile, updatePhoto: images[imgIndex] })
+                    : getProfileImage(profile)
+                }
                 alt={fullName}
                 className={locked || profile?.hideProfilePhoto ? "blur-image" : ""}
                 draggable={false}
@@ -117,7 +136,7 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
               )}
 
             </div>
-              
+
             {photos && photos.length > 1 && (
               <div className="vp-photos-row">
                 {photos.slice(0, 6).map((p, i) => <img key={i} src={p} alt={`${fullName}-${i}`} className="vp-thumb" />)}

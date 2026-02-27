@@ -3,6 +3,7 @@ import { MdLocalFlorist, MdPsychology, MdTaskAlt } from "react-icons/md";
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import '../styleSheets/homePage.css';
+import AssistedService from "../components/assistedService/AssistedService";
 const FAQ = lazy(() => import("../components/FAQ"));
 
 const Home = () => {
@@ -58,6 +59,10 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div className="container">
+                <AssistedService />
             </div>
 
             <div>

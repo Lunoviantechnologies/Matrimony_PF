@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import "../styleSheets/ManageMatches.css";
 import { TbHeartHandshake } from "react-icons/tb";
 import api from "../api/axiosInstance";
+import serverURL from "../api/server";
 
 export default function ManageMatches() {
   const [matches, setMatches] = useState([]);
@@ -67,12 +68,21 @@ export default function ManageMatches() {
     }
   }, [totalPages]);
 
-  /* -----------------------------------
-     Image Helper
-  ----------------------------------- */
   const getImage = (photo, gender) => {
-    if (photo) return photo; // add base URL if required
-    return gender === "Female" ? "placeholder_girl.png" : "placeholder_boy.png";
+    if (!photo) return null;
+
+    if (photo && typeof photo === "string" && photo.trim() !== "") {
+      photo = photo.trim();
+
+      if (photo.includes("/profile-photos/")) {
+        return `${serverURL}${photo}`;
+      }
+
+      return `${serverURL}/profile-photos/${photo}`;
+    }
+
+    // Fallback to frontend placeholder
+    return gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
   };
 
   return (

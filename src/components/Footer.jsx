@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styleSheets/Footer.css";
 import { FaFacebookF, FaInstagram, FaQuora, FaGooglePlay, FaApple } from "react-icons/fa";
@@ -56,7 +56,7 @@ const ROUTE_MAP = {
   "Partner Search": "/",
   "How to Use Vivahjeevan.com": "/",
   "Customer Support": "/contactus",
-  "Vivahjeevan Blog": "/resources/blog",
+  "Blog": "/resources/blog",
   "Careers": "/",
   "Awards & Recognition": "/",
   "Site Map": "/sitemap",
@@ -87,7 +87,7 @@ const SOCIAL_LINKS = [
     url: "https://www.instagram.com/vivah_jeevan/",
   },
   {
-    icon: <FaXTwitter  />,
+    icon: <FaXTwitter />,
     url: "https://x.com/vivahjeewan",
   },
   {
@@ -100,6 +100,35 @@ const Footer = () => {
 
   const { role } = useSelector(state => state.auth);
   const navigate = useNavigate();
+  const [showAppModal, setShowAppModal] = useState(false);
+
+  // Auto close after 5 seconds
+  useEffect(() => {
+    let timer;
+    if (showAppModal) {
+      timer = setTimeout(() => {
+        setShowAppModal(false);
+      }, 3000);
+    }
+    return () => clearTimeout(timer);
+  }, [showAppModal]);
+
+  // ESC key close
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === "Escape") {
+        setShowAppModal(false);
+      }
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, []);
+
+  const handleComingSoon = (e) => {
+    e.preventDefault();
+    setShowAppModal(true);
+  };
+
   const isUser = role?.[0] === "USER";
 
   const getSlug = (text) => text.toLowerCase().replace(/ /g, "-").replace(/[&]/g, "");
@@ -108,11 +137,6 @@ const Footer = () => {
     if (role?.[0] === "USER") navigate("/dashboard");
     else if (role?.[0] === "ADMIN") navigate("/admin");
     else navigate("/");
-  }
-
-  const handleComingSoon = (e) => {
-    e.preventDefault();
-    toast.info("Our mobile app is coming soon! Stay tuned.");
   };
 
   const dynamicFooterLinks = isUser
@@ -225,6 +249,36 @@ const Footer = () => {
       <div className="footer-copyright">
         &copy; {new Date().getFullYear()} Vivahjeevan.com. All Rights Reserved.
       </div>
+
+      {showAppModal && (
+        <div
+          className="custom-modal-overlay"
+          onClick={() => setShowAppModal(false)}
+        >
+          <div
+            className="custom-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-icon">
+              <i className="bi bi-phone-fill"></i>
+            </div>
+
+            <h4 className="fw-bold mt-3">Mobile App Coming Soon</h4>
+
+            <p className="text-muted">
+              Our Android & iOS app is launching soon.
+              Stay tuned for an amazing experience!
+            </p>
+
+            <button
+              className="modal-btn"
+              onClick={() => setShowAppModal(false)}
+            >
+              Got it
+            </button>
+          </div>
+        </div>
+      )}
 
     </footer>
 

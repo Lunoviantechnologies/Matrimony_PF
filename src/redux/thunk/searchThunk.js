@@ -9,6 +9,7 @@ export const searchProfiles = createAsyncThunk(
                 .filter(([_, value]) => value !== undefined && value !== null && value !== "" && !(Array.isArray(value) && value.length === 0)));
 
             const res = await api.post(`/profiles/search?page=${page}&size=${size}`, cleanFilters);
+            console.log("search : ", res.data);
 
             return res.data;
         } catch (err) {
