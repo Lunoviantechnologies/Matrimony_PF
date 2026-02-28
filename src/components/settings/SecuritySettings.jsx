@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Card, CardContent, Typography, TextField, Button, Box, Stack, IconButton, InputAdornment,} from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import api from "../../api/axiosInstance";
+import { toast } from "react-toastify";
 
 export default function SecuritySettings({
     securityPassword,
@@ -16,15 +17,15 @@ export default function SecuritySettings({
         const { oldPassword, newPassword, confirmPassword } = securityPassword;
 
         if (!oldPassword || !newPassword || !confirmPassword) {
-            alert("All fields are required");
+            toast.info("All fields are required");
             return;
         }
         if (newPassword !== confirmPassword) {
-            alert("Passwords do not match");
+            toast.info("Passwords do not match");
             return;
         }
         if (newPassword.length < 8) {
-            alert("Password must be at least 8 characters");
+            toast.info("Password must be at least 8 characters");
             return;
         }
 
@@ -35,14 +36,17 @@ export default function SecuritySettings({
                 confirmPassword,
             })
             .then(() => {
-                alert("Password changed successfully");
+                toast.success("Password changed successfully");
                 setSecurityPassword({
                     oldPassword: "",
                     newPassword: "",
                     confirmPassword: "",
                 });
             })
-            .catch(() => alert("Failed to change password"));
+            .catch((err) => {
+                console.log("error password: ", err);
+                toast.error(err.response.data);
+            });
     };
 
     return (

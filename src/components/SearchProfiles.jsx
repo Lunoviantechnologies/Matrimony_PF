@@ -44,7 +44,7 @@ const SearchProfiles = () => {
         dispatch(setPage(newPage));
     };
 
-    console.log("Search results : ", results);
+    console.log("Search results : ", page);
 
     return (
         <div className="search-page">
@@ -53,10 +53,20 @@ const SearchProfiles = () => {
             <div>
                 {loading ? (
                     <h3>Loading...</h3>
+                ) : results.length === 0 && page === 0 ? (
+                    <div className="empty-guide">
+                        <h3>
+                            Search by name, location, profession, religion, or interests to find matches
+                        </h3>
+                    </div>
                 ) : results.length === 0 ? (
-                    <h3>
-                        Search by name, location, profession, religion, or interests to find matches
-                    </h3>
+                    <div className="empty-state">
+                        <h3>No Profiles Found</h3>
+                        <p>
+                            We couldn’t find any profiles matching your preferences.
+                            Try adjusting your search filters to discover more matches.
+                        </p>
+                    </div>
                 ) : (
                     <div className="profile-cards-wrapper">
                         {results.map((p) => (
