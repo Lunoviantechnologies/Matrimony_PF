@@ -61,9 +61,16 @@ export default function AdminApprovals() {
     window.open(fileURL, "_blank");
   };
 
-  // Pagination
+  // Filter only pending, not yet approved profiles
+  const pendingProfiles = adminProfiles.filter(
+    (u) =>
+      u?.accountStatus === "Pending Verification" &&
+      !u?.approved
+  );
+
+  // Pagination (backend already filtered by status; we just apply safety filter above)
   const totalPagesCount = totalPages || 1;
-  const paginatedData = adminProfiles;
+  const paginatedData = pendingProfiles;
 
   useEffect(() => {
     if (page > totalPagesCount) {
