@@ -172,6 +172,11 @@ export default function EditProfile() {
         updatedProfile.partnerHobbies = updatedProfile.partnerHobbies.join(",");
       }
 
+      if (editBuffer.mobileNumber && editBuffer.mobileNumber.length !== 10) {
+        toast.error("Mobile number must be exactly 10 digits");
+        return;
+      }
+
       const res = await api.put(`/admin/update/${id}`, updatedProfile);
 
       setProfileData(updatedProfile);
@@ -785,8 +790,21 @@ export default function EditProfile() {
             <label className="field"><div className="field-label">Body Type</div>
               <input value={buffer.bodyType || ""} onChange={(e) => handleEditInputLocal("bodyType", e.target.value)} />
             </label>
-            <label className="field"><div className="field-label">Complexion</div>
-              <input value={buffer.complexion || ""} onChange={(e) => handleEditInputLocal("complexion", e.target.value)} placeholder="Skin tone..." />
+            <label className="field">
+              <div className="field-label">Skin Tone</div>
+              <select
+                value={buffer.complexion || ""}
+                onChange={(e) => handleEditInputLocal("complexion", e.target.value)}
+              >
+                <option value="">Select Skin Tone</option>
+                <option value="Very Fair">Very Fair</option>
+                <option value="Fair">Fair</option>
+                <option value="Wheatish">Wheatish</option>
+                <option value="Wheatish Brown">Wheatish Brown</option>
+                <option value="Brown">Brown</option>
+                <option value="Dark">Dark</option>
+                <option value="Dusky">Dusky</option>
+              </select>
             </label>
             <select name="habbits" id="habbits" className="field" value={buffer.habbits || ""} onChange={(e) => handleEditInputLocal("habbits", e.target.value)}>
               <option value="">Select Habbits</option>
@@ -819,11 +837,31 @@ export default function EditProfile() {
             </label><label className="field"><div className="field-label">Number of Sisters</div>
               <input value={buffer.numberOfSisters || ""} onChange={(e) => handleEditInputLocal("numberOfSisters", e.target.value)} placeholder="leave if no sisters..." />
             </label>
-            <label className="field"><div className="field-label">Family Status</div>
-              <input value={buffer.familyStatus || ""} onChange={(e) => handleEditInputLocal("familyStatus", e.target.value)} placeholder="below or middle or above middle class..." />
+            <label className="field">
+              <div className="field-label">Family Status</div>
+              <select
+                value={buffer.familyStatus || ""}
+                onChange={(e) => handleEditInputLocal("familyStatus", e.target.value)}
+              >
+                <option value="">Select Family Status</option>
+                <option value="Lower Class">Lower Class</option>
+                <option value="Middle Class">Middle Class</option>
+                <option value="Upper Middle Class">Upper Middle Class</option>
+                <option value="Upper Class">Upper Class</option>
+              </select>
             </label>
-            <label className="field"><div className="field-label">Family Type</div>
-              <input value={buffer.familyType || ""} onChange={(e) => handleEditInputLocal("familyType", e.target.value)} placeholder="nuclear or joint..." />
+
+            <label className="field">
+              <div className="field-label">Family Type</div>
+              <select
+                value={buffer.familyType || ""}
+                onChange={(e) => handleEditInputLocal("familyType", e.target.value)}
+              >
+                <option value="">Select Family Type</option>
+                <option value="Nuclear">Nuclear</option>
+                <option value="Joint">Joint</option>
+                <option value="Extended">Extended</option>
+              </select>
             </label>
           </div>
         );
@@ -945,8 +983,21 @@ export default function EditProfile() {
               <input value={buffer.lastName || ""} onChange={(e) => handleEditInputLocal("lastName", e.target.value)} disabled />
             </label>
 
-            <label className="field"><div className="field-label">Mobile Number</div>
-              <input value={buffer.mobileNumber || ""} onChange={(e) => handleEditInputLocal("mobileNumber", e.target.value)} />
+            <label className="field">
+              <div className="field-label">Mobile Number</div>
+              <input
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={10}
+                value={buffer.mobileNumber || ""}
+                onChange={(e) => {
+                  const onlyNumbers = e.target.value.replace(/\D/g, "");
+                  const limited = onlyNumbers.slice(0, 10);
+                  handleEditInputLocal("mobileNumber", limited);
+                }}
+                placeholder="Enter 10 digit mobile number"
+              />
             </label>
 
             <label className="field"><div className="field-label">Date of Birth</div>
