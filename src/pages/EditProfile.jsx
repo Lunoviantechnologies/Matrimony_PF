@@ -826,11 +826,29 @@ export default function EditProfile() {
       case "family":
         return (
           <div className="modal-form">
-            <label className="field"><div className="field-label">Father's Name</div>
-              <input value={buffer.fatherName || ""} onChange={(e) => handleEditInputLocal("fatherName", e.target.value)} />
+            <label className="field">
+              <div className="field-label">Father's Name</div>
+              <input
+                type="text"
+                value={buffer.fatherName || ""}
+                onChange={(e) => {
+                  const onlyText = e.target.value.replace(/[^a-zA-Z\s]/g, "");
+                  handleEditInputLocal("fatherName", onlyText);
+                }}
+                placeholder="Enter father's name"
+              />
             </label>
-            <label className="field"><div className="field-label">Mother's Name</div>
-              <input value={buffer.motherName || ""} onChange={(e) => handleEditInputLocal("motherName", e.target.value)} />
+            <label className="field">
+              <div className="field-label">Mother's Name</div>
+              <input
+                type="text"
+                value={buffer.motherName || ""}
+                onChange={(e) => {
+                  const onlyText = e.target.value.replace(/[^a-zA-Z\s]/g, "");
+                  handleEditInputLocal("motherName", onlyText);
+                }}
+                placeholder="Enter mother's name"
+              />
             </label>
             <label className="field"><div className="field-label">Number of Brothers</div>
               <input value={buffer.numberOfBrothers || ""} onChange={(e) => handleEditInputLocal("numberOfBrothers", e.target.value)} placeholder="leave if no brothers..." />
