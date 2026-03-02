@@ -30,10 +30,19 @@ const profileSlice = createSlice({
             })
             .addCase(fetchAdminProfiles.fulfilled, (state, action) => {
                 state.adminloading = false;
-                const payload = action.payload || {};
-                state.adminProfiles = payload.content || [];
-                state.totalPages = payload.totalPages ?? 0;
-                state.totalElements = payload.totalElements ?? 0;
+                const payload = action.payload ?? {};
+
+                if (Array.isArray(payload)) {
+                    // Backend returns plain array
+                    state.adminProfiles = payload;
+                    state.totalPages = 1;
+                    state.totalElements = payload.length;
+                } else {
+                    // Backend returns Page-style object
+                    state.adminProfiles = payload.content || [];
+                    state.totalPages = payload.totalPages ?? 0;
+                    state.totalElements = payload.totalElements ?? 0;
+                }
             })
             .addCase(fetchAdminProfiles.rejected, (state, action) => {
                 state.adminloading = false;

@@ -17,7 +17,7 @@ export default function AdminApprovals() {
   useEffect(() => {
     if (role?.[0]?.toUpperCase() === "ADMIN") {
       dispatch(
-        fetchAdminProfiles({ page: page - 1, size: pageSize, accountStatus: "PENDING VERIFICATION" })
+        fetchAdminProfiles({ page: page - 1, size: pageSize, accountStatus: "Pending Verification" })
       );
     }
   }, [dispatch, role, page]);
@@ -30,7 +30,7 @@ export default function AdminApprovals() {
       await api.post(`/admin/profiles/approve/${userId}`);
 
       toast.success("User profile approved successfully!");
-      dispatch(fetchAdminProfiles({ page: page - 1, size: pageSize, accountStatus: "PENDING VERIFICATION" }));
+      dispatch(fetchAdminProfiles({ page: page - 1, size: pageSize, accountStatus: "Pending Verification" }));
     } catch (error) {
       toast.error("Approval failed!");
     } finally {
@@ -44,7 +44,7 @@ export default function AdminApprovals() {
       setActionLoading({ id: userId, type: "reject" });
       await api.post(`/admin/profiles/reject/${userId}`);
       toast.success("User profile rejected successfully!");
-      dispatch(fetchAdminProfiles({ page: page - 1, size: pageSize, accountStatus: "PENDING VERIFICATION" }));
+      dispatch(fetchAdminProfiles({ page: page - 1, size: pageSize, accountStatus: "Pending Verification" }));
     } catch (error) {
       toast.error("Rejection failed!");
     } finally {
