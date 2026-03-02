@@ -9,11 +9,24 @@ export const getProfileImage = (profile) => {
         photo = photo.trim();
         if (!photo) return null;
 
-        if (photo.includes("/profile-photos/")) {
-            return `${serverURL}${photo}`;
+        // Absolute URL already
+        if (photo.startsWith("http://") || photo.startsWith("https://")) {
+            return photo;
         }
 
-        return `${serverURL}/profile-photos/${photo}`;
+        // Ensure we point to the correct host even if serverURL includes /api
+        const base =
+            typeof serverURL === "string"
+                ? serverURL.replace(/\/api\/?$/, "")
+                : "";
+
+        // Already contains profile-photos path
+        if (photo.includes("/profile-photos/")) {
+            return `${base}${photo}`;
+        }
+
+        // Plain filename → build full URL
+        return `${base}/profile-photos/${photo}`;
     };
 
     // 1️⃣ Main profile photo
