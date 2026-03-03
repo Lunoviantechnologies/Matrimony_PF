@@ -715,6 +715,7 @@ const Register = () => {
       })
       .catch((error) => {
         console.error("Upload error:", error.response?.data || error.message);
+        console.error("Upload error:", error);
         toast.error(error.response?.data || error.message);
       });
   };
@@ -727,7 +728,7 @@ const Register = () => {
       setOtpSent(true);
       toast.success("OTP sent to your email");
     } catch (err) {
-      toast.error("Failed to send OTP");
+      toast.error(err.response?.data.message || err.message);
       console.log("error : ", err);
     } finally {
       setLoading(false);
@@ -753,7 +754,8 @@ const Register = () => {
         toast.error("Invalid OTP");
       }
     } catch (err) {
-      toast.error("OTP verification failed");
+      toast.error(err.response?.data.message || err.message);
+      console.log("otp verify err : ", err);
     } finally {
       setLoading(false);
     }
@@ -1201,47 +1203,6 @@ const Register = () => {
           </>
         );
 
-
-      /* ---------------------- STEP 5 ----------------------- */
-      // case 5:
-      //   return (
-      //     <>
-      //       <div className="step-icon"><FaUserCheck /></div>
-      //       <h2>Marital Status</h2>
-      //       <Field as="select" name="maritalStatus" className="form-select">
-      //         <option value="" disabled>Select your Marital Status</option>
-      //         <option value="Single">Single</option>
-      //         <option value="Divorced">Divorced</option>
-      //         <option value="Separated">Separated</option>
-      //         <option value="Widowed">Widowed</option>
-      //       </Field>
-      //       {["Divorced", "Widowed", "Separated"].includes(values.maritalStatus) && (
-      //         <Field as="select" name="livingStatus" className="form-select">
-      //           <option value="" disabled>Living status</option>
-      //           <option value="Staying with parents">Staying with parents</option>
-      //           <option value="Living separately">Living separately</option>
-      //         </Field>
-      //       )}
-
-      //       {values.maritalStatus && values.maritalStatus !== "Single" && (
-      //         <Field name="noOfChildren">
-      //           {({ field }) => (
-      //             <input
-      //               {...field}
-      //               className="form-input"
-      //               placeholder="Number Of Children"
-      //               onChange={(e) => {
-      //                 setFieldValue(
-      //                   "noOfChildren",
-      //                   allowOnlyNumbers(e.target.value)
-      //                 );
-      //               }}
-      //             />
-      //           )}
-      //         </Field>
-      //       )}
-      //     </>
-      //   )
       /* ---------------------- STEP 5 ----------------------- */
       case 5:
         return (

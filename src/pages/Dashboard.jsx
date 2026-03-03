@@ -67,6 +67,7 @@ const Dashboard = () => {
   };
 
   const newMatches = summary?.newMatches || [];
+  const recommendedMatches = summary?.recommendedMatches || [];
   const premiumFilteredProfiles = summary?.premiumMatches || [];
   const acceptedRequests = summary?.acceptedCount || 0;
   const receivedRequests = summary?.receivedCount || 0;
@@ -77,19 +78,9 @@ const Dashboard = () => {
   const filteredProfiles = newMatches.slice(0, 6);
   const isPremiumActive = !!currentPlan;
 
+  const suggestedMatches = recommendedMatches.slice(0,6);
+
   console.log("Dashboard Summary:", summary);
-
-  // const getProfileImage = (profile) => {
-  //   const photo = profile?.updatePhoto;
-
-  //   // Valid real image filename check
-  //   if (photo && typeof photo === "string" && photo.trim() !== "" && !photo.includes("placeholder")) {
-  //     return `${serverURL}/profile-photos/${photo.replace(/^\/+/, "")}`;
-  //   }
-
-  //   // Fallback to frontend placeholder
-  //   return profile.gender === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";
-  // };
 
   return (
     <div className="dashboard_body">
@@ -155,7 +146,7 @@ const Dashboard = () => {
 
       <section className="matchSection">
         <h2 style={{ color: "#695019", marginBottom: 15 }}>
-          New Profile Matches
+          New Matches
         </h2>
 
         <div className="matchGrid">
@@ -219,7 +210,7 @@ const Dashboard = () => {
       {/* ====== Request Section ====== */}
       <section
         style={{ background: "#fff", borderRadius: 15, padding: 24, marginBottom: 32, boxShadow: "0 1px 6px #ddd", }}>
-        <h2 style={{ color: "#695019", marginBottom: 15 }}>Interest Requests</h2>
+        <h2 style={{ color: "#695019", marginBottom: 15, fontWeight: "bold" }}>Interest Requests</h2>
 
         <div className="interest-tabs" style={{ display: "flex", gap: 15, marginBottom: 20 }}>
           <button onClick={() => { navigate('/dashboard/requests/received') }}
@@ -239,6 +230,67 @@ const Dashboard = () => {
         </div>
       </section>
 
+      {/* Recommended Matches */}
+      <section className="matchSection">
+        <h2 style={{ color: "#695019", marginBottom: 15 }}>
+          Recommended Matches
+        </h2>
+
+        <div className="matchGrid">
+          {
+            suggestedMatches.length === 0 ? (
+              <div className="no-profiles">
+                <h4>No Recommended Profiles Available</h4>
+                <p>
+                  Check back later or update your preferences to see more matches.
+                </p>
+              </div>
+            ) : (
+              suggestedMatches.map((i) => (
+                <div className="matchSection_map" key={i.id}>
+                  {
+                    i ? (
+                      <img
+                        src={getProfileImage(i)}
+                        style={{ objectFit: "cover", }}
+                        className={`profile-img ${i.hideProfilePhoto ? "blur-image" : ""}`}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src =
+                            i.gender === "Female"
+                              ? `${window.location.origin}/placeholder_girl.png`
+                              : `${window.location.origin}/placeholder_boy.png`;
+                        }}
+                        draggable={false}
+                        onContextMenu={(e) => e.preventDefault()}
+                      />
+                    ) : (
+                      <img src={`${i.gender} === "Female" ? "/placeholder_girl.png" : "/placeholder_boy.png";`} />
+                    )
+                  }
+                  <div className="premium-badge">
+                    {i.premium ? (
+                      <span className="premium-icon"><FaCrown /></span>
+                    ) : (
+                      <span className="free-icon"><FaUser /> free</span>
+                    )}
+                  </div>
+                  <div
+                    style={{ position: "absolute", bottom: 15, left: 0, right: 0, textAlign: "center", color: "#fff", }}>
+                    <div style={{ fontWeight: "bold", fontSize: 18, color: "#f7f6f6" }}>
+                      {getDisplayName(i.name)}
+                    </div>
+                    <div style={{ fontSize: 14 }}>{i.city} • {i.age} Years old</div>
+                  </div>
+                  {/* Online Indicator */}
+                  <div className={`status-dot ${isRecentlyActive(i.lastActive) ? "online" : "offline"}`} />
+                </div>
+              ))
+            )
+          }
+        </div>
+      </section>
+
       <div>
         <AssistedService />
       </div>
@@ -247,7 +299,7 @@ const Dashboard = () => {
       <section style={{ display: "flex", gap: 32, flexWrap: "wrap" }}>
         {/* Plan Details */}
         <div className="planSection">
-          <h3 style={{ color: "#695019", marginBottom: 15 }}>
+          <h3 style={{ color: "#695019", marginBottom: 15, fontWeight: "bold" }}>
             <RiSecurePaymentFill /> My Subscription Plan
           </h3>
 
@@ -299,7 +351,7 @@ const Dashboard = () => {
 
         {/* Premium Members */}
         <div className="chatList">
-          <h3 style={{ color: "#695019", marginBottom: 20 }}>
+          <h3 style={{ color: "#695019", marginBottom: 20, fontWeight: "bold" }}>
             <FaCrown /> Premium Members
           </h3>
 

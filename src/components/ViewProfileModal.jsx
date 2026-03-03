@@ -10,8 +10,8 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
   const [imgIndex, setImgIndex] = useState(0);
   const [matchPercent, setMatchPercent] = useState(0);
 
-  console.log("Images array:", images);
-  console.log("Images length:", images.length);
+  // console.log("Images array:", images);
+  // console.log("Images length:", images.length);
 
   const locked = !premium && imgIndex > 0;
   const nextImage = () => {
@@ -28,7 +28,7 @@ export default function ViewProfileModal({ premium, profile = {}, onClose = () =
     setImgIndex(0);
   }, [profile]);
 
-  console.log("profile view modal: ", profile);
+  // console.log("profile view modal: ", profile);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";

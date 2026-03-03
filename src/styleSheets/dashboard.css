@@ -92,6 +92,10 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
+.matchSection h2{
+  font-weight: bold;
+}
+
 .matchGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));

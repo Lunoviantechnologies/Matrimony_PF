@@ -849,7 +849,7 @@ export default function EditProfile() {
                 }}
                 placeholder="Enter mother's name"
               />
-            </label>
+            </label>    
             <label className="field"><div className="field-label">Number of Brothers</div>
               <input value={buffer.numberOfBrothers || ""} onChange={(e) => handleEditInputLocal("numberOfBrothers", e.target.value)} placeholder="leave if no brothers..." />
             </label><label className="field"><div className="field-label">Number of Sisters</div>
