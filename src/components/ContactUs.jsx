@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../styleSheets/ContactUs.css";
-import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaFacebookF, FaQuora, FaInstagram, } from "react-icons/fa";
+import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaFacebookF, FaQuora, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import backendIP from "../api/api";
 import { toast } from "react-toastify";
@@ -176,9 +176,13 @@ const ContactUs = () => {
                 <FaInstagram className="social-icon instagram" />
                 <a target="_blank" href="https://www.instagram.com/vivah_jeevan/">Instagram</a>
               </li>
-               <li>
-                <FaQuora className="social-icon instagram" />
+              <li>
+                <FaQuora className="social-icon quora" />
                 <a target="_blank" href="https://www.quora.com/profile/Vivah-Jeevan">Quora</a>
+              </li>
+              <li>
+                <FaLinkedin className="social-icon linkedin" />
+                <a target="_blank" href="https://www.linkedin.com/company/vivah-jeevan/">Linkedin</a>
               </li>
             </ul>
           </div>

@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet";
 import { fetchBlogBySlug } from "../../api/blogApi";
 import backendIP from "../../api/api";
 import "../../styleSheets/blog/blogDetails.css";
+import DOMPurify from "dompurify";
 
 const BlogDetails = () => {
 
@@ -97,11 +98,10 @@ const BlogDetails = () => {
                 </div>
 
                 {/* Content */}
-                <div className="blog-content">
-                    {blog.content.split("\n").map((para, index) => (
-                        <p key={index}>{para.trim()}</p>
-                    ))}
-                </div>
+                <div
+                    className="blog-content"
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.content), }}
+                />
 
             </div>
         </div>

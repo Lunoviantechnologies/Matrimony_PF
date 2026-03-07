@@ -11,6 +11,31 @@ const FAQ = () => {
 
   const faqData = [
     {
+      question: "What is ISKCON matrimony?",
+      answer:
+        "ISKCON matrimony is a spiritual matchmaking platform created for Krishna devotees who wish to build marriages based on devotion, values, and dharmic principles. It connects individuals and families who follow the teachings of ISKCON and Vaishnav traditions, helping them find compatible life partners who share similar spiritual beliefs and lifestyle.",
+    },
+    {
+      question: "How does Vaishnav matrimony work?",
+      answer:
+        "Vaishnav matrimony platforms help devotees find suitable life partners within the Vaishnav community. Users create a profile with their personal, spiritual, and family details. Based on these details, they can browse or connect with compatible profiles that share similar spiritual values, traditions, and life goals.",
+    },
+    {
+      question: "Is VivahJeevan a spiritual matrimony app?",
+      answer:
+        "Yes, VivahJeevan is a spiritual matrimony platform designed specifically for ISKCON devotees and Vaishnav families. The platform focuses on sacred relationships rooted in devotion, culture, and shared spiritual values rather than only modern matchmaking criteria.",
+    },
+    {
+      question: "Can parents create profiles?",
+      answer:
+        "Yes, parents or family members can create and manage profiles on behalf of their children. This allows families to actively participate in the matchmaking process while ensuring that the search aligns with family traditions and spiritual values.",
+    },
+    {
+      question: "Is this only for Krishna devotees?",
+      answer:
+        "Vivah Jeevan primarily serves Krishna devotees and members of the Vaishnav community. However, individuals who respect and wish to follow Vaishnav spiritual values and lifestyle are also welcome to join the platform and find compatible partners.",
+    },
+    {
       question: "Are all people allowed to become members?",
       answer:
         "Yes. VivahJeevan welcomes people from all castes, communities, and backgrounds across the world!",
@@ -42,13 +67,13 @@ const FAQ = () => {
     },
   ];
 
-  return ( 
+  return (
     <div className="faq-container">
       <h2><FaQuestionCircle className="faq-icon" /> Frequently Asked Questions</h2>
       <p className="faq-subtitle">
         Answers to the most common questions from our global community
       </p>
-  
+
       <div className="faq-list">
         {faqData.map((item, index) => (
           <div

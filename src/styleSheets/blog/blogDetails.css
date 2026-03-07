@@ -86,8 +86,27 @@
     color: #343a40;
 }
 
+.blog-content h2 {
+    font-size: 26px;
+    margin-top: 30px;
+}
+
+.blog-content h3 {
+    font-size: 20px;
+    margin-top: 25px;
+}
+
 .blog-content p {
-    margin-bottom: 22px;
+    line-height: 1.8;
+    margin-bottom: 18px;
+}
+
+.blog-content ul {
+    padding-left: 20px;
+}
+
+.blog-content a {
+    color: #0d6efd;
 }
 
 /* ===========================

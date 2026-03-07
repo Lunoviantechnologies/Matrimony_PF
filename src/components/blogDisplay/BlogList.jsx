@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { fetchPublicBlogs } from "../../api/blogApi";
 import "../../styleSheets/blog/blogList.css";
+import serverURL from "../../api/server";
 
 const BlogList = () => {
 
@@ -21,6 +22,7 @@ const BlogList = () => {
             const response = await fetchPublicBlogs(page);
 
             const { content, last } = response.data;
+            console.log("Blog list : ", response.data);
 
             setBlogs(prev => [...prev, ...content]);
             setHasMore(!last);
@@ -35,7 +37,7 @@ const BlogList = () => {
 
     useEffect(() => {
         loadBlogs();
-    }, []);
+    }, [loadBlogs]);
 
     const getImageUrl = (blog) => {
         if (!blog.imageUrl) return "/placeholder.png";
@@ -46,8 +48,14 @@ const BlogList = () => {
         }
 
         // If image is stored as file path from server
-        const serverRoot = backendIP.replace("/api", "");
+        const serverRoot = serverURL;
         return `${serverRoot}${blog.imageUrl}`;
+    };
+
+    const stripHtml = (html) => {
+        const temp = document.createElement("div");
+        temp.innerHTML = html;
+        return temp.textContent || temp.innerText || "";
     };
 
     return (
@@ -63,11 +71,15 @@ const BlogList = () => {
 
             <div className="blog-grid">
 
+                {blogs.length === 0 && !loading && (
+                    <p className="no-blogs">No blogs available.</p>
+                )}
+
                 {blogs.map((blog) => (
                     <div className="blog-card" key={blog.id}>
 
                         <div className="blog-image">
-                            <img src={getImageUrl(blog)} alt={blog.title} />
+                            <img src={getImageUrl(blog)} alt={blog.title} loading="lazy" />
                         </div>
 
                         <div className="blog-content">
@@ -81,7 +93,7 @@ const BlogList = () => {
                             </h6>
 
                             <p className="blog-desc">
-                                {blog.content?.slice(0, 90) || "No content available"}…
+                                {stripHtml(blog.content)?.slice(0, 120) || "No content available"}…
                             </p>
 
                             <Link to={`/resources/blog/${blog.slug}`} className="read-more">
@@ -96,7 +108,8 @@ const BlogList = () => {
 
             {error && (
                 <div style={{ textAlign: "center", marginTop: "20px", color: "red" }}>
-                    {error}
+                    <p>{error}</p>
+                    <button onClick={loadBlogs}>Retry</button>
                 </div>
             )}
 

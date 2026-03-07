@@ -4,6 +4,8 @@ import { addBlog } from "../../redux/thunk/blogThunk";
 import { useNavigate } from "react-router-dom";
 import "../../styleSheets/blog/blogForm.css";
 import { toast } from "react-toastify";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 export default function BlogForm() {
 
@@ -69,11 +71,10 @@ export default function BlogForm() {
 
                 <div className="form-group">
                     <label>Content</label>
-                    <textarea
-                        rows={6}
+                    <ReactQuill
                         value={form.content}
-                        onChange={e => handleChange("content", e.target.value)}
-                        required
+                        onChange={(value) => handleChange("content", value)}
+                        theme="snow"
                     />
                 </div>
 

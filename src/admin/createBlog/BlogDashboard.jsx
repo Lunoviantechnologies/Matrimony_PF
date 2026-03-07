@@ -51,6 +51,12 @@ export default function BlogDashboard() {
         return Array.from({ length: end - start }, (_, i) => start + i);
     };
 
+    const stripHtml = (html) => {
+        const temp = document.createElement("div");
+        temp.innerHTML = html;
+        return temp.textContent || temp.innerText || "";
+    };
+
     return (
         <div className="blog-dashboard">
 
@@ -90,7 +96,7 @@ export default function BlogDashboard() {
                             </div>
 
                             <p className="snippet">
-                                {blog.content?.slice(0, 90) || "No content available"}…
+                                {stripHtml(blog.content)?.slice(0, 90) || "No content available"}…
                             </p>
 
                             <div className="stats">

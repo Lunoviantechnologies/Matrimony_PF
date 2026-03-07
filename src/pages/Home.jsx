@@ -44,8 +44,8 @@ const Home = () => {
                         <div className="card homeCard">
                             <div className="card-body">
                                 <MdTaskAlt  size={70} color="blue" />
-                                <h6 className="card-title" style={{ fontWeight: 'bold' }}>Blue Tick to find your Green Flag</h6>
-                                <p className="card-text opacity-75">Did you know our blue-tick profiles get 40% more connection requests than others?.</p>
+                                <h6 className="card-title" style={{ fontWeight: 'bold' }}>Verified Blue-Tick Profiles</h6>
+                                <p className="card-text opacity-75">Profiles with a blue tick build more trust and receive higher connection requests compared to regular profiles.</p>
                             </div>
                         </div>
                     </div>
@@ -53,8 +53,8 @@ const Home = () => {
                         <div className="card homeCard">
                             <div className="card-body">
                                 <MdPsychology size={70} color="#00eaffff" />
-                                <h6 className="card-title" style={{ fontWeight: 'bold' }}>Matchmaking Powered by AI</h6>
-                                <p className="card-text opacity-75">Cutting-edge technology with two decades of matchmaking expertise to help you find "the one".</p>
+                                <h6 className="card-title" style={{ fontWeight: 'bold' }}>Smart AI Matchmaking</h6>
+                                <p className="card-text opacity-75">Combining advanced technology with years of expertise to guide users toward the right life partner.</p>
                             </div>
                         </div>
                     </div>

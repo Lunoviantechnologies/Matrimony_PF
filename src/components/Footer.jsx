@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styleSheets/Footer.css";
-import { FaFacebookF, FaInstagram, FaQuora, FaGooglePlay, FaApple } from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaQuora, FaGooglePlay, FaApple, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -93,6 +93,10 @@ const SOCIAL_LINKS = [
   {
     icon: <FaQuora />,
     url: "https://www.quora.com/profile/Vivah-Jeevan",
+  },
+  {
+    icon: <FaLinkedin />,
+    url: "https://www.linkedin.com/company/vivah-jeevan/",
   },
 ];
 

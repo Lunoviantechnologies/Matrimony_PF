@@ -6,6 +6,16 @@
   <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="GlPc5R3ki2O5yo_PvIW0D-XIixZ4tZGArq4e2oiO5kw" />
+  <meta name="description"
+    content="Vivahjeevan is a spiritual matrimony platform for ISKCON devotees and Vaishnav families seeking sacred and value-based marriages.">
+  <meta name="keywords"
+    content="ISKCON matrimony, Vaishnav matrimony, spiritual marriage, devotee marriage, Vivahjeevan">
+  <meta property="og:title" content="Vivah Jeevan - Spiritual Matrimony Platform">
+  <meta property="og:description"
+    content="Vivahjeevan is a spiritual matrimony platform for ISKCON devotees and Vaishnav families seeking sacred and value-based marriages.">
+  <meta property="og:image" content="https://vivahjeevan.com/vivahjeevan_logo.png">
+  <meta property="og:url" content="https://vivahjeevan.com">
+  <meta property="og:type" content="website">
 
   <!-- Google Tag Manager -->
   <script>
@@ -18,6 +28,75 @@
           'https://www.googletagmanager.com/gtm.js?id=GTM-TSHVXM6S' + dl;
       f.parentNode.insertBefore(j, f);
     })(window, document, 'script', 'dataLayer', 'GTM-TSHVXM6S');
+  </script>
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Vivahjeevan",
+      "url": "https://vivahjeevan.com/",
+      "logo": "https://vivahjeevan.com/vivahjeevan_logo.png",
+      "description": "Vivahjeevan is a spiritual matrimony platform for ISKCON devotees and Vaishnav families seeking sacred and value-based marriages.",
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+    },
+    "sameAs": [
+      "https://www.instagram.com/",
+      "https://www.facebook.com/"
+    ]
+    }
+  </script>
+
+  <!-- Structured Data - Website Search -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Vivahjeevan",
+      "url": "https://vivahjeevan.com/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://vivahjeevan.com/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  </script>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "serviceType": "ISKCON Matrimony and Vaishnav Marriage Services",
+      "provider": {
+        "@type": "Organization",
+        "name": "Vivah Jeevan",
+        "url": "https://vivahjeevan.com/"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "description": "Vivah Jeevan offers ISKCON matrimony, Vaishnav matrimony, and spiritual marriage matchmaking services for Krishna devotees."
+    }
+  </script>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is ISKCON matrimony?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ISKCON matrimony is a spiritual matchmaking platform designed for Krishna devotees seeking sacred and value-based marriages."
+        }
+      }]
+    }
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap" rel="stylesheet">
@@ -90,6 +169,13 @@
 </head>
 
 <body>
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TSHVXM6S" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe>
+  </noscript>
+
   <div id="root">
     <!-- Pre React Loader -->
     <div class="app-loader">
@@ -101,12 +187,6 @@
   </div>
 
   <script type="module" src="/src/main.jsx"></script>
-
-  <!-- Google Tag Manager (noscript) -->
-  <noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TSHVXM6S" height="0" width="0"
-      style="display:none;visibility:hidden"></iframe>
-  </noscript>
 </body>
 
 </html>
