@@ -4,8 +4,8 @@ import { fetchBlogs, deleteBlog } from "../../redux/thunk/blogThunk";
 import { setPage } from "../../redux/slices/blogSlice";
 import { useNavigate } from "react-router-dom";
 import "../../styleSheets/blog/blogDashboard.css";
-import backendIP from "../../api/api";
 import { FaEye, FaHeart } from "react-icons/fa";
+import serverURL from "../../api/server";
 
 export default function BlogDashboard() {
 
@@ -33,7 +33,7 @@ export default function BlogDashboard() {
         }
 
         // If image is stored as file path from server
-        const serverRoot = backendIP.replace("/api", "");
+        const serverRoot = serverURL;
         return `${serverRoot}${blog.imageUrl}`;
     };
 

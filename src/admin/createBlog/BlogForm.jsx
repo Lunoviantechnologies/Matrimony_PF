@@ -47,7 +47,7 @@ export default function BlogForm() {
             navigate("/admin/blogs");
         } catch (error) {
             console.error("Blog creation failed:", error);
-            toast.error("Failed to create blog");
+            toast.error(error);
         } finally {
             setLoading(false);
         }

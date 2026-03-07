@@ -6,6 +6,7 @@ import "../../styleSheets/blog/blogForm.css";
 import { toast } from "react-toastify";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import serverURL from "../../api/server";
 
 export default function EditBlog() {
 
@@ -71,6 +72,23 @@ export default function EditBlog() {
 
     if (!blog) return <p className="status">Loading blog...</p>;
 
+    const getImageUrl = (blogImage) => {
+        if (!blogImage) return "/placeholder.png";
+
+        // Base64
+        if (blogImage.startsWith("data:image")) {
+            return blogImage;
+        }
+
+        // Blob URL (selected image preview)
+        if (blogImage.startsWith("blob:")) {
+            return blogImage;
+        }
+
+        // Server image path
+        return `${serverURL}${blogImage}`;
+    };
+
     return (
         <div className="blog-form-page">
 
@@ -123,11 +141,10 @@ export default function EditBlog() {
                         accept="image/*"
                         onChange={e => handleImage(e.target.files[0])}
                     />
-
                     {preview && (
                         <img
                             className="image-preview"
-                            src={preview}
+                            src={preview.startsWith("blob:") ? preview : getImageUrl(preview)}
                             alt="Preview"
                         />
                     )}
